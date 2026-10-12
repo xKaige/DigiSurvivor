@@ -219,11 +219,11 @@ function endRun(title){if(!running)return;running=false;paused=false;evo=null;pe
 const NAMES=['Cría','Bebé','Novato','Campeón'],LINEAS=['Línea Cuernos','Línea Garras'];
 
 function drawBuddy(q,s,x,y,f,a){
+ const fw=32, fh=32; // Estándar único de 32x32px por cuadro
+
  // Botamon (Fase 0 - Cría)
  if(s===0 && botamonCanvas){
-  const cols=4, rows=11;
-  const fw=botamonCanvas.width/cols, fh=botamonCanvas.height/rows;
-  const h=40, w=fw*h/fh;
+  const h=32, w=32;
   let row=0, col=0;
 
   if(q.dead){
@@ -247,9 +247,7 @@ function drawBuddy(q,s,x,y,f,a){
 
  // Agumon (Fase 2 - Novato)
  if(s===2 && agumonCanvas){
-  const cols=7, rows=7;
-  const fw=agumonCanvas.width/cols, fh=agumonCanvas.height/rows;
-  const h=56, w=fw*h/fh;
+  const h=48, w=48;
   let row=0, col=0;
 
   if(q.dead){
@@ -311,7 +309,7 @@ function chooseLine(){
   $('up').querySelector('p').textContent='Tus stats (permanentes + partida): '+Object.keys(SN).map(k=>SN[k]+' '+tot(p,k)).join(' · ')+(inest?' — No cumplís ningún requisito: la evolución será inestable (bonos a la mitad)':'');
   cur=[0,1].map(i=>({k:['champA','champB'][i],n:LINEAS[i],lock:!ok[i]&&!inest,op:'line',lineIdx:i,weak:inest,
    d:['Pesado: +3 de daño, +60 de vida y ataques que perforan','Veloz: +2 proyectiles, +1 de daño y +15% de velocidad'][i],
-   req:LREQ[i].map(([k,v])=>SN[k]+' '+Math.min(tot(p,k),v)+'/'+v+' ('+permS(k)+' perm. + '+p.st[k]+' partida)'+(tot(p,k)>=v?' ✓':''),
+   req:LREQ[i].map(([k,v])=>SN[k]+' '+Math.min(tot(p,k),v)+'/'+v+' ('+permS(k)+' perm. + '+p.st[k]+' partida)'+(tot(p,k)>=v?' ✓':'')).join(' · '),
    f:()=>{p.line=i;p.weak=inest}}));
   const c=$('cards');c.innerHTML='';
   cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.disabled=u.lock;b.innerHTML='<img src="'+SPR[u.k].im.src+'"><b>'+(i+1)+'. '+u.n+'</b>'+u.d+'<em>Requiere: '+u.req+'</em>';b.onclick=()=>choose(u);c.appendChild(b)});
