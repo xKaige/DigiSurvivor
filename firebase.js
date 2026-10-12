@@ -19,7 +19,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 let uid = null;
 
-// Función para guardar inmediatamente en la nube
 async function saveToCloud(saveData) {
   if (!uid) return;
   try {
@@ -29,7 +28,7 @@ async function saveToCloud(saveData) {
       updated: Date.now()
     });
   } catch (err) {
-    console.error('Error guardando en Firestore:', err);
+    console.error('Error al guardar en Firestore:', err);
   }
 }
 
@@ -39,12 +38,17 @@ if ($('login')) {
 }
 
 if ($('logout')) {
-  $('logout').onclick = () => signOut(auth);
+  $('logout').onclick = () => {
+    signOut(auth).then(() => {
+      // Limpia la memoria local al cerrar sesión
+      localStorage.removeItem('digisurvivor');
+      if (window.loadSave) window.loadSave({ coins: 0, lv: {} });
+    });
+  };
 }
 
-// Intercepta la función de guardado del juego
 window.onSave = s => {
-  saveToCloud(s);
+  if (uid) saveToCloud(s);
 };
 
 onAuthStateChanged(auth, async u => {
@@ -60,14 +64,12 @@ onAuthStateChanged(auth, async u => {
     if (snap.exists()) {
       const d = snap.data();
       const loadedSave = { coins: d.coins | 0, lv: d.lv || {} };
-      if (window.loadSave) {
-        window.loadSave(loadedSave);
-      }
+      if (window.loadSave) window.loadSave(loadedSave);
     } else if (window.getSave) {
-      // Primera vez del usuario: subir lo que tenía localmente a Firestore
+      // Primera vez de esta cuenta: vincula el progreso actual a la nube
       await saveToCloud(window.getSave());
     }
   } catch (e) {
-    console.error('Error cargando progreso desde Firestore:', e);
+    console.error('Error al cargar progreso de Firestore:', e);
   }
 });
