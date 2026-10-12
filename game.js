@@ -3,6 +3,67 @@ let W,H;function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}addEventList
 const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
 const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>document.getElementById(id);
+
+// Multijugador Online
+let peer = null, conn = null, isHost = false, isOnline = false, remoteKeys = {};
+
+window.initPeer = function(name) {
+  if (peer) return;
+  const shortId = 'digi-' + Math.floor(1000 + Math.random() * 9000);
+  peer = new Peer(shortId);
+  peer.on('open', id => {
+    if ($('my-peer-code')) $('my-peer-code').textContent = 'Tu código de amigo: ' + id;
+  });
+  peer.on('connection', c => {
+    conn = c;
+    isHost = true;
+    setupConn();
+  });
+};
+
+function setupConn() {
+  if ($('party-status')) $('party-status').textContent = '¡Amigo conectado!';
+  if (isHost && $('go-online')) $('go-online').style.display = 'inline-block';
+  conn.on('data', data => {
+    if (data.type === 'input') {
+      remoteKeys = data.keys || {};
+    } else if (data.type === 'start') {
+      isOnline = true;
+      start(2);
+    } else if (data.type === 'sync') {
+      applyOnlineSync(data);
+    }
+  });
+}
+
+if ($('btn-connect')) {
+  $('btn-connect').onclick = () => {
+    const code = $('friend-code').value.trim();
+    if (!code || !peer) return;
+    conn = peer.connect(code);
+    isHost = false;
+    setupConn();
+  };
+}
+
+if ($('go-online')) {
+  $('go-online').onclick = () => {
+    if (conn) conn.send({ type: 'start' });
+    isOnline = true;
+    start(2);
+  };
+}
+
+function applyOnlineSync(data) {
+  if (isHost) return;
+  t = data.t; kills = data.kills; lvl = data.lvl; need = data.need; xp = data.xp;
+  if (data.P && P.length === data.P.length) {
+    data.P.forEach((sq, i) => { if (P[i]) Object.assign(P[i], sq); });
+  }
+  if (data.en) en = data.en;
+  if (data.gems) gems = data.gems;
+}
+
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
  if(e.key==='Enter'&&!running&&!treeOpen)start(lastMode);
  if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)endRun('Run terminada')}
@@ -20,7 +81,7 @@ function start(m){mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i);q.x=m=
  $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
  $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
  last=performance.now();requestAnimationFrame(loop)}
-$('go').onclick=()=>start(1);$('go2').onclick=()=>start(2);
+$('go').onclick=()=>{isOnline=false;start(1)};$('go2').onclick=()=>{isOnline=false;start(2)};
 const UP=[
 {c:'FUE',n:'Más daño',d:'+1 de daño por disparo',f:()=>p.dmg++},
 {c:'VEL',n:'Disparo rápido',d:'Ataca un 20% más seguido',f:()=>p.rate*=.8},
@@ -115,10 +176,27 @@ function wpn(q,dt){const wl=k=>q.wp[k],sc=k=>1+.3*(q.wp[k]-1);
    for(const e of en){const px=e.x-q.x,py=e.y-q.y;if(px*ca+py*sa>0&&px*ca+py*sa<Lg&&Math.abs(-px*sa+py*ca)<e.r+9)hit(e,q.dmg*2.4*sc('rayo'))}}else q.wt.rayo=.3}}}
 function update(dt){
  t+=dt;
+ if (isOnline) {
+   if (!isHost && conn) {
+     conn.send({ type: 'input', keys: { w: keys.w||keys.arrowup, a: keys.a||keys.arrowleft, s: keys.s||keys.arrowdown, d: keys.d||keys.arrowright } });
+   } else if (isHost && conn) {
+     conn.send({
+       type: 'sync',
+       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, line: q.line })),
+       en: en.map(e => ({ x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun })),
+       gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
+       t, kills, lvl, need, xp
+     });
+   }
+ }
  for(const q of P){if(q.dead)continue;let dx,dy;
   if(mode===1){dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0)}
   else if(q.id===0){dx=(keys.d?1:0)-(keys.a?1:0);dy=(keys.s?1:0)-(keys.w?1:0)}
-  else{dx=(keys.arrowright?1:0)-(keys.arrowleft?1:0);dy=(keys.arrowdown?1:0)-(keys.arrowup?1:0)}
+  else{
+    const kSource = (isOnline && isHost) ? remoteKeys : keys;
+    dx=(kSource.d||kSource.arrowright?1:0)-(kSource.a||kSource.arrowleft?1:0);
+    dy=(kSource.s||kSource.arrowdown?1:0)-(kSource.w||kSource.arrowup?1:0);
+  }
   if(dx||dy){const l=Math.hypot(dx,dy);q.x+=dx/l*q.sp*dt;q.y+=dy/l*q.sp*dt;if(dx)q.face=dx}
   q.inv-=dt}
  const al=P.filter(q=>!q.dead);
