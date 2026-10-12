@@ -52,11 +52,12 @@ function setupConn() {
         applyCardOp(P[1], data);
         clientDone = true;
         if (hostDone) {
-          $('up').style.display = 'none';
           if (cardMode === 'line') {
             if (conn) conn.send({ type: 'trigger_evo', stage: 3 });
+            $('up').style.display = 'none';
             startEvo(3);
           } else {
+            $('up').style.display = 'none';
             paused = false;
             last = performance.now();
             if (conn) conn.send({ type: 'resume_game' });
@@ -114,15 +115,11 @@ function applyOnlineSync(data) {
   if (data.P && P.length === data.P.length) {
     data.P.forEach((sq, i) => { if (P[i]) Object.assign(P[i], sq); });
   }
-  if (data.en) {
-    en = data.en.map(e => ({
-      x: e.x || 0, y: e.y || 0, r: e.r || 12, k: e.k || 0,
-      ti: e.ti || 0, el: e.el || 0, fl: e.fl || 0, ang: e.ang || 0, gun: !!e.gun
-    }));
-  }
-  if (data.gems) {
-    gems = data.gems.map(g => ({ x: g.x || 0, y: g.y || 0, v: g.v || 3 }));
-  }
+  if (data.en) en = data.en;
+  if (data.gems) gems = data.gems;
+  if (data.sh) sh = data.sh;
+  if (data.eb) eb = data.eb;
+  if (data.ef) ef = data.ef;
 }
 
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
@@ -195,20 +192,36 @@ function stepEvo(dt){evo.t+=dt;
    else if(q.line===0){q.dmg+=q.weak?1.5:3;q.max+=q.weak?30:60;if(!q.weak)q.pierce++}else{q.dmg+=q.weak?.5:1;q.multi+=q.weak?1:2;q.sp*=q.weak?1.07:1.15}
    q.hp=q.max;for(let i=0;i<30;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f')}
   $('evt').textContent='¡'+(evo.s===3?P.map((q,i)=>(mode===2?'J'+(i+1)+': ':'')+LINEAS[q.line]).join(' · '):NAMES[evo.s])+'!'}
- if(evo.t>=2.8){const s=evo.s;evo=null;const v=$('evt');v.textContent='¡Los enemigos también evolucionaron: '+NAMES[s]+'!';setTimeout(()=>{if(!evo)v.style.display='none'},2600);startCards()}}
+ if(evo.t>=2.8){
+  const s=evo.s;evo=null;const v=$('evt');
+  v.textContent='¡Los enemigos también evolucionaron: '+NAMES[s]+'!';
+  setTimeout(()=>{if(!evo)v.style.display='none'},2600);
+  if (isOnline) {
+    if (isHost) {
+      if (conn) conn.send({ type: 'trigger_levelup' });
+      startCards();
+    }
+  } else {
+    startCards();
+  }
+ }}
 const LREQ=[[['FUE',3],['VIT',1]],[['VEL',4]]],SN={FUE:'Fuerza',VEL:'Velocidad',VIT:'Vitalidad',INT:'Inteligencia'};
 function setHead(txt){const h=$('up').querySelector('h2');h.textContent=txt+(mode===2&&!txt.startsWith('ESPERANDO')?' · Jugador '+(p.id+1):'');h.style.color=mode===2?PC[p.id]:''}
 
-function chooseLine(){paused=true;p=pending[0];cardMode='line';setHead('¡Elegí tu evolución!');
- const ok=LREQ.map(r=>r.every(([k,v])=>tot(p,k)>=v)),inest=!ok[0]&&!ok[1];
- $('up').querySelector('p').textContent='Tus stats (permanentes + partida): '+Object.keys(SN).map(k=>SN[k]+' '+tot(p,k)).join(' · ')+(inest?' — No cumplís ningún requisito: la evolución será inestable (bonos a la mitad)':'');
- cur=[0,1].map(i=>({k:['champA','champB'][i],n:LINEAS[i],lock:!ok[i]&&!inest,op:'line',lineIdx:i,weak:inest,
-  d:['Pesado: +3 de daño, +60 de vida y ataques que perforan','Veloz: +2 proyectiles, +1 de daño y +15% de velocidad'][i],
-  req:LREQ[i].map(([k,v])=>SN[k]+' '+Math.min(tot(p,k),v)+'/'+v+' ('+permS(k)+' perm. + '+p.st[k]+' partida)'+(tot(p,k)>=v?' ✓':'')).join(' · '),
-  f:()=>{p.line=i;p.weak=inest}}));
- const c=$('cards');c.innerHTML='';
- cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.disabled=u.lock;b.innerHTML='<img src="'+SPR[u.k].im.src+'"><b>'+(i+1)+'. '+u.n+'</b>'+u.d+'<em>Requiere: '+u.req+'</em>';b.onclick=()=>choose(u);c.appendChild(b)});
- $('up').style.display='flex'}
+function chooseLine(){
+  hostDone = false; clientDone = false; paused = true;
+  p = isOnline ? (isHost ? P[0] : P[1]) : pending[0];
+  cardMode='line'; setHead('¡Elegí tu evolución!');
+  const ok=LREQ.map(r=>r.every(([k,v])=>tot(p,k)>=v)),inest=!ok[0]&&!ok[1];
+  $('up').querySelector('p').textContent='Tus stats (permanentes + partida): '+Object.keys(SN).map(k=>SN[k]+' '+tot(p,k)).join(' · ')+(inest?' — No cumplís ningún requisito: la evolución será inestable (bonos a la mitad)':'');
+  cur=[0,1].map(i=>({k:['champA','champB'][i],n:LINEAS[i],lock:!ok[i]&&!inest,op:'line',lineIdx:i,weak:inest,
+   d:['Pesado: +3 de daño, +60 de vida y ataques que perforan','Veloz: +2 proyectiles, +1 de daño y +15% de velocidad'][i],
+   req:LREQ[i].map(([k,v])=>SN[k]+' '+Math.min(tot(p,k),v)+'/'+v+' ('+permS(k)+' perm. + '+p.st[k]+' partida)'+(tot(p,k)>=v?' ✓':'')).join(' · '),
+   f:()=>{p.line=i;p.weak=inest}}));
+  const c=$('cards');c.innerHTML='';
+  cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.disabled=u.lock;b.innerHTML='<img src="'+SPR[u.k].im.src+'"><b>'+(i+1)+'. '+u.n+'</b>'+u.d+'<em>Requiere: '+u.req+'</em>';b.onclick=()=>choose(u);c.appendChild(b)});
+  $('up').style.display='flex';
+}
 
 function levelUp(){
   xp-=need;lvl++;need=Math.round(need*1.3+2);paused=true;
@@ -221,7 +234,6 @@ function levelUp(){
   if(lvl===10){
     if (isOnline) {
       pending = [isHost ? P[0] : P[1]];
-      hostDone = false; clientDone = false;
       if (isHost && conn) conn.send({ type: 'trigger_line' });
     } else {
       pending = [...P];
@@ -231,15 +243,15 @@ function levelUp(){
   }
   if (isOnline) {
     pending = [isHost ? P[0] : P[1]];
-    hostDone = false; clientDone = false;
     if (isHost && conn) conn.send({ type: 'trigger_levelup' });
   } else {
     pending = [...P];
   }
-  showCards();
+  startCards();
 }
 
 function startCards(){
+  hostDone = false; clientDone = false;
   if (isOnline) {
     pending = [isHost ? P[0] : P[1]];
   } else {
@@ -248,12 +260,14 @@ function startCards(){
   showCards();
 }
 
-function showCards(){paused=true;p=pending[0];cardMode='cards';setHead('¡Subiste de nivel!');
- $('up').querySelector('p').textContent='Elegí con el mouse o con las teclas 1, 2 o 3';
- cur=[...UP,...WP.filter(w=>p.wp[w.k]<5).map(w=>({n:w.n,d:w.d,op:'wp',wpKey:w.k,tag:'Arma · '+(p.wp[w.k]?'sube a nivel '+(p.wp[w.k]+1)+' de 5':'NUEVA'),f:()=>p.wp[w.k]++}))].sort(()=>Math.random()-.5).slice(0,3);
- const c=$('cards');c.innerHTML='';
- cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.innerHTML='<b>'+(i+1)+'. '+u.n+'</b>'+u.d+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag?'<em>'+u.tag+'</em>':'');b.onclick=()=>choose(u);c.appendChild(b)});
- $('up').style.display='flex'}
+function showCards(){
+  paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');
+  $('up').querySelector('p').textContent='Elegí con el mouse o con las teclas 1, 2 o 3';
+  cur=[...UP,...WP.filter(w=>p.wp[w.k]<5).map(w=>({n:w.n,d:w.d,op:'wp',wpKey:w.k,tag:'Arma · '+(p.wp[w.k]?'sube a nivel '+(p.wp[w.k]+1)+' de 5':'NUEVA'),f:()=>p.wp[w.k]++}))].sort(()=>Math.random()-.5).slice(0,3);
+  const c=$('cards');c.innerHTML='';
+  cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.innerHTML='<b>'+(i+1)+'. '+u.n+'</b>'+u.d+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag?'<em>'+u.tag+'</em>':'');b.onclick=()=>choose(u);c.appendChild(b)});
+  $('up').style.display='flex';
+}
 
 function choose(u){
   const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c)q.st[u.c]++;p=P[0];pending.shift();
@@ -283,11 +297,12 @@ function choose(u){
 
   if (isOnline) {
     if (isHost && hostDone && clientDone) {
-      $('up').style.display = 'none';
       if (modo === 'line') {
         if (conn) conn.send({ type: 'trigger_evo', stage: 3 });
+        $('up').style.display = 'none';
         startEvo(3);
       } else {
+        $('up').style.display = 'none';
         paused = false; last = performance.now();
         if (conn) conn.send({ type: 'resume_game' });
       }
@@ -320,9 +335,12 @@ function update(dt){
    } else if (isHost && conn) {
      conn.send({
        type: 'sync',
-       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, line: q.line })),
+       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, line: q.line, wp: q.wp, oa: q.oa })),
        en: en.map(e => ({ x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun })),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
+       sh: sh.map(s => ({ x: s.x, y: s.y })),
+       eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el })),
+       ef: ef.map(o => ({ k: o.k, x: o.x, y: o.y, R: o.R, l: o.l, m: o.m, a: o.a, Lg: o.Lg })),
        t, kills, lvl, need, xp
      });
    }
