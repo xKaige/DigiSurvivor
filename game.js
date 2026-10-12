@@ -331,7 +331,7 @@ function update(dt){
  t+=dt;
  if (isOnline) {
    if (!isHost && conn) {
-     conn.send({ type: 'input', keys: { w: keys.w||keys.arrowup, a: keys.a||keys.arrowleft, s: keys.s||keys.arrowdown, d: keys.d||keys.arrowright } });
+     conn.send({ type: 'input', keys: { w: keys.w, a: keys.a, s: keys.s, d: keys.d, arrowup: keys.arrowup, arrowleft: keys.arrowleft, arrowdown: keys.arrowdown, arrowright: keys.arrowright } });
    } else if (isHost && conn) {
      conn.send({
        type: 'sync',
@@ -346,16 +346,32 @@ function update(dt){
    }
  }
 
- for(const q of P){if(q.dead)continue;let dx,dy;
-  if(mode===1){dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0)}
-  else if(q.id===0){dx=(keys.d?1:0)-(keys.a?1:0);dy=(keys.s?1:0)-(keys.w?1:0)}
-  else{
-    const kSource = (isOnline && isHost) ? remoteKeys : keys;
-    dx=(kSource.d||kSource.arrowright?1:0)-(kSource.a||kSource.arrowleft?1:0);
-    dy=(kSource.s||kSource.arrowdown?1:0)-(kSource.w||kSource.arrowup?1:0);
+ for(const q of P){
+  if(q.dead)continue;
+  let dx=0, dy=0;
+  if(mode===1){
+    dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);
+    dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0);
+  } else if(q.id===0){
+    dx=(keys.d?1:0)-(keys.a?1:0);
+    dy=(keys.s?1:0)-(keys.w?1:0);
+  } else if(q.id===1){
+    if(isOnline) {
+      if(isHost) {
+        dx=(remoteKeys.d||remoteKeys.arrowright?1:0)-(remoteKeys.a||remoteKeys.arrowleft?1:0);
+        dy=(remoteKeys.s||remoteKeys.arrowdown?1:0)-(remoteKeys.w||remoteKeys.arrowup?1:0);
+      } else {
+        dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);
+        dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0);
+      }
+    } else {
+      dx=(keys.arrowright?1:0)-(keys.arrowleft?1:0);
+      dy=(keys.arrowdown?1:0)-(keys.arrowup?1:0);
+    }
   }
   if(dx||dy){const l=Math.hypot(dx,dy);q.x+=dx/l*q.sp*dt;q.y+=dy/l*q.sp*dt;if(dx)q.face=dx}
-  q.inv-=dt}
+  q.inv-=dt;
+ }
 
  const al=P.filter(q=>!q.dead);
  if(al.length && mode===2){
