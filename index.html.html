@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>DigiSurvivor</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦖</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <b id="l1" class="pl"></b>
+    <div id="bar"><div id="fill"></div></div>
+    <b id="l2" class="pl"></b>
+    <div id="bar2"><div id="fill2"></div></div>
+    <span id="info">0:00 · 0 virus</span>
+  </div>
+  <div id="pst"></div>
+  <div id="xp"><div id="xpf"></div></div>
+  <div id="timer"><span id="tm">0:00</span><small id="tr">Enemigos: Cría</small></div>
+  <div id="leg">
+    <span style="color:#4db8ff">● Vacuna (vos)</span>›<span style="color:#c05bff">● Virus</span>›<span style="color:#ffb02e">● Dato</span>›<span style="color:#4db8ff">Vacuna</span>
+  </div>
+  <div id="evt"></div>
+  <div id="up">
+    <h2>¡Subiste de nivel!</h2>
+    <div id="cards"></div>
+    <p>Elegí con el mouse o con las teclas 1, 2 o 3</p>
+  </div>
+  <div id="ov">
+    <h1 id="t">DigiSurvivor</h1>
+    <p id="m">1 jugador: WASD o flechas. Coop local: J1 con WASD y J2 con las flechas. Tu compañero ataca solo. Vacuna vence a Virus, Virus a Dato y Dato a Vacuna: los números verdes y grandes son ventaja, los rojos, desventaja. Con Escape terminás la run y te quedás con las monedas.</p>
+    <p id="wal"></p>
+    <button id="go">Jugar (1 jugador)</button>
+    <button id="go2" class="alt">Coop local (2 jugadores)</button>
+    <button id="tb" class="alt">Árbol de habilidades</button>
+    <div id="acc">
+      <button id="login" class="alt">Iniciar sesión con Google</button>
+      <button id="logout" class="alt" style="display:none">Cerrar sesión</button>
+      <span id="who"></span>
+    </div>
+  </div>
+  <div id="tree">
+    <h2>Árbol de habilidades</h2>
+    <p id="tw"></p>
+    <div id="cols"></div>
+    <button id="tx">Volver</button>
+  </div>
+
+  <script src="sprites.js"></script>
+  <script src="game.js"></script>
+  <script type="module" src="firebase.js"></script>
+</body>
+</html>
