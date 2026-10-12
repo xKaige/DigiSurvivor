@@ -6,6 +6,7 @@ const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>documen
 
 // Multijugador Online
 let peer = null, conn = null, isHost = false, isOnline = false, remoteKeys = {};
+let hostDone = false, clientDone = false;
 
 window.initPeer = function(name) {
   if (peer) return;
@@ -32,8 +33,48 @@ function setupConn() {
       start(2);
     } else if (data.type === 'sync') {
       applyOnlineSync(data);
+    } else if (data.type === 'trigger_levelup') {
+      paused = true;
+      pending = [P[1]];
+      showCards();
+    } else if (data.type === 'trigger_line') {
+      paused = true;
+      pending = [P[1]];
+      chooseLine();
+    } else if (data.type === 'trigger_evo') {
+      startEvo(data.stage);
+    } else if (data.type === 'client_choice') {
+      if (isHost && P[1]) {
+        applyCardOp(P[1], data);
+        clientDone = true;
+        checkOnlineUnpause();
+      }
+    } else if (data.type === 'host_choice') {
+      if (!isHost && P[0]) {
+        applyCardOp(P[0], data);
+      }
     }
   });
+}
+
+function checkOnlineUnpause() {
+  if (isHost && hostDone && clientDone) {
+    paused = false;
+    last = performance.now();
+  }
+}
+
+function applyCardOp(targetP, data) {
+  if (data.c) targetP.st[data.c]++;
+  if (data.op === 'dmg') targetP.dmg++;
+  else if (data.op === 'rate') targetP.rate *= .8;
+  else if (data.op === 'multi') targetP.multi++;
+  else if (data.op === 'pierce') targetP.pierce++;
+  else if (data.op === 'sp') targetP.sp *= 1.15;
+  else if (data.op === 'hp') { targetP.max += 25; targetP.hp = Math.min(targetP.max, targetP.hp + 25); }
+  else if (data.op === 'mag') targetP.mag *= 1.6;
+  else if (data.op === 'wp' && data.wpKey) targetP.wp[data.wpKey]++;
+  else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.weak = data.weak; }
 }
 
 if ($('btn-connect')) {
@@ -82,14 +123,15 @@ function start(m){mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i);q.x=m=
  $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
  last=performance.now();requestAnimationFrame(loop)}
 $('go').onclick=()=>{isOnline=false;start(1)};$('go2').onclick=()=>{isOnline=false;start(2)};
+
 const UP=[
-{c:'FUE',n:'Más daño',d:'+1 de daño por disparo',f:()=>p.dmg++},
-{c:'VEL',n:'Disparo rápido',d:'Ataca un 20% más seguido',f:()=>p.rate*=.8},
-{c:'VEL',n:'Disparo doble',d:'+1 proyectil por ataque',f:()=>p.multi++},
-{c:'FUE',n:'Perforante',d:'Los disparos atraviesan 1 enemigo más',f:()=>p.pierce++},
-{c:'VEL',n:'Patas veloces',d:'+15% de velocidad',f:()=>p.sp*=1.15},
-{c:'VIT',n:'Reparación',d:'+25 de vida máxima y cura 25',f:()=>{p.max+=25;p.hp=Math.min(p.max,p.hp+25)}},
-{c:'INT',n:'Imán de datos',d:'Atrae el XP desde más lejos',f:()=>p.mag*=1.6}];
+{c:'FUE',n:'Más daño',d:'+1 de daño por disparo',op:'dmg',f:()=>p.dmg++},
+{c:'VEL',n:'Disparo rápido',d:'Ataca un 20% más seguido',op:'rate',f:()=>p.rate*=.8},
+{c:'VEL',n:'Disparo doble',d:'+1 proyectil por ataque',op:'multi',f:()=>p.multi++},
+{c:'FUE',n:'Perforante',d:'Los disparos atraviesan 1 enemigo más',op:'pierce',f:()=>p.pierce++},
+{c:'VEL',n:'Patas veloces',d:'+15% de velocidad',op:'sp',f:()=>p.sp*=1.15},
+{c:'VIT',n:'Reparación',d:'+25 de vida máxima y cura 25',op:'hp',f:()=>{p.max+=25;p.hp=Math.min(p.max,p.hp+25)}},
+{c:'INT',n:'Imán de datos',d:'Atrae el XP desde más lejos',op:'mag',f:()=>p.mag*=1.6}];
 const WP=[{k:'onda',n:'Onda de datos',d:'Pulso en área alrededor tuyo'},{k:'orbe',n:'Orbitales',d:'Esferas que giran a tu alrededor y dañan al tocar'},{k:'rafaga',n:'Ráfaga multidireccional',d:'Dispara en 4, 8 o 12 direcciones a la vez'},{k:'rayo',n:'Rayo perforante',d:'Línea de energía hacia el enemigo más cercano'}];
 const TREE=[
 {c:'Ataque',n:[{k:'a1',n:'Poder',d:'+20% de daño',m:5,b:30},{k:'a2',n:'Cadencia',d:'Ataca un 6% más rápido',m:5,b:40,r:'a1'},{k:'a3',n:'Disparo extra',d:'+1 proyectil desde el inicio',m:1,b:150,r:'a2'}]},
@@ -139,29 +181,82 @@ function setHead(txt){const h=$('up').querySelector('h2');h.textContent=txt+(mod
 function chooseLine(){paused=true;p=pending[0];cardMode='line';setHead('¡Elegí tu evolución!');
  const ok=LREQ.map(r=>r.every(([k,v])=>tot(p,k)>=v)),inest=!ok[0]&&!ok[1];
  $('up').querySelector('p').textContent='Tus stats (permanentes + partida): '+Object.keys(SN).map(k=>SN[k]+' '+tot(p,k)).join(' · ')+(inest?' — No cumplís ningún requisito: la evolución será inestable (bonos a la mitad)':'');
- cur=[0,1].map(i=>({k:['champA','champB'][i],n:LINEAS[i],lock:!ok[i]&&!inest,
+ cur=[0,1].map(i=>({k:['champA','champB'][i],n:LINEAS[i],lock:!ok[i]&&!inest,op:'line',lineIdx:i,weak:inest,
   d:['Pesado: +3 de daño, +60 de vida y ataques que perforan','Veloz: +2 proyectiles, +1 de daño y +15% de velocidad'][i],
   req:LREQ[i].map(([k,v])=>SN[k]+' '+Math.min(tot(p,k),v)+'/'+v+' ('+permS(k)+' perm. + '+p.st[k]+' partida)'+(tot(p,k)>=v?' ✓':'')).join(' · '),
   f:()=>{p.line=i;p.weak=inest}}));
  const c=$('cards');c.innerHTML='';
  cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.disabled=u.lock;b.innerHTML='<img src="'+SPR[u.k].im.src+'"><b>'+(i+1)+'. '+u.n+'</b>'+u.d+'<em>Requiere: '+u.req+'</em>';b.onclick=()=>choose(u);c.appendChild(b)});
  $('up').style.display='flex'}
-function levelUp(){xp-=need;lvl++;need=Math.round(need*1.3+2);paused=true;
- for(const q of P)if(q.dead){q.dead=false;q.hp=q.max*.5;q.inv=2}
- if(lvl===3||lvl===6){startEvo(lvl/3);return}
- if(lvl===10){pending=[...P];chooseLine();return}
- startCards()}
-function startCards(){pending=[...P];showCards()}
+
+function levelUp(){
+  xp-=need;lvl++;need=Math.round(need*1.3+2);paused=true;
+  for(const q of P)if(q.dead){q.dead=false;q.hp=q.max*.5;q.inv=2}
+  if(lvl===3||lvl===6){
+    startEvo(lvl/3);
+    if (isOnline && isHost && conn) conn.send({ type: 'trigger_evo', stage: lvl/3 });
+    return;
+  }
+  if(lvl===10){
+    if (isOnline) {
+      pending = [isHost ? P[0] : P[1]];
+      hostDone = false; clientDone = false;
+      if (isHost && conn) conn.send({ type: 'trigger_line' });
+    } else {
+      pending = [...P];
+    }
+    chooseLine();
+    return;
+  }
+  if (isOnline) {
+    pending = [isHost ? P[0] : P[1]];
+    hostDone = false; clientDone = false;
+    if (isHost && conn) conn.send({ type: 'trigger_levelup' });
+  } else {
+    pending = [...P];
+  }
+  showCards();
+}
+
+function startCards(){
+  if (isOnline) {
+    pending = [isHost ? P[0] : P[1]];
+  } else {
+    pending = [...P];
+  }
+  showCards();
+}
+
 function showCards(){paused=true;p=pending[0];cardMode='cards';setHead('¡Subiste de nivel!');
  $('up').querySelector('p').textContent='Elegí con el mouse o con las teclas 1, 2 o 3';
- cur=[...UP,...WP.filter(w=>p.wp[w.k]<5).map(w=>({n:w.n,d:w.d,tag:'Arma · '+(p.wp[w.k]?'sube a nivel '+(p.wp[w.k]+1)+' de 5':'NUEVA'),f:()=>p.wp[w.k]++}))].sort(()=>Math.random()-.5).slice(0,3);
+ cur=[...UP,...WP.filter(w=>p.wp[w.k]<5).map(w=>({n:w.n,d:w.d,op:'wp',wpKey:w.k,tag:'Arma · '+(p.wp[w.k]?'sube a nivel '+(p.wp[w.k]+1)+' de 5':'NUEVA'),f:()=>p.wp[w.k]++}))].sort(()=>Math.random()-.5).slice(0,3);
  const c=$('cards');c.innerHTML='';
  cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.innerHTML='<b>'+(i+1)+'. '+u.n+'</b>'+u.d+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag?'<em>'+u.tag+'</em>':'');b.onclick=()=>choose(u);c.appendChild(b)});
  $('up').style.display='flex'}
-function choose(u){const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c)q.st[u.c]++;p=P[0];pending.shift();
- if(pending.length){modo==='line'?chooseLine():showCards();return}
- $('up').style.display='none';
- if(modo==='line')startEvo(3);else{paused=false;last=performance.now()}}
+
+function choose(u){
+  const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c)q.st[u.c]++;p=P[0];pending.shift();
+
+  if (isOnline) {
+    const payload = { type: isHost ? 'host_choice' : 'client_choice', op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, weak: u.weak };
+    if (conn) conn.send(payload);
+    if (isHost) hostDone = true;
+  }
+
+  if(pending.length){modo==='line'?chooseLine():showCards();return}
+  $('up').style.display='none';
+
+  if(modo==='line') {
+    startEvo(3);
+  } else {
+    if (!isOnline) {
+      paused = false; last = performance.now();
+    } else if (isHost) {
+      checkOnlineUnpause();
+    }
+  }
+}
+
 function spawn(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  const q=Math.random(),k=t>25&&q<.15?2:t>10&&q<.4?1:0,b=2+Math.floor(t/40);
  const HM=[1,1.8,3,4.5][ti],T=[{hp:b,sp:1,r:12,v:3},{hp:Math.max(1,Math.ceil(b/2)),sp:1.9,r:9,v:4},{hp:b*4,sp:.55,r:21,v:10}][k];
