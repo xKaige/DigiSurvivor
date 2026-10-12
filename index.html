@@ -7,14 +7,13 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦖</text></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
 <body>
   <canvas id="c"></canvas>
   <div id="hud">
-    <b id="l1" class="pl"></b>
-    <div id="bar"><div id="fill"></div></div>
-    <b id="l2" class="pl"></b>
-    <div id="bar2"><div id="fill2"></div></div>
+    <b id="l1" class="pl"></b><div id="bar"><div id="fill"></div></div>
+    <b id="l2" class="pl"></b><div id="bar2"><div id="fill2"></div></div>
     <span id="info">0:00 · 0 virus</span>
   </div>
   <div id="pst"></div>
@@ -40,6 +39,15 @@
       <button id="login" class="alt">Iniciar sesión con Google</button>
       <button id="logout" class="alt" style="display:none">Cerrar sesión</button>
       <span id="who"></span>
+    </div>
+    <div id="party-panel" style="display:none; flex-direction:column; align-items:center; gap:8px; margin-top:8px;">
+      <div id="my-peer-code" style="color:var(--gold); font-weight:700; font-size:14px;"></div>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="friend-code" placeholder="Código de tu amigo" style="padding:6px 12px; font-family:inherit; font-size:14px; background:#0a1a33; border:2px solid var(--teal); color:var(--ink); border-radius:4px;">
+        <button id="btn-connect" class="alt" style="margin:0;">Conectar</button>
+      </div>
+      <div id="party-status" style="color:var(--teal); font-size:14px; font-weight:700;"></div>
+      <button id="go-online" class="alt" style="display:none; background:var(--gold); color:var(--bg);">Iniciar Coop Online</button>
     </div>
   </div>
   <div id="tree">
