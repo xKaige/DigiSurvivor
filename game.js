@@ -4,7 +4,7 @@ const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
 const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>document.getElementById(id);
 
-// Sprite Animado Agumon con remoción de fondo verde por muestra (0,0)
+// Sprite Animado Agumon con remoción de fondo verde y recorte de 7 filas
 let agumonCanvas = null;
 const agumonImg = new Image();
 agumonImg.src = 'agumon.png';
@@ -17,7 +17,6 @@ agumonImg.onload = () => {
   const imgData = tempCx.getImageData(0, 0, tempCv.width, tempCv.height);
   const d = imgData.data;
   
-  // Muestra del color verde del fondo (píxel superior izquierdo)
   const bgR = d[0], bgG = d[1], bgB = d[2];
 
   for (let i = 0; i < d.length; i += 4) {
@@ -206,7 +205,7 @@ const NAMES=['Cría','Bebé','Novato','Campeón'],LINEAS=['Línea Cuernos','Lín
 
 function drawBuddy(q,s,x,y,f,a){
  if(s===2 && agumonCanvas){
-  const cols=7, rows=6;
+  const cols=7, rows=7;
   const fw=agumonCanvas.width/cols, fh=agumonCanvas.height/rows;
   const h=56, w=fw*h/fh;
   let row=0, frame=0;
@@ -217,7 +216,7 @@ function drawBuddy(q,s,x,y,f,a){
    row=4;
    frame=Math.min(6, Math.floor(((q.rate - q.atkT) / 0.25) * 7));
   }else if(q.moving){
-   row=2;
+   row=3;
    frame=Math.floor(t * 10) % 4;
   }else{
    row=0;
