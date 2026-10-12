@@ -4,23 +4,23 @@ const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
 const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>document.getElementById(id);
 
-// Botamon (Fase 0 - Cría)
-let botamonCanvas = null;
-const botamonImg = new Image();
-botamonImg.src = 'botamon.png';
-botamonImg.onload = () => {
+// Gigimon (Fase 0 - Cría)
+let gigimonCanvas = null;
+const gigimonImg = new Image();
+gigimonImg.src = 'gigimon.png';
+gigimonImg.onload = () => {
   const tempCv = document.createElement('canvas');
-  tempCv.width = botamonImg.naturalWidth;
-  tempCv.height = botamonImg.naturalHeight;
+  tempCv.width = gigimonImg.naturalWidth;
+  tempCv.height = gigimonImg.naturalHeight;
   const tempCx = tempCv.getContext('2d');
-  tempCx.drawImage(botamonImg, 0, 0);
+  tempCx.drawImage(gigimonImg, 0, 0);
   const imgData = tempCx.getImageData(0, 0, tempCv.width, tempCv.height);
   const d = imgData.data;
   for (let i = 0; i < d.length; i += 4) {
     if (d[i] > 240 && d[i+1] > 240 && d[i+2] > 240) d[i+3] = 0;
   }
   tempCx.putImageData(imgData, 0, 0);
-  botamonCanvas = tempCv;
+  gigimonCanvas = tempCv;
 };
 
 // Agumon (Fase 2 - Novato)
@@ -219,28 +219,28 @@ function endRun(title){if(!running)return;running=false;paused=false;evo=null;pe
 const NAMES=['Cría','Bebé','Novato','Campeón'],LINEAS=['Línea Cuernos','Línea Garras'];
 
 function drawBuddy(q,s,x,y,f,a){
- // Botamon (Fase 0 - Cría)
- if(s===0 && botamonCanvas){
-  const cols=4, rows=11;
-  const fw=botamonCanvas.width/cols, fh=botamonCanvas.height/rows;
-  const h=40, w=fw*h/fh;
+ // Gigimon (Fase 0 - Cría)
+ if(s===0 && gigimonCanvas){
+  const cols=2, rows=6;
+  const fw=gigimonCanvas.width/cols, fh=gigimonCanvas.height/rows;
+  const h=32, w=32;
   let row=0, col=0;
 
   if(q.dead){
-   row=8; col=0;
+   row=2; col=0;
   }else if(q.atkT > q.rate - 0.25){
-   row=6; col=Math.min(2, Math.floor(((q.rate - q.atkT) / 0.25) * 3));
+   row=5; col=0;
   }else if(q.moving){
-   row=5; col=Math.floor(t * 8) % 4;
+   row=1; col=Math.floor(t * 6) % 2;
   }else{
-   row=0; col=Math.floor(t * 5) % 4;
+   row=0; col=Math.floor(t * 4) % 2;
   }
 
   cx.save();cx.globalAlpha=a;cx.imageSmoothingEnabled=false;cx.translate(x,y);
   cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.35,5,0,0,6.283);cx.fill();
   if(mode===2){cx.strokeStyle=PC[q.id];cx.lineWidth=3;cx.beginPath();cx.ellipse(0,h/2-2,w*.4,7,0,0,6.283);cx.stroke()}
   if(f>0)cx.scale(-1,1);
-  cx.drawImage(botamonCanvas, col*fw, row*fh, fw, fh, -w/2, -h/2, w, h);
+  cx.drawImage(gigimonCanvas, col*fw, row*fh, fw, fh, -w/2, -h/2, w, h);
   cx.restore();
   return;
  }
@@ -311,7 +311,7 @@ function chooseLine(){
   $('up').querySelector('p').textContent='Tus stats (permanentes + partida): '+Object.keys(SN).map(k=>SN[k]+' '+tot(p,k)).join(' · ')+(inest?' — No cumplís ningún requisito: la evolución será inestable (bonos a la mitad)':'');
   cur=[0,1].map(i=>({k:['champA','champB'][i],n:LINEAS[i],lock:!ok[i]&&!inest,op:'line',lineIdx:i,weak:inest,
    d:['Pesado: +3 de daño, +60 de vida y ataques que perforan','Veloz: +2 proyectiles, +1 de daño y +15% de velocidad'][i],
-   req:LREQ[i].map(([k,v])=>SN[k]+' '+Math.min(tot(p,k),v)+'/'+v+' ('+permS(k)+' perm. + '+p.st[k]+' partida)'+(tot(p,k)>=v?' ✓':''),
+   req:LREQ[i].map(([k,v])=>SN[k]+' '+Math.min(tot(p,k),v)+'/'+v+' ('+permS(k)+' perm. + '+p.st[k]+' partida)'+(tot(p,k)>=v?' ✓':'')).join(' · '),
    f:()=>{p.line=i;p.weak=inest}}));
   const c=$('cards');c.innerHTML='';
   cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.disabled=u.lock;b.innerHTML='<img src="'+SPR[u.k].im.src+'"><b>'+(i+1)+'. '+u.n+'</b>'+u.d+'<em>Requiere: '+u.req+'</em>';b.onclick=()=>choose(u);c.appendChild(b)});
