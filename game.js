@@ -223,7 +223,7 @@ function drawBuddy(q,s,x,y,f,a){
  if(s===0 && gigimonCanvas){
   const cols=2, rows=6;
   const fw=gigimonCanvas.width/cols, fh=gigimonCanvas.height/rows;
-  const h=80, w=fw*h/fh; // Cambiá este valor a 64, 80, 96 o el que te guste
+  const h=96, w=fw*h/fh; // Aumentado a 96px
   let row=0, col=0;
 
   if(q.dead){
@@ -239,7 +239,7 @@ function drawBuddy(q,s,x,y,f,a){
   cx.save();cx.globalAlpha=a;cx.imageSmoothingEnabled=false;cx.translate(x,y);
   cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.35,5,0,0,6.283);cx.fill();
   if(mode===2){cx.strokeStyle=PC[q.id];cx.lineWidth=3;cx.beginPath();cx.ellipse(0,h/2-2,w*.4,7,0,0,6.283);cx.stroke()}
-  if(f>0)cx.scale(-1,1);
+  if(f<0)cx.scale(-1,1); // Invierte el sprite sólo al ir a la izquierda
   cx.drawImage(gigimonCanvas, col*fw, row*fh, fw, fh, -w/2, -h/2, w, h);
   cx.restore();
   return;
