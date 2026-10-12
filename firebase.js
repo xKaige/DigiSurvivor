@@ -40,9 +40,9 @@ if ($('login')) {
 if ($('logout')) {
   $('logout').onclick = () => {
     signOut(auth).then(() => {
-      // Limpia la memoria local al cerrar sesión
       localStorage.removeItem('digisurvivor');
       if (window.loadSave) window.loadSave({ coins: 0, lv: {} });
+      if ($('party-panel')) $('party-panel').style.display = 'none';
     });
   };
 }
@@ -56,8 +56,11 @@ onAuthStateChanged(auth, async u => {
   if ($('login')) $('login').style.display = u ? 'none' : 'inline-block';
   if ($('logout')) $('logout').style.display = u ? 'inline-block' : 'none';
   if ($('who')) $('who').textContent = u ? (u.displayName || u.email) : '';
+  if ($('party-panel')) $('party-panel').style.display = u ? 'flex' : 'none';
 
   if (!u) return;
+
+  if (window.initPeer) window.initPeer(u.displayName || u.email || u.uid);
 
   try {
     const snap = await getDoc(doc(db, 'users', u.uid));
@@ -66,7 +69,6 @@ onAuthStateChanged(auth, async u => {
       const loadedSave = { coins: d.coins | 0, lv: d.lv || {} };
       if (window.loadSave) window.loadSave(loadedSave);
     } else if (window.getSave) {
-      // Primera vez de esta cuenta: vincula el progreso actual a la nube
       await saveToCloud(window.getSave());
     }
   } catch (e) {
