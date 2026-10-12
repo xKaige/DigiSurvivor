@@ -223,7 +223,7 @@ function drawBuddy(q,s,x,y,f,a){
  if(s===0 && gigimonCanvas){
   const cols=2, rows=6;
   const fw=gigimonCanvas.width/cols, fh=gigimonCanvas.height/rows;
-  const h=32, w=32;
+  const h=48, w=fw*h/fh; // Aumentado a 48px para mejor visibilidad
   let row=0, col=0;
 
   if(q.dead){
