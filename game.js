@@ -4,6 +4,10 @@ const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
 const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>document.getElementById(id);
 
+// Sprite Animado Agumon (Fase Novato)
+const agumonImg = new Image();
+agumonImg.src = 'agumon.png';
+
 // Multijugador Online
 let peer = null, conn = null, isHost = false, isOnline = false, remoteKeys = {};
 let hostDone = false, clientDone = false;
@@ -133,7 +137,7 @@ function hit(e,d){const m=mult(0,e.el),v=d*m;e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,
 function hurt(q,d,el){if(q.dead)return;const m=mult(el,0),v=d*m*(1-q.arm);q.hp-=v;q.inv=.45;burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.dead=true;q.hp=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
 function permS(k){return {FUE:L('tf'),VEL:L('tv'),INT:L('ti'),VIT:L('th')}[k]|0}
 function tot(q,k){return permS(k)+q.st[k]}
-function np(i){return{id:i,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,line:0,weak:false,dead:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{onda:0,orbe:0,rafaga:0,rayo:0},wt:{onda:0,rafaga:0,rayo:0},oa:0}}
+function np(i){return{id:i,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,line:0,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{onda:0,orbe:0,rafaga:0,rayo:0},wt:{onda:0,rafaga:0,rayo:0},oa:0}}
 function start(m){mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i);q.x=m===1?0:(i?40:-40);applyTree(q);P.push(q)}
  p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=5;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
  $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
@@ -178,12 +182,44 @@ function endRun(title){if(!running)return;running=false;paused=false;evo=null;pe
  $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas.';
  wal();$('ov').style.display='flex'}
 const NAMES=['Cría','Bebé','Novato','Campeón'],LINEAS=['Línea Cuernos','Línea Garras'];
-function drawBuddy(q,s,x,y,f,a){const S=SPR[['baby','train','rookie',q.line?'champB':'champA'][s]],h=[40,46,56,68][s],w=S.w*h/S.h;
+
+function drawBuddy(q,s,x,y,f,a){
+ if(s===2 && agumonImg.complete && agumonImg.naturalWidth!==0){
+  const cols=7, rows=6;
+  const fw=agumonImg.width/cols, fh=agumonImg.height/rows;
+  const h=56, w=fw*h/fh;
+  let row=0, frame=0;
+
+  if(q.dead){
+   row=1; frame=3;
+  }else if(q.atkT > q.rate - 0.25){
+   row=4;
+   frame=Math.min(6, Math.floor(((q.rate - q.atkT) / 0.25) * 7));
+  }else if(q.moving){
+   row=2;
+   frame=Math.floor(t * 10) % 4;
+  }else{
+   row=0;
+   frame=Math.floor(t * 6) % 7;
+  }
+
+  cx.save();cx.globalAlpha=a;cx.imageSmoothingEnabled=false;cx.translate(x,y);
+  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.35,5,0,0,6.283);cx.fill();
+  if(mode===2){cx.strokeStyle=PC[q.id];cx.lineWidth=3;cx.beginPath();cx.ellipse(0,h/2-2,w*.4,7,0,0,6.283);cx.stroke()}
+  if(f>0)cx.scale(-1,1);
+  cx.drawImage(agumonImg, frame*fw, row*fh, fw, fh, -w/2, -h/2, w, h);
+  cx.restore();
+  return;
+ }
+
+ const S=SPR[['baby','train','rookie',q.line?'champB':'champA'][s]],h=[40,46,56,68][s],w=S.w*h/S.h;
  cx.save();cx.globalAlpha=a;cx.imageSmoothingEnabled=false;cx.translate(x,y);
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.35,5,0,0,6.283);cx.fill();
  if(mode===2){cx.strokeStyle=PC[q.id];cx.lineWidth=3;cx.beginPath();cx.ellipse(0,h/2-2,w*.4,7,0,0,6.283);cx.stroke()}
  if(f>0&&s>=2)cx.scale(-1,1);
- cx.drawImage(S.im,-w/2,-h/2,w,h);cx.restore()}
+ cx.drawImage(S.im,-w/2,-h/2,w,h);cx.restore();
+}
+
 function startEvo(s){evo={t:0,s,done:0};const v=$('evt');v.style.display='block';v.textContent='¡Tu compañero está digievolucionando!'}
 function stepEvo(dt){evo.t+=dt;
  if(!evo.done&&evo.t>=1.3){evo.done=1;
@@ -335,7 +371,7 @@ function update(dt){
    } else if (isHost && conn) {
      conn.send({
        type: 'sync',
-       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, line: q.line, wp: q.wp, oa: q.oa })),
+       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, wp: q.wp, oa: q.oa })),
        en: en.map(e => ({ x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun })),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
        sh: sh.map(s => ({ x: s.x, y: s.y })),
@@ -369,6 +405,7 @@ function update(dt){
       dy=(keys.arrowdown?1:0)-(keys.arrowup?1:0);
     }
   }
+  q.moving = !!(dx || dy);
   if(dx||dy){const l=Math.hypot(dx,dy);q.x+=dx/l*q.sp*dt;q.y+=dy/l*q.sp*dt;if(dx)q.face=dx}
   q.inv-=dt;
  }
