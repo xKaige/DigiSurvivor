@@ -17,7 +17,7 @@ botamonImg.onload = () => {
   const imgData = tempCx.getImageData(0, 0, tempCv.width, tempCv.height);
   const d = imgData.data;
   for (let i = 0; i < d.length; i += 4) {
-    if (d[i] > 240 && d[i+1] > 240 && d[i+2] > 240) d[i+3] = 0; // Remueve fondo blanco
+    if (d[i] > 240 && d[i+1] > 240 && d[i+2] > 240) d[i+3] = 0;
   }
   tempCx.putImageData(imgData, 0, 0);
   botamonCanvas = tempCv;
@@ -219,11 +219,11 @@ function endRun(title){if(!running)return;running=false;paused=false;evo=null;pe
 const NAMES=['Cría','Bebé','Novato','Campeón'],LINEAS=['Línea Cuernos','Línea Garras'];
 
 function drawBuddy(q,s,x,y,f,a){
+ const fw=32, fh=32; // Estándar único de 32x32px por cuadro
+
  // Botamon (Fase 0 - Cría)
  if(s===0 && botamonCanvas){
-  const cols=4, rows=11;
-  const fw=botamonCanvas.width/cols, fh=botamonCanvas.height/rows;
-  const h=40, w=fw*h/fh;
+  const h=32, w=32;
   let row=0, col=0;
 
   if(q.dead){
@@ -247,9 +247,7 @@ function drawBuddy(q,s,x,y,f,a){
 
  // Agumon (Fase 2 - Novato)
  if(s===2 && agumonCanvas){
-  const cols=7, rows=7;
-  const fw=agumonCanvas.width/cols, fh=agumonCanvas.height/rows;
-  const h=56, w=fw*h/fh;
+  const h=48, w=48;
   let row=0, col=0;
 
   if(q.dead){
@@ -257,7 +255,7 @@ function drawBuddy(q,s,x,y,f,a){
   }else if(q.atkT > q.rate - 0.25){
    row=4; col=Math.min(6, Math.floor(((q.rate - q.atkT) / 0.25) * 7));
   }else if(q.moving){
-   row=2; col=(Math.floor(t * 10) % 4) * 2;
+   row=2; col=Math.floor(t * 8) % 4;
   }else{
    row=0; col=Math.floor(t * 6) % 7;
   }
