@@ -2,7 +2,6 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-// Configuración integrada de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBoPF0edlZUgwvihWcODdbBW2gsG3hON-o",
   authDomain: "digisurvivor-5ecb6.firebaseapp.com",
@@ -18,7 +17,21 @@ const $ = id => document.getElementById(id);
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-let uid = null, timer = null;
+let uid = null;
+
+// Función para guardar inmediatamente en la nube
+async function saveToCloud(saveData) {
+  if (!uid) return;
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      coins: saveData.coins,
+      lv: saveData.lv || {},
+      updated: Date.now()
+    });
+  } catch (err) {
+    console.error('Error guardando en Firestore:', err);
+  }
+}
 
 if ($('login')) {
   $('login').onclick = () => signInWithPopup(auth, new GoogleAuthProvider())
@@ -29,11 +42,9 @@ if ($('logout')) {
   $('logout').onclick = () => signOut(auth);
 }
 
+// Intercepta la función de guardado del juego
 window.onSave = s => {
-  if (!uid) return;
-  clearTimeout(timer);
-  timer = setTimeout(() => setDoc(doc(db, 'users', uid), { coins: s.coins, lv: s.lv, updated: Date.now() })
-    .catch(console.error), 400);
+  saveToCloud(s);
 };
 
 onAuthStateChanged(auth, async u => {
@@ -41,16 +52,22 @@ onAuthStateChanged(auth, async u => {
   if ($('login')) $('login').style.display = u ? 'none' : 'inline-block';
   if ($('logout')) $('logout').style.display = u ? 'inline-block' : 'none';
   if ($('who')) $('who').textContent = u ? (u.displayName || u.email) : '';
+
   if (!u) return;
+
   try {
     const snap = await getDoc(doc(db, 'users', u.uid));
     if (snap.exists()) {
       const d = snap.data();
-      if (window.loadSave) window.loadSave({ coins: d.coins | 0, lv: d.lv || {} });
-    } else if (window.onSave && window.getSave) {
-      window.onSave(window.getSave());
+      const loadedSave = { coins: d.coins | 0, lv: d.lv || {} };
+      if (window.loadSave) {
+        window.loadSave(loadedSave);
+      }
+    } else if (window.getSave) {
+      // Primera vez del usuario: subir lo que tenía localmente a Firestore
+      await saveToCloud(window.getSave());
     }
   } catch (e) {
-    console.error(e);
+    console.error('Error cargando progreso desde Firestore:', e);
   }
 });
