@@ -4,7 +4,26 @@ const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
 const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>document.getElementById(id);
 
-// Sprite Animado Agumon con remoción de fondo verde y mapeo exacto de columnas
+// Botamon (Fase 0 - Cría)
+let botamonCanvas = null;
+const botamonImg = new Image();
+botamonImg.src = 'botamon.png';
+botamonImg.onload = () => {
+  const tempCv = document.createElement('canvas');
+  tempCv.width = botamonImg.naturalWidth;
+  tempCv.height = botamonImg.naturalHeight;
+  const tempCx = tempCv.getContext('2d');
+  tempCx.drawImage(botamonImg, 0, 0);
+  const imgData = tempCx.getImageData(0, 0, tempCv.width, tempCv.height);
+  const d = imgData.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i] > 240 && d[i+1] > 240 && d[i+2] > 240) d[i+3] = 0; // Remueve fondo blanco
+  }
+  tempCx.putImageData(imgData, 0, 0);
+  botamonCanvas = tempCv;
+};
+
+// Agumon (Fase 2 - Novato)
 let agumonCanvas = null;
 const agumonImg = new Image();
 agumonImg.src = 'agumon.png';
@@ -16,13 +35,9 @@ agumonImg.onload = () => {
   tempCx.drawImage(agumonImg, 0, 0);
   const imgData = tempCx.getImageData(0, 0, tempCv.width, tempCv.height);
   const d = imgData.data;
-  
   const bgR = d[0], bgG = d[1], bgB = d[2];
-
   for (let i = 0; i < d.length; i += 4) {
-    if (Math.abs(d[i] - bgR) < 35 && Math.abs(d[i+1] - bgG) < 35 && Math.abs(d[i+2] - bgB) < 35) {
-      d[i+3] = 0;
-    }
+    if (Math.abs(d[i] - bgR) < 35 && Math.abs(d[i+1] - bgG) < 35 && Math.abs(d[i+2] - bgB) < 35) d[i+3] = 0;
   }
   tempCx.putImageData(imgData, 0, 0);
   agumonCanvas = tempCv;
@@ -204,6 +219,33 @@ function endRun(title){if(!running)return;running=false;paused=false;evo=null;pe
 const NAMES=['Cría','Bebé','Novato','Campeón'],LINEAS=['Línea Cuernos','Línea Garras'];
 
 function drawBuddy(q,s,x,y,f,a){
+ // Botamon (Fase 0 - Cría)
+ if(s===0 && botamonCanvas){
+  const cols=4, rows=11;
+  const fw=botamonCanvas.width/cols, fh=botamonCanvas.height/rows;
+  const h=40, w=fw*h/fh;
+  let row=0, col=0;
+
+  if(q.dead){
+   row=8; col=0;
+  }else if(q.atkT > q.rate - 0.25){
+   row=6; col=Math.min(2, Math.floor(((q.rate - q.atkT) / 0.25) * 3));
+  }else if(q.moving){
+   row=5; col=Math.floor(t * 8) % 4;
+  }else{
+   row=0; col=Math.floor(t * 5) % 4;
+  }
+
+  cx.save();cx.globalAlpha=a;cx.imageSmoothingEnabled=false;cx.translate(x,y);
+  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.35,5,0,0,6.283);cx.fill();
+  if(mode===2){cx.strokeStyle=PC[q.id];cx.lineWidth=3;cx.beginPath();cx.ellipse(0,h/2-2,w*.4,7,0,0,6.283);cx.stroke()}
+  if(f>0)cx.scale(-1,1);
+  cx.drawImage(botamonCanvas, col*fw, row*fh, fw, fh, -w/2, -h/2, w, h);
+  cx.restore();
+  return;
+ }
+
+ // Agumon (Fase 2 - Novato)
  if(s===2 && agumonCanvas){
   const cols=7, rows=7;
   const fw=agumonCanvas.width/cols, fh=agumonCanvas.height/rows;
@@ -213,14 +255,11 @@ function drawBuddy(q,s,x,y,f,a){
   if(q.dead){
    row=1; col=3;
   }else if(q.atkT > q.rate - 0.25){
-   row=4;
-   col=Math.min(6, Math.floor(((q.rate - q.atkT) / 0.25) * 7));
+   row=4; col=Math.min(6, Math.floor(((q.rate - q.atkT) / 0.25) * 7));
   }else if(q.moving){
-   row=2;
-   col=(Math.floor(t * 10) % 4) * 2;
+   row=2; col=(Math.floor(t * 10) % 4) * 2;
   }else{
-   row=0;
-   col=Math.floor(t * 6) % 7;
+   row=0; col=Math.floor(t * 6) % 7;
   }
 
   cx.save();cx.globalAlpha=a;cx.imageSmoothingEnabled=false;cx.translate(x,y);
