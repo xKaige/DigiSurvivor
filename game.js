@@ -30,38 +30,50 @@ function setupConn() {
       remoteKeys = data.keys || {};
     } else if (data.type === 'start') {
       isOnline = true;
+      isHost = false;
       start(2);
     } else if (data.type === 'sync') {
       applyOnlineSync(data);
     } else if (data.type === 'trigger_levelup') {
       paused = true;
+      hostDone = false; clientDone = false;
       pending = [P[1]];
       showCards();
     } else if (data.type === 'trigger_line') {
       paused = true;
+      hostDone = false; clientDone = false;
       pending = [P[1]];
       chooseLine();
     } else if (data.type === 'trigger_evo') {
+      $('up').style.display = 'none';
       startEvo(data.stage);
     } else if (data.type === 'client_choice') {
       if (isHost && P[1]) {
         applyCardOp(P[1], data);
         clientDone = true;
-        checkOnlineUnpause();
+        if (hostDone) {
+          $('up').style.display = 'none';
+          if (cardMode === 'line') {
+            if (conn) conn.send({ type: 'trigger_evo', stage: 3 });
+            startEvo(3);
+          } else {
+            paused = false;
+            last = performance.now();
+            if (conn) conn.send({ type: 'resume_game' });
+          }
+        }
       }
     } else if (data.type === 'host_choice') {
       if (!isHost && P[0]) {
         applyCardOp(P[0], data);
+        hostDone = true;
       }
+    } else if (data.type === 'resume_game') {
+      $('up').style.display = 'none';
+      paused = false;
+      last = performance.now();
     }
   });
-}
-
-function checkOnlineUnpause() {
-  if (isHost && hostDone && clientDone) {
-    paused = false;
-    last = performance.now();
-  }
 }
 
 function applyCardOp(targetP, data) {
@@ -91,6 +103,7 @@ if ($('go-online')) {
   $('go-online').onclick = () => {
     if (conn) conn.send({ type: 'start' });
     isOnline = true;
+    isHost = true;
     start(2);
   };
 }
@@ -101,8 +114,15 @@ function applyOnlineSync(data) {
   if (data.P && P.length === data.P.length) {
     data.P.forEach((sq, i) => { if (P[i]) Object.assign(P[i], sq); });
   }
-  if (data.en) en = data.en;
-  if (data.gems) gems = data.gems;
+  if (data.en) {
+    en = data.en.map(e => ({
+      x: e.x || 0, y: e.y || 0, r: e.r || 12, k: e.k || 0,
+      ti: e.ti || 0, el: e.el || 0, fl: e.fl || 0, ang: e.ang || 0, gun: !!e.gun
+    }));
+  }
+  if (data.gems) {
+    gems = data.gems.map(g => ({ x: g.x || 0, y: g.y || 0, v: g.v || 3 }));
+  }
 }
 
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
@@ -177,7 +197,8 @@ function stepEvo(dt){evo.t+=dt;
   $('evt').textContent='¡'+(evo.s===3?P.map((q,i)=>(mode===2?'J'+(i+1)+': ':'')+LINEAS[q.line]).join(' · '):NAMES[evo.s])+'!'}
  if(evo.t>=2.8){const s=evo.s;evo=null;const v=$('evt');v.textContent='¡Los enemigos también evolucionaron: '+NAMES[s]+'!';setTimeout(()=>{if(!evo)v.style.display='none'},2600);startCards()}}
 const LREQ=[[['FUE',3],['VIT',1]],[['VEL',4]]],SN={FUE:'Fuerza',VEL:'Velocidad',VIT:'Vitalidad',INT:'Inteligencia'};
-function setHead(txt){const h=$('up').querySelector('h2');h.textContent=txt+(mode===2?' · Jugador '+(p.id+1):'');h.style.color=mode===2?PC[p.id]:''}
+function setHead(txt){const h=$('up').querySelector('h2');h.textContent=txt+(mode===2&&!txt.startsWith('ESPERANDO')?' · Jugador '+(p.id+1):'');h.style.color=mode===2?PC[p.id]:''}
+
 function chooseLine(){paused=true;p=pending[0];cardMode='line';setHead('¡Elegí tu evolución!');
  const ok=LREQ.map(r=>r.every(([k,v])=>tot(p,k)>=v)),inest=!ok[0]&&!ok[1];
  $('up').querySelector('p').textContent='Tus stats (permanentes + partida): '+Object.keys(SN).map(k=>SN[k]+' '+tot(p,k)).join(' · ')+(inest?' — No cumplís ningún requisito: la evolución será inestable (bonos a la mitad)':'');
@@ -240,20 +261,41 @@ function choose(u){
   if (isOnline) {
     const payload = { type: isHost ? 'host_choice' : 'client_choice', op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, weak: u.weak };
     if (conn) conn.send(payload);
-    if (isHost) hostDone = true;
+
+    if (isHost) {
+      hostDone = true;
+      if (!clientDone) {
+        setHead('ESPERANDO A JUGADOR 2');
+        $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">Jugador 1 listo. Esperando a que Jugador 2 elija...</p>';
+        return;
+      }
+    } else {
+      clientDone = true;
+      if (!hostDone) {
+        setHead('ESPERANDO A JUGADOR 1');
+        $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">Jugador 2 listo. Esperando a que Jugador 1 elija...</p>';
+        return;
+      }
+    }
   }
 
   if(pending.length){modo==='line'?chooseLine():showCards();return}
-  $('up').style.display='none';
 
-  if(modo==='line') {
-    startEvo(3);
-  } else {
-    if (!isOnline) {
-      paused = false; last = performance.now();
-    } else if (isHost) {
-      checkOnlineUnpause();
+  if (isOnline) {
+    if (isHost && hostDone && clientDone) {
+      $('up').style.display = 'none';
+      if (modo === 'line') {
+        if (conn) conn.send({ type: 'trigger_evo', stage: 3 });
+        startEvo(3);
+      } else {
+        paused = false; last = performance.now();
+        if (conn) conn.send({ type: 'resume_game' });
+      }
     }
+  } else {
+    $('up').style.display = 'none';
+    if (modo === 'line') startEvo(3);
+    else { paused = false; last = performance.now(); }
   }
 }
 
@@ -269,6 +311,7 @@ function wpn(q,dt){const wl=k=>q.wp[k],sc=k=>1+.3*(q.wp[k]-1);
  if(wl('rayo')){q.wt.rayo-=dt;if(q.wt.rayo<=0){let b=null,bd=520;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
   if(b){q.wt.rayo=2.6-.15*wl('rayo');const a=Math.atan2(b.y-q.y,b.x-q.x),Lg=360,ca=Math.cos(a),sa=Math.sin(a);ef.push({k:'ray',x:q.x,y:q.y,a,Lg,l:.25,m:.25});
    for(const e of en){const px=e.x-q.x,py=e.y-q.y;if(px*ca+py*sa>0&&px*ca+py*sa<Lg&&Math.abs(-px*sa+py*ca)<e.r+9)hit(e,q.dmg*2.4*sc('rayo'))}}else q.wt.rayo=.3}}}
+
 function update(dt){
  t+=dt;
  if (isOnline) {
@@ -284,6 +327,7 @@ function update(dt){
      });
    }
  }
+
  for(const q of P){if(q.dead)continue;let dx,dy;
   if(mode===1){dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0)}
   else if(q.id===0){dx=(keys.d?1:0)-(keys.a?1:0);dy=(keys.s?1:0)-(keys.w?1:0)}
@@ -294,9 +338,24 @@ function update(dt){
   }
   if(dx||dy){const l=Math.hypot(dx,dy);q.x+=dx/l*q.sp*dt;q.y+=dy/l*q.sp*dt;if(dx)q.face=dx}
   q.inv-=dt}
+
  const al=P.filter(q=>!q.dead);
- if(al.length){cam.x=al.reduce((a,q)=>a+q.x,0)/al.length;cam.y=al.reduce((a,q)=>a+q.y,0)/al.length;
-  if(mode===2)for(const q of al){q.x=Math.max(cam.x-W/2+40,Math.min(cam.x+W/2-40,q.x));q.y=Math.max(cam.y-H/2+40,Math.min(cam.y+H/2-40,q.y))}}
+ if(al.length && mode===2){
+   for(const q of al){
+     q.x=Math.max(cam.x-W/2+40,Math.min(cam.x+W/2-40,q.x));
+     q.y=Math.max(cam.y-H/2+40,Math.min(cam.y+H/2-40,q.y));
+   }
+ }
+
+ if (isOnline && !isHost) {
+   $('fill').style.width=Math.max(0,P[0].hp/P[0].max*100)+'%';
+   if(mode===2)$('fill2').style.width=Math.max(0,P[1].hp/P[1].max*100)+'%';
+   $('xpf').style.width=Math.min(100,xp/need*100)+'%';
+   $('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+   $('info').textContent='Nv '+lvl+' · '+kills+' virus';
+   return;
+ }
+
  spawnT-=dt;const iv=Math.max(.2,1.1-t*.008)/(mode===2?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/60);i<n&&en.length<(mode===2?340:260);i++)spawn(mt);spawnT+=iv}
  for(const q of al){q.atkT-=dt;
@@ -331,7 +390,14 @@ function update(dt){
  $('info').textContent='Nv '+lvl+' · '+kills+' virus';
  $('pst').textContent=Math.min(...P.map(q=>q.stage))<3?P.map(q=>(mode===2?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n'):'';
 }
+
 function draw(){
+ const al=P.filter(q=>!q.dead);
+ if(al.length){
+   cam.x=al.reduce((a,q)=>a+q.x,0)/al.length;
+   cam.y=al.reduce((a,q)=>a+q.y,0)/al.length;
+ }
+
  cx.fillStyle='#050b1a';cx.fillRect(0,0,W,H);
  const ox=W/2-cam.x,oy=H/2-cam.y;
  cx.strokeStyle='#0e2a4a';cx.lineWidth=1;cx.beginPath();
@@ -366,5 +432,6 @@ function draw(){
  cx.textAlign='center';cx.lineJoin='round';for(const f of fx){cx.globalAlpha=Math.min(1,f.l*2);cx.font='bold '+f.sz+'px Chakra Petch,system-ui,sans-serif';cx.lineWidth=4;cx.strokeStyle='#000';cx.strokeText(f.txt,f.x,f.y);cx.fillStyle=f.col;cx.fillText(f.txt,f.x,f.y)}cx.globalAlpha=1;
  cx.restore();
 }
+
 function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(evo)stepEvo(dt);else if(!paused)update(dt);draw();if(running)requestAnimationFrame(loop)}
 P=[np(0)];p=P[0];draw();wal();
