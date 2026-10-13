@@ -51,7 +51,7 @@ onAuthStateChanged(auth, async u => {
   if ($('who')) $('who').textContent = u ? (u.displayName || u.email) : '';
   if ($('party-panel')) $('party-panel').style.display = u ? 'flex' : 'none';
 
-  if (!u) return;
+  if (!u) { if (window.stopPeer) window.stopPeer(); return; }
 
   if (window.initPeer) window.initPeer(u.displayName || u.email || u.uid);
 

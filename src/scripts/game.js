@@ -36,6 +36,15 @@ window.initPeer = function(name) {
   });
 };
 
+// Cierra la conexión online (se usa al cerrar sesión)
+window.stopPeer = function() {
+  if (peer) { try { peer.destroy(); } catch (e) {} }
+  peer = null; conn = null; isHost = false; isOnline = false;
+  if ($('my-peer-code')) $('my-peer-code').textContent = 'Conectando...';
+  if ($('party-status')) $('party-status').textContent = '';
+  if ($('go-online')) $('go-online').style.display = 'none';
+};
+
 function setupConn() {
   if ($('party-status')) $('party-status').textContent = '¡Amigo conectado!';
   if (isHost && $('go-online')) $('go-online').style.display = 'inline-block';

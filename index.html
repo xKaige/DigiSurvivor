@@ -52,7 +52,8 @@
       <button id="logout" style="display:none;">Cerrar sesión</button>
       <span id="who"></span>
     </div>
-    <div style="margin-top:15px; border-top:1px solid #2ee6c8; padding-top:10px;">
+    <!-- El multijugador online solo aparece (y se conecta) cuando iniciás sesión; firebase.js lo muestra -->
+    <div id="party-panel" style="display:none; flex-direction:column; align-items:center; margin-top:15px; border-top:1px solid #2ee6c8; padding-top:10px;">
       <h3>Multijugador Online</h3>
       <p id="my-peer-code">Conectando...</p>
       <input type="text" id="friend-code" placeholder="Código de amigo">
@@ -82,9 +83,6 @@
 
   <script src="src/scripts/loader.js"></script>
   <script src="src/scripts/game.js"></script>
-  <script>
-    if (window.initPeer) window.initPeer();
-  </script>
   <!-- firebase.js usa import/export: SIEMPRE type="module". firebase-config.js NO se carga acá, lo importa firebase.js -->
   <script type="module" src="src/scripts/firebase.js"></script>
 </body>
