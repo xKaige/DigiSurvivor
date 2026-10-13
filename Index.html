@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>DigiSurvivor</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦖</text></svg>">
+  <link rel="stylesheet" href="src/styles/style.css">
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <style id="hud-css">
+    /* respaldo del HUD: si tu style.css ya lo define, esto no molesta */
+    #hud{position:fixed;top:12px;left:16px;right:16px;display:flex;gap:16px;align-items:center;pointer-events:none;font-weight:700;font-size:18px;color:#dff8ff}
+    #bar,#bar2{flex:0 0 200px;height:14px;border:2px solid #2ee6c8;background:#0a1a33}
+    #bar2{border-color:#ff7ad9}#bar2,#l2{display:none}
+    #fill{height:100%;width:100%;background:#2ee6c8;transition:width .1s}
+    #fill2{height:100%;width:100%;background:#ff7ad9;transition:width .1s}
+    #hud span{margin-left:auto}.pl{font-size:14px}
+    #xp{position:fixed;left:0;right:0;bottom:0;height:10px;background:#0a1a33}
+    #xpf{height:100%;width:0;background:#ffd23f}
+    #timer{position:fixed;top:8px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 0 10px #000;color:#dff8ff}
+    #tm{display:block;font-size:34px;font-weight:700;line-height:1}
+    #tr{display:block;font-size:13px;color:#ffd23f;font-weight:700;margin-top:2px}
+    #leg{position:fixed;left:16px;bottom:22px;font-size:14px;font-weight:700;pointer-events:none;display:flex;gap:8px;color:#dff8ff}
+    #pst{position:fixed;top:44px;left:16px;font-size:13px;font-weight:700;color:#ffd23f;white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <!-- HUD: los ids y la estructura tienen que coincidir con lo que usa game.js -->
+  <div id="hud">
+    <b id="l1" class="pl"></b><div id="bar"><div id="fill"></div></div>
+    <b id="l2" class="pl"></b><div id="bar2"><div id="fill2"></div></div>
+    <span id="info">Nv 1 · 0 virus</span>
+  </div>
+  <div id="pst"></div>
+  <div id="xp"><div id="xpf"></div></div>
+  <div id="timer"><span id="tm">0:00</span><small id="tr">Enemigos: Jyarimon</small></div>
+  <div id="leg">
+    <span style="color:#4db8ff">● Vacuna (vos)</span>›<span style="color:#c05bff">● Virus</span>›<span style="color:#ffb02e">● Dato</span>›<span style="color:#4db8ff">Vacuna</span>
+  </div>
+
+  <div id="ov">
+    <h1 id="t">DigiSurvivor</h1>
+    <p id="m">Sobreviví a las hordas de virus informáticos.</p>
+    <div style="margin:10px 0;">
+      <button id="go">1 Jugador</button>
+      <button id="go2">2 Jugadores Local</button>
+      <button id="tb">Árbol de Mejoras</button>
+    </div>
+    <div id="acc" style="margin:8px 0; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
+      <button id="login">Iniciar sesión con Google</button>
+      <button id="logout" style="display:none;">Cerrar sesión</button>
+      <span id="who"></span>
+    </div>
+    <div style="margin-top:15px; border-top:1px solid #2ee6c8; padding-top:10px;">
+      <h3>Multijugador Online</h3>
+      <p id="my-peer-code">Conectando...</p>
+      <input type="text" id="friend-code" placeholder="Código de amigo">
+      <button id="btn-connect">Conectarse</button>
+      <button id="go-online" style="display:none; margin-left:10px;">Iniciar Online</button>
+      <p id="party-status"></p>
+    </div>
+    <div id="wal">Monedas: 0</div>
+  </div>
+
+  <div id="up" style="display:none;">
+    <h2>¡Subiste de nivel!</h2>
+    <p>Elegí una mejora</p>
+    <div id="cards"></div>
+  </div>
+
+  <div id="tree" style="display:none;">
+    <div style="display:flex; justify-content: space-between; align-items:center;">
+      <h2>Árbol de Mejoras Permanentes</h2>
+      <button id="tx">X</button>
+    </div>
+    <div id="tw">Monedas: 0</div>
+    <div id="cols"></div>
+  </div>
+
+  <div id="evt" style="display:none;"></div>
+
+  <script src="src/scripts/loader.js"></script>
+  <script src="src/scripts/game.js"></script>
+  <script>
+    if (window.initPeer) window.initPeer();
+  </script>
+  <!-- firebase.js usa import/export: SIEMPRE type="module". firebase-config.js NO se carga acá, lo importa firebase.js -->
+  <script type="module" src="src/scripts/firebase.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "id": "001_guilmon",
+  "name": "Línea Guilmon",
+  "stages": [
+    { "stage": 0, "name": "Jyarimon", "file": "jyarimon_1.png", "cols": 2, "rows": 6 },
+    { "stage": 1, "name": "Gigimon", "file": "gigimon_2.png", "cols": 2, "rows": 6 },
+    { "stage": 2, "name": "Guilmon", "file": "guilmon_3.png", "cols": 2, "rows": 6 },
+    { "stage": 3, "name": "Growmon", "file": "growmon_4.png", "cols": 2, "rows": 6 },
+    { "stage": 4, "name": "WarGrowlmon", "file": "megalogrowmon_5.png", "cols": 2, "rows": 6 }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Dukemon",
+      "file": "dukemon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "FUE": 3, "VIT": 1 },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan"
+    },
+    {
+      "id": "6_2",
+      "name": "MedievalDukemon",
+      "file": "medievaldukemon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "VEL": 4 },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad"
+    },
+    {
+      "id": "6_3",
+      "name": "ChaosDukemon",
+      "file": "chaosdukemon_6_3.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "INT": 4 },
+      "desc": "Oscuro: +5 de daño y mayor alcance"
+    }
+  ]
+}
