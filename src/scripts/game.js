@@ -48,6 +48,11 @@ window.stopPeer = function() {
 function setupConn() {
   if ($('party-status')) $('party-status').textContent = '¡Amigo conectado!';
   if (isHost && $('go-online')) $('go-online').style.display = 'inline-block';
+  // si se corta la conexión con el otro jugador, no te quedás jugando solo con el mundo congelado
+  conn.on('close', () => {
+    if (running && isOnline) endRun('Se perdió la conexión con el otro jugador');
+    if ($('party-status')) $('party-status').textContent = 'Conexión cerrada';
+  });
   conn.on('data', data => {
     if (data.type === 'input') {
       remoteKeys = data.keys || {};
@@ -92,6 +97,8 @@ function setupConn() {
         applyCardOp(P[0], data);
         hostDone = true;
       }
+    } else if (data.type === 'end') {
+      if (running) endRun(data.title || 'Run terminada');
     } else if (data.type === 'resume_game') {
       $('up').style.display = 'none';
       paused = false;
@@ -198,7 +205,10 @@ function renderTree(){const c=$('cols');c.innerHTML='';
    b.onclick=()=>{save.coins-=cost;save.lv[n.k]=lv+1;persist();wal();renderTree()};col.appendChild(b)});c.appendChild(col)})}
 $('tb').onclick=()=>{treeOpen=true;renderTree();wal();$('tree').style.display='flex'};
 $('tx').onclick=()=>{treeOpen=false;$('tree').style.display='none'};
-function endRun(title){if(!running)return;running=false;paused=false;evo=null;pending=[];
+function endRun(title){if(!running)return;
+ // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
+ if(isOnline&&isHost&&conn){try{conn.send({type:'end',title:title})}catch(e){}}
+ running=false;paused=false;evo=null;pending=[];
  $('evt').style.display='none';$('up').style.display='none';
  const m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin);save.coins+=c;persist();
  $('t').textContent=title;
