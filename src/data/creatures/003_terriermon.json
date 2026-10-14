@@ -1,0 +1,25 @@
+{
+  "id": "003_terriermon",
+  "name": "Línea Terriermon",
+  "attribute": "Vacuna",
+  "anySkill": true,
+  "stages": [
+    { "stage": 0, "name": "Zerimon", "file": "zerimon_1.png", "cols": 2, "rows": 6, "skills": [] },
+    { "stage": 1, "name": "Gummymon", "file": "Gummymon_2.png", "cols": 2, "rows": 6, "skills": [] },
+    { "stage": 2, "name": "Terriermon", "file": "terriermon_3.png", "cols": 2, "rows": 6, "skills": [] },
+    { "stage": 3, "name": "Galgomon", "file": "Galgomon_4.png", "cols": 2, "rows": 6, "skills": [] },
+    { "stage": 4, "name": "Rapidmon", "file": "Rapidmon_5.png", "cols": 2, "rows": 6, "skills": [] }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "SaintGalgomon",
+      "file": "saintgalgomon_6.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "FUE": 3, "VIT": 1 },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": []
+    }
+  ]
+}

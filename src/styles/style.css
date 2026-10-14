@@ -43,3 +43,11 @@ canvas{display:block;width:100%;height:100%}
 .card img{display:block;height:72px;image-rendering:pixelated;margin-bottom:8px}
 #acc{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px;font-weight:700}
 
+/* barra fija de skills */
+#skbar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:28px;pointer-events:none}
+.skgrp{display:flex;gap:10px;align-items:flex-start}
+.skwho{align-self:center;font-weight:700;font-size:14px}
+.sk{display:flex;flex-direction:column;align-items:center;width:84px}
+.skbox{width:56px;height:56px;background:#fff;border:3px solid var(--gold)}
+.skname{margin-top:4px;font-size:12px;font-weight:700;text-align:center;line-height:1.15;text-shadow:0 0 6px #000}
+.sk.empty .skbox{opacity:.2}

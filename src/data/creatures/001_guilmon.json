@@ -1,12 +1,19 @@
 {
   "id": "001_guilmon",
   "name": "Línea Guilmon",
+  "attribute": "Virus",
+  "anySkill": true,
   "stages": [
-    { "stage": 0, "name": "Jyarimon", "file": "jyarimon_1.png", "cols": 2, "rows": 6 },
-    { "stage": 1, "name": "Gigimon", "file": "gigimon_2.png", "cols": 2, "rows": 6 },
-    { "stage": 2, "name": "Guilmon", "file": "guilmon_3.png", "cols": 2, "rows": 6 },
-    { "stage": 3, "name": "Growmon", "file": "growmon_4.png", "cols": 2, "rows": 6 },
-    { "stage": 4, "name": "WarGrowlmon", "file": "megalogrowmon_5.png", "cols": 2, "rows": 6 }
+    { "stage": 0, "name": "Jyarimon", "file": "jyarimon_1.png", "cols": 2, "rows": 6,
+      "skills": [], "verified": false, "note": "Sin skill propia encontrada: usa solo el disparo básico" },
+    { "stage": 1, "name": "Gigimon", "file": "gigimon_2.png", "cols": 2, "rows": 6,
+      "skills": ["hot_bite"], "verified": true },
+    { "stage": 2, "name": "Guilmon", "file": "guilmon_3.png", "cols": 2, "rows": 6,
+      "skills": ["rock_breaker", "fireball"], "verified": true },
+    { "stage": 3, "name": "Growmon", "file": "growmon_4.png", "cols": 2, "rows": 6,
+      "skills": ["plasma_blade", "exhaust_flame"], "verified": true },
+    { "stage": 4, "name": "WarGrowlmon", "file": "megalogrowmon_5.png", "cols": 2, "rows": 6,
+      "skills": ["atomic_blaster", "assault_balancer"], "verified": true }
   ],
   "branches": [
     {
@@ -16,7 +23,10 @@
       "cols": 2,
       "rows": 6,
       "req": { "FUE": 3, "VIT": 1 },
-      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan"
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": ["lightning_joust", "shield_of_the_just"],
+      "verified": false,
+      "note": "Skills de memoria (canon). Confirmar en la wiki"
     },
     {
       "id": "6_2",
@@ -25,7 +35,10 @@
       "cols": 2,
       "rows": 6,
       "req": { "VEL": 4 },
-      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad"
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [],
+      "verified": false,
+      "note": "PENDIENTE: completar con las skills reales"
     },
     {
       "id": "6_3",
@@ -34,7 +47,10 @@
       "cols": 2,
       "rows": 6,
       "req": { "INT": 4 },
-      "desc": "Oscuro: +5 de daño y mayor alcance"
+      "desc": "Oscuro: +5 de daño",
+      "skills": [],
+      "verified": false,
+      "note": "PENDIENTE: completar con las skills reales"
     }
   ]
 }

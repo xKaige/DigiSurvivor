@@ -1,0 +1,45 @@
+{
+  "id": "002_renamon",
+  "name": "Línea Renamon",
+  "attribute": "Vacuna",
+  "anySkill": true,
+  "stages": [
+    { "stage": 0, "name": "Relemon", "file": "Relemon_1.png", "cols": 2, "rows": 6, "skills": [] },
+    { "stage": 1, "name": "Pokomon", "file": "Pokomon_2.png", "cols": 2, "rows": 6, "skills": [] },
+    { "stage": 2, "name": "Renamon", "file": "renamon_3.png", "cols": 2, "rows": 6, "skills": [] },
+    { "stage": 3, "name": "Kyubimon", "file": "Kyubimon_4.png", "cols": 2, "rows": 6, "skills": [] },
+    { "stage": 4, "name": "Taomon", "file": "taomon_5.png", "cols": 2, "rows": 6, "skills": [] }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Kuzuhamon",
+      "file": "kuzuhamon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "FUE": 3, "VIT": 1 },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": []
+    },
+    {
+      "id": "6_2",
+      "name": "Sakuyamon",
+      "file": "sakuyamon_6.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "VEL": 4 },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": []
+    },
+    {
+      "id": "6_3",
+      "name": "Sakuyamon Miko Mode",
+      "file": "sakuyamonmikomode_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "INT": 4 },
+      "desc": "Poderoso: +5 de daño",
+      "skills": []
+    }
+  ]
+}
