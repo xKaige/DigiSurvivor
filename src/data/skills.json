@@ -1,6 +1,11 @@
 {
   "maxLevel": 5,
-  "levelBonus": { "dmg": 0.3, "area": 0.1, "cd": 0.05 },
+  "maxActive": 4,
+  "levelBonus": {
+    "dmg": 0.3,
+    "area": 0.1,
+    "cd": 0.05
+  },
   "elements": {
     "fire": "#ff7a2e",
     "earth": "#b08a5a",
@@ -16,63 +21,90 @@
       "desc": "Muerde con colmillos al rojo vivo y quema lo que toca",
       "type": "melee_arc",
       "element": "fire",
-      "dmg": 1.3, "cd": 1.4, "range": 70, "arc": 2.2
+      "dmg": 1.3,
+      "cd": 1.4,
+      "range": 70,
+      "arc": 2.2
     },
     "rock_breaker": {
       "name": "Rock Breaker",
       "desc": "Arañazo con las garras delanteras capaz de romper piedra",
       "type": "melee_arc",
       "element": "earth",
-      "dmg": 2.0, "cd": 1.1, "range": 95, "arc": 1.8
+      "dmg": 2.0,
+      "cd": 1.1,
+      "range": 95,
+      "arc": 1.8
     },
     "fireball": {
       "name": "Fireball",
       "desc": "Escupe una bola de fuego que explota al impactar",
       "type": "projectile",
       "element": "fire",
-      "dmg": 1.8, "cd": 1.6, "speed": 380, "life": 1.2, "explode": 55
+      "dmg": 1.8,
+      "cd": 1.6,
+      "speed": 380,
+      "life": 1.2,
+      "explode": 55
     },
     "plasma_blade": {
       "name": "Plasma Blade",
       "desc": "Tajo con las cuchillas de los codos cargadas de plasma",
       "type": "melee_arc",
       "element": "electric",
-      "dmg": 2.2, "cd": 1.2, "range": 110, "arc": 2.6
+      "dmg": 2.2,
+      "cd": 1.2,
+      "range": 110,
+      "arc": 2.6
     },
     "exhaust_flame": {
       "name": "Exhaust Flame",
       "desc": "Ruge y escupe una llamarada en abanico",
       "type": "cone",
       "element": "fire",
-      "dmg": 2.6, "cd": 2.4, "range": 180, "arc": 1.0
+      "dmg": 2.6,
+      "cd": 2.4,
+      "range": 180,
+      "arc": 1.0
     },
     "atomic_blaster": {
       "name": "Atomic Blaster",
       "desc": "Dispara los cañones del pecho: rayo largo que perfora",
       "type": "beam",
       "element": "fire",
-      "dmg": 3.2, "cd": 2.8, "range": 420, "width": 26
+      "dmg": 3.2,
+      "cd": 2.8,
+      "range": 420,
+      "width": 26
     },
     "assault_balancer": {
       "name": "Assault Balancer",
       "desc": "Extiende el cable de la espalda y atraviesa a los enemigos",
       "type": "beam",
       "element": "metal",
-      "dmg": 2.2, "cd": 1.8, "range": 300, "width": 10
+      "dmg": 2.2,
+      "cd": 1.8,
+      "range": 300,
+      "width": 10
     },
     "lightning_joust": {
       "name": "Lightning Joust",
       "desc": "Embestida de lanza de luz en línea recta",
       "type": "beam",
       "element": "light",
-      "dmg": 3.0, "cd": 2.6, "range": 380, "width": 20
+      "dmg": 3.0,
+      "cd": 2.6,
+      "range": 380,
+      "width": 20
     },
     "shield_of_the_just": {
       "name": "Shield of the Just",
       "desc": "Escudos de luz que giran a tu alrededor y dañan al tocar",
       "type": "orbit",
       "element": "light",
-      "dmg": 0.9, "radius": 64, "count": 3
+      "dmg": 0.9,
+      "radius": 64,
+      "count": 3
     }
   }
 }

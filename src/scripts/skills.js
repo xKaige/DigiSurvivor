@@ -20,6 +20,10 @@ const SkillSys = {
   def(k) { return this.cat && this.cat.skills[k]; },
   col(d) { return (this.cat.elements[d.element]) || '#ffffff'; },
   maxLv() { return (this.cat && this.cat.maxLevel) || 5; },
+  // Máximo de skills activas a la vez (maxActive en skills.json). Con el cupo lleno solo salen mejoras de las que ya tenés.
+  maxActive() { return (this.cat && this.cat.maxActive) || 4; },
+  activeCount(q) { return Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) > 0).length; },
+  canTake(q, k) { return !!this.def(k) && ((q.wp[k] | 0) > 0 || this.activeCount(q) < this.maxActive()); },
 
   // Escalado por nivel: igual para todas las skills
   scale(lv) {
@@ -44,9 +48,10 @@ const SkillSys = {
     if (!this.cat) return [];
     const max = this.maxLv(), b = this.cat.levelBonus;
     const gain = '+' + Math.round(b.dmg * 100) + '% daño · +' + Math.round(b.area * 100) + '% área · -' + Math.round(b.cd * 100) + '% recarga';
-    const fresh = this.pool(q).filter(k => this.def(k) && !(q.wp[k] | 0)).map(k => {
+    const full = this.activeCount(q) >= this.maxActive();
+    const fresh = (full ? [] : this.pool(q)).filter(k => this.def(k) && !(q.wp[k] | 0)).map(k => {
       const d = this.def(k);
-      return { n: d.name, d: d.desc, op: 'wp', wpKey: k, tag: 'Skill NUEVA', f: () => { q.wp[k] = 1; } };
+      return { n: d.name, d: d.desc, op: 'wp', wpKey: k, tag: 'Skill NUEVA', f: () => { if (this.canTake(q, k)) q.wp[k] = 1; } };
     });
     const ups = Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) >= 1 && q.wp[k] < max).map(k => {
       const d = this.def(k);
@@ -87,7 +92,7 @@ const SkillSys = {
       const dx = e.x - q.x, dy = e.y - q.y, dist = Math.hypot(dx, dy);
       if (dist > R + e.r) continue;
       let da = Math.abs(Math.atan2(dy, dx) - a); if (da > Math.PI) da = 2 * Math.PI - da;
-      if (da <= arc / 2 || dist < e.r + 12) hit(e, dm);
+      if (da <= arc / 2 || dist < e.r + 12) hit(e, dm, q.el);
     }
   },
 
@@ -109,7 +114,7 @@ const SkillSys = {
     const b = this.near(q, 520); if (!b) { q.wt[k] = .25; return; }
     const a = Math.atan2(b.y - q.y, b.x - q.x);
     sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed,
-      l: d.life || 1.2, pi: 0, h: new Set(), d: d.dmg * q.dmg * S.dmg,
+      l: d.life || 1.2, pi: 0, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el,
       ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 });
     this.fired(q, k, cd);
   },
@@ -119,7 +124,7 @@ const SkillSys = {
     ef.push({ k: 'ring', x: s.x, y: s.y, R: s.ex, col: s.c, l: .3, m: .3 });
     for (const e of en) {
       if (e === first) continue;
-      if (Math.hypot(e.x - s.x, e.y - s.y) < s.ex + e.r) hit(e, s.d * .6);
+      if (Math.hypot(e.x - s.x, e.y - s.y) < s.ex + e.r) hit(e, s.d * .6, s.el);
     }
   },
 
@@ -130,7 +135,7 @@ const SkillSys = {
     ef.push({ k: 'ray', x: q.x, y: q.y, a, Lg, w: W, col: this.col(d), l: .25, m: .25 });
     for (const e of en) {
       const px = e.x - q.x, py = e.y - q.y, al = px * ca + py * sa;
-      if (al > 0 && al < Lg && Math.abs(-px * sa + py * ca) < e.r + W / 2) hit(e, dm);
+      if (al > 0 && al < Lg && Math.abs(-px * sa + py * ca) < e.r + W / 2) hit(e, dm, q.el);
     }
     this.fired(q, k, cd);
   },
@@ -142,7 +147,7 @@ const SkillSys = {
       const a = q.oa + i * 6.283 / n, ox = q.x + Math.cos(a) * R, oy = q.y + Math.sin(a) * R;
       for (const e of en) {
         if (t - (e[key] || -9) > .45 && Math.hypot(e.x - ox, e.y - oy) < e.r + 9) {
-          e[key] = t; hit(e, d.dmg * q.dmg * S.dmg);
+          e[key] = t; hit(e, d.dmg * q.dmg * S.dmg, q.el);
         }
       }
     }

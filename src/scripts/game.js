@@ -9,6 +9,13 @@ const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>documen
 const CREATURES = [{ id: '001_guilmon' }, { id: '002_renamon' }, { id: '003_terriermon' }];
 // Criatura de un jugador (cada jugador elige la suya; guarda su id en q.cid)
 const CR = q => CreatureLoader.cache[(q && q.cid) || '001_guilmon'] || null;
+// Atributos: 0 Vacuna, 1 Virus, 2 Dato. Cada uno es fuerte contra el siguiente: Vacuna > Virus > Dato > Vacuna.
+// El atributo de cada Digimon sale de "attribute" en su JSON.
+const ATTR = ['Vacuna', 'Virus', 'Dato'];
+const elOf = cid => { const C = CreatureLoader.cache[cid], a = C && C.meta.attribute; return a === 'Virus' ? 1 : a === 'Dato' ? 2 : 0; };
+// Revivir: un compañero vivo parado sobre tu sprite te revive tras REVIVE_TIME segundos.
+// Cada jugador tiene q.revSpd (1 = normal) para que futuras pasivas puedan acelerarlo.
+const REVIVE_TIME = 5, REVIVE_R = 48;
 
 // Niveles de evolución. Para probar rápido abrí la página con ?test al final de la URL (ej: index.html?test)
 const TEST = new URLSearchParams(location.search).has('test');
@@ -28,6 +35,9 @@ let peer = null, conn = null, isHost = false, isOnline = false, remoteKeys = {};
 let hostDone = false, clientDone = false;
 // Selección de criatura
 let pickRes = null, pickRej = null, pickList = [], picking = false, hostPick = null;
+// Digimon elegido en el menú principal (se recuerda entre partidas)
+let selected = null;
+try { selected = localStorage.getItem('digisurvivor_pick') || null; } catch (e) {}
 
 window.initPeer = function(name) {
   if (peer) return;
@@ -47,7 +57,6 @@ window.initPeer = function(name) {
 window.stopPeer = function() {
   if (peer) { try { peer.destroy(); } catch (e) {} }
   peer = null; conn = null; isHost = false; isOnline = false; hostPick = null;
-  if (pickRes) pickCancel();
   if ($('my-peer-code')) $('my-peer-code').textContent = 'Conectando...';
   if ($('party-status')) $('party-status').textContent = '';
   if ($('go-online')) $('go-online').style.display = 'none';
@@ -60,8 +69,6 @@ function setupConn() {
   conn.on('close', () => {
     if (running && isOnline) endRun('Se perdió la conexión con el otro jugador');
     hostPick = null;
-    if (pickRes) pickCancel();
-    if (!running) $('up').style.display = 'none';
     if ($('party-status')) $('party-status').textContent = 'Conexión cerrada';
   });
   conn.on('data', data => {
@@ -135,7 +142,7 @@ function applyCardOp(targetP, data) {
   else if (data.op === 'sp') targetP.sp *= 1.15;
   else if (data.op === 'hp') { targetP.max += 25; targetP.hp = Math.min(targetP.max, targetP.hp + 25); }
   else if (data.op === 'mag') targetP.mag *= 1.6;
-  else if (data.op === 'wp' && data.wpKey) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1;
+  else if (data.op === 'wp' && data.wpKey) { if (SkillSys.canTake(targetP, data.wpKey)) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; }
   else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; }
 }
 
@@ -149,28 +156,21 @@ if ($('btn-connect')) {
   };
 }
 
-// Online, anfitrión: elige su criatura, avisa al invitado y espera su elección ('ready')
+// Online, anfitrión: avisa con su Digimon y espera el 'ready' del invitado (que responde con el suyo)
 if ($('go-online')) {
-  $('go-online').onclick = async () => {
-    if (!conn || pickRes || picking) return;
-    try {
-      const id = await askCreature('Jugador 1: elegí tu compañero', PC[0]);
-      hostPick = id; isOnline = true; isHost = true;
-      $('up').querySelector('h2').textContent = 'ESPERANDO A JUGADOR 2';
-      $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">Esperando a que tu amigo elija...</p>';
-      if (conn) conn.send({ type: 'start', c0: id });
-    } catch (e) { if (e && e.message !== 'cancel') console.error(e); }
+  $('go-online').onclick = () => {
+    if (!conn || !selected) return;
+    hostPick = selected; isOnline = true; isHost = true;
+    conn.send({ type: 'start', c0: selected });
+    if ($('party-status')) $('party-status').textContent = 'Esperando a tu amigo...';
   };
 }
 
-// Online, invitado: recibe la criatura del anfitrión, elige la suya y arranca
-async function joinOnline(c0) {
-  try {
-    const id = await askCreature('Jugador 2: elegí tu compañero', PC[1]);
-    if (conn) conn.send({ type: 'ready', c1: id });
-    $('up').style.display = 'none';
-    await start(2, [c0 || '001_guilmon', id]);
-  } catch (e) { if (e && e.message !== 'cancel') console.error(e); }
+// Online, invitado: responde con su Digimon y arranca
+function joinOnline(c0) {
+  const id = selected || '001_guilmon';
+  if (conn) conn.send({ type: 'ready', c1: id });
+  start(2, [c0 || '001_guilmon', id]).catch(e => console.error(e));
 }
 
 function applyOnlineSync(data) {
@@ -188,17 +188,17 @@ function applyOnlineSync(data) {
 
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
  if(pickRes){if(/^[1-3]$/.test(e.key)&&pickList[e.key-1])pickDone(pickList[e.key-1].id);else if(e.key==='Escape'&&!isOnline)pickCancel();return}
- if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline)beginLocal(lastMode);
+ if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline){if(selected)beginLocal(lastMode);else openMenuPick()}
  if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)endRun('Run terminada')}
  if(paused&&!evo&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 function dmgNum(x,y,v,col,sz){fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
-function hit(e,d){const m=mult(0,e.el),v=d*m;e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,v,m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',m>1?30:m<1?14:18)}
-function hurt(q,d,el){if(q.dead)return;const m=mult(el,0),v=d*m*(1-q.arm);q.hp-=v;q.inv=.45;burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.dead=true;q.hp=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
+function hit(e,d,el){const m=mult(el|0,e.el),v=d*m;e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,v,m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',m>1?30:m<1?14:18)}
+function hurt(q,d,el){if(q.dead)return;const m=mult(el,q.el|0),v=d*m*(1-q.arm);q.hp-=v;q.inv=.45;burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.dead=true;q.hp=0;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
 function permS(k){return {FUE:L('tf'),VEL:L('tv'),INT:L('ti'),VIT:L('th')}[k]|0}
 function tot(q,k){return permS(k)+q.st[k]}
-function np(i,cid){return{id:i,cid:cid||'001_guilmon',x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
+function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
 
 // ids: criatura de cada jugador, ej. ['002_renamon'] o ['001_guilmon','003_terriermon']
 async function start(m,ids){
@@ -208,7 +208,7 @@ async function start(m,ids){
   p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=5;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
-  last=performance.now();requestAnimationFrame(loop);
+  renderLegend();last=performance.now();requestAnimationFrame(loop);
 }
 
 // ---------- Selección de criatura ----------
@@ -225,7 +225,7 @@ async function askCreature(title, color) {
     list.forEach((cr, i) => {
       const C = CreatureLoader.cache[cr.id], M = C.meta, nm = (M.stages[2] || M.stages[0]).name;
       const b = document.createElement('button'); b.className = 'card';
-      b.innerHTML = thumbOf(C, 'stage_2') + '<b>' + (i + 1) + '. ' + nm + '</b>' + M.stages.map(s => s.name).join(' → ');
+      b.innerHTML = thumbOf(C, 'stage_2') + '<b>' + (i + 1) + '. ' + nm + '</b>' + M.stages.map(s => s.name).join(' → ') + '<em><span style="color:' + ELC[elOf(cr.id)] + '">●</span> ' + ATTR[elOf(cr.id)] + '</em>';
       b.onclick = () => pickDone(cr.id);
       c.appendChild(b);
     });
@@ -241,19 +241,58 @@ function pickCancel() {
   const j = pickRej; pickRes = pickRej = null; pickList = [];
   $('up').style.display = 'none'; j(new Error('cancel'));
 }
-// Partida local (1 o 2 jugadores): cada jugador elige su criatura y arranca
+// Partida local. El Jugador 1 usa el Digimon elegido en el menú; en 2 jugadores, el Jugador 2 elige el suyo acá.
 async function beginLocal(m) {
   if (picking || running) return;
+  if (!selected) return openMenuPick();
   picking = true;
   try {
-    const ids = [];
-    for (let i = 0; i < m; i++) ids.push(await askCreature(m === 2 ? 'Jugador ' + (i + 1) + ': elegí tu compañero' : 'Elegí tu compañero', m === 2 ? PC[i] : ''));
+    const ids = [selected];
+    if (m === 2) ids.push(await askCreature('Jugador 2: elegí tu Digimon', PC[1]));
     $('up').style.display = 'none';
     await start(m, ids);
   } catch (e) { if (e && e.message !== 'cancel') console.error(e); }
   finally { picking = false; }
 }
 $('go').onclick=()=>{isOnline=false;beginLocal(1)};$('go2').onclick=()=>{isOnline=false;beginLocal(2)};
+
+// ---------- Menú: Digimon elegido ----------
+function buildMenuSel() {
+  const st = document.createElement('style');
+  st.textContent = '#ov button:disabled{opacity:.4;cursor:not-allowed}#selrow{display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap;margin:6px 0}#selinfo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px}#selinfo img{height:56px!important;margin:0!important;image-rendering:pixelated}#selrow button{margin-top:0!important}';
+  document.head.appendChild(st);
+  const row = document.createElement('div'); row.id = 'selrow';
+  row.innerHTML = '<div id="selinfo"></div><button id="selbtn" class="alt">Elegir Digimon</button>';
+  const bar = $('go').parentNode; bar.parentNode.insertBefore(row, bar);
+  $('selbtn').onclick = openMenuPick;
+}
+function renderSel() {
+  const C = selected && CreatureLoader.cache[selected], info = $('selinfo');
+  if (C) {
+    const M = C.meta, nm = (M.stages[2] || M.stages[0]).name, el = elOf(selected);
+    info.innerHTML = thumbOf(C, 'stage_2') + '<span>' + nm + ' <span style="color:' + ELC[el] + '">● ' + ATTR[el] + '</span></span>';
+  } else {
+    info.innerHTML = '<span style="color:var(--gold)">Elegí tu Digimon para poder jugar</span>';
+  }
+  ['go', 'go2', 'btn-connect', 'go-online'].forEach(id => { if ($(id)) $(id).disabled = !C; });
+  if (C && !running) { P = [np(0, selected)]; p = P[0]; draw(); }   // el fondo muestra a tu Digimon
+}
+async function openMenuPick() {
+  if (picking || running || pickRes) return;
+  picking = true;
+  try {
+    const id = await askCreature('Elegí tu Digimon', '');
+    selected = id; $('up').style.display = 'none';
+    try { localStorage.setItem('digisurvivor_pick', id); } catch (e) {}
+    renderSel();
+  } catch (e) { if (e && e.message !== 'cancel') console.error(e); }
+  finally { picking = false; }
+}
+// Leyenda de atributos (cada uno es fuerte contra el siguiente), empezando por el tuyo
+function renderLegend() {
+  const e0 = P[0].el | 0, o = [e0, (e0 + 1) % 3, (e0 + 2) % 3];
+  $('leg').innerHTML = o.map((e, i) => '<span style="color:' + ELC[e] + '">● ' + ATTR[e] + (i === 0 ? (mode === 2 ? ' (J1)' : ' (vos)') : '') + '</span>').join('›') + '›<span style="color:' + ELC[e0] + '">' + ATTR[e0] + '</span>';
+}
 
 const UP=[
 {c:'FUE',n:'Más daño',d:'+1 de daño por disparo',op:'dmg',f:()=>p.dmg++},
@@ -432,7 +471,6 @@ function chooseLine(){
 
 function levelUp(){
   xp-=need;lvl++;need=Math.round(need*1.3+2);paused=true;
-  for(const q of P)if(q.dead){q.dead=false;q.hp=q.max*.5;q.inv=2}
 
   if(EVO_LEVELS.includes(lvl)){
     const nextStage = EVO_LEVELS.indexOf(lvl) + 1;
@@ -539,7 +577,7 @@ function update(dt){
    } else if (isHost && conn) {
      conn.send({
        type: 'sync',
-       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, oa: q.oa })),
+       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, oa: q.oa, revP: q.revP })),
        en: en.map(e => ({ x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun })),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
        sh: sh.map(s => ({ x: s.x, y: s.y, c: s.c, r: s.r })),
@@ -593,13 +631,18 @@ function update(dt){
    return;
  }
 
+ // revivir: si un compañero vivo está parado sobre un jugador caído, se va llenando el progreso
+ for(const d of P){if(!d.dead)continue;
+  let rv=0;for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R)rv=Math.max(rv,a.revSpd||1);
+  d.revP=rv?(d.revP||0)+dt*rv:Math.max(0,(d.revP||0)-dt);
+  if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*.5;d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  spawnT-=dt;const iv=Math.max(.2,1.1-t*.008)/(mode===2?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/60);i<n&&en.length<(mode===2?340:260);i++)spawn(Math.max(0,mt-1));spawnT+=iv}
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
-   if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg})}q.atkT=q.rate}}}
+   if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el})}q.atkT=q.rate}}}
  for(const s of sh){s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=dt;
-  for(const e of en)if(s.l>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+6){hit(e,s.d);s.h.add(e);if(s.pi>0)s.pi--;else s.l=0;if(s.ex)SkillSys.explode(s,e);burst(s.x,s.y,'#ffd23f')}}
+  for(const e of en)if(s.l>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+6){hit(e,s.d,s.el);s.h.add(e);if(s.pi>0)s.pi--;else s.l=0;if(s.ex)SkillSys.explode(s,e);burst(s.x,s.y,'#ffd23f')}}
  sh=sh.filter(s=>s.l>0);
  for(const q of al)SkillSys.update(q,dt);
  for(const e of en){let tg=null,dd=1e9;for(const q of al){if(q.dead)continue;const d=Math.hypot(q.x-e.x,q.y-e.y);if(d<dd){dd=d;tg=q}}
@@ -656,7 +699,8 @@ function draw(){
  for(const q of P){const s=q.stage|0,hh=96;
   if(q.dead)drawBuddy(q,s,q.x,q.y,q.face,.25);
   else if(!evo&&(q.inv<=0||Math.floor(t*20)%2))drawBuddy(q,s,q.x,q.y,q.face,1);
-  if(mode===2){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (revive al subir de nivel)':'J'+(q.id+1),q.x,q.y-hh/2-8)}}
+  if(mode===2){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (pararse encima para revivir)':'J'+(q.id+1),q.x,q.y-hh/2-8)}
+  if(q.dead&&mode===2){const pr=Math.min(1,(q.revP||0)/REVIVE_TIME);cx.lineWidth=3;cx.strokeStyle='rgba(255,210,63,.35)';cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,0,6.283);cx.stroke();if(pr>0){cx.strokeStyle='#ffd23f';cx.lineWidth=6;cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,-Math.PI/2,-Math.PI/2+6.283*pr);cx.stroke()}}}
  if(evo){const e0=evo.t,sw=e0>=1.3,pul=Math.sin(e0*Math.PI/2.8);
   for(const q of P){
    drawBuddy(q,sw?evo.s:evo.s-1,q.x,q.y,q.face,sw?Math.min(1,(e0-1.3)*2):Math.max(0,1-e0*.9));
@@ -668,4 +712,9 @@ function draw(){
 
 function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(evo)stepEvo(dt);else if(!paused)update(dt);draw();if(running)requestAnimationFrame(loop)}
 P=[np(0,'001_guilmon')];p=P[0];
-initGame(['001_guilmon']).then(() => { draw(); wal(); });
+buildMenuSel();
+(async()=>{
+  try{await SkillSys.load();await Promise.all(CREATURES.map(c=>CreatureLoader.load(c.id).catch(e=>console.error(e))))}catch(e){console.error(e)}
+  if(selected&&!CreatureLoader.cache[selected])selected=null;
+  renderSel();wal();draw();
+})();

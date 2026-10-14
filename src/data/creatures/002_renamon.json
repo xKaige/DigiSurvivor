@@ -1,7 +1,7 @@
 {
   "id": "002_renamon",
   "name": "Línea Renamon",
-  "attribute": "Vacuna",
+  "attribute": "Dato",
   "anySkill": true,
   "stages": [
     { "stage": 0, "name": "Relemon", "file": "Relemon_1.png", "cols": 2, "rows": 6, "skills": [] },
