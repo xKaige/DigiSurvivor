@@ -30,58 +30,170 @@ async function initGame(ids) {
   await Promise.all([...new Set(ids)].map(id => CreatureLoader.load(id)));
 }
 
-// Multijugador Online
-let peer = null, conn = null, isHost = false, isOnline = false, remoteKeys = {};
+// ---------- Red: PeerJS + party ----------
+// El login, el Nick, la lista de amigos y las ventanas están en social.js; acá vive la conexión entre jugadores.
+// Una invitación viaja por una conexión de control; si el invitado acepta, él se conecta al que invitó
+// (que pasa a ser el anfitrión/líder) y ahí queda armado el party. El líder inicia la partida.
+let peer = null, myPeerId = null, conn = null, isHost = false, isOnline = false, remoteKeys = {};
 let hostDone = false, clientDone = false;
 // Selección de criatura
 let pickRes = null, pickRej = null, pickList = [], picking = false, hostPick = null;
 // Digimon elegido en el menú principal (se recuerda entre partidas)
 let selected = null;
 try { selected = localStorage.getItem('digisurvivor_pick') || null; } catch (e) {}
+// Party
+let me = { uid: null, nick: null };   // lo carga social.js al iniciar sesión
+let party = null;                     // { uid, nick, c } del otro jugador mientras hay party
+let lobbyNote = '';                   // último aviso para mostrar en la ventana (rechazos, cortes, etc.)
+const pendingInv = {};                // invitaciones que mandé: uid -> hora
+const ctl = {};                       // conexiones de invitación en curso: peerId -> función que las da por fallidas
+const inbox = [];                     // invitaciones recibidas { id, uid, nick, peerId, c }
 
-window.initPeer = function(name) {
+const lobbyChanged = () => { if (window.onLobby) window.onLobby(); };
+const lobbyMsg = m => { lobbyNote = m || ''; lobbyChanged(); };
+const whenOpen = (c, fn) => { if (c.open) fn(); else c.on('open', fn); };
+const sendTo = (c, m) => { try { c.send(m); } catch (e) {} };
+const validId = id => CREATURES.some(x => x.id === id) ? id : null;
+const dropInvite = id => { const k = inbox.findIndex(x => x.id === id); if (k >= 0) { inbox.splice(k, 1); lobbyChanged(); } };
+
+window.initPeer = function () {
   if (peer) return;
-  const shortId = 'digi-' + Math.floor(1000 + Math.random() * 9000);
-  peer = new Peer(shortId);
-  peer.on('open', id => {
-    if ($('my-peer-code')) $('my-peer-code').textContent = 'Tu código de amigo: ' + id;
+  peer = new Peer('ds-' + Math.random().toString(36).slice(2, 12));
+  peer.on('open', id => { myPeerId = id; if (window.onPeerOpen) window.onPeerOpen(id); lobbyChanged(); });
+  peer.on('error', err => {
+    if (err && err.type === 'unavailable-id') { try { peer.destroy(); } catch (e) {} peer = null; window.initPeer(); return; }
+    if (err && err.type === 'peer-unavailable') { for (const pid in ctl) if (String(err.message || '').includes(pid)) ctl[pid](); return; }
+    console.error('PeerJS:', err);
   });
+  peer.on('disconnected', () => { try { peer.reconnect(); } catch (e) {} });
   peer.on('connection', c => {
-    conn = c;
-    isHost = true;
-    setupConn();
+    const md = c.metadata || {};
+    if (md.kind === 'game') {
+      // alguien a quien invité se une a mi party: yo soy el líder/anfitrión
+      if (conn || !pendingInv[md.uid]) { try { c.close(); } catch (e) {} return; }
+      delete pendingInv[md.uid];
+      conn = c; isHost = true; isOnline = false;
+      party = { uid: md.uid, nick: String(md.nick || '').slice(0, 20), c: null };
+      setupConn(c);
+      lobbyMsg(party.nick + ' se unió al party');
+    } else {
+      // conexión de control: solo se aceptan invitaciones de amigos
+      c.on('data', m => {
+        if (!m || m.type !== 'invite' || !m.uid || !m.peerId) return;
+        // se consulta en el momento si es amigo (así una amistad recién creada o eliminada se respeta al instante)
+        Promise.resolve(window.isFriendUid ? window.isFriendUid(m.uid) : false).then(isF => {
+          if (!isF) return;
+          if (conn || running || inbox.some(i => i.uid === m.uid)) { whenOpen(c, () => sendTo(c, { type: 'decline', busy: 1 })); return; }
+          const inv = { id: Math.random().toString(36).slice(2), uid: m.uid, nick: String(m.nick || '').slice(0, 20), peerId: m.peerId, c };
+          inbox.push(inv); setTimeout(() => dropInvite(inv.id), 60000); lobbyChanged();
+        }).catch(() => {});
+      });
+    }
   });
 };
 
-// Cierra la conexión online (se usa al cerrar sesión)
-window.stopPeer = function() {
+// Cierra todo lo online (se usa al cerrar sesión)
+window.stopPeer = function () {
+  if (conn) { const c = conn; try { c.close(); } catch (e) {} connClosed(c); }
   if (peer) { try { peer.destroy(); } catch (e) {} }
-  peer = null; conn = null; isHost = false; isOnline = false; hostPick = null;
-  if ($('my-peer-code')) $('my-peer-code').textContent = 'Conectando...';
-  if ($('party-status')) $('party-status').textContent = '';
-  if ($('go-online')) $('go-online').style.display = 'none';
+  peer = null; myPeerId = null; hostPick = null; inbox.length = 0;
+  for (const k in pendingInv) delete pendingInv[k];
+  lobbyMsg('');
 };
 
-function setupConn() {
-  if ($('party-status')) $('party-status').textContent = '¡Amigo conectado!';
-  if (isHost && $('go-online')) $('go-online').style.display = 'inline-block';
-  // si se corta la conexión con el otro jugador, no te quedás jugando solo con el mundo congelado
-  conn.on('close', () => {
-    if (running && isOnline) endRun('Se perdió la conexión con el otro jugador');
-    hostPick = null;
-    if ($('party-status')) $('party-status').textContent = 'Conexión cerrada';
-  });
-  conn.on('data', data => {
-    if (data.type === 'input') {
+// Acciones que usa la ventana de Amigos / Party
+window.Lobby = {
+  setSelf(uid, nick) { me = { uid, nick }; },
+  state() {
+    return { me, myPeerId, ready: !!myPeerId, role: conn ? (isHost ? 'host' : 'guest') : null, party, selected,
+      inbox: inbox.map(i => ({ id: i.id, uid: i.uid, nick: i.nick })), note: lobbyNote, running };
+  },
+  info(id) {
+    const C = id && CreatureLoader.cache[id]; if (!C) return null;
+    const M = C.meta, el = elOf(id);
+    return { id, name: (M.stages[2] || M.stages[0]).name, attr: ATTR[el], color: ELC[el], img: thumbOf(C, 'stage_2') };
+  },
+  pick() { openMenuPick(); },
+  invite(f) {   // f: { uid, nick, peerId }
+    if (!peer || !myPeerId) return lobbyMsg('Todavía conectando con el servidor...');
+    if (conn) return lobbyMsg('Ya estás en un party');
+    if (!f.peerId) return lobbyMsg(f.nick + ' no está en línea');
+    pendingInv[f.uid] = Date.now();
+    const c = peer.connect(f.peerId, { metadata: { kind: 'ctl' } });
+    let done = false, to = null;
+    const fail = msg => { if (done) return; done = true; clearTimeout(to); delete ctl[f.peerId]; delete pendingInv[f.uid]; lobbyMsg(msg); try { c.close(); } catch (e) {} };
+    to = setTimeout(() => fail(f.nick + ' no respondió'), 15000);
+    ctl[f.peerId] = () => fail(f.nick + ' no está disponible');
+    whenOpen(c, () => sendTo(c, { type: 'invite', uid: me.uid, nick: me.nick, peerId: myPeerId }));
+    c.on('data', m => {
+      if (!m) return;
+      if (m.type === 'decline') fail(f.nick + (m.busy ? ' está ocupado' : ' rechazó la invitación'));
+      else if (m.type === 'accept') { done = true; clearTimeout(to); delete ctl[f.peerId]; setTimeout(() => { try { c.close(); } catch (e) {} }, 500); }
+    });
+    c.on('error', () => fail(f.nick + ' no está disponible'));
+    setTimeout(() => { if (!conn) delete pendingInv[f.uid]; }, 90000);
+    lobbyMsg('Invitación enviada a ' + f.nick);
+  },
+  accept(id) {
+    const k = inbox.findIndex(x => x.id === id); if (k < 0) return;
+    const inv = inbox.splice(k, 1)[0];
+    if (conn || !peer) { sendTo(inv.c, { type: 'decline', busy: 1 }); lobbyChanged(); return; }
+    sendTo(inv.c, { type: 'accept' });
+    setTimeout(() => { try { inv.c.close(); } catch (e) {} }, 500);
+    while (inbox.length) sendTo(inbox.pop().c, { type: 'decline', busy: 1 });   // las demás invitaciones se rechazan
+    const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick } });
+    conn = c; isHost = false; isOnline = false;
+    party = { uid: inv.uid, nick: inv.nick, c: null };
+    setupConn(c);
+    setTimeout(() => { if (conn === c && !c.open) { try { c.close(); } catch (e) {} connClosed(c); } }, 12000);
+    lobbyMsg('Te uniste al party de ' + inv.nick);
+  },
+  decline(id) {
+    const k = inbox.findIndex(x => x.id === id); if (k < 0) return;
+    const inv = inbox.splice(k, 1)[0];
+    sendTo(inv.c, { type: 'decline' });
+    setTimeout(() => { try { inv.c.close(); } catch (e) {} }, 500);
+    lobbyChanged();
+  },
+  leave() { if (conn) { const c = conn; try { c.close(); } catch (e) {} connClosed(c); } },
+  // solo el líder, y solo si los dos ya eligieron Digimon
+  startOnline() {
+    if (!conn || !isHost || !selected || !party || !party.c || running) return;
+    hostPick = selected; isOnline = true;
+    sendTo(conn, { type: 'start', c0: selected });
+    lobbyMsg('Iniciando partida...');
+  }
+};
+
+function connClosed(c) {
+  if (conn !== c) return;
+  const was = party && party.nick;
+  if (running && isOnline) endRun('Se perdió la conexión con el otro jugador');
+  conn = null; isHost = false; isOnline = false; hostPick = null; party = null;
+  lobbyMsg(was ? 'El party con ' + was + ' se cerró' : '');
+}
+
+function setupConn(c) {
+  whenOpen(c, () => sendTo(c, { type: 'hello', uid: me.uid, nick: me.nick, c: selected }));
+  c.on('close', () => connClosed(c));
+  c.on('error', () => connClosed(c));
+  c.on('data', data => {
+    if (data.type === 'hello') {
+      if (party) { party.c = validId(data.c); if (data.nick) party.nick = String(data.nick).slice(0, 20); }
+      lobbyChanged();
+    } else if (data.type === 'pick') {
+      if (party) party.c = validId(data.c);
+      lobbyChanged();
+    } else if (data.type === 'input') {
       remoteKeys = data.keys || {};
     } else if (data.type === 'start') {
+      if (isHost) return;
       isOnline = true;
-      isHost = false;
       joinOnline(data.c0);
     } else if (data.type === 'ready') {
       // el invitado ya eligió: arranca la partida con las dos criaturas
       if (isHost && hostPick) {
-        const ids = [hostPick, data.c1 || '001_guilmon'];
+        const ids = [hostPick, validId(data.c1) || '001_guilmon'];
         hostPick = null;
         $('up').style.display = 'none';
         start(2, ids);
@@ -146,31 +258,11 @@ function applyCardOp(targetP, data) {
   else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; }
 }
 
-if ($('btn-connect')) {
-  $('btn-connect').onclick = () => {
-    const code = $('friend-code').value.trim();
-    if (!code || !peer) return;
-    conn = peer.connect(code);
-    isHost = false;
-    setupConn();
-  };
-}
-
-// Online, anfitrión: avisa con su Digimon y espera el 'ready' del invitado (que responde con el suyo)
-if ($('go-online')) {
-  $('go-online').onclick = () => {
-    if (!conn || !selected) return;
-    hostPick = selected; isOnline = true; isHost = true;
-    conn.send({ type: 'start', c0: selected });
-    if ($('party-status')) $('party-status').textContent = 'Esperando a tu amigo...';
-  };
-}
-
-// Online, invitado: responde con su Digimon y arranca
+// Invitado: responde con su Digimon y arranca
 function joinOnline(c0) {
   const id = selected || '001_guilmon';
-  if (conn) conn.send({ type: 'ready', c1: id });
-  start(2, [c0 || '001_guilmon', id]).catch(e => console.error(e));
+  if (conn) sendTo(conn, { type: 'ready', c1: id });
+  start(2, [validId(c0) || '001_guilmon', id]).catch(e => console.error(e));
 }
 
 function applyOnlineSync(data) {
@@ -208,7 +300,7 @@ async function start(m,ids){
   p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=5;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
-  renderLegend();last=performance.now();requestAnimationFrame(loop);
+  renderLegend();if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
 }
 
 // ---------- Selección de criatura ----------
@@ -259,7 +351,7 @@ $('go').onclick=()=>{isOnline=false;beginLocal(1)};$('go2').onclick=()=>{isOnlin
 // ---------- Menú: Digimon elegido ----------
 function buildMenuSel() {
   const st = document.createElement('style');
-  st.textContent = '#ov button:disabled{opacity:.4;cursor:not-allowed}#selrow{display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap;margin:6px 0}#selinfo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px}#selinfo img{height:56px!important;margin:0!important;image-rendering:pixelated}#selrow button{margin-top:0!important}';
+  st.textContent = '#up{z-index:30}#ov button:disabled{opacity:.4;cursor:not-allowed}#selrow{display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap;margin:6px 0}#selinfo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px}#selinfo img{height:56px!important;margin:0!important;image-rendering:pixelated}#selrow button{margin-top:0!important}';
   document.head.appendChild(st);
   const row = document.createElement('div'); row.id = 'selrow';
   row.innerHTML = '<div id="selinfo"></div><button id="selbtn" class="alt">Elegir Digimon</button>';
@@ -274,7 +366,7 @@ function renderSel() {
   } else {
     info.innerHTML = '<span style="color:var(--gold)">Elegí tu Digimon para poder jugar</span>';
   }
-  ['go', 'go2', 'btn-connect', 'go-online'].forEach(id => { if ($(id)) $(id).disabled = !C; });
+  ['go', 'go2'].forEach(id => { if ($(id)) $(id).disabled = !C; });
   if (C && !running) { P = [np(0, selected)]; p = P[0]; draw(); }   // el fondo muestra a tu Digimon
 }
 async function openMenuPick() {
@@ -285,6 +377,8 @@ async function openMenuPick() {
     selected = id; $('up').style.display = 'none';
     try { localStorage.setItem('digisurvivor_pick', id); } catch (e) {}
     renderSel();
+    if (conn) sendTo(conn, { type: 'pick', c: selected });
+    lobbyChanged();
   } catch (e) { if (e && e.message !== 'cancel') console.error(e); }
   finally { picking = false; }
 }
@@ -331,7 +425,7 @@ function endRun(title){if(!running)return;
  const m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin);save.coins+=c;persist();
  $('t').textContent=title;
  $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas.';
- wal();$('ov').style.display='flex'}
+ wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
 
 function drawBuddy(q,s,x,y,f,a){
  const C=CR(q);
@@ -712,6 +806,7 @@ function draw(){
 
 function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(evo)stepEvo(dt);else if(!paused)update(dt);draw();if(running)requestAnimationFrame(loop)}
 P=[np(0,'001_guilmon')];p=P[0];
+if($('party-panel'))$('party-panel').style.display='none';   // reemplazado por la ventana Amigos / Party (social.js)
 buildMenuSel();
 (async()=>{
   try{await SkillSys.load();await Promise.all(CREATURES.map(c=>CreatureLoader.load(c.id).catch(e=>console.error(e))))}catch(e){console.error(e)}
