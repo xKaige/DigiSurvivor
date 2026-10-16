@@ -11,7 +11,9 @@ const CreatureLoader = {
 
     const loadedData = { meta: data, canvases: {} };
 
-    const loadSprite = (key, fileName, cols = 2, rows = 6) => {
+    // keyWhite: false en el JSON para sprites que ya traen transparencia (ej. los sacados del ROM),
+    // así no se borran los blancos de adentro del dibujo
+    const loadSprite = (key, fileName, cols = 2, rows = 6, keyWhite = true) => {
       return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
@@ -22,12 +24,14 @@ const CreatureLoader = {
           cx.drawImage(img, 0, 0);
 
           // quita el fondo blanco
-          const imgData = cx.getImageData(0, 0, cv.width, cv.height);
-          const d = imgData.data;
-          for (let i = 0; i < d.length; i += 4) {
-            if (d[i] > 240 && d[i + 1] > 240 && d[i + 2] > 240) d[i + 3] = 0;
+          if (keyWhite) {
+            const imgData = cx.getImageData(0, 0, cv.width, cv.height);
+            const d = imgData.data;
+            for (let i = 0; i < d.length; i += 4) {
+              if (d[i] > 240 && d[i + 1] > 240 && d[i + 2] > 240) d[i + 3] = 0;
+            }
+            cx.putImageData(imgData, 0, 0);
           }
-          cx.putImageData(imgData, 0, 0);
           loadedData.canvases[key] = { canvas: cv, cols, rows };
           resolve();
         };
@@ -41,8 +45,8 @@ const CreatureLoader = {
     };
 
     const promises = [];
-    data.stages.forEach(s => promises.push(loadSprite(`stage_${s.stage}`, s.file, s.cols, s.rows)));
-    data.branches.forEach(b => promises.push(loadSprite(`branch_${b.id}`, b.file, b.cols, b.rows)));
+    data.stages.forEach(s => promises.push(loadSprite(`stage_${s.stage}`, s.file, s.cols, s.rows, s.keyWhite !== false)));
+    data.branches.forEach(b => promises.push(loadSprite(`branch_${b.id}`, b.file, b.cols, b.rows, b.keyWhite !== false)));
 
     await Promise.all(promises);
     this.cache[creatureId] = loadedData;

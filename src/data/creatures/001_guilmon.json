@@ -6,13 +6,13 @@
   "stages": [
     { "stage": 0, "name": "Jyarimon", "file": "jyarimon_1.png", "cols": 2, "rows": 6,
       "skills": [], "wiki": null, "verified": true, "note": "No está en la wiki: usa solo el disparo básico" },
-    { "stage": 1, "name": "Gigimon", "file": "gigimon_2.png", "cols": 2, "rows": 6,
+    { "stage": 1, "name": "Gigimon", "file": "gigimon_2.png", "cols": 2, "rows": 6, "keyWhite": false, "sprite": "rom:dusk/btchr#14",
       "skills": ["hot_bite"], "wiki": "gigimon", "verified": false, "note": "En la wiki solo tiene ataque básico; Hot Bite es canon" },
-    { "stage": 2, "name": "Guilmon", "file": "guilmon_3.png", "cols": 2, "rows": 6,
+    { "stage": 2, "name": "Guilmon", "file": "guilmon_3.png", "cols": 2, "rows": 6, "keyWhite": false, "sprite": "rom:dusk/btchr#27",
       "skills": ["rock_breaker", "fireball"], "wiki": "guilmon", "verified": true },
-    { "stage": 3, "name": "Growmon", "file": "growmon_4.png", "cols": 2, "rows": 6,
+    { "stage": 3, "name": "Growmon", "file": "growmon_4.png", "cols": 2, "rows": 6, "keyWhite": false, "sprite": "rom:dusk/btchr#113",
       "skills": ["grow_claw", "plasma_blade", "exhaust_flame"], "wiki": "growlmon", "verified": true },
-    { "stage": 4, "name": "WarGrowlmon", "file": "megalogrowmon_5.png", "cols": 2, "rows": 6,
+    { "stage": 4, "name": "WarGrowlmon", "file": "megalogrowmon_5.png", "cols": 2, "rows": 6, "keyWhite": false, "sprite": "rom:dusk/btchr#229",
       "skills": ["hammer_edge", "double_edge", "atomic_blaster"], "wiki": "wargrowlmon", "verified": true }
   ],
   "branches": [
@@ -22,6 +22,8 @@
       "file": "dukemon_6_1.png",
       "cols": 2,
       "rows": 6,
+      "keyWhite": false,
+      "sprite": "rom:dusk/btchr#324",
       "req": { "FUE": 3, "VIT": 1 },
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": ["royal_slash", "royal_saber", "final_elysion"],
