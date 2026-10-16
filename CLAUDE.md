@@ -1,107 +1,130 @@
-# DigiSurvivor
+# CLAUDE.md — DigiSurvivor
 
-Juego web tipo "survivor" (hordas de virus, subís de nivel, elegís mejoras) con Digimon. Se juega en un `<canvas>`, en JavaScript puro, **sin build ni dependencias**. Sprites sacados de Stream Avatar. Se publica en Vercel desde GitHub.
+Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero que ataca solo, juntás XP de los virus que matás, subís de nivel, elegís mejoras y skills, y tu compañero digievoluciona. Hay 1 jugador, 2 jugadores local (mismo teclado) y 2 jugadores online (PeerJS, invitando amigos).
 
-## Cómo trabajar con el usuario
+## Idioma y estilo
+- **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
+- Respondeme en español.
+- El código de `game.js` está escrito muy compacto (nombres de 1–3 letras, muchas sentencias por línea). Al editar, respetá el estilo de la zona que tocás; si refactorizás algo grande, avisame antes. Las partes más nuevas (online/lobby, `skills.js`, `social.js`) están escritas en estilo más legible.
 
-- Responder en **español rioplatense**, claro y sin jerga. El usuario no es programador y usa **Windows**.
-- Los tokens son limitados: cambios chicos y puntuales, sin reescribir archivos enteros si no hace falta.
-- Después de cambiar algo, decir cómo probarlo y qué se tendría que ver.
-- No inventar skills ni datos de Digimon: tienen que ser **reales**. Fuentes: https://dsrworldwiki.com/en/digimon/ (skills, Digimon Super Rumble) y https://humulos.com/digimon/vbdm/ex/ (líneas evolutivas). Si no se puede verificar algo, marcarlo `"verified": false` y avisar.
+## Stack y cómo correrlo
+- **Sitio estático, sin build, sin bundler, sin npm.** JS vanilla + Canvas 2D.
+- Probar en local: `npx serve` en la raíz (con doble clic no andan los `fetch` ni los módulos ES). En esta PC no hay Node: usar `py -m http.server 3000` (es lo que tiene `.claude/launch.json`).
+- Agregar `?test` a la URL (`TEST`) hace que **todas las ramas finales cumplan los requisitos**. No cambia los niveles de evolución (eso es `FAST`); el comentario en `game.js:20` lo explica mal.
+- Deploy: GitHub → Vercel (preset "Other", sin build command). Cada push republica. Ojo: se publica todo lo que esté en el repo (incluidos los `.bak`).
+- Dependencias externas por CDN: PeerJS 1.5.2 (unpkg) y Firebase 10.14.1 (gstatic).
 
-## Cómo correrlo
-
+## Estructura real
 ```
-py -m http.server 8000
+index.html                      # página + HUD + overlays (ids usados por game.js)
+src/styles/style.css            # estilos
+src/scripts/loader.js           # CreatureLoader: carga JSON + sprites de una criatura (cache por id)
+src/scripts/skills.js           # SkillSys: motor de skills (cartas, niveles, barra de skills)
+src/scripts/game.js             # el juego + conexión online/lobby (script clásico, globals)
+src/scripts/firebase.js         # login Google + guardado en Firestore (type="module")
+src/scripts/firebase-config.js  # config pública de Firebase (la importa firebase.js)
+src/scripts/social.js           # nick único, amigos, party e invitaciones (lo importa firebase.js)
+src/scripts/map.js              # mapa de tiles (MAP_COLS/ROWS, mapData) — HOY NO SE CARGA en index.html
+src/data/creatures/<id>.json    # definición de cada línea evolutiva
+src/data/skills.json            # catálogo de skills, elementos, maxLevel, maxActive, levelBonus
+assets/sprites/creatures/<id>/  # spritesheets PNG de cada etapa/rama
 ```
-y abrir `http://localhost:8000` (recargar con `Ctrl + F5`). **No abrir `index.html` con doble clic**: el navegador bloquea los JSON y los módulos de Firebase.
+El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-## Estructura
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `game.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
-```
-index.html                      HUD y menú (ids que usa game.js; no renombrarlos)
-src/styles/style.css
-src/scripts/loader.js           CreatureLoader: carga el JSON + sprites de una criatura
-src/scripts/skills.js           SkillSys: motor de skills (cartas, disparo, dibujo, barra)
-src/scripts/game.js             el juego (bucle, jugadores, enemigos, evolución, online)
-src/scripts/social.js           Nick único, Amigos, invitaciones y ventana Party (lo importa firebase.js)
-src/scripts/firebase.js         login con Google + guardado en la nube (type="module")
-src/scripts/firebase-config.js  config pública de Firebase (la importa firebase.js)
-src/data/skills.json            catálogo de skills + reglas globales
-firestore.rules                 reglas de seguridad de Firestore (se pegan en la consola de Firebase)
-src/data/creatures/<id>.json    una criatura por archivo
-assets/sprites/creatures/<id>/  sprite sheets PNG de esa criatura
-```
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `game.js` (scripts clásicos) y `firebase.js` como `type="module"` (que importa `social.js`). `skills.js` usa variables globales de `game.js` (`en`, `sh`, `ef`, `hit`, `cx`, `t`, `CR`) en tiempo de ejecución.
+## Arquitectura de game.js
 
-## Criaturas
+### Estado global
+- `P` = array de jugadores (1 o 2), `p` = jugador "actual" (lo usan las cartas de mejora vía closures `f:()=>p.dmg++`).
+- `en` enemigos, `sh` disparos del jugador, `eb` balas enemigas, `gems` XP, `pt` partículas, `fx` números de daño, `ef` efectos (anillo/rayo/skills).
+- `t` tiempo de partida, `lvl`, `xp`, `need`, `kills`, `running`, `paused`, `evo` (animación de digievolución en curso), `mode` (1 o 2).
+- `CREATURES` = lista de criaturas disponibles (`001_guilmon`, `002_renamon`, `003_terriermon`). Cada jugador tiene la suya en `q.cid`; `CR(q)` devuelve su entrada de `CreatureLoader.cache`: `{ meta: <json>, canvases: { stage_0..stage_4, branch_6_1.. } }`.
 
-- Hoy: `001_guilmon` (Virus), `002_renamon` (Dato), `003_terriermon` (Vacuna). La lista está en `CREATURES` al inicio de `game.js`.
-- Cada una tiene 5 etapas (`stages`, índices 0-4) y 1 a 3 ramas finales (`branches`, etapa 5). Los sprites son hojas de **2 columnas × 6 filas**; el juego usa fila 0 idle, 1 caminar, 2 muerte y 5 ataque. El blanco (>240 RGB) se vuelve transparente.
-- Campos del JSON: `id`, `name`, `attribute` (`Vacuna` | `Virus` | `Dato`), `anySkill`, `stages[]` y `branches[]` (con `file`, `cols`, `rows`, `skills`; las ramas además `id`, `req`, `desc`).
-- **Los nombres de archivo del JSON tienen que coincidir exactamente (mayúsculas incluidas) con los PNG**: Vercel distingue mayúsculas.
-- El efecto de cada rama depende de su **posición** en `branches`: 0 = pesado (+daño, +vida, perfora), 1 = veloz (+proyectiles, +velocidad), 2 = poderoso (+daño).
-- Evolución por nivel: `FAST = true` en `game.js` usa niveles bajos de prueba (2,3,4,5 y rama en 6). Con `false` son 3,6,9,12 y rama en 15. `?test` en la URL desbloquea todas las ramas.
+### Loop
+`loop()` → si `evo` corre `stepEvo`, si no y no está en pausa corre `update(dt)` → siempre `draw()`. `dt` está topeado a 0.05.
 
-### Agregar un Digimon nuevo
-1. Carpeta `assets/sprites/creatures/<id>/` con los PNG 2×6.
-2. `src/data/creatures/<id>.json` (copiar uno existente).
-3. Agregar `{ id: '<id>' }` a `CREATURES` en `game.js`.
-Si falta el JSON, simplemente no aparece en la selección.
+### Jugador (`np(i, cid)`)
+Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), multi, pierce, mag, arm, xpm, coin, stage (0–5), line (índice de rama), branchId, weak, st {FUE,VEL,VIT,INT}, wp {skillKey: nivel} (skills activas), wt (timers de skills), revP/revSpd (revivir)`.
 
-## Menú y selección
+### Progresión
+- `FAST = true` en `game.js` → evoluciones en niveles 2,3,4,5 (`EVO_LEVELS`) y rama final en nivel 6 (`LINE_LEVEL`), con requisitos al 40% (`REQ_FACTOR`). **Está en modo prueba; para la versión real va `false`** (niveles 3,6,9,12 y 15).
+- Al subir de nivel (`levelUp`): si es nivel de evolución → `startEvo(etapa)`; si es `LINE_LEVEL` → `chooseLine()` (elegir rama final) → `startEvo(5)`; si no → cartas (`startCards`/`showCards`).
+- Cartas: mejoras de stat en `UP` (cada una suma 1 punto a FUE/VEL/VIT/INT) + cartas de skills de `SkillSys.cards(q)`. Se muestran 3 al azar.
+- Ramas finales: requisitos en `branches[].req` del JSON, comparados contra `tot(q, stat)` = puntos permanentes del árbol + puntos de la partida. Si no cumplís ninguna, todas quedan disponibles pero "inestables" (`weak`, bonos a la mitad).
+- **Los bonos de cada rama están hardcodeados por índice en `stepEvo`** (`line 0/1/2`), no en el JSON. Con 3 criaturas ya conviene pasarlo a datos (ej. un campo `bonus` en cada branch).
+- `cardsAt` + 800 ms: protección contra clicks/teclas accidentales cuando aparecen cartas encadenadas.
 
-- El menú tiene "Elegir Digimon". Hasta elegir uno, **Jugar, 2 Jugadores, Conectarse e Iniciar Online están bloqueados**. La elección se guarda en `localStorage` (`digisurvivor_pick`).
-- 1 jugador: usa el elegido. 2 jugadores local: J1 usa el del menú y J2 elige al empezar. Online: cada uno usa el de su menú.
-- La selección reutiliza la pantalla `#up` (la misma de subir de nivel).
+### Skills (`skills.js` + `skills.json`)
+- `SkillSys` usa globals de `game.js` (`en, sh, ef, hit, cx, t, CR`) en tiempo de ejecución; se carga antes que `game.js`.
+- Skills **nuevas**: solo las de la etapa actual (`stages[s].skills`) o de la rama elegida (`branches[].skills`). `meta.anySkill: true` habilita todas (modo prueba; las 3 criaturas actuales lo tienen en `false`).
+- Tipos de skill (`type` en `skills.json`, implementados en `skills.js`): `melee_arc`, `cone`, `projectile` (con `count`/`spread` para abanicos, `pierce`, `explode`), `beam`, `orbit`, `nova` (pulso alrededor; `guard` = segundos de invulnerabilidad). Tipo nuevo = método nuevo en `SkillSys` con el mismo nombre.
+- Fuente de datos: las skills salen de https://dsrworldwiki.com/en/digimon/<slug> (Digimon Super Rumble). Cada etapa/rama guarda `wiki` (slug o `null`), `verified` y `note`; cada skill guarda `source`. Nombres en inglés como en la wiki; descripciones propias en español (no copiar textos de la wiki). Nombres que cambian: Growmon=Growlmon, Galgomon=Gargomon, Dukemon=Gallantmon, SaintGalgomon=MegaGargomon, Pokomon=Viximon (los nombres del juego son los japoneses; la wiki usa los de occidente). Las etapas bebé solo tienen ataque básico en la wiki.
+- Skills que ya tenés: se pueden seguir mejorando aunque cambies de etapa. Tope de nivel `maxLevel` (5) y de skills activas `maxActive` (4).
+- El escalado por nivel es igual para todas (`levelBonus`: daño, área, recarga). La barra de skills se dibuja con `SkillSys.renderBar(P)`.
 
-## Atributos
+### Combate
+- Triángulo elemental `mult(atacante, defensor)`: 0 Vacuna › 1 Virus › 2 Dato › 0 Vacuna. ×1.5 ventaja, ×0.5 desventaja. El atributo del jugador sale de `attribute` en el JSON de su criatura (`elOf(cid)`; si falta, Vacuna).
+- Enemigos: 3 tipos `k` (normal, rápido, tanque), tier `ti` según la etapa máxima de los jugadores, algunos con arma (`gun`).
+- **Se dibujan con los sprites de `ENEMY_LINE` (`004_impmon`)** en `drawEnemy`. Cada enemigo guarda `sk` (clave de canvas: `stage_<ti>`; los tanques una etapa más, y desde el tope una rama `branch_6_N` al azar). `sk` va en el `sync`. Tamaño = `enH(e)` (a partir de `e.r`). El atributo se ve en el aro de color bajo los pies y el golpe recibido con `brightness`. Si la línea no carga, vuelve a las formas geométricas viejas.
+- El texto "Enemigos: X" del HUD usa los nombres de las etapas de `ENEMY_LINE`.
+- Revivir: un compañero vivo parado sobre el sprite de un jugador caído lo revive en `REVIVE_TIME` (5 s) dentro de `REVIVE_R`. `q.revSpd` queda para futuras pasivas.
 
-Índices: 0 Vacuna, 1 Virus, 2 Dato. Cada uno es fuerte contra el siguiente: **Vacuna > Virus > Dato > Vacuna** (x1.5 de daño; x0.5 al revés), tanto atacando como recibiendo. El del jugador sale de `attribute` (`elOf`). Los enemigos tienen atributo al azar.
+### Árbol de mejoras permanentes
+`TREE` (4 columnas). Se compra con monedas que se ganan al terminar la partida (`endRun`). Se aplica al inicio con `applyTree(q)`. Guardado en `save = {coins, lv:{clave:nivel}}`.
 
-## Skills
+## Sprites y criaturas
+- JSON en `src/data/creatures/<id>.json`: `attribute`, `stages[]` (etapas 0–4, con `skills`) y `branches[]` (formas finales con `id`, `req`, `desc`, `skills`).
+- Spritesheets de **2 columnas × 6 filas**. Filas que usa `drawBuddy`: **0 idle, 1 caminar, 2 muerto, 5 ataque** (3 y 4 sin usar por ahora). Se dibujan a 96 px de alto, pixel art sin suavizado.
+- `loader.js` vuelve transparente todo píxel con R,G,B > 240 (quita fondo blanco). Ojo: también borra blancos dentro del sprite. **Los nombres de archivo distinguen mayúsculas en Vercel** (hay PNGs con mayúscula inicial en renamon/terriermon: el JSON tiene que coincidir exacto).
+- Para sumar una criatura: JSON + carpeta de sprites + agregarla a `CREATURES` en `game.js`. `001_guilmon` es el fallback cuando falta un id.
+- `004_impmon` está cargada en datos y sprites pero **todavía no es jugable** (no está en `CREATURES`). Hoy es la línea de los enemigos (`ENEMY_LINE`).
+- **Origen de los sprites: Stream Avatars (Steam Workshop).** Los packs bajados quedan en `D:\Steam\steamapps\workshop\content\665300\<idPack>\<idPack>.zip`, con `avatars/*.png` (ya vienen en 128×384 = grilla 2×6, se copian tal cual) y un `data.txt` con la config de cada avatar. Receta para importar una línea:
+  1. Ver qué trae el zip y ordenar las etapas con la wiki (sección EVOLUTION de cada ficha).
+  2. Extraer a `assets/sprites/creatures/<NNN_nombre>/` renombrando en minúsculas `<nombre>_<etapa+1>.png` (etapas 0–4 → `_1`…`_5`) y `<nombre>_6_<n>.png` para ramas.
+  3. Crear `src/data/creatures/<NNN_nombre>.json` (con `wiki`, `verified`, `note`) y sumar sus skills a `skills.json`.
+  4. Validar que todas las skills y PNG referenciados existan. Las ramas siguen el orden de bonos de `stepEvo`: 6_1 pesado, 6_2 veloz, 6_3 oscuro/poderoso.
+- Packs usados: 2944839923 (Guilmon), 2976689900 (Renamon), 2916279274 (Terriermon + Devas/Cherubimon), 2952066637 (Impmon). Sin usar: 2916848304 (línea Veemon).
+- Selección: en 1J/2J local desde el menú; online con `openMenuPick` y el mensaje `pick`.
 
-- Catálogo en `skills.json`: `maxLevel` 5, `maxActive` 4, `levelBonus` (cada nivel suma **lo mismo a todas**: +30% daño, +10% área, -5% recarga). Tipos: `melee_arc`, `cone`, `projectile`, `beam`, `orbit`. Los efectos se dibujan por código, no con sprites.
-- `anySkill: true` en el JSON de una criatura = puede aprender cualquier skill. Sin eso, solo las de su etapa/rama actual (`skills` por etapa).
-- Máximo 4 skills activas por jugador. Con el cupo lleno solo salen mejoras de las que ya tenés (también se valida al aplicar elecciones online con `SkillSys.canTake`).
-- Cada nivel de subida ofrece hasta 2 cartas de skills (nuevas y mejoras intercaladas) y el resto stats (`dmg`, `sp`, `hp`, `mag`). Hay una barra fija abajo con las skills y su nivel.
-- Skills verificadas: Hot Bite (Gigimon), Rock Breaker y Fireball (Guilmon, wiki DSR), Plasma Blade y Exhaust Flame (Growmon), Atomic Blaster y Assault Balancer (WarGrowlmon). **Sin verificar**: Lightning Joust y Shield of the Just (Dukemon). Los valores de daño/recarga/rango son estimaciones a ajustar jugando.
-
-## Revivir
-
-Un jugador caído revive si un compañero vivo se queda sobre su sprite `REVIVE_TIME` (5 s, en `game.js`) dentro de `REVIVE_R`. Revive con 50% de vida. Cada jugador tiene `revSpd` (1 = normal) para futuras pasivas. Subir de nivel **no** revive. Si caen todos, termina la partida.
-
-## Nick, amigos y party
-
-- Al iniciar sesión por primera vez hay que elegir un **Nick único** (3 a 16: letras sin tilde, números o `_`; no distingue mayúsculas y por ahora no se puede cambiar). Se reserva en `nicks/{nick}` con una transacción, así no se repite.
-- El botón **Amigos / Party** del menú abre la ventana (solo con sesión y nick):
-  - **Amigos**: agregar por Nick, ver quién está en línea, **Invitar** y **Eliminar** (pide confirmación). La amistad es **mutua e inmediata** (no hay solicitud que aceptar): se escribe en las dos listas.
-  - **Party**: muestra a los dos jugadores con el Digimon que eligió cada uno (y su atributo). Cada uno puede elegir Digimon desde ahí. Solo el **líder** (quien invitó) ve "Iniciar partida", que se habilita cuando los dos eligieron. El party es de 2 jugadores.
-- Las invitaciones llegan como aviso arriba a la derecha y solo se aceptan de **amigos** (se consulta a Firestore en el momento). Se ignoran durante una partida.
-- Datos en Firestore: `nicks/{nick en minúsculas}` `{uid,nick}`, `profiles/{uid}` `{nick,nickLower,peerId,seen}` (perfil público; "en línea" = `seen` de hace menos de 100 s, se renueva cada 40 s), `users/{uid}/friends/{amigoUid}` `{at}`. Las reglas están en `firestore.rules`: **si se agregan colecciones nuevas hay que actualizar las reglas y pegarlas en la consola de Firebase**.
+## Guardado y Firebase
+- Sin sesión: `localStorage['digisurvivor']`.
+- Con sesión Google: Firestore `users/<uid>` con `{coins, lv, updated}`.
+- `social.js` además usa: `nicks/{nick en minúsculas}` `{uid, nick}` (nick único), `profiles/{uid}` `{nick, nickLower, peerId, seen}` (perfil público; `seen` = en línea) y `users/{uid}/friends/{amigoUid}` `{at}` (amistad mutua, se escribe en las dos listas). Las reglas de Firestore tienen que contemplar todo esto.
+- Puente entre módulos (globals en `window`):
+  - `game.js` expone `getSave`, `loadSave`, `initPeer`, `stopPeer` y `Lobby` (acciones de la ventana Amigos/Party: `setSelf, state, info, pick, invite`, …).
+  - `firebase.js` define `onSave` (lo llama `persist()`).
+  - `social.js` define `isFriendUid`, `onLobby`, `onRunStart`, `onPeerOpen` (y los pone en `null` en `stopSocial`).
+- La config de Firebase es pública por diseño; la seguridad está en las reglas. El guardado se puede editar desde el navegador (no hay validación en servidor).
 
 ## Multijugador online (PeerJS)
+- Solo al iniciar sesión: `firebase.js` llama `initSocial` (ventana Amigos/Party de `social.js`) e `initPeer`. El viejo `#party-panel` está oculto.
+- ID de peer = `ds-` + 10 caracteres al azar en el servidor público de PeerJS; si está ocupado (`unavailable-id`) se regenera. El ID se publica en `profiles/{uid}.peerId` vía `onPeerOpen`.
+- Invitaciones: conexión de control (`metadata.kind: 'ctl'`) con `invite` → `accept`/`decline`; solo se aceptan de amigos (se consulta `isFriendUid` en el momento). La partida usa otra conexión (`kind: 'game'`); quien invita es el host.
+- **Host autoritativo**: el host simula todo y manda `sync` **cada frame** con jugadores, enemigos, gemas, disparos, balas enemigas y efectos. El cliente solo manda `input` (teclas) y en `update` corta temprano después de actualizar el HUD.
+- Mensajes de partida: `hello, pick, ready, start, input, sync, trigger_levelup, trigger_line, trigger_evo, host_choice, client_choice, resume_game, end`.
+- Cartas online: cada uno elige para su jugador; se espera a que ambos elijan (`hostDone/clientDone`) y el host reanuda.
+- Limitaciones conocidas: el cliente no ve partículas ni números de daño (no se sincronizan `pt`/`fx`), no hay interpolación, y mandar el estado completo cada frame es pesado.
 
-- La conexión vive en `game.js` y la usa `social.js` mediante `window.Lobby` (`state`, `info`, `pick`, `invite`, `accept`, `decline`, `leave`, `startOnline`) y los avisos `window.onLobby`, `window.onPeerOpen`, `window.onRunStart`, `window.isFriendUid`.
-- Cada sesión tiene un Peer `ds-xxxxxxxxxx` que se publica en `profiles/{uid}.peerId`. Una invitación viaja por una conexión de control (`metadata.kind = 'ctl'`); si el invitado acepta, **él se conecta** al que invitó (`kind = 'game'`), que pasa a ser el anfitrión. El anfitrión solo acepta conexiones de gente a la que invitó (`pendingInv`).
-- El anfitrión **simula todo** y manda `sync` (jugadores, enemigos, gemas, disparos, efectos, tiempo, xp); el invitado manda sus teclas (`input`) y solo dibuja.
-- Mensajes: `hello`/`pick` (nick y Digimon elegido), `start` (con la criatura del líder), `ready` (con la del invitado), `input`, `sync`, `trigger_levelup`, `trigger_line`, `trigger_evo`, `host_choice`, `client_choice`, `resume_game`, `end`.
-- Si se agrega un campo que el invitado tenga que dibujar, **hay que incluirlo en el `sync` y en `applyOnlineSync`**.
-- El panel viejo de "código de amigo" (`#party-panel`) quedó oculto y sin uso.
+## Cosas a tener en cuenta al cambiar código
+- Los ids del HTML (`#hud`, `#fill`, `#fill2`, `#xpf`, `#tm`, `#tr`, `#info`, `#pst`, `#up`, `#cards`, `#evt`, `#ov`, `#tree`, etc.) están acoplados a `game.js`. Si cambiás uno, cambialo en los dos lados.
+- `index.html` tiene un `<style id="hud-css">` de respaldo que duplica reglas de `style.css`.
+- Cualquier cambio en lo que afecta la simulación tiene que pensarse para los 3 modos: 1J, 2J local y online (host vs cliente).
+- Si agregás un campo nuevo al jugador (o a enemigos/efectos) que el cliente necesita ver, sumalo al payload de `sync`.
+- Antes de dar por terminado un cambio de jugabilidad, probalo con `npx serve` en 1J y 2J local.
 
-## Guardado
+## Referencias de diseño
+- Guía de evoluciones (inspiración para ramas y requisitos): https://humulos.com/digimon/vbdm/ex/#terrier_ex_anchor
+- Habilidades de Digimon (inspiración para skills/ataques): https://dsrworldwiki.com/en/digimon/
 
-Monedas y mejoras permanentes en `localStorage` (`digisurvivor`) y, con sesión, en Firestore (`users/<uid>`). Reglas de Firestore: `firestore.rules`. Dominio autorizado de Vercel: ver `README.md`. Un jugador puede editar su guardado; si hace falta ranking hay que validar en un servidor.
-
-## Despliegue
-
-Subir a GitHub y Vercel republica solo (preset "Other", sin build). No subir copias de respaldo (`*.bak*`, `src_backup/`) ni scripts de parche.
-
-## Pendiente / ideas
-
-- **Evolución de skills**: al maxear una skill (nivel 5) y evolucionar, se transforma en una versión superior de la etapa siguiente (ej. Fireball → Exhaust Flame; Rock Breaker → Hammer Edge o Double Edge). Faltan definir: cuándo se ofrece, cómo se elige entre varias salidas, con qué nivel arranca la nueva y de dónde salen las skills base. Hammer Edge y Double Edge **no están verificadas**.
-- Completar skills reales de MedievalDukemon y ChaosDukemon (hoy vacías), y de Renamon y Terriermon (hoy todas pueden aprender cualquiera).
-- Terriermon tiene una sola rama final (SaintGalgomon).
-- Posible: que el atributo de los enemigos dependa de la zona o del Digimon.
-- Amigos: solicitudes con aceptación (hoy es inmediato y mutuo), poder cambiar el Nick, party de más de 2 jugadores y estado "en partida" de los amigos.
-- Las invitaciones no se pueden autenticar entre jugadores (PeerJS es directo): se filtran por amistad, pero alguien que conozca el uid de un amigo podría intentar suplantarlo.
+## Pendientes / ideas
+- Pasar `FAST` a `false` para producción.
+- Corregir el comentario de `?test` en `game.js:20`.
+- Más líneas evolutivas en `src/data/creatures/`.
+- Mover los bonos de rama de `stepEvo` al JSON.
+- Decidir qué hacer con `map.js` (integrarlo o borrarlo).
+- Sacar los `.bak` del repo (o sumarlos al `.gitignore`) para que no se publiquen.
+- Optimizar el `sync` online (menos frecuencia, deltas, interpolación en el cliente).
+- Validación del guardado en servidor si se agrega ranking.
+- Actualizar el `README.md` a la estructura `src/`.
+- Git: el repo es https://github.com/xkaige/digisurvivor (rama `main`). Git está en `C:\Program Files\Git\cmd\git.exe`. Cada push a `main` publica en Vercel.

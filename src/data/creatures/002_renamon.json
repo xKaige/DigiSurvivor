@@ -2,13 +2,18 @@
   "id": "002_renamon",
   "name": "Línea Renamon",
   "attribute": "Dato",
-  "anySkill": true,
+  "anySkill": false,
   "stages": [
-    { "stage": 0, "name": "Relemon", "file": "Relemon_1.png", "cols": 2, "rows": 6, "skills": [] },
-    { "stage": 1, "name": "Pokomon", "file": "Pokomon_2.png", "cols": 2, "rows": 6, "skills": [] },
-    { "stage": 2, "name": "Renamon", "file": "renamon_3.png", "cols": 2, "rows": 6, "skills": [] },
-    { "stage": 3, "name": "Kyubimon", "file": "Kyubimon_4.png", "cols": 2, "rows": 6, "skills": [] },
-    { "stage": 4, "name": "Taomon", "file": "taomon_5.png", "cols": 2, "rows": 6, "skills": [] }
+    { "stage": 0, "name": "Relemon", "file": "Relemon_1.png", "cols": 2, "rows": 6,
+      "skills": [], "wiki": null, "verified": true, "note": "No está en la wiki: usa solo el disparo básico" },
+    { "stage": 1, "name": "Pokomon", "file": "Pokomon_2.png", "cols": 2, "rows": 6,
+      "skills": [], "wiki": "viximon", "verified": true, "note": "En la wiki (Viximon) solo tiene ataque básico" },
+    { "stage": 2, "name": "Renamon", "file": "renamon_3.png", "cols": 2, "rows": 6,
+      "skills": ["sozan", "koyosetsu"], "wiki": "renamon", "verified": true },
+    { "stage": 3, "name": "Kyubimon", "file": "Kyubimon_4.png", "cols": 2, "rows": 6,
+      "skills": ["headbutt", "koshugeki", "koenryu"], "wiki": "kyubimon", "verified": true },
+    { "stage": 4, "name": "Taomon", "file": "taomon_5.png", "cols": 2, "rows": 6,
+      "skills": ["knifehand_strike", "kofusatsu", "bonhitsusen"], "wiki": "taomon", "verified": true }
   ],
   "branches": [
     {
@@ -19,7 +24,9 @@
       "rows": 6,
       "req": { "FUE": 3, "VIT": 1 },
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
-      "skills": []
+      "skills": ["swing", "ura_izuna", "taizoukai_mandara"],
+      "wiki": "kuzuhamon",
+      "verified": true
     },
     {
       "id": "6_2",
@@ -29,7 +36,9 @@
       "rows": 6,
       "req": { "VEL": 4 },
       "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
-      "skills": []
+      "skills": ["jouenkobu", "izuna", "kongoukai_mandara"],
+      "wiki": "sakuyamon",
+      "verified": true
     },
     {
       "id": "6_3",
@@ -39,7 +48,10 @@
       "rows": 6,
       "req": { "INT": 4 },
       "desc": "Poderoso: +5 de daño",
-      "skills": []
+      "skills": ["izuna", "kongoukai_mandara"],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR). Canon (Wikimon: Sakuyamon:_Miko_Mode) solo tiene Izuna y Kongoukai Mandara, las mismas skills que Sakuyamon"
     }
   ]
 }

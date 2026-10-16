@@ -1,0 +1,7 @@
+*.bak*
+src_backup/
+__pycache__/
+aplicar_parche*.py
+diagnostico.py
+reparar_update.py
+.claude/

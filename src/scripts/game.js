@@ -9,6 +9,8 @@ const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>documen
 const CREATURES = [{ id: '001_guilmon' }, { id: '002_renamon' }, { id: '003_terriermon' }];
 // Criatura de un jugador (cada jugador elige la suya; guarda su id en q.cid)
 const CR = q => CreatureLoader.cache[(q && q.cid) || '001_guilmon'] || null;
+// Línea que se usa para dibujar a los enemigos (no hace falta que sea jugable). Si no carga, se dibujan con formas.
+const ENEMY_LINE = '004_impmon';
 // Atributos: 0 Vacuna, 1 Virus, 2 Dato. Cada uno es fuerte contra el siguiente: Vacuna > Virus > Dato > Vacuna.
 // El atributo de cada Digimon sale de "attribute" en su JSON.
 const ATTR = ['Vacuna', 'Virus', 'Dato'];
@@ -28,6 +30,7 @@ const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisi
 async function initGame(ids) {
   await SkillSys.load();
   await Promise.all([...new Set(ids)].map(id => CreatureLoader.load(id)));
+  await CreatureLoader.load(ENEMY_LINE).catch(e => console.error(e));
 }
 
 // ---------- Red: PeerJS + party ----------
@@ -481,6 +484,23 @@ function drawBuddy(q,s,x,y,f,a){
  cx.restore();
 }
 
+// ---------- Enemigos con sprites (ENEMY_LINE) ----------
+// El tamaño sale del radio de colisión; el atributo se ve en el aro de color de la sombra.
+const enSpr=e=>{const C=CreatureLoader.cache[ENEMY_LINE];return C&&e.sk?C.canvases[e.sk]:null};
+const enH=e=>Math.max(50,e.r*4.2);
+const enTop=e=>enSpr(e)?enH(e)/2:e.r;
+function drawEnemy(e){
+ const S=enSpr(e);if(!S||!S.canvas)return false;
+ const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),w=fw*h/fh;
+ const stop=e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
+ cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
+ cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
+ cx.strokeStyle=ELC[e.el];cx.lineWidth=2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,6,0,0,6.283);cx.stroke();
+ if(Math.cos(e.ang)<0)cx.scale(-1,1);
+ if(e.fl>0)cx.filter='brightness(3)';
+ cx.drawImage(cv,col*fw,row*fh,fw,fh,-w/2,-h/2,w,h);
+ cx.restore();return true}
+
 function startEvo(s){evo={t:0,s,done:0};const v=$('evt');v.style.display='block';v.textContent='¡Tu compañero está digievolucionando!'}
 function stepEvo(dt){evo.t+=dt;
  if(!evo.done&&evo.t>=1.3){evo.done=1;
@@ -659,8 +679,10 @@ function choose(u){
 
 function spawn(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  const q=Math.random(),k=t>25&&q<.15?2:t>10&&q<.4?1:0,b=2+Math.floor(t/40);
+ // sk: sprite de ENEMY_LINE. Etapa = tier; los tanques van una etapa arriba (en el tope, una de las ramas finales al azar)
+ const es=ti+(k===2?1:0),sk=es<5?'stage_'+es:'branch_6_'+(1+Math.floor(Math.random()*3));
  const HM=[1,1.5,2.2,3,4,5.5][ti],T=[{hp:b,sp:1,r:12,v:3},{hp:Math.max(1,Math.ceil(b/2)),sp:1.9,r:9,v:4},{hp:b*4,sp:.55,r:21,v:10}][k];
- en.push({x:cam.x+Math.cos(a)*d,y:cam.y+Math.sin(a)*d,k,ti,hp:T.hp*HM,sp:(55+Math.random()*25+t*.4)*T.sp*(1+.05*ti),r:T.r*(1+.12*ti),v:T.v*(1+.5*ti),dm:[1,1.2,1.4,1.7,2,2.4][ti],fl:0,ang:0,el:Math.floor(Math.random()*3),gun:k!==1&&t>15&&Math.random()<Math.min(.4,(t-15)/150)+.08*ti,cd:1+Math.random()*2})}
+ en.push({x:cam.x+Math.cos(a)*d,y:cam.y+Math.sin(a)*d,k,ti,sk,hp:T.hp*HM,sp:(55+Math.random()*25+t*.4)*T.sp*(1+.05*ti),r:T.r*(1+.12*ti),v:T.v*(1+.5*ti),dm:[1,1.2,1.4,1.7,2,2.4][ti],fl:0,ang:0,el:Math.floor(Math.random()*3),gun:k!==1&&t>15&&Math.random()<Math.min(.4,(t-15)/150)+.08*ti,cd:1+Math.random()*2})}
 function burst(x,y,c){for(let i=0;i<8;i++){const a=Math.random()*6.283,s=60+Math.random()*120;pt.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.4,c})}}
 
 function update(dt){
@@ -672,7 +694,7 @@ function update(dt){
      conn.send({
        type: 'sync',
        P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, oa: q.oa, revP: q.revP })),
-       en: en.map(e => ({ x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun })),
+       en: en.map(e => ({ x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun })),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
        sh: sh.map(s => ({ x: s.x, y: s.y, c: s.c, r: s.r })),
        eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el })),
@@ -760,7 +782,7 @@ function update(dt){
  $('fill').style.width=Math.max(0,P[0].hp/P[0].max*100)+'%';
  if(mode===2)$('fill2').style.width=Math.max(0,P[1].hp/P[1].max*100)+'%';
  $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
- if($('tr')&&CR(P[0])){const M=CR(P[0]).meta;$('tr').textContent='Enemigos: '+(M.stages[Math.max(0,Math.max(...P.map(q=>q.stage|0))-1)]||M.stages[4]).name}
+ if($('tr')&&CR(P[0])){const EC=CreatureLoader.cache[ENEMY_LINE],M=(EC||CR(P[0])).meta;$('tr').textContent='Enemigos: '+(M.stages[Math.max(0,Math.max(...P.map(q=>q.stage|0))-1)]||M.stages[4]).name}
  $('info').textContent='Nv '+lvl+' · '+kills+' virus';$('pst').textContent=P.map(q=>(mode===2?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
 }
 
@@ -781,10 +803,11 @@ function draw(){
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
  for(const e of en){const C=e.fl>0?'#fff':ELC[e.el],D='#050b1a';cx.fillStyle=C;
-  if(e.k===1){cx.save();cx.translate(e.x,e.y);cx.rotate(e.ang);cx.beginPath();cx.moveTo(e.r*1.4,0);cx.lineTo(-e.r,-e.r);cx.lineTo(-e.r*.5,0);cx.lineTo(-e.r,e.r);cx.fill();cx.restore()}
+  if(drawEnemy(e)){}
+  else if(e.k===1){cx.save();cx.translate(e.x,e.y);cx.rotate(e.ang);cx.beginPath();cx.moveTo(e.r*1.4,0);cx.lineTo(-e.r,-e.r);cx.lineTo(-e.r*.5,0);cx.lineTo(-e.r,e.r);cx.fill();cx.restore()}
   else if(e.k===2){cx.fillRect(e.x-e.r,e.y-e.r,e.r*2,e.r*2);cx.fillStyle=D;cx.fillRect(e.x-e.r+4,e.y-e.r+4,e.r*2-8,e.r*2-8);cx.fillStyle=C;cx.fillRect(e.x-8,e.y-7,5,6);cx.fillRect(e.x+3,e.y-7,5,6);cx.fillRect(e.x-8,e.y+4,16,3)}
   else{cx.fillRect(e.x-e.r,e.y-e.r,e.r*2,e.r*2);cx.fillStyle=D;cx.fillRect(e.x-7,e.y-4,5,5);cx.fillRect(e.x+2,e.y-4,5,5);cx.fillRect(e.x-6,e.y+4,12,3)}
-  for(let i=0;i<e.ti;i++){cx.fillStyle='#ffd23f';cx.fillRect(e.x-(e.ti*5-1)+i*10,e.y-e.r-10,7,5)}
+  for(let i=0;i<e.ti;i++){cx.fillStyle='#ffd23f';cx.fillRect(e.x-(e.ti*5-1)+i*10,e.y-enTop(e)-10,7,5)}
   if(e.gun){cx.strokeStyle='rgba(255,255,255,.75)';cx.lineWidth=2;cx.beginPath();cx.arc(e.x,e.y,e.r+5,0,6.283);cx.stroke()}}
  for(const s of sh){cx.fillStyle=s.c||'#ffd23f';cx.beginPath();cx.arc(s.x,s.y,s.r||5,0,6.283);cx.fill()}
  for(const b of eb){cx.fillStyle=ELC[b.el];cx.strokeStyle='#fff';cx.lineWidth=2;cx.beginPath();cx.arc(b.x,b.y,6,0,6.283);cx.fill();cx.stroke()}

@@ -13,98 +13,434 @@
     "light": "#bfe6ff",
     "dark": "#a04bff",
     "metal": "#cfd8e3",
+    "wind": "#8ef0b0",
     "neutral": "#ffffff"
+  },
+  "types": {
+    "melee_arc": "Tajo en arco hacia el enemigo más cercano (range, arc)",
+    "cone": "Abanico relleno, más largo que el tajo (range, arc)",
+    "projectile": "Proyectil al enemigo más cercano (speed, life, explode, pierce; count + spread = abanico de varios)",
+    "beam": "Rayo recto instantáneo que atraviesa todo (range, width)",
+    "orbit": "Objetos que giran alrededor del jugador (radius, count)",
+    "nova": "Pulso circular alrededor del jugador (radius; guard = segundos de invulnerabilidad)"
   },
   "skills": {
     "hot_bite": {
       "name": "Hot Bite",
       "desc": "Muerde con colmillos al rojo vivo y quema lo que toca",
-      "type": "melee_arc",
-      "element": "fire",
-      "dmg": 1.3,
-      "cd": 1.4,
-      "range": 70,
-      "arc": 2.2
+      "type": "melee_arc", "element": "fire",
+      "dmg": 1.3, "cd": 1.4, "range": 70, "arc": 2.2,
+      "source": "canon (en la wiki Gigimon solo tiene ataque básico)"
     },
+
     "rock_breaker": {
       "name": "Rock Breaker",
       "desc": "Arañazo con las garras delanteras capaz de romper piedra",
-      "type": "melee_arc",
-      "element": "earth",
-      "dmg": 2.0,
-      "cd": 1.1,
-      "range": 95,
-      "arc": 1.8
+      "type": "melee_arc", "element": "earth",
+      "dmg": 2.0, "cd": 1.1, "range": 95, "arc": 1.8,
+      "source": "dsrworldwiki:guilmon"
     },
     "fireball": {
       "name": "Fireball",
       "desc": "Escupe una bola de fuego que explota al impactar",
-      "type": "projectile",
-      "element": "fire",
-      "dmg": 1.8,
-      "cd": 1.6,
-      "speed": 380,
-      "life": 1.2,
-      "explode": 55
+      "type": "projectile", "element": "fire",
+      "dmg": 1.8, "cd": 1.6, "speed": 380, "life": 1.2, "explode": 55,
+      "source": "dsrworldwiki:guilmon"
+    },
+    "grow_claw": {
+      "name": "Grow Claw",
+      "desc": "Zarpazo con una garra gigante que barre todo adelante",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 2.1, "cd": 1.0, "range": 105, "arc": 2.0,
+      "source": "dsrworldwiki:growlmon"
     },
     "plasma_blade": {
       "name": "Plasma Blade",
       "desc": "Tajo con las cuchillas de los codos cargadas de plasma",
-      "type": "melee_arc",
-      "element": "electric",
-      "dmg": 2.2,
-      "cd": 1.2,
-      "range": 110,
-      "arc": 2.6
+      "type": "melee_arc", "element": "electric",
+      "dmg": 2.2, "cd": 1.2, "range": 110, "arc": 2.6,
+      "source": "dsrworldwiki:growlmon"
     },
     "exhaust_flame": {
       "name": "Exhaust Flame",
       "desc": "Ruge y escupe una llamarada en abanico",
-      "type": "cone",
-      "element": "fire",
-      "dmg": 2.6,
-      "cd": 2.4,
-      "range": 180,
-      "arc": 1.0
+      "type": "cone", "element": "fire",
+      "dmg": 2.6, "cd": 2.4, "range": 180, "arc": 1.0,
+      "source": "dsrworldwiki:growlmon"
+    },
+    "hammer_edge": {
+      "name": "Hammer Edge",
+      "desc": "Baja los dos brazos de golpe y aplasta lo que tiene enfrente",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 3.0, "cd": 1.5, "range": 120, "arc": 1.6,
+      "source": "dsrworldwiki:wargrowlmon"
+    },
+    "double_edge": {
+      "name": "Double Edge",
+      "desc": "Lanza dos ondas de choque con las cuchillas que atraviesan enemigos",
+      "type": "projectile", "element": "wind",
+      "dmg": 2.2, "cd": 1.8, "speed": 460, "life": 0.9, "pierce": 3, "count": 2, "spread": 0.35,
+      "source": "dsrworldwiki:wargrowlmon"
     },
     "atomic_blaster": {
       "name": "Atomic Blaster",
       "desc": "Dispara los cañones del pecho: rayo largo que perfora",
-      "type": "beam",
-      "element": "fire",
-      "dmg": 3.2,
-      "cd": 2.8,
-      "range": 420,
-      "width": 26
+      "type": "beam", "element": "fire",
+      "dmg": 3.2, "cd": 2.8, "range": 420, "width": 26,
+      "source": "dsrworldwiki:wargrowlmon"
     },
-    "assault_balancer": {
-      "name": "Assault Balancer",
-      "desc": "Extiende el cable de la espalda y atraviesa a los enemigos",
-      "type": "beam",
-      "element": "metal",
-      "dmg": 2.2,
-      "cd": 1.8,
-      "range": 300,
-      "width": 10
+    "royal_slash": {
+      "name": "Royal Slash",
+      "desc": "Barre con la lanza Gram en un arco enorme",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 3.4, "cd": 1.1, "range": 135, "arc": 2.8,
+      "source": "dsrworldwiki:gallantmon"
     },
-    "lightning_joust": {
-      "name": "Lightning Joust",
-      "desc": "Embestida de lanza de luz en línea recta",
-      "type": "beam",
-      "element": "light",
-      "dmg": 3.0,
-      "cd": 2.6,
-      "range": 380,
-      "width": 20
+    "royal_saber": {
+      "name": "Royal Saber",
+      "desc": "Gram dispara un haz de luz de un solo golpe",
+      "type": "beam", "element": "light",
+      "dmg": 3.6, "cd": 2.2, "range": 400, "width": 22,
+      "source": "dsrworldwiki:gallantmon"
     },
-    "shield_of_the_just": {
-      "name": "Shield of the Just",
-      "desc": "Escudos de luz que giran a tu alrededor y dañan al tocar",
-      "type": "orbit",
-      "element": "light",
-      "dmg": 0.9,
-      "radius": 64,
-      "count": 3
+    "final_elysion": {
+      "name": "Final Elysion",
+      "desc": "El escudo Aegis lanza un rayo purificador gigante",
+      "type": "beam", "element": "light",
+      "dmg": 4.4, "cd": 3.4, "range": 480, "width": 46,
+      "source": "dsrworldwiki:gallantmon"
+    },
+    "dynas": {
+      "name": "Dynas",
+      "desc": "Revolea la lanza Dynas en un barrido rapidísimo",
+      "type": "melee_arc", "element": "wind",
+      "dmg": 3.0, "cd": 0.8, "range": 130, "arc": 2.6,
+      "source": "canon:wikimon (no está en DSR)"
+    },
+    "final_crest": {
+      "name": "Final Crest",
+      "desc": "Lanza ráfagas de viento filosas como cuchillas que atraviesan todo",
+      "type": "projectile", "element": "wind",
+      "dmg": 2.4, "cd": 1.3, "speed": 620, "life": 0.9, "pierce": 4, "count": 3, "spread": 0.4,
+      "source": "canon:wikimon (no está en DSR)"
+    },
+    "rage_of_wyvern": {
+      "name": "Rage of Wyvern",
+      "desc": "Dispara desde el cristal de Dynas una energía con forma de dragón",
+      "type": "beam", "element": "wind",
+      "dmg": 4.2, "cd": 3.0, "range": 460, "width": 40,
+      "source": "canon:wikimon (no está en DSR)"
+    },
+    "demons_disaster": {
+      "name": "Demon's Disaster",
+      "desc": "Lluvia de estocadas oscuras disparadas desde la lanza Balmung",
+      "type": "projectile", "element": "dark",
+      "dmg": 2.0, "cd": 1.4, "speed": 540, "life": 1.0, "pierce": 1, "count": 5, "spread": 0.5,
+      "source": "canon:wikimon (no está en DSR)"
+    },
+    "judecca_prison": {
+      "name": "Judecca Prison",
+      "desc": "El escudo Gorgon libera una onda oscura y corrosiva",
+      "type": "cone", "element": "dark",
+      "dmg": 4.0, "cd": 2.6, "range": 230, "arc": 1.2,
+      "source": "canon:wikimon (no está en DSR)"
+    },
+    "waking_dead": {
+      "name": "Waking Dead",
+      "desc": "Envuelve todo alrededor en una esfera gigante de energía oscura",
+      "type": "nova", "element": "dark",
+      "dmg": 3.4, "cd": 4.5, "radius": 190,
+      "source": "canon:wikimon (no está en DSR)"
+    },
+
+    "sozan": {
+      "name": "Sozan",
+      "desc": "Ráfaga de golpes rápidos y filosos",
+      "type": "melee_arc", "element": "wind",
+      "dmg": 1.6, "cd": 0.8, "range": 85, "arc": 1.8,
+      "source": "dsrworldwiki:renamon"
+    },
+    "koyosetsu": {
+      "name": "Koyosetsu",
+      "desc": "Esparce hojas afiladas en abanico",
+      "type": "projectile", "element": "wind",
+      "dmg": 0.9, "cd": 1.7, "speed": 420, "life": 0.9, "count": 5, "spread": 0.9,
+      "source": "dsrworldwiki:renamon"
+    },
+    "headbutt": {
+      "name": "Headbutt",
+      "desc": "Cabezazo seguido de un latigazo con las colas",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 2.2, "cd": 1.1, "range": 100, "arc": 2.0,
+      "source": "dsrworldwiki:kyubimon"
+    },
+    "koshugeki": {
+      "name": "Koshugeki",
+      "desc": "Lanza fuegos fatuos que persiguen a los enemigos",
+      "type": "projectile", "element": "fire",
+      "dmg": 1.1, "cd": 1.9, "speed": 330, "life": 1.3, "count": 3, "spread": 0.5, "explode": 35,
+      "source": "dsrworldwiki:kyubimon"
+    },
+    "koenryu": {
+      "name": "Koenryu",
+      "desc": "Desata un dragón de llamas azules hacia adelante",
+      "type": "cone", "element": "fire",
+      "dmg": 3.0, "cd": 2.6, "range": 200, "arc": 1.1,
+      "source": "dsrworldwiki:kyubimon"
+    },
+    "knifehand_strike": {
+      "name": "Knifehand Strike",
+      "desc": "Golpe de mano en filo, rápido y preciso",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 2.8, "cd": 1.0, "range": 110, "arc": 1.7,
+      "source": "dsrworldwiki:taomon"
+    },
+    "kofusatsu": {
+      "name": "Kofusatsu",
+      "desc": "Arroja talismanes espirituales que atraviesan enemigos",
+      "type": "projectile", "element": "dark",
+      "dmg": 1.6, "cd": 1.8, "speed": 400, "life": 1.1, "pierce": 1, "count": 3, "spread": 0.45,
+      "source": "dsrworldwiki:taomon"
+    },
+    "bonhitsusen": {
+      "name": "Bonhitsusen",
+      "desc": "Dibuja un sello sagrado con el pincel que estalla al tocar",
+      "type": "projectile", "element": "dark",
+      "dmg": 3.6, "cd": 2.8, "speed": 300, "life": 1.4, "explode": 95,
+      "source": "dsrworldwiki:taomon"
+    },
+    "swing": {
+      "name": "Swing",
+      "desc": "Revolea una losa de piedra a su alrededor",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 3.6, "cd": 1.3, "range": 130, "arc": 3.2,
+      "source": "dsrworldwiki:kuzuhamon"
+    },
+    "ura_izuna": {
+      "name": "Ura Izuna",
+      "desc": "Dispara con el escudo de la cintura un golpe oscuro que estalla",
+      "type": "projectile", "element": "dark",
+      "dmg": 3.8, "cd": 2.0, "speed": 440, "life": 1.2, "explode": 70,
+      "source": "dsrworldwiki:kuzuhamon"
+    },
+    "taizoukai_mandara": {
+      "name": "Taizoukai Mandara",
+      "desc": "Levanta una barrera de talismanes: daña alrededor y te protege un instante",
+      "type": "nova", "element": "light",
+      "dmg": 2.4, "cd": 5.0, "radius": 150, "guard": 1.2,
+      "source": "dsrworldwiki:kuzuhamon"
+    },
+    "jouenkobu": {
+      "name": "Jouenkobu",
+      "desc": "Crea llamas azules y las dispara contra el enemigo",
+      "type": "projectile", "element": "fire",
+      "dmg": 3.2, "cd": 1.2, "speed": 480, "life": 1.1, "explode": 50,
+      "source": "dsrworldwiki:sakuyamon"
+    },
+    "izuna": {
+      "name": "Izuna",
+      "desc": "Invoca cuatro zorros espirituales que salen disparados",
+      "type": "projectile", "element": "dark",
+      "dmg": 2.2, "cd": 2.2, "speed": 380, "life": 1.3, "pierce": 2, "count": 4, "spread": 1.0,
+      "source": "dsrworldwiki:sakuyamon"
+    },
+    "kongoukai_mandara": {
+      "name": "Kongoukai Mandara",
+      "desc": "Barrera purificadora que expulsa a los malos espíritus y te protege",
+      "type": "nova", "element": "light",
+      "dmg": 2.6, "cd": 5.0, "radius": 170, "guard": 1.2,
+      "source": "dsrworldwiki:sakuyamon"
+    },
+
+    "blazing_fire": {
+      "name": "Blazing Fire",
+      "desc": "Escupe disparos de aire supercaliente a corta distancia",
+      "type": "projectile", "element": "fire",
+      "dmg": 0.8, "cd": 1.1, "speed": 520, "life": 0.45, "count": 3, "spread": 0.3,
+      "source": "dsrworldwiki:terriermon"
+    },
+    "petit_twister": {
+      "name": "Petit Twister",
+      "desc": "Gira las orejas como hélices y arma un pequeño tornado",
+      "type": "nova", "element": "wind",
+      "dmg": 1.5, "cd": 1.9, "radius": 95,
+      "source": "dsrworldwiki:terriermon"
+    },
+    "crush": {
+      "name": "Crush",
+      "desc": "Golpe hacia abajo con las dos manos",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 2.3, "cd": 1.1, "range": 95, "arc": 1.8,
+      "source": "dsrworldwiki:gargomon"
+    },
+    "dumdum_upper": {
+      "name": "Dumdum Upper",
+      "desc": "Uppercut brutal con el brazo Gatling",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 3.6, "cd": 2.2, "range": 90, "arc": 1.3,
+      "source": "dsrworldwiki:gargomon"
+    },
+    "gatling_arm": {
+      "name": "Gatling Arm",
+      "desc": "Barre la zona con balas de las dos ametralladoras",
+      "type": "projectile", "element": "metal",
+      "dmg": 0.9, "cd": 1.6, "speed": 560, "life": 0.9, "count": 7, "spread": 1.3,
+      "source": "dsrworldwiki:gargomon"
+    },
+    "kick": {
+      "name": "Kick",
+      "desc": "Patada a toda velocidad",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 2.8, "cd": 0.9, "range": 100, "arc": 1.8,
+      "source": "dsrworldwiki:rapidmon"
+    },
+    "rapid_fire": {
+      "name": "Rapid Fire",
+      "desc": "Dispara misiles desde las dos manos que explotan al impactar",
+      "type": "projectile", "element": "metal",
+      "dmg": 2.0, "cd": 1.6, "speed": 420, "life": 1.3, "count": 2, "spread": 0.3, "explode": 55,
+      "source": "dsrworldwiki:rapidmon"
+    },
+    "golden_triangle": {
+      "name": "Golden Triangle",
+      "desc": "Rayo triangular verde que desintegra datos",
+      "type": "beam", "element": "light",
+      "dmg": 3.2, "cd": 2.6, "range": 420, "width": 34,
+      "source": "dsrworldwiki:rapidmon"
+    },
+    "saint_kick": {
+      "name": "Saint Kick",
+      "desc": "Pisotón gigante que aplasta todo alrededor",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 3.6, "cd": 1.2, "range": 130, "arc": 2.6,
+      "source": "dsrworldwiki:megagargomon"
+    },
+    "burst_shot": {
+      "name": "Burst Shot",
+      "desc": "Descarga todas las armas del cuerpo en una lluvia de balas",
+      "type": "projectile", "element": "metal",
+      "dmg": 1.4, "cd": 2.0, "speed": 500, "life": 1.0, "count": 10, "spread": 2.4,
+      "source": "dsrworldwiki:megagargomon"
+    },
+    "giant_missile": {
+      "name": "Giant Missile",
+      "desc": "Misil de megatoneladas desde el hombro: explosión enorme",
+      "type": "projectile", "element": "metal",
+      "dmg": 4.4, "cd": 3.0, "speed": 300, "life": 1.6, "explode": 120,
+      "source": "dsrworldwiki:megagargomon"
+    },
+
+    "summon": {
+      "name": "Summon",
+      "desc": "Invoca dos espíritus de fuego y hielo y los lanza",
+      "type": "projectile", "element": "fire",
+      "dmg": 1.4, "cd": 1.4, "speed": 400, "life": 1.1, "count": 2, "spread": 0.4,
+      "source": "dsrworldwiki:impmon"
+    },
+    "night_of_fire": {
+      "name": "Night of Fire",
+      "desc": "Llamarada de fuego oscuro hacia adelante",
+      "type": "cone", "element": "dark",
+      "dmg": 2.0, "cd": 1.9, "range": 150, "arc": 1.0,
+      "source": "dsrworldwiki:impmon"
+    },
+    "cane_strike": {
+      "name": "Cane Strike",
+      "desc": "Dos bastonazos seguidos con el báculo",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 2.2, "cd": 1.0, "range": 100, "arc": 1.9,
+      "source": "dsrworldwiki:wizardmon"
+    },
+    "thunder_cloud": {
+      "name": "Thunder Cloud",
+      "desc": "Descarga un rayo desde el báculo que atraviesa la fila",
+      "type": "beam", "element": "electric",
+      "dmg": 2.6, "cd": 2.0, "range": 360, "width": 18,
+      "source": "dsrworldwiki:wizardmon"
+    },
+    "magic_game": {
+      "name": "Magic Game",
+      "desc": "Arroja una esfera de luz que estalla y confunde a los enemigos",
+      "type": "projectile", "element": "dark",
+      "dmg": 2.4, "cd": 2.4, "speed": 320, "life": 1.3, "explode": 80,
+      "source": "dsrworldwiki:wizardmon"
+    },
+    "guiltish": {
+      "name": "Guiltish",
+      "desc": "Convierte talismanes en proyectiles que salen en abanico",
+      "type": "projectile", "element": "neutral",
+      "dmg": 1.5, "cd": 1.5, "speed": 440, "life": 1.1, "count": 4, "spread": 0.8,
+      "source": "dsrworldwiki:baalmon"
+    },
+    "leak_information": {
+      "name": "Leak Information",
+      "desc": "Lee el libro rojo, expone las debilidades de los que te rodean y los daña",
+      "type": "nova", "element": "dark",
+      "dmg": 2.2, "cd": 4.0, "radius": 160,
+      "source": "dsrworldwiki:baalmon (en DSR sube el crítico; acá es un pulso porque no hay críticos)"
+    },
+    "kamiuchi": {
+      "name": "Kamiuchi",
+      "desc": "Golpe con el Taishinpen que descarga una sacudida eléctrica",
+      "type": "melee_arc", "element": "electric",
+      "dmg": 3.2, "cd": 1.4, "range": 120, "arc": 2.2,
+      "source": "dsrworldwiki:baalmon"
+    },
+    "darkness_claw": {
+      "name": "Darkness Claw",
+      "desc": "Desgarra con garras cargadas de energía oscura",
+      "type": "melee_arc", "element": "dark",
+      "dmg": 3.4, "cd": 0.9, "range": 115, "arc": 2.2,
+      "source": "dsrworldwiki:beelzemon + beelzemon-xwars"
+    },
+    "double_impact": {
+      "name": "Double Impact",
+      "desc": "Ráfaga rápida con las dos escopetas Berenjena",
+      "type": "projectile", "element": "metal",
+      "dmg": 2.0, "cd": 0.9, "speed": 640, "life": 0.9, "count": 2, "spread": 0.15, "pierce": 1,
+      "source": "dsrworldwiki:beelzemon"
+    },
+    "heartbreak_shot": {
+      "name": "Heartbreak Shot",
+      "desc": "Disparo certero al corazón que atraviesa todo",
+      "type": "beam", "element": "metal",
+      "dmg": 4.2, "cd": 2.6, "range": 460, "width": 14,
+      "source": "dsrworldwiki:beelzemon"
+    },
+    "double_impact_blast": {
+      "name": "Double Impact",
+      "desc": "Dispara a quemarropa la Berenjena y el Blaster a la vez",
+      "type": "projectile", "element": "metal",
+      "dmg": 2.2, "cd": 1.0, "speed": 560, "life": 0.5, "count": 3, "spread": 0.35,
+      "source": "dsrworldwiki:beelzemon-blastmode"
+    },
+    "death_slinger": {
+      "name": "Death Slinger",
+      "desc": "El Blaster libera una onda destructiva que arrasa todo alrededor",
+      "type": "nova", "element": "dark",
+      "dmg": 3.6, "cd": 3.6, "radius": 230,
+      "source": "dsrworldwiki:beelzemon-blastmode"
+    },
+    "chaos_flare": {
+      "name": "Chaos Flare",
+      "desc": "Dibuja un círculo mágico y dispara una onda destructiva",
+      "type": "beam", "element": "dark",
+      "dmg": 4.0, "cd": 2.8, "range": 440, "width": 44,
+      "source": "dsrworldwiki:beelzemon-blastmode"
+    },
+    "double_impact_sdx": {
+      "name": "Double Impact SDX",
+      "desc": "Escopetazo de corto alcance con muchos perdigones",
+      "type": "projectile", "element": "metal",
+      "dmg": 1.3, "cd": 1.1, "speed": 600, "life": 0.4, "count": 6, "spread": 0.7,
+      "source": "dsrworldwiki:beelzemon-xwars"
+    },
+    "death_the_cannon": {
+      "name": "Death the Cannon",
+      "desc": "Cañonazo de la Berenjena SDX que explota con fuerza",
+      "type": "projectile", "element": "dark",
+      "dmg": 4.4, "cd": 2.8, "speed": 420, "life": 1.3, "explode": 110,
+      "source": "dsrworldwiki:beelzemon-xwars"
     }
   }
 }

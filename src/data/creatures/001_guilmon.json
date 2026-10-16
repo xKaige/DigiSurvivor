@@ -2,18 +2,18 @@
   "id": "001_guilmon",
   "name": "Línea Guilmon",
   "attribute": "Virus",
-  "anySkill": true,
+  "anySkill": false,
   "stages": [
     { "stage": 0, "name": "Jyarimon", "file": "jyarimon_1.png", "cols": 2, "rows": 6,
-      "skills": [], "verified": false, "note": "Sin skill propia encontrada: usa solo el disparo básico" },
+      "skills": [], "wiki": null, "verified": true, "note": "No está en la wiki: usa solo el disparo básico" },
     { "stage": 1, "name": "Gigimon", "file": "gigimon_2.png", "cols": 2, "rows": 6,
-      "skills": ["hot_bite"], "verified": true },
+      "skills": ["hot_bite"], "wiki": "gigimon", "verified": false, "note": "En la wiki solo tiene ataque básico; Hot Bite es canon" },
     { "stage": 2, "name": "Guilmon", "file": "guilmon_3.png", "cols": 2, "rows": 6,
-      "skills": ["rock_breaker", "fireball"], "verified": true },
+      "skills": ["rock_breaker", "fireball"], "wiki": "guilmon", "verified": true },
     { "stage": 3, "name": "Growmon", "file": "growmon_4.png", "cols": 2, "rows": 6,
-      "skills": ["plasma_blade", "exhaust_flame"], "verified": true },
+      "skills": ["grow_claw", "plasma_blade", "exhaust_flame"], "wiki": "growlmon", "verified": true },
     { "stage": 4, "name": "WarGrowlmon", "file": "megalogrowmon_5.png", "cols": 2, "rows": 6,
-      "skills": ["atomic_blaster", "assault_balancer"], "verified": true }
+      "skills": ["hammer_edge", "double_edge", "atomic_blaster"], "wiki": "wargrowlmon", "verified": true }
   ],
   "branches": [
     {
@@ -24,9 +24,9 @@
       "rows": 6,
       "req": { "FUE": 3, "VIT": 1 },
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
-      "skills": ["lightning_joust", "shield_of_the_just"],
-      "verified": false,
-      "note": "Skills de memoria (canon). Confirmar en la wiki"
+      "skills": ["royal_slash", "royal_saber", "final_elysion"],
+      "wiki": "gallantmon",
+      "verified": true
     },
     {
       "id": "6_2",
@@ -36,9 +36,10 @@
       "rows": 6,
       "req": { "VEL": 4 },
       "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
-      "skills": [],
+      "skills": ["dynas", "final_crest", "rage_of_wyvern"],
+      "wiki": null,
       "verified": false,
-      "note": "PENDIENTE: completar con las skills reales"
+      "note": "No está en la wiki (DSR). Skills del canon (Wikimon: Medieval_Dukemon)"
     },
     {
       "id": "6_3",
@@ -48,9 +49,10 @@
       "rows": 6,
       "req": { "INT": 4 },
       "desc": "Oscuro: +5 de daño",
-      "skills": [],
+      "skills": ["demons_disaster", "judecca_prison", "waking_dead"],
+      "wiki": null,
       "verified": false,
-      "note": "PENDIENTE: completar con las skills reales"
+      "note": "No está en la wiki (DSR). Skills del canon (Wikimon: ChaosGallantmon)"
     }
   ]
 }

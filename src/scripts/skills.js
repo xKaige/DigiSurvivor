@@ -112,10 +112,25 @@ const SkillSys = {
 
   projectile(q, k, d, S, cd) {
     const b = this.near(q, 520); if (!b) { q.wt[k] = .25; return; }
-    const a = Math.atan2(b.y - q.y, b.x - q.x);
-    sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed,
-      l: d.life || 1.2, pi: 0, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el,
-      ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 });
+    // count + spread: varios proyectiles repartidos en abanico (spread = ángulo total en radianes)
+    const a0 = Math.atan2(b.y - q.y, b.x - q.x), n = d.count || 1, sp = n > 1 ? (d.spread || .5) : 0;
+    for (let i = 0; i < n; i++) {
+      const a = a0 + (n > 1 ? -sp / 2 + sp * i / (n - 1) : 0);
+      sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed,
+        l: d.life || 1.2, pi: d.pierce || 0, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el,
+        ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 });
+    }
+    this.fired(q, k, cd);
+  },
+
+  // Pulso alrededor del jugador. guard: segundos de invulnerabilidad (barreras tipo Mandara)
+  nova(q, k, d, S, cd) {
+    const R = d.radius * S.area;
+    if (!this.near(q, R + 40)) { q.wt[k] = .25; return; }
+    ef.push({ k: 'ring', x: q.x, y: q.y, R, col: this.col(d), l: .35, m: .35 });
+    const dm = d.dmg * q.dmg * S.dmg;
+    for (const e of en) if (Math.hypot(e.x - q.x, e.y - q.y) < R + e.r) hit(e, dm, q.el);
+    if (d.guard) q.inv = Math.max(q.inv || 0, d.guard);
     this.fired(q, k, cd);
   },
 

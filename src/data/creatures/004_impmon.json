@@ -1,0 +1,60 @@
+{
+  "id": "004_impmon",
+  "name": "Línea Impmon",
+  "attribute": "Virus",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars, pack 2952066637",
+  "stages": [
+    { "stage": 0, "name": "Kiimon", "file": "kiimon_1.png", "cols": 2, "rows": 6,
+      "skills": [], "wiki": null, "verified": true, "note": "No está en la wiki: usa solo el disparo básico" },
+    { "stage": 1, "name": "Yaamon", "file": "yaamon_2.png", "cols": 2, "rows": 6,
+      "skills": [], "wiki": "yaamon", "verified": true, "note": "En la wiki solo tiene ataque básico" },
+    { "stage": 2, "name": "Impmon", "file": "impmon_3.png", "cols": 2, "rows": 6,
+      "skills": ["summon", "night_of_fire"], "wiki": "impmon", "verified": true },
+    { "stage": 3, "name": "Wizarmon", "file": "wizarmon_4.png", "cols": 2, "rows": 6,
+      "skills": ["cane_strike", "thunder_cloud", "magic_game"], "wiki": "wizardmon", "verified": true,
+      "note": "En la wiki Impmon evoluciona a Madleomon; se usa Wizarmon porque es el sprite que trae el pack" },
+    { "stage": 4, "name": "Baalmon", "file": "baalmon_5.png", "cols": 2, "rows": 6,
+      "skills": ["guiltish", "leak_information", "kamiuchi"], "wiki": "baalmon", "verified": true }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Beelzebumon Blast Mode",
+      "file": "beelzebumonblastmode_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "FUE": 3, "VIT": 1 },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": ["double_impact_blast", "death_slinger", "chaos_flare"],
+      "wiki": "beelzemon-blastmode",
+      "verified": true,
+      "note": "En la wiki evoluciona desde Beelzemon, no desde Baalmon"
+    },
+    {
+      "id": "6_2",
+      "name": "Beelzebumon",
+      "file": "beelzebumon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "VEL": 4 },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": ["darkness_claw", "double_impact", "heartbreak_shot"],
+      "wiki": "beelzemon",
+      "verified": true
+    },
+    {
+      "id": "6_3",
+      "name": "Beelzebumon 2010",
+      "file": "beelzebumon2010_6_3.png",
+      "cols": 2,
+      "rows": 6,
+      "req": { "INT": 4 },
+      "desc": "Oscuro: +5 de daño",
+      "skills": ["double_impact_sdx", "darkness_claw", "death_the_cannon"],
+      "wiki": "beelzemon-xwars",
+      "verified": true,
+      "note": "En la wiki figura como Beelzemon-Xwars"
+    }
+  ]
+}

@@ -2,13 +2,18 @@
   "id": "003_terriermon",
   "name": "Línea Terriermon",
   "attribute": "Vacuna",
-  "anySkill": true,
+  "anySkill": false,
   "stages": [
-    { "stage": 0, "name": "Zerimon", "file": "zerimon_1.png", "cols": 2, "rows": 6, "skills": [] },
-    { "stage": 1, "name": "Gummymon", "file": "Gummymon_2.png", "cols": 2, "rows": 6, "skills": [] },
-    { "stage": 2, "name": "Terriermon", "file": "terriermon_3.png", "cols": 2, "rows": 6, "skills": [] },
-    { "stage": 3, "name": "Galgomon", "file": "Galgomon_4.png", "cols": 2, "rows": 6, "skills": [] },
-    { "stage": 4, "name": "Rapidmon", "file": "Rapidmon_5.png", "cols": 2, "rows": 6, "skills": [] }
+    { "stage": 0, "name": "Zerimon", "file": "zerimon_1.png", "cols": 2, "rows": 6,
+      "skills": [], "wiki": null, "verified": true, "note": "No está en la wiki: usa solo el disparo básico" },
+    { "stage": 1, "name": "Gummymon", "file": "Gummymon_2.png", "cols": 2, "rows": 6,
+      "skills": [], "wiki": "gummymon", "verified": true, "note": "En la wiki solo tiene ataque básico" },
+    { "stage": 2, "name": "Terriermon", "file": "terriermon_3.png", "cols": 2, "rows": 6,
+      "skills": ["blazing_fire", "petit_twister"], "wiki": "terriermon", "verified": true },
+    { "stage": 3, "name": "Galgomon", "file": "Galgomon_4.png", "cols": 2, "rows": 6,
+      "skills": ["crush", "dumdum_upper", "gatling_arm"], "wiki": "gargomon", "verified": true },
+    { "stage": 4, "name": "Rapidmon", "file": "Rapidmon_5.png", "cols": 2, "rows": 6,
+      "skills": ["kick", "rapid_fire", "golden_triangle"], "wiki": "rapidmon", "verified": true }
   ],
   "branches": [
     {
@@ -19,7 +24,9 @@
       "rows": 6,
       "req": { "FUE": 3, "VIT": 1 },
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
-      "skills": []
+      "skills": ["saint_kick", "burst_shot", "giant_missile"],
+      "wiki": "megagargomon",
+      "verified": true
     }
   ]
 }
