@@ -21,13 +21,18 @@ const CreatureLoader = {
           const cx = cv.getContext('2d');
           cx.drawImage(img, 0, 0);
 
-          // quita el fondo blanco
+          // quita el fondo blanco, solo si la imagen no trae transparencia propia
+          // (si ya es transparente, borrar los blancos se come las caras, panzas, etc. del dibujo)
           const imgData = cx.getImageData(0, 0, cv.width, cv.height);
           const d = imgData.data;
-          for (let i = 0; i < d.length; i += 4) {
-            if (d[i] > 240 && d[i + 1] > 240 && d[i + 2] > 240) d[i + 3] = 0;
+          let hasAlpha = false;
+          for (let i = 3; i < d.length; i += 4) if (d[i] < 255) { hasAlpha = true; break; }
+          if (!hasAlpha) {
+            for (let i = 0; i < d.length; i += 4) {
+              if (d[i] > 240 && d[i + 1] > 240 && d[i + 2] > 240) d[i + 3] = 0;
+            }
+            cx.putImageData(imgData, 0, 0);
           }
-          cx.putImageData(imgData, 0, 0);
           loadedData.canvases[key] = { canvas: cv, cols, rows };
           resolve();
         };
