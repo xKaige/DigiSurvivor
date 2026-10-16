@@ -76,7 +76,7 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 ## Sprites y criaturas
 - JSON en `src/data/creatures/<id>.json`: `attribute`, `stages[]` (etapas 0–4, con `skills`) y `branches[]` (formas finales con `id`, `req`, `desc`, `skills`).
 - Spritesheets de **2 columnas × 6 filas**. Filas que usa `drawBuddy`: **0 idle, 1 caminar, 2 muerto, 5 ataque** (3 y 4 sin usar por ahora). Se dibujan a 96 px de alto, pixel art sin suavizado.
-- `loader.js` vuelve transparente todo píxel con R,G,B > 240 (quita fondo blanco). Ojo: también borra blancos dentro del sprite; con `"keyWhite": false` en la etapa/rama del JSON no lo hace. **Los nombres de archivo distinguen mayúsculas en Vercel** (hay PNGs con mayúscula inicial en renamon/terriermon: el JSON tiene que coincidir exacto).
+- `loader.js` vuelve transparente todo píxel con R,G,B > 240 (quita fondo blanco). Ojo: también borra blancos dentro del sprite. **Los nombres de archivo distinguen mayúsculas en Vercel** (hay PNGs con mayúscula inicial en renamon/terriermon: el JSON tiene que coincidir exacto).
 - Para sumar una criatura: JSON + carpeta de sprites + agregarla a `CREATURES` en `game.js`. `001_guilmon` es el fallback cuando falta un id.
 - `004_impmon` está cargada en datos y sprites pero **todavía no es jugable** (no está en `CREATURES`). Hoy es la línea de los enemigos (`ENEMY_LINE`).
 - **Origen de los sprites: Stream Avatars (Steam Workshop).** Los packs bajados quedan en `D:\Steam\steamapps\workshop\content\665300\<idPack>\<idPack>.zip`, con `avatars/*.png` (ya vienen en 128×384 = grilla 2×6, se copian tal cual) y un `data.txt` con la config de cada avatar. Receta para importar una línea:
@@ -84,7 +84,6 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
   2. Extraer a `assets/sprites/creatures/<NNN_nombre>/` renombrando en minúsculas `<nombre>_<etapa+1>.png` (etapas 0–4 → `_1`…`_5`) y `<nombre>_6_<n>.png` para ramas.
   3. Crear `src/data/creatures/<NNN_nombre>.json` (con `wiki`, `verified`, `note`) y sumar sus skills a `skills.json`.
   4. Validar que todas las skills y PNG referenciados existan. Las ramas siguen el orden de bonos de `stepEvo`: 6_1 pesado, 6_2 veloz, 6_3 oscuro/poderoso.
-- **Otra fuente: el ROM de Digimon World Dusk** (`C:\Users\dario_lv7\OneDrive\Escritorio\rom Digi\`, fuera del repo). Extractor y receta en `tools/rom/README.md`. Gigimon, Guilmon, Growmon, WarGrowlmon y Dukemon ya usan sprites de batalla del ROM (cuadro de 160×128, llevan `"keyWhite": false`); Jyarimon, MedievalDukemon y ChaosDukemon siguen con los del Workshop (no están en el ROM).
 - Packs usados: 2944839923 (Guilmon), 2976689900 (Renamon), 2916279274 (Terriermon + Devas/Cherubimon), 2952066637 (Impmon). Sin usar: 2916848304 (línea Veemon).
 - Selección: en 1J/2J local desde el menú; online con `openMenuPick` y el mensaje `pick`.
 
@@ -129,3 +128,4 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Validación del guardado en servidor si se agrega ranking.
 - Actualizar el `README.md` a la estructura `src/`.
 - Git: el repo es https://github.com/xKaige/DigiSurvivor (rama `main`). Git está en `C:\Program Files\Git\cmd\git.exe`. Cada push a `main` publica en Vercel. El push se hace desde la terminal de la app (`run_in_terminal`), porque la consola de Claude no es interactiva y no puede usar el login guardado de Git Credential Manager si hace falta reautenticar.
+- Se probaron los sprites de batalla del ROM de Digimon World Dusk y **no gustaron** (se revirtió). No volver a proponerlos.
