@@ -6,7 +6,7 @@ const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>documen
 
 // Criaturas jugables. Cada una necesita la carpeta assets/sprites/creatures/<id>/ y el archivo src/data/creatures/<id>.json
 // Para sumar otra: agregala acá (y creá su JSON). Si falta el JSON, simplemente no aparece en la selección.
-const CREATURES = [{ id: '001_guilmon' }, { id: '002_renamon' }, { id: '003_terriermon' }];
+const CREATURES = [{ id: '001_guilmon' }, { id: '002_renamon' }, { id: '003_terriermon' }, { id: '005_veemon' }];
 // Criatura de un jugador (cada jugador elige la suya; guarda su id en q.cid)
 const CR = q => CreatureLoader.cache[(q && q.cid) || '001_guilmon'] || null;
 // Línea que se usa para dibujar a los enemigos (no hace falta que sea jugable). Si no carga, se dibujan con formas.
@@ -448,7 +448,10 @@ function drawBuddy(q,s,x,y,f,a){
  const cv = spriteInfo.canvas;
  const cols = spriteInfo.cols, rows = spriteInfo.rows;
  const fw = cv.width / cols, fh = cv.height / rows;
- const h = 96, w = fw * h / fh;
+ // 1,5 px de pantalla por píxel de la hoja: un cuadro de 64 ocupa 96 px y uno más grande (Digimon grandes) crece en proporción.
+ // Los pies quedan siempre a +48 de q.y (donde quedaban con los cuadros de 64).
+ const h = fh * 1.5, w = fw * 1.5;
+ q.dh = h;
 
  let row = 0, col = 0;
  if(q.dead){
@@ -468,19 +471,19 @@ function drawBuddy(q,s,x,y,f,a){
 
  cx.fillStyle = 'rgba(0,0,0,.35)';
  cx.beginPath();
- cx.ellipse(0, h / 2 - 2, w * .35, 5, 0, 0, 6.283);
+ cx.ellipse(0, 46, w * .35, 5, 0, 0, 6.283);
  cx.fill();
 
  if(mode === 2){
   cx.strokeStyle = PC[q.id];
   cx.lineWidth = 3;
   cx.beginPath();
-  cx.ellipse(0, h / 2 - 2, w * .4, 7, 0, 0, 6.283);
+  cx.ellipse(0, 46, w * .4, 7, 0, 0, 6.283);
   cx.stroke();
  }
 
  if(f < 0) cx.scale(-1, 1);
- cx.drawImage(cv, col * fw, row * fh, fw, fh, -w / 2, -h / 2, w, h);
+ cx.drawImage(cv, col * fw, row * fh, fw, fh, -w / 2, 48 - h, w, h);
  cx.restore();
 }
 
@@ -816,7 +819,7 @@ function draw(){
  for(const q of P){const s=q.stage|0,hh=96;
   if(q.dead)drawBuddy(q,s,q.x,q.y,q.face,.25);
   else if(!evo&&(q.inv<=0||Math.floor(t*20)%2))drawBuddy(q,s,q.x,q.y,q.face,1);
-  if(mode===2){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (pararse encima para revivir)':'J'+(q.id+1),q.x,q.y-hh/2-8)}
+  if(mode===2){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (pararse encima para revivir)':'J'+(q.id+1),q.x,q.y+48-(q.dh||hh)-8)}
   if(q.dead&&mode===2){const pr=Math.min(1,(q.revP||0)/REVIVE_TIME);cx.lineWidth=3;cx.strokeStyle='rgba(255,210,63,.35)';cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,0,6.283);cx.stroke();if(pr>0){cx.strokeStyle='#ffd23f';cx.lineWidth=6;cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,-Math.PI/2,-Math.PI/2+6.283*pr);cx.stroke()}}}
  if(evo){const e0=evo.t,sw=e0>=1.3,pul=Math.sin(e0*Math.PI/2.8);
   for(const q of P){

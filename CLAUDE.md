@@ -39,7 +39,7 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `game.js` → `f
 - `P` = array de jugadores (1 o 2), `p` = jugador "actual" (lo usan las cartas de mejora vía closures `f:()=>p.dmg++`).
 - `en` enemigos, `sh` disparos del jugador, `eb` balas enemigas, `gems` XP, `pt` partículas, `fx` números de daño, `ef` efectos (anillo/rayo/skills).
 - `t` tiempo de partida, `lvl`, `xp`, `need`, `kills`, `running`, `paused`, `evo` (animación de digievolución en curso), `mode` (1 o 2).
-- `CREATURES` = lista de criaturas disponibles (`001_guilmon`, `002_renamon`, `003_terriermon`). Cada jugador tiene la suya en `q.cid`; `CR(q)` devuelve su entrada de `CreatureLoader.cache`: `{ meta: <json>, canvases: { stage_0..stage_4, branch_6_1.. } }`.
+- `CREATURES` = lista de criaturas disponibles (`001_guilmon`, `002_renamon`, `003_terriermon`, `005_veemon`). Cada jugador tiene la suya en `q.cid`; `CR(q)` devuelve su entrada de `CreatureLoader.cache`: `{ meta: <json>, canvases: { stage_0..stage_4, branch_6_1.. } }`.
 
 ### Loop
 `loop()` → si `evo` corre `stepEvo`, si no y no está en pausa corre `update(dt)` → siempre `draw()`. `dt` está topeado a 0.05.
@@ -75,7 +75,8 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 
 ## Sprites y criaturas
 - JSON en `src/data/creatures/<id>.json`: `attribute`, `stages[]` (etapas 0–4, con `skills`) y `branches[]` (formas finales con `id`, `req`, `desc`, `skills`).
-- Spritesheets de **2 columnas × 6 filas**. Filas que usa `drawBuddy`: **0 idle, 1 caminar, 2 muerto, 5 ataque** (3 y 4 sin usar por ahora). Se dibujan a 96 px de alto, pixel art sin suavizado.
+- Spritesheets de **2 columnas × 6 filas**. Filas que usa `drawBuddy`: **0 idle, 1 caminar, 2 muerto, 5 ataque** (3 y 4 sin usar por ahora). Pixel art sin suavizado.
+- `drawBuddy` dibuja cada cuadro a **1,5 px de pantalla por píxel de la hoja** (un cuadro de 64 ocupa 96 px; uno de 192, 288 px), con los pies siempre a `q.y + 48`. Así los Digimon grandes pueden tener cuadros más grandes sin achicarse. Guarda la altura dibujada en `q.dh` (la usa la etiqueta J1/J2).
 - `loader.js` vuelve transparente todo píxel con R,G,B > 240 (quita fondo blanco). Ojo: también borra blancos dentro del sprite. **Los nombres de archivo distinguen mayúsculas en Vercel** (hay PNGs con mayúscula inicial en renamon/terriermon: el JSON tiene que coincidir exacto).
 - Para sumar una criatura: JSON + carpeta de sprites + agregarla a `CREATURES` en `game.js`. `001_guilmon` es el fallback cuando falta un id.
 - `004_impmon` está cargada en datos y sprites pero **todavía no es jugable** (no está en `CREATURES`). Hoy es la línea de los enemigos (`ENEMY_LINE`).
@@ -84,7 +85,8 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
   2. Extraer a `assets/sprites/creatures/<NNN_nombre>/` renombrando en minúsculas `<nombre>_<etapa+1>.png` (etapas 0–4 → `_1`…`_5`) y `<nombre>_6_<n>.png` para ramas.
   3. Crear `src/data/creatures/<NNN_nombre>.json` (con `wiki`, `verified`, `note`) y sumar sus skills a `skills.json`.
   4. Validar que todas las skills y PNG referenciados existan. Las ramas siguen el orden de bonos de `stepEvo`: 6_1 pesado, 6_2 veloz, 6_3 oscuro/poderoso.
-- Packs usados: 2944839923 (Guilmon), 2976689900 (Renamon), 2916279274 (Terriermon + Devas/Cherubimon), 2952066637 (Impmon). Sin usar: 2916848304 (línea Veemon).
+- **Otra fuente de sprites: Digital Tamers: Reborn** (juego de PC en GameMaker; el exe está en `C:\Users\dario_lv7\OneDrive\Escritorio\rom Digi\`, fuera del repo). Es un autoextraíble IExpress: adentro hay un `.cab` con `data.win`, que tiene ~566 Digimon como sprites `d<ID>_<anim>` (idle, walk, atk01, atk02, dmg, lose, win, jump, eat). Se extrae sin ejecutar nada (sacar el CABINET del exe → `expand.exe -F:data.win`). Los nombres por ID se sacan de STRG pero **la lista se corre en IDs altos**: verificar siempre a ojo. Hojas armadas **al doble** (nearest), cuadro de 64 si entra o múltiplo de 32 más grande. Filas: 0 idle, 1 walk, 2 lose, 3 idle, 4 dmg, 5 atk01. `005_veemon` sale de acá (IDs en el campo `sprite` de cada etapa: `dtr:d<ID>`). Los packs del Workshop parecen redibujos x2 de este juego.
+- Packs usados: 2944839923 (Guilmon), 2976689900 (Renamon), 2916279274 (Terriermon + Devas/Cherubimon), 2952066637 (Impmon). Sin usar: 2916848304 (línea Veemon; se prefirió Digital Tamers).
 - Selección: en 1J/2J local desde el menú; online con `openMenuPick` y el mensaje `pick`.
 
 ## Guardado y Firebase

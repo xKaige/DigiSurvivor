@@ -441,6 +441,112 @@
       "type": "projectile", "element": "dark",
       "dmg": 4.4, "cd": 2.8, "speed": 420, "life": 1.3, "explode": 110,
       "source": "dsrworldwiki:beelzemon-xwars"
+    },
+
+    "bunbun_punch": {
+      "name": "Bunbun Punch",
+      "desc": "Revolea los brazos a lo loco y golpea todo lo que tiene cerca",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 1.7, "cd": 0.9, "range": 85, "arc": 2.0,
+      "source": "dsrworldwiki:veemon"
+    },
+    "veemon_head": {
+      "name": "V-mon Head",
+      "desc": "Salta y da un cabezazo con fuerza",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 2.6, "cd": 1.6, "range": 95, "arc": 1.4,
+      "source": "dsrworldwiki:veemon"
+    },
+    "rapid_attack": {
+      "name": "Rapid Attack",
+      "desc": "Lluvia de golpes rapidísimos",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 1.9, "cd": 0.7, "range": 100, "arc": 1.9,
+      "source": "dsrworldwiki:veedramon"
+    },
+    "hammer_punch": {
+      "name": "Hammer Punch",
+      "desc": "Golpea varias veces con puños duros como martillos",
+      "type": "melee_arc", "element": "metal",
+      "dmg": 2.8, "cd": 1.4, "range": 105, "arc": 1.7,
+      "source": "dsrworldwiki:veedramon"
+    },
+    "v_breath_arrow": {
+      "name": "V-breath Arrow",
+      "desc": "Dispara desde el pecho una ráfaga de energía con forma de V",
+      "type": "beam", "element": "light",
+      "dmg": 2.8, "cd": 2.2, "range": 340, "width": 26,
+      "source": "dsrworldwiki:veedramon"
+    },
+    "magnum_crash": {
+      "name": "Magnum Crash",
+      "desc": "Ráfaga de puñetazos cargados de energía brillante",
+      "type": "melee_arc", "element": "light",
+      "dmg": 3.0, "cd": 0.9, "range": 120, "arc": 2.2,
+      "source": "dsrworldwiki:aeroveedramon"
+    },
+    "dragon_impulse": {
+      "name": "Dragon Impulse",
+      "desc": "Libera una onda de choque con forma de dragón que atraviesa todo",
+      "type": "projectile", "element": "wind",
+      "dmg": 3.8, "cd": 2.6, "speed": 380, "life": 1.4, "pierce": 6, "explode": 60,
+      "source": "dsrworldwiki:aeroveedramon"
+    },
+    "v_wing_blade": {
+      "name": "V-wing Blade",
+      "desc": "Lanza una cuchilla de energía en forma de V",
+      "type": "projectile", "element": "wind",
+      "dmg": 2.6, "cd": 1.4, "speed": 560, "life": 1.0, "pierce": 3, "count": 2, "spread": 0.3,
+      "source": "dsrworldwiki:aeroveedramon"
+    },
+    "ulforce_saber": {
+      "name": "Ulforce Saber",
+      "desc": "Tajo veloz con el sable de luz del brazalete",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 3.4, "cd": 0.7, "range": 130, "arc": 2.4,
+      "source": "dsrworldwiki:ulforceveedramon"
+    },
+    "shining_v_force": {
+      "name": "Shining V Force",
+      "desc": "Libera la energía de la V del pecho y barre todo alrededor",
+      "type": "nova", "element": "light",
+      "dmg": 3.4, "cd": 3.4, "radius": 220,
+      "source": "dsrworldwiki:ulforceveedramon"
+    },
+    "dragon_impulse_x": {
+      "name": "Dragon Impulse X",
+      "desc": "Corte en X con el Ulforce Saber que sale disparado",
+      "type": "projectile", "element": "wind",
+      "dmg": 3.0, "cd": 1.6, "speed": 600, "life": 1.0, "pierce": 4, "count": 2, "spread": 0.5,
+      "source": "dsrworldwiki:ulforceveedramon"
+    },
+    "splendor_blade": {
+      "name": "Splendor Blade",
+      "desc": "Zarpazo con garras brillantes",
+      "type": "melee_arc", "element": "neutral",
+      "dmg": 3.6, "cd": 1.0, "range": 140, "arc": 2.4,
+      "source": "dsrworldwiki:imperialdramon-dragonmode + imperialdramon-fightermode"
+    },
+    "positron_laser": {
+      "name": "Positron Laser",
+      "desc": "El cañón dispara un rayo de energía que atraviesa la fila",
+      "type": "beam", "element": "light",
+      "dmg": 4.0, "cd": 2.4, "range": 480, "width": 36,
+      "source": "dsrworldwiki:imperialdramon-dragonmode + imperialdramon-fightermode"
+    },
+    "mega_death": {
+      "name": "Mega Death",
+      "desc": "Escupe materia oscura que arrasa con todo alrededor",
+      "type": "nova", "element": "dark",
+      "dmg": 3.8, "cd": 4.0, "radius": 240,
+      "source": "dsrworldwiki:imperialdramon-dragonmode"
+    },
+    "giga_death": {
+      "name": "Giga Death",
+      "desc": "El cañón del pecho dispara una esfera oscura que estalla",
+      "type": "projectile", "element": "dark",
+      "dmg": 4.4, "cd": 2.8, "speed": 360, "life": 1.4, "explode": 130,
+      "source": "dsrworldwiki:imperialdramon-fightermode"
     }
   }
 }
