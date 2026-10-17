@@ -28,7 +28,7 @@ const World = {
   // Tiles: assets/maps/woods_tiles.png. Fila de arriba = 4 manchas en cruz (pasto, pasto oscuro, meseta, estanque) en
   // ventanas de 96×96 (celdas -1..4 de una cruz de 4×4 celdas de 16 px); abajo, el tileset original con los adornos.
   // De cada cruz se sacan cuartos de 8×8 según los vecinos (esquina, borde, esquina interior, relleno): autotile.
-  N: 64,                   // celdas de 16 px por lado (mapa de 1024×1024, a escala 2)
+  N: 64,                   // celdas de 16 px por lado (mapa de 1024×1024, a escala 3)
   nextSeed: null,          // semilla para la próxima partida (online: la pone el mensaje 'start')
   BLOBS: ['grass', 'dark', 'cliff', 'pond'],
   CROSS: [0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0],
@@ -200,7 +200,7 @@ const World = {
     }
     // ---- datos para el resto de World (paredes en píxeles del mapa, igual que los JSON) ----
     for (let i = 0; i < N * N; i++) if (wall[i]) blocks.push([(i % N) * T, ((i / N) | 0) * T, T, T]);
-    const d = { id: 'woods_' + seed, name: 'Bosque', w: S, h: S, scale: 2, wrap: true, start: [cen * T, cen * T + 20], block: blocks, trunk: trunks };
+    const d = { id: 'woods_' + seed, name: 'Bosque', w: S, h: S, scale: 3, wrap: true, start: [cen * T, cen * T + 20], block: blocks, trunk: trunks };
     this.data = null; this.img = cv; this.flow = null;
     this.setData(d);
   },
