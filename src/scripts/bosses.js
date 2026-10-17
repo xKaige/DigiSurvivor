@@ -63,7 +63,7 @@ const Bosses = {
     e.at -= dt;
     if (e.wd > 0) {                     // preparando una embestida: se queda quieto un instante (aviso)
       e.wd -= dt; e.fl = Math.max(e.fl, Math.floor(e.wd * 10) % 2 ? 0.05 : 0);
-      if (e.wd <= 0) { e.ca = a; e.ch = e.chDur; }
+      if (e.wd <= 0) e.ch = e.chDur;   // embiste en la dirección que marcó el aviso
       return;
     }
     if (e.ch > 0) {                     // embestida en línea recta
@@ -85,7 +85,8 @@ const Bosses = {
       const s = k.spread || 0.2;
       for (let j = 0; j < k.c; j++) shot(a + (j - (k.c - 1) / 2) * s, k.sp || 270);
     } else if (k.k === 'charge') {
-      e.wd = 0.5; e.chDur = k.dur || 1;
+      e.wd = 0.7; e.chDur = k.dur || 1; e.ca = a;   // marca el recorrido antes de embestir
+      Enemies.warnLine(e.x, e.y, a, e.sp * 3.6 * e.chDur + e.r, e.r * 2 + 10, 0.7);
     } else if (k.k === 'summon') {
       const ti = Math.max(0, Math.max(...P.map(q => q.stage | 0)) - 1);
       for (let j = 0; j < k.c; j++) {

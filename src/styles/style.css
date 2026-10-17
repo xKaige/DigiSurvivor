@@ -411,21 +411,37 @@ body:not(.ingame) #bossbar{display:none!important}
 #challenge .ttl small{margin-top:4px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cy)}
 #ch-x,#news-x{flex:0 0 auto;width:48px;height:48px;font:700 22px 'Chakra Petch',sans-serif;color:#ff5c5c;background:rgba(4,16,34,.85);border:2px solid #ff5c5c;cursor:pointer;clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px)}
 #ch-x:hover,#news-x:hover{color:#fff;background:rgba(255,92,92,.18)}
-.ch-mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.ch-mod{--ac:var(--or);display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:rgba(2,8,18,.7);border:2px solid var(--ac);border-radius:8px 2px 8px 2px}
-.ch-mod b{font-size:15px;text-transform:uppercase;letter-spacing:.04em;color:var(--ac)}
-.ch-mod span{font-size:13px;color:#cfe6f5}
-.ch-row{display:flex;gap:12px;align-items:stretch}
-.ch-best{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:150px;padding:8px 12px;border:1px solid var(--cy2);background:rgba(2,8,18,.6)}
-.ch-best small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9fc0d6}
-.ch-best b{font:900 30px 'Orbitron',sans-serif;color:var(--gold)}
-.ch-best span{font-size:12px;color:#9fc0d6}
-.ch-play{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px;font-size:15px}
-#ch-go{padding:12px;font:700 16px 'Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);border:2px solid #ffd23f}
+#challenge .box{width:min(880px,100%);gap:16px}
+#challenge .head{align-items:center}
+.ch-reset{padding:6px 12px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9fc0d6;border:1px solid var(--cy2);border-radius:4px;white-space:nowrap;text-align:center}
+.ch-reset b{display:block;font-size:20px;letter-spacing:.06em;color:var(--gold)}
+#ch-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;align-items:start}
+#ch-body section{display:flex;flex-direction:column;gap:10px;min-width:0}
+.ch-lbl{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#9fc0d6;padding-bottom:4px;border-bottom:1px solid rgba(63,208,255,.25)}
+.ch-rule{--ac:var(--or);display:flex;align-items:center;gap:14px;padding:12px 14px;background:linear-gradient(90deg,color-mix(in srgb,var(--ac) 16%,transparent),rgba(2,8,18,.7) 60%);border-left:4px solid var(--ac);border-radius:0 8px 2px 0}
+.ch-rule .bd{flex:0 0 52px;height:52px;display:flex;align-items:center;justify-content:center;font:900 15px 'Orbitron',sans-serif;color:var(--ac);border:2px solid var(--ac);border-radius:50%;box-shadow:0 0 10px color-mix(in srgb,var(--ac) 45%,transparent)}
+.ch-rule b{display:block;font-size:17px;letter-spacing:.04em;text-transform:uppercase;color:#f2fbff}
+.ch-rule div span{font-size:14px;color:#cfe6f5}
+.ch-score{margin-top:6px;display:flex;flex-direction:column;gap:6px}
+.ch-score ul{display:flex;gap:8px;margin:0;padding:0;list-style:none}
+.ch-score li{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 6px;font-size:12px;color:#9fc0d6;text-align:center;background:rgba(2,8,18,.6);border:1px solid rgba(63,208,255,.2)}
+.ch-score li b{font:900 20px 'Orbitron',sans-serif;color:var(--gold)}
+.ch-score small{font-size:12px;color:#7fa0b8}
+.ch-best{display:flex;align-items:flex-end;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(60,50,20,.45),rgba(20,16,6,.75));border:2px solid rgba(255,210,63,.6);border-radius:10px 2px 10px 2px}
+.ch-best small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#e9d9a0}
+.ch-best b{font:900 40px/1 'Orbitron',sans-serif;color:var(--gold);text-shadow:0 0 12px rgba(255,210,63,.5)}
+.ch-best>span{font-size:13px;color:#e9d9a0}
+.ch-pick{--ac:var(--cy);display:flex;align-items:center;gap:12px;padding:8px 12px;background:rgba(2,8,18,.65);border:2px solid var(--ac);border-radius:8px}
+.ch-pick img{height:64px!important;margin:0!important;image-rendering:pixelated}
+.ch-pick .ph{width:64px;height:64px;display:flex;align-items:center;justify-content:center;font:900 26px 'Orbitron',sans-serif;color:#3a5a74}
+.ch-pick small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9fc0d6}
+.ch-pick b{display:block;font-size:19px;text-transform:uppercase;color:#f2fbff}
+.ch-pick div span{font-size:13px;font-weight:700;color:#4dffb8}
+.ch-pick.bad{border-color:#ff5c5c}.ch-pick.bad div span{color:#ff8a8a}
+#ch-go{padding:14px;font:700 17px 'Chakra Petch',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);border:2px solid #ffd23f;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)}
 #ch-go.alt{color:var(--cy);background:rgba(4,16,34,.85);border-color:var(--cy)}
-#ch-go:hover{border-color:#fff}
-.ch-lbl{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#9fc0d6}
-.ch-board{display:flex;flex-direction:column;gap:6px}
+#ch-go:hover{filter:brightness(1.1)}
+.ch-board{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto}
 .ch-board .dim{font-size:14px;color:#7fa0b8}
 .ch-p{display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(2,8,18,.6);border:1px solid rgba(63,208,255,.25)}
 .ch-p.me{border-color:var(--gold)}
@@ -433,8 +449,7 @@ body:not(.ingame) #bossbar{display:none!important}
 .ch-p b{font-size:15px}
 .ch-p small{flex:1;font-size:12px;color:#9fc0d6;text-transform:uppercase}
 .ch-p .sc{font:700 18px 'Orbitron',sans-serif;color:var(--gold)}
-#challenge .foot{font-size:13px;color:#7fa0b8}
-@media (max-width:620px){.ch-mods{grid-template-columns:1fr}.ch-row{flex-direction:column}}
+@media (max-width:760px){#ch-body{grid-template-columns:1fr}#challenge .head{flex-wrap:wrap}}
 
 /* ---------- Novedades (news.js) ---------- */
 #news-btn{position:absolute;left:18px;bottom:16px;z-index:3;padding:7px 14px;font:700 13px 'Chakra Petch',sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:var(--cy,#3fd0ff);background:rgba(3,10,24,.85);border:1px solid var(--cy2,#1b6fa8)}

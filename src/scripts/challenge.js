@@ -56,29 +56,44 @@ const Challenge = {
   },
 
   // ---------- Ventana ----------
+  // Dos columnas: a la izquierda las reglas del día; a la derecha tu récord, con quién vas y el ranking de amigos.
+  BADGE: { a0: 'VAC', a1: 'VIR', a2: 'DAT', boss60: '60s', swarm: '×1.5', fast: '>>', notree: 'Ø', glass: '½', items: '×3' },
   build() {
     if (document.getElementById('challenge')) return;
     const w = document.createElement('div'); w.id = 'challenge';
-    w.innerHTML = '<div class="box"><div class="head"><div class="ttl"><h2>Desafío diario</h2><small>Las mismas reglas para todos · se renueva a las 00:00 (hora argentina)</small></div>' +
-      '<button id="ch-x" aria-label="Cerrar">X</button></div><div id="ch-body"></div></div>';
+    w.innerHTML = '<div class="box"><div class="head"><div class="ttl"><h2>Desafío diario</h2><small id="ch-date"></small></div>' +
+      '<div class="ch-reset">Nuevo en<b id="ch-reset">--:--:--</b></div><button id="ch-x" aria-label="Cerrar">X</button></div><div id="ch-body"></div></div>';
     document.body.appendChild(w);
     document.getElementById('ch-x').onclick = () => this.close();
     w.onclick = e => { if (e.target === w) this.close(); };
   },
-  open() { this.build(); this.render(); document.getElementById('challenge').style.display = 'flex'; this.loadBoard(); },
-  close() { const w = document.getElementById('challenge'); if (w) w.style.display = 'none'; },
+  open() {
+    this.build(); this.render(); document.getElementById('challenge').style.display = 'flex'; this.loadBoard();
+    clearInterval(this.timer);
+    const tick = () => { const el = document.getElementById('ch-reset'); if (el && typeof Missions !== 'undefined' && Missions.cat) el.textContent = Missions.fmt(Missions.msToReset()); };
+    tick(); this.timer = setInterval(tick, 1000);
+  },
+  close() { const w = document.getElementById('challenge'); if (w) w.style.display = 'none'; clearInterval(this.timer); },
   isOpen() { const w = document.getElementById('challenge'); return !!w && w.style.display === 'flex'; },
   render() {
     const body = document.getElementById('ch-body'); if (!body) return;
     const mods = this.today(), b = this.best(), at = this.attr(), ok = this.okPick(selected);
     const C = selected && CreatureLoader.cache[selected], nm = C ? (C.meta.stages[2] || C.meta.stages[0]).name : null;
+    const [y, m, d] = this.day().split('-');
+    document.getElementById('ch-date').textContent = 'Reglas del ' + d + '/' + m + '/' + y + ' · iguales para todos';
+    const rule = x => '<div class="ch-rule" style="--ac:' + (x.attr != null ? ELC[x.attr] : 'var(--or)') + '"><span class="bd">' + this.BADGE[x.id] + '</span>' +
+      '<div><b>' + x.n + '</b><span>' + x.d + '</span></div></div>';
     body.innerHTML =
-      '<div class="ch-mods">' + mods.map(m => '<div class="ch-mod' + (m.attr != null ? ' at" style="--ac:' + ELC[m.attr] : '') + '"><b>' + m.n + '</b><span>' + m.d + '</span></div>').join('') + '</div>' +
-      '<div class="ch-row"><div class="ch-best"><small>Tu mejor puntaje hoy</small><b>' + b.best + '</b><span>' + b.runs + (b.runs === 1 ? ' intento' : ' intentos') + '</span></div>' +
-      '<div class="ch-play"><span>' + (ok ? 'Vas con <b style="color:' + ELC[at] + '">' + nm + '</b>' : 'Necesitás un Digimon <b style="color:' + ELC[at] + '">' + ATTR[at] + '</b>' + (nm ? ' (tenés a ' + nm + ')' : '')) + '</span>' +
-      '<button id="ch-go"' + (ok ? '' : ' class="alt"') + '>' + (ok ? 'Jugar desafío' : 'Elegir Digimon') + '</button></div></div>' +
-      '<div class="ch-lbl">Ranking de amigos</div><div id="ch-board" class="ch-board"><span class="dim">' + (window.challengeCloud ? 'Cargando...' : 'Iniciá sesión para ver el ranking con tus amigos.') + '</span></div>' +
-      '<div class="foot">Puntaje = virus eliminados + 2 × segundos + 150 por jefe. Solo cuenta tu mejor partida del día.</div>';
+      '<section class="ch-left"><div class="ch-lbl">Reglas de hoy</div>' + mods.map(rule).join('') +
+      '<div class="ch-score"><div class="ch-lbl">Puntaje</div><ul><li><b>1</b> por virus eliminado</li><li><b>2</b> por segundo sobrevivido</li><li><b>150</b> por jefe derrotado</li></ul>' +
+      '<small>Solo cuenta tu mejor partida del día. Se juega de a 1 jugador.</small></div></section>' +
+      '<section class="ch-right">' +
+      '<div class="ch-best"><div><small>Tu récord de hoy</small><b>' + b.best + '</b></div><span>' + b.runs + (b.runs === 1 ? ' intento' : ' intentos') + '</span></div>' +
+      '<div class="ch-pick' + (ok ? ' ok' : ' bad') + '" style="--ac:' + ELC[at] + '">' + (C ? thumbOf(C, 'stage_2') : '<span class="ph">?</span>') +
+      '<div><small>Tu compañero</small><b>' + (nm || 'Sin elegir') + '</b><span>' + (ok ? 'Cumple: atributo ' + ATTR[at] : 'Necesitás uno de atributo ' + ATTR[at]) + '</span></div></div>' +
+      '<button id="ch-go"' + (ok ? '' : ' class="alt"') + '>' + (ok ? 'Jugar desafío' : 'Elegir otro Digimon') + '</button>' +
+      '<div class="ch-lbl">Ranking de amigos</div><div id="ch-board" class="ch-board"><span class="dim">' + (window.challengeCloud ? 'Cargando...' : 'Iniciá sesión para competir con tus amigos.') + '</span></div>' +
+      '</section>';
     document.getElementById('ch-go').onclick = () => {
       if (ok) return this.play();
       this.close(); openMenuPick();

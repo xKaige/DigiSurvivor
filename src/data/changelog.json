@@ -1,5 +1,16 @@
 [
   {
+    "v": "0.5",
+    "items": [
+      "84 enemigos nuevos: cada partida sortea qué Digimon aparecen.",
+      "Los enemigos atacan distinto: embestidas, disparos, bombas, saltos y pisotones, siempre con aviso en el piso para esquivarlos.",
+      "Juego rebalanceado: los enemigos crecen más parejo y se sigue subiendo de nivel en el late game.",
+      "La evolución oscura ya no te deja en 1 de vida: baja hasta el 35%.",
+      "Tu Rango de Tamer, Digimon desbloqueados y Analyzer quedan guardados en tu cuenta.",
+      "Menú reordenado (Nueva Partida) y Desafío diario rediseñado."
+    ]
+  },
+  {
     "v": "0.4",
     "items": [
       "Ítems en el piso: Carne, Digicore, Imán de datos y Recovery Floppy.",

@@ -235,6 +235,8 @@ const SkillSys = {
       cx.globalAlpha = Math.max(0, o.l / o.m); cx.lineWidth = o.w || 14; cx.beginPath(); cx.moveTo(o.x, o.y); cx.lineTo(x2, y2); cx.stroke();
       cx.strokeStyle = '#fff'; cx.lineWidth = Math.max(2, (o.w || 14) * .35); cx.beginPath(); cx.moveTo(o.x, o.y); cx.lineTo(x2, y2); cx.stroke();
       cx.lineCap = 'butt';
+    } else if (o.k === 'wline' || o.k === 'wcirc') {
+      Enemies.drawWarn(o);   // aviso de ataque enemigo (enemies.js)
     } else if (o.k === 'hit' || o.k === 'nova') {
       const S = this.fxOf(o.fx, o.k === 'hit' ? 'hit' : 'nv');
       if (S) { cx.globalAlpha = Math.min(1, o.l / o.m * 3); this.spr(S, k * S.n, o.x, o.y, o.k === 'hit' ? o.R : o.R * 2); }

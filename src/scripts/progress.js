@@ -6,7 +6,8 @@
 // - Cada Digimon bloqueado tiene una misión permanente en src/data/unlocks.json. Al cumplirla ganás su Digitama;
 //   el huevo eclosiona después de `hatch` partidas terminadas y ahí queda desbloqueado (con animación en el menú).
 // - El Analyzer registra cada forma que usaste (etapas y formas finales) y cada jefe que derrotaste.
-// - Todo se guarda en el navegador (localStorage 'digisurvivor_prog'), igual que las misiones diarias: no va a Firestore.
+// - Se guarda en el navegador (localStorage 'digisurvivor_prog') y, con sesión iniciada, en la cuenta
+//   (Firestore users/{uid}.prog, vía window.onProgSave de firebase.js). Al iniciar sesión manda lo de la cuenta (loadProg).
 const STARTERS = ['001_guilmon', '002_renamon', '003_terriermon'];
 const STAGE_NAMES = ['Bebé', 'Bebé II', 'Novato', 'Campeón', 'Perfecto', 'Final'];
 // Rango de Tamer: experiencia de cuenta que suma cada partida. Al subir de rango ganás monedas (100 × rango).
@@ -37,7 +38,7 @@ const Progress = {
     for (const cid in this.st.unl) this.st.seen[cid + ':stage_0'] = 1;   // al eclosionar ya conocés su forma bebé
     return this.st;
   },
-  write() { try { localStorage.setItem(this.KEY, JSON.stringify(this.st)); } catch (e) {} },
+  write() { try { localStorage.setItem(this.KEY, JSON.stringify(this.st)); } catch (e) {} if (window.onProgSave) window.onProgSave(this.st); },
   reset() { this.st = this.blank(); this.write(); },   // lo usa el reinicio de progreso (RESET_BEFORE en game.js)
 
   has(cid) { return STARTERS.includes(cid) || !!this.read().unl[cid]; },
@@ -256,6 +257,16 @@ const Progress = {
     }
     list.innerHTML = h;
   }
+};
+
+// Puente con firebase.js: el progreso es de la cuenta logueada
+window.getProg = () => Progress.read();
+window.loadProg = st => {
+  Progress.st = null;
+  try { if (st) localStorage.setItem(Progress.KEY, JSON.stringify(st)); else localStorage.removeItem(Progress.KEY); } catch (e) {}
+  Progress.read(); Progress.renderRank();
+  if (Progress.isOpen()) Progress.render();
+  if (window.onProgressReady && Progress.data) window.onProgressReady();   // revisa el Digimon elegido (puede quedar bloqueado)
 };
 
 (async () => {

@@ -30,12 +30,15 @@ const FAST = true;
 const EVO_LEVELS = FAST ? [2,3,4,5] : [3,6,9,12];   // etapas 1,2,3,4
 const LINE_LEVEL = FAST ? 6 : 15;                    // elección de la evolución final (rama)
 const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisitos de stats de las ramas se achican
+// Experiencia para el próximo nivel: need = need × XP_GROW + XP_ADD (más bajo = se sigue subiendo en el late game)
+let XP_GROW = 1.2, XP_ADD = 4;
 
 async function initGame(ids) {
   await SkillSys.load();
   await Promise.all([...new Set(ids)].map(id => CreatureLoader.load(id)));
   await CreatureLoader.load(ENEMY_LINE).catch(e => console.error(e));
   await Bosses.load().catch(e => console.error(e));
+  await Enemies.load().catch(e => console.error(e));
 }
 // Digimon desbloqueados (progress.js). Si progress.js no cargó, se puede usar cualquiera.
 const unlocked = id => typeof Progress === 'undefined' || Progress.has(id);
@@ -335,7 +338,7 @@ async function start(m,ids){
   await initGame(ids);
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);q.x=m===1?0:(i?40:-40);if(!chal('notree'))applyTree(q);if(chal('glass')){q.max=Math.round(q.max/2);q.hp=q.max;q.dmg*=1.5}P.push(q)}
   p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=5;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
   renderLegend();if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -460,9 +463,9 @@ function buildMenuSel() {
   const row = document.createElement('div'); row.id = 'selrow';
   row.innerHTML = '<div id="selinfo"></div><button id="selbtn" class="alt">Elegir Digimon</button>';
   const bar = $('go').parentNode; bar.parentNode.insertBefore(row, bar);
-  // menú nuevo: tu Digimon va en la pantalla del Digivice y "Elegir Digimon" queda primero en la lista
+  // menú nuevo: tu Digimon va en la pantalla del Digivice y "Elegir Digimon" queda debajo de las partidas
   if ($('dvscreen')) $('dvscreen').appendChild($('selinfo'));
-  if ($('mnu')) { $('mnu').insertBefore($('selbtn'), $('mnu').firstChild); row.remove(); }
+  if ($('mnu')) { $('go2').after($('selbtn')); row.remove(); }   // va debajo de "2 Jugadores Local"
   $('selbtn').onclick = openMenuPick;
 }
 function renderSel() {
@@ -538,7 +541,7 @@ const TREE=[
 // poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
 // a esa fecha vuelve a 0 una sola vez (monedas, árbol y misiones del día). Nick, amigos y Digimon elegido no se tocan.
 // Ej.: const RESET_BEFORE = Date.parse('2027-03-01T00:00:00-03:00');
-const GAME_VERSION = '0.4';
+const GAME_VERSION = '0.5';
 const RESET_BEFORE = null;
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
@@ -651,13 +654,13 @@ function drawBuddy(q,s,x,y,f,a){
 
 // ---------- Enemigos con sprites (ENEMY_LINE) ----------
 // El tamaño sale del radio de colisión; el atributo se ve en el aro de color de la sombra.
-const enSpr=e=>{if(e.bo!=null)return Bosses.sprite(e.bo);const C=CreatureLoader.cache[ENEMY_LINE];return C&&e.sk?C.canvases[e.sk]:null};
+const enSpr=e=>{if(e.bo!=null)return Bosses.sprite(e.bo);if(e.et!=null)return Enemies.sprite(e.et);const C=CreatureLoader.cache[ENEMY_LINE];return C&&e.sk?C.canvases[e.sk]:null};
 const enH=e=>e.bo!=null?Bosses.h(e):Math.max(50,e.r*4.2);
 const enTop=e=>enSpr(e)?enH(e)/2:e.r;
 function drawEnemy(e){
  const S=enSpr(e);if(!S||!S.canvas)return false;
  const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),w=fw*h/fh;
- const stop=e.bo!=null?e.at>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
+ const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
  cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
@@ -738,7 +741,7 @@ function chooseLine(){
   });
   // sin ningún requisito cumplido: la única salida es la evolución oscura (más daño, pero pierde vida de a poco)
   if (!anyOk) cur = [{ n: darkName(C), lock: false, weak: false, dark: 1, op: 'line', lineIdx: 0, branchId: null,
-    d: ((C.meta.dark && C.meta.dark.desc) || 'La oscuridad consume a tu compañero') + '. +7 de daño y +1 proyectil, pero pierde vida de a poco',
+    d: ((C.meta.dark && C.meta.dark.desc) || 'La oscuridad consume a tu compañero') + '. +7 de daño y +1 proyectil, pero pierde vida de a poco (hasta quedar al 35%)',
     req: 'ningún requisito cumplido', f: () => { p.line = 0; p.branchId = null; p.weak = false; p.dark = true; } }];
 
   const c=$('cards');c.innerHTML='';
@@ -756,7 +759,7 @@ function chooseLine(){
 }
 
 function levelUp(){
-  xp-=need;lvl++;need=Math.round(need*1.3+2);paused=true;
+  xp-=need;lvl++;need=Math.round(need*XP_GROW+XP_ADD);paused=true;
 
   if(EVO_LEVELS.includes(lvl)){
     const nextStage = EVO_LEVELS.indexOf(lvl) + 1;
@@ -853,7 +856,10 @@ function choose(u){
   }
 }
 
-function spawn(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
+// Enemigos comunes: los arma enemies.js con el plantel sorteado de la partida (group: los "swarm" vienen de a 3).
+// Si enemies.json no cargó, queda la aparición vieja con la línea de Impmon (spawnOld).
+function spawn(ti,group){if(Enemies.data&&Enemies.roster.length)Enemies.spawn(ti,group);else spawnOld(ti)}
+function spawnOld(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  const q=Math.random(),k=t>25&&q<.15?2:t>10&&q<.4?1:0,b=2+Math.floor(t/40);
  // sk: sprite de ENEMY_LINE. Etapa = tier; los tanques van una etapa arriba (en el tope, una de las ramas finales al azar)
  const es=ti+(k===2?1:0),sk=es<5?'stage_'+es:'branch_6_'+(1+Math.floor(Math.random()*3));
@@ -876,7 +882,7 @@ function update(dt){
        type: 'sync',
        P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP, dark: q.dark, xa: q.xa })),
        en: en.map(e => e.bo != null ? { x: e.x, y: e.y, r: e.r, k: e.k, ti: 0, el: e.el, fl: e.fl, ang: e.ang, bo: e.bo, cyc: e.cyc, hp: e.hp, mh: e.mh, at: e.at }
-         : { x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun }),
+         : { x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, et: e.et, st: e.st, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun }),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
        sh: sh.map(s => s.fx ? { x: s.x, y: s.y, c: s.c, r: s.r, fx: s.fx, sz: s.sz, a: Math.atan2(s.vy, s.vx) } : { x: s.x, y: s.y, c: s.c, r: s.r }),
        eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el, r: b.r })),
@@ -913,7 +919,7 @@ function update(dt){
   q.moving = !!(dx || dy);
   if(dx||dy){const l=Math.hypot(dx,dy);q.x+=dx/l*q.sp*dt;q.y+=dy/l*q.sp*dt;if(dx)q.face=dx}
   q.inv-=dt;
-  if(q.dark&&(q.stage|0)>=5)q.hp=Math.max(1,q.hp-q.max*.006*dt);   // la oscuridad lo va consumiendo (nunca lo mata sola)
+  if(q.dark&&(q.stage|0)>=5&&q.hp>q.max*.35)q.hp=Math.max(q.max*.35,q.hp-q.max*.004*dt);   // la oscuridad lo va consumiendo, hasta el 35% de la vida
  }
 
  const al=P.filter(q=>!q.dead);
@@ -934,9 +940,10 @@ function update(dt){
   let rv=0;for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R)rv=Math.max(rv,a.revSpd||1);
   d.revP=rv?(d.revP||0)+dt*rv:Math.max(0,(d.revP||0)-dt);
   if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*.5;d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
- spawnT-=dt;const iv=Math.max(.2,1.1-t*.008)/(mode===2?1.5:1)/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/60);i<n&&en.length<(mode===2?340:260);i++)spawn(Math.max(0,mt-1));spawnT+=iv}
- Bosses.tick();
+ // ritmo de aparición: intervalo con piso de 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
+ spawnT-=dt;const iv=Math.max(.3,1-t*.004)/(mode===2?1.4:1)/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);i<n&&en.length<(mode===2?200:150);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
+ Bosses.tick();Enemies.tick(dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
    if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el})}q.atkT=q.rate}}}
@@ -947,12 +954,13 @@ function update(dt){
  for(const e of en){let tg=null,dd=1e9;for(const q of al){if(q.dead)continue;const d=Math.hypot(q.x-e.x,q.y-e.y);if(d<dd){dd=d;tg=q}}
   if(!tg)break;const a=Math.atan2(tg.y-e.y,tg.x-e.x);e.ang=a;
   if(e.bo!=null)Bosses.act(e,dt,tg,dd,a);   // jefes: su propio movimiento y ataques (bosses.js)
-  else if(!(e.gun&&dd<230)){e.x+=Math.cos(a)*e.sp*dt;e.y+=Math.sin(a)*e.sp*dt}e.fl-=dt;
-  if(e.gun){e.cd-=dt;if(e.cd<=0&&dd<520){e.cd=2.2+Math.random();{const n=e.ti>=3?5:e.ti>=2?3:1,vb=230+25*e.ti;for(let j=0;j<n;j++){const aa=a+(j-(n-1)/2)*.28;eb.push({x:e.x,y:e.y,vx:Math.cos(aa)*vb,vy:Math.sin(aa)*vb,l:3,el:e.el,dm:e.dm})}}}}
-  for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4)hurt(q,[7,5,12][e.k]*e.dm,e.el)}
+  else if(e.kd!=null||!e.gun)Enemies.act(e,dt,tg,dd,a);   // enemigos comunes: movimiento y ataques con aviso (enemies.js)
+  else{if(dd>=230){e.x+=Math.cos(a)*e.sp*dt;e.y+=Math.sin(a)*e.sp*dt}e.cd-=dt;if(e.cd<=0&&dd<520){e.cd=2.2+Math.random();const n=e.ti>=3?5:e.ti>=2?3:1,vb=230+25*e.ti;for(let j=0;j<n;j++){const aa=a+(j-(n-1)/2)*.28;eb.push({x:e.x,y:e.y,vx:Math.cos(aa)*vb,vy:Math.sin(aa)*vb,l:3,el:e.el,dm:e.dm})}}}   // aparición vieja (spawnOld)
+  e.fl-=dt;
+  for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4)hurt(q,e.bo!=null?12*e.dm:Enemies.touch(e),e.el)}
  for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el);b.l=0}}eb=eb.filter(b=>b.l>0);
  for(let i=0;i<en.length;i++)for(let j=i+1;j<en.length;j++){const a=en[i],b=en[j],d=Math.hypot(a.x-b.x,a.y-b.y);
-  if(d>0&&d<a.r*1.6){const k=(a.r*1.6-d)/2/d;a.x+=(a.x-b.x)*k;a.y+=(a.y-b.y)*k;b.x-=(a.x-b.x)*k;b.y-=(a.y-b.y)*k}}
+  if(d>0&&d<a.r*1.6&&a.st!==2&&b.st!==2){const k=(a.r*1.6-d)/2/d;a.x+=(a.x-b.x)*k;a.y+=(a.y-b.y)*k;b.x-=(a.x-b.x)*k;b.y-=(a.y-b.y)*k}}
  for(const e of en)if(e.hp<=0){kills++;if(e.bo!=null)Bosses.onDeath(e);else{gems.push({x:e.x,y:e.y,v:e.v});Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
@@ -1015,7 +1023,7 @@ P=[np(0,'001_guilmon')];p=P[0];
 if($('party-panel'))$('party-panel').style.display='none';   // reemplazado por la ventana Amigos / Party (social.js)
 buildMenuSel();
 (async()=>{
-  try{await SkillSys.load();Bosses.load().catch(e=>console.error(e));await Promise.all(CREATURES.map(c=>CreatureLoader.load(c.id).catch(e=>console.error(e))))}catch(e){console.error(e)}
+  try{await SkillSys.load();Bosses.load().catch(e=>console.error(e));Enemies.load().catch(e=>console.error(e));await Promise.all(CREATURES.map(c=>CreatureLoader.load(c.id).catch(e=>console.error(e))))}catch(e){console.error(e)}
   if(selected&&(!CreatureLoader.cache[selected]||!unlocked(selected)))selected=null;
   renderSel();wal();draw();
   if(typeof Progress!=='undefined')Progress.showHatch();   // eclosión pendiente (necesita los sprites cargados)

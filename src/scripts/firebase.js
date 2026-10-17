@@ -17,15 +17,29 @@ let uid = null;
 async function saveToCloud(saveData) {
   if (!uid) return;
   try {
+    // merge: no pisa el campo "prog" (progreso de progress.js) que se guarda aparte
     await setDoc(doc(db, 'users', uid), {
       coins: saveData.coins,
       lv: saveData.lv || {},
       updated: Date.now()
-    });
+    }, { merge: true });
   } catch (err) {
     console.error('Error al guardar en Firestore:', err);
   }
 }
+
+// Progreso de progress.js (Rango de Tamer, Digimon desbloqueados, Digitamas, Analyzer): users/{uid}.prog
+// Se guarda con un pequeño retraso para no escribir en cada cambio del Analyzer.
+let progTimer = null;
+function saveProgToCloud(st) {
+  if (!uid) return;
+  clearTimeout(progTimer);
+  progTimer = setTimeout(() => {
+    setDoc(doc(db, 'users', uid), { prog: st, updated: Date.now() }, { merge: true })
+      .catch(err => console.error('Error al guardar el progreso en Firestore:', err));
+  }, 1500);
+}
+window.onProgSave = st => saveProgToCloud(st);
 
 if ($('login')) {
   $('login').onclick = () => signInWithPopup(auth, new GoogleAuthProvider())
@@ -36,7 +50,9 @@ if ($('logout')) {
   $('logout').onclick = () => {
     signOut(auth).then(() => {
       localStorage.removeItem('digisurvivor');
+      localStorage.removeItem('digisurvivor_prog');
       if (window.loadSave) window.loadSave({ coins: 0, lv: {} });
+      if (window.loadProg) window.loadProg(null);   // el rango y los desbloqueos son de la cuenta: se vuelve a cero
     });
   };
 }
@@ -61,8 +77,12 @@ onAuthStateChanged(auth, async u => {
       const d = snap.data();
       const loadedSave = { coins: d.coins | 0, lv: d.lv || {}, updated: Number(d.updated) || 0 };   // updated: lo usa el reinicio de progreso (RESET_BEFORE en game.js)
       if (window.loadSave) window.loadSave(loadedSave);
+      // progreso de la cuenta; si la cuenta todavía no tiene, se sube el del navegador
+      if (d.prog && window.loadProg) window.loadProg(d.prog);
+      else if (window.getProg) saveProgToCloud(window.getProg());
     } else if (window.getSave) {
       await saveToCloud(window.getSave());
+      if (window.getProg) saveProgToCloud(window.getProg());
     }
   } catch (e) {
     console.error('Error al cargar progreso de Firestore:', e);
