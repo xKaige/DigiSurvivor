@@ -60,27 +60,31 @@ const World = {
   // clave de un cuarto: 0 nada/esquina, 1 vecino horizontal, 2 vertical, 3 los dos (esquina interior), 4 todo, 5 solo diagonal
   qkey(q, s, h, v, d) { const k = h && v ? (s && d ? 4 : 3) : h ? 1 : v ? 2 : (!s && d ? 5 : 0); return q + 4 * (s + 2 * k); },
   rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; },
-  // ruido suave (value noise de 2 octavas) sobre la grilla de celdas
+  // ruido suave (value noise de 2 octavas) sobre la grilla de celdas. Es periódico: empalma en los bordes del mapa.
   noise(R, f) {
-    const N = this.N, out = new Float32Array(N * N);
+    const N = this.N, out = new Float32Array(N * N), sm = x => x * x * (3 - 2 * x);
     for (const [fr, amp] of [[f, 0.65], [f * 2.3, 0.35]]) {
-      const L = Math.ceil(N * fr) + 2, lat = Array.from({ length: L * L }, R), sm = x => x * x * (3 - 2 * x);
+      const L = Math.max(2, Math.round(N * fr)), lat = Array.from({ length: L * L }, R), at = (i, j) => lat[(j % L) * L + (i % L)];
       for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
-        const gx = x * fr, gy = y * fr, ix = gx | 0, iy = gy | 0, tx = sm(gx - ix), ty = sm(gy - iy), at = (i, j) => lat[j * L + i];
+        const gx = x * L / N, gy = y * L / N, ix = gx | 0, iy = gy | 0, tx = sm(gx - ix), ty = sm(gy - iy);
         const a = at(ix, iy) + (at(ix + 1, iy) - at(ix, iy)) * tx, b = at(ix, iy + 1) + (at(ix + 1, iy + 1) - at(ix, iy + 1)) * tx;
         out[y * N + x] += (a + (b - a) * ty) * amp;
       }
     }
     return out;
   },
-  // celda con espejo en los bordes (como el mundo se repite en espejo, el vecino de afuera es la misma celda)
-  at(A, c, r) { const N = this.N; c = c < 0 ? 0 : c >= N ? N - 1 : c; r = r < 0 ? 0 : r >= N ? N - 1 : r; return A[r * N + c]; },
-  // saca las celdas que no forman parte de ningún bloque de 2×2 (las puntas finitas quedan feas con el autotile)
-  open(A) {
+  // celda con vuelta en los bordes (el bosque se repite tal cual, sin espejo)
+  at(A, c, r) { const N = this.N; c = ((c % N) + N) % N; r = ((r % N) + N) % N; return A[r * N + c]; },
+  // saca las celdas que no forman parte de ningún bloque de k×k (las puntas finitas quedan feas con el autotile)
+  open(A, k = 2) {
     const N = this.N, B = new Uint8Array(N * N);
     for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (A[r * N + c]) {
-      for (const [dx, dy] of [[0, 0], [-1, 0], [0, -1], [-1, -1]])
-        if (this.at(A, c + dx, r + dy) && this.at(A, c + dx + 1, r + dy) && this.at(A, c + dx, r + dy + 1) && this.at(A, c + dx + 1, r + dy + 1)) { B[r * N + c] = 1; break; }
+      let ok = false;
+      for (let oy = 1 - k; oy <= 0 && !ok; oy++) for (let ox = 1 - k; ox <= 0 && !ok; ox++) {
+        let all = true; for (let y = 0; y < k && all; y++) for (let x = 0; x < k && all; x++) all = !!this.at(A, c + ox + x, r + oy + y);
+        ok = all;
+      }
+      B[r * N + c] = ok ? 1 : 0;
     }
     return B;
   },
@@ -97,40 +101,53 @@ const World = {
     }
     return A;
   },
+  // ¿hay alguna celda marcada en A a distancia d (cuadrada) de (c, r)?
+  near(A, c, r, d) { for (let dy = -d; dy <= d; dy++) for (let dx = -d; dx <= d; dx++) if (this.at(A, c + dx, r + dy)) return true; return false; },
   async gen(seed) {
     await this.loadTiles();
-    const N = this.N, R = this.rng(seed), cen = N >> 1, T = 16;
-    const near = (c, r, rad) => Math.hypot(c - cen, r - cen) < rad;
+    const N = this.N, R = this.rng(seed), cen = N >> 1, T = 16, wr = v => ((Math.floor(v) % N) + N) % N;
+    const nearStart = (c, r, rad) => Math.hypot(c - cen, r - cen) < rad;
     const mk = f => { const A = new Uint8Array(N * N); for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) A[r * N + c] = f(c, r, r * N + c) ? 1 : 0; return A; };
-    // lagos y mesetas (paredes), separados entre sí y lejos del inicio
     const nl = this.noise(R, 0.09), nm = this.noise(R, 0.1), nd = this.noise(R, 0.14), nt = this.noise(R, 0.12);
-    let lake = this.open(this.smooth(mk((c, r, i) => nl[i] > 0.68 && !near(c, r, 7)))); lake = this.open(lake.map(v => 1 - v)).map(v => 1 - v);
-    const lakeNear = (c, r, d) => { for (let dy = -d; dy <= d; dy++) for (let dx = -d; dx <= d; dx++) if (this.at(lake, c + dx, r + dy)) return true; return false; };
-    let cliff = this.open(this.smooth(mk((c, r, i) => nm[i] > 0.67 && !near(c, r, 7) && !lakeNear(c, r, 2))));
-    // caminos de tierra: caminatas al azar que cruzan el mapa pasando cerca del centro
+    // ---- caminos de tierra: una red sin puntas muertas ----
+    // nodos (uno por cuadrante) unidos en un circuito, el centro unido al circuito, y un camino que da la vuelta al mapa
+    // en horizontal y otro en vertical (como el mapa se repite, empalman con la copia de al lado: la red sigue en todo el mundo)
     let path = new Uint8Array(N * N);
-    for (let k = 0; k < 3; k++) {
-      let x = R() * N, y = R() * N, a = R() * 6.283; const tx = cen + (R() - 0.5) * 16, ty = cen + (R() - 0.5) * 16;
-      for (let s = 0; s < 140; s++) {
-        const want = s < 50 ? Math.atan2(ty - y, tx - x) : a; let da = want - a; da = Math.atan2(Math.sin(da), Math.cos(da));
-        a += da * 0.15 + (R() - 0.5) * 0.5; x += Math.cos(a); y += Math.sin(a);
-        for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) { const c = Math.floor(x) + dx, r = Math.floor(y) + dy; if (c >= 0 && r >= 0 && c < N && r < N) path[r * N + c] = 1; }
+    const road = (x0, y0, x1, y1) => {
+      const len = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(len * 2), nx = -(y1 - y0) / len, ny = (x1 - x0) / len;
+      const amp = 2 + R() * 3, fq = 1 + R() * 2, ph = R() * 6.283;
+      for (let s = 0; s <= n; s++) {
+        const u = s / n, o = Math.sin(u * Math.PI * fq + ph) * Math.sin(u * Math.PI) * amp;
+        const x = x0 + (x1 - x0) * u + nx * o, y = y0 + (y1 - y0) * u + ny * o;
+        for (let dy = 0; dy <= 1; dy++) for (let dx = 0; dx <= 1; dx++) path[wr(y + dy) * N + wr(x + dx)] = 1;   // 2 celdas de ancho
       }
-    }
+    };
+    const nodes = [];
+    for (const [qx, qy] of [[0.25, 0.25], [0.75, 0.25], [0.75, 0.75], [0.25, 0.75]]) nodes.push([N * qx + (R() - 0.5) * N * 0.2, N * qy + (R() - 0.5) * N * 0.2]);
+    const any = () => nodes[(R() * 4) | 0];
+    for (let k = 0; k < 4; k++) { const a = nodes[k], b = nodes[(k + 1) % 4]; road(a[0], a[1], b[0], b[1]); }   // circuito
+    { const a = any(); road(cen, cen, a[0], a[1]); }               // el centro se une al circuito
+    { const a = any(); road(a[0], a[1], a[0] + N, a[1]); }         // vuelta horizontal
+    { const a = any(); road(a[0], a[1], a[0], a[1] + N); }         // vuelta vertical
     for (let r = cen - 2; r <= cen + 2; r++) for (let c = cen - 3; c <= cen + 3; c++) path[r * N + c] = 1;   // claro de tierra en el inicio
-    path = this.open(path); { const gr = this.open(path.map(v => 1 - v)); path = gr.map(v => 1 - v); }   // sin islitas sueltas de pasto
-    // todo lo que no se pueda alcanzar desde el inicio pasa a ser meseta (así nadie queda encerrado)
+    path = this.open(path); path = this.open(path.map(v => 1 - v)).map(v => 1 - v);   // sin puntas finitas ni islitas de pasto
+    // ---- lagos y mesetas (paredes): lejos del inicio, de los caminos y entre sí ----
+    let lake = this.smooth(mk((c, r, i) => nl[i] > 0.62 && !nearStart(c, r, 7) && !this.near(path, c, r, 1)));
+    lake = this.open(lake); lake = this.open(lake.map(v => 1 - v), 3).map(v => 1 - v);   // agua sin puntas; la tierra entre agua, de 3 o más
+    for (let i = 0; i < N * N; i++) if (path[i]) lake[i] = 0;
+    const cliff = this.open(this.smooth(mk((c, r, i) => nm[i] > 0.62 && !nearStart(c, r, 7) && !this.near(lake, c, r, 2) && !this.near(path, c, r, 1))));
+    // todo lo que no se pueda alcanzar desde el inicio pasa a ser meseta o lago (así nadie queda encerrado)
     const seen = new Uint8Array(N * N), st = [cen * N + cen]; seen[st[0]] = 1;
     while (st.length) {
       const i = st.pop(), r = (i / N) | 0, c = i - r * N;
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-        const cc = c + dx, rr = r + dy; if (cc < 0 || rr < 0 || cc >= N || rr >= N) continue;
-        const j = rr * N + cc; if (!seen[j] && !lake[j] && !cliff[j]) { seen[j] = 1; st.push(j); }
+        const j = wr(r + dy) * N + wr(c + dx); if (!seen[j] && !lake[j] && !cliff[j]) { seen[j] = 1; st.push(j); }
       }
     }
-    for (let i = 0; i < N * N; i++) if (!seen[i] && !lake[i] && !cliff[i]) (lakeNear(i % N, (i / N) | 0, 1) ? lake : cliff)[i] = 1;
-    const wall = mk((c, r, i) => lake[i] || cliff[i]);
-    const dark = this.open(this.smooth(mk((c, r, i) => nd[i] > 0.6 && !path[i] && !wall[i])));
+    for (let i = 0; i < N * N; i++) if (!seen[i] && !lake[i] && !cliff[i]) (this.near(lake, i % N, (i / N) | 0, 1) ? lake : cliff)[i] = 1;
+    const wall = mk((c, r, i) => lake[i] || cliff[i]), land = mk((c, r, i) => !lake[i]);
+    // pasto oscuro: manchas separadas de caminos, lagos y mesetas (si no, sus bordes se pisan)
+    const dark = this.open(this.smooth(mk((c, r, i) => nd[i] > 0.6 && !this.near(path, c, r, 1) && !this.near(wall, c, r, 2))));
     // ---- dibujo ----
     const cv = document.createElement('canvas'); cv.width = cv.height = N * T;
     const g = cv.getContext('2d'); g.imageSmoothingEnabled = false;
@@ -141,7 +158,7 @@ const World = {
     const layer = (b, A, skipFill) => {
       const Q = this.quarters[b];
       for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) for (let q = 0; q < 4; q++) {
-        const sx = q & 1 ? 1 : -1, sy = q & 2 ? 1 : -1, s = this.at(A, c, r);
+        const sx = q & 1 ? 1 : -1, sy = q & 2 ? 1 : -1, s = A[r * N + c];
         const k = this.qkey(q, s, this.at(A, c + sx, r), this.at(A, c, r + sy), this.at(A, c + sx, r + sy));
         if (k === q || (skipFill && k === q + 4 * (1 + 8))) continue;   // vacío sin vecinos / relleno
         const o = Q[k] || Q[q + 4 * (s + 2 * (s ? 4 : 0))]; if (!o) continue;
@@ -150,31 +167,40 @@ const World = {
     };
     layer(0, mk((c, r, i) => !path[i]), true);   // pasto sobre la tierra (los caminos son los huecos)
     layer(1, dark, false);
-    layer(3, mk((c, r, i) => !lake[i]), true);   // estanque: lo lleno es tierra firme, los huecos son agua
+    layer(3, land, true);                        // estanque: lo lleno es tierra firme, los huecos son agua
     layer(2, cliff, false);
     // ---- adornos ----
-    const D = this.DEC, blocks = [], trunks = [], items = [];
-    const free = (c, r, rad) => { for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) if (this.at(wall, c + dx, r + dy)) return false; return true; };
-    const used = new Uint8Array(N * N);
-    const put = (name, c, r) => { const d = D[name], x = Math.round(c * T + T / 2 - d[2] / 2 + (R() - 0.5) * 6), y = Math.round(r * T + T - d[3] + (R() - 0.5) * 4); items.push([name, x, y]); if (d[4]) trunks.push([x + d[4][0], y + d[4][1], d[4][2], d[4][3]]); };
+    const D = this.DEC, S = N * T, blocks = [], trunks = [], items = [];
+    const used = new Uint8Array(N * N), mark = (c, r) => { used[wr(r) * N + wr(c)] = 1; };
+    const put = (name, c, r) => {
+      const d = D[name], x = Math.round(c * T + T / 2 - d[2] / 2 + (R() - 0.5) * 6), y = Math.round(r * T + T - d[3] + (R() - 0.5) * 4);
+      items.push([name, x, y]);
+      if (d[4]) for (const ox of [-S, 0, S]) for (const oy of [-S, 0, S]) trunks.push([x + d[4][0] + ox, y + d[4][1] + oy, d[4][2], d[4][3]]);   // setData recorta lo que queda afuera
+    };
     const pick = a => a[(R() * a.length) | 0];
-    for (let r = 2; r < N - 2; r++) for (let c = 2; c < N - 2; c++) {
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
       const i = r * N + c; if (used[i]) continue;
-      if (lake[i]) { if (!lakeNear(c, r, 0) || R() > 0.05) continue; if (this.at(lake, c - 1, r) && this.at(lake, c + 1, r) && this.at(lake, c, r - 1) && this.at(lake, c, r + 1)) { put(pick(['lily', 'lily2', 'lily', 'reed', 'ripple', 'wRock']), c, r); used[i] = 1; } continue; }
-      if (wall[i] || near(c, r, 5)) continue;
+      if (lake[i]) { if (R() < 0.05 && !this.near(land, c, r, 1)) { put(pick(['lily', 'lily2', 'lily', 'reed', 'ripple', 'wRock']), c, r); used[i] = 1; } continue; }
+      if (wall[i] || nearStart(c, r, 5)) continue;
       const forest = nt[i], v = R();
-      if (!path[i] && forest > 0.58 && v < 0.16 && r > 4 && free(c, r, 1) && !used[i - N] && !used[i - 1]) {
-        const big = forest > 0.66 && v < 0.07 && free(c, r, 2);
+      if (!path[i] && forest > 0.58 && v < 0.16 && !this.near(wall, c, r, 1) && !this.at(used, c, r - 1) && !this.at(used, c - 1, r)) {
+        const big = forest > 0.66 && v < 0.07 && !this.near(wall, c, r, 2);
         put(big ? 'treeBig' : pick(['tree', 'pine', 'tree']), c, r);
-        for (let dy = -3; dy <= 1; dy++) for (let dx = -2; dx <= 2; dx++) { const j = (r + dy) * N + c + dx; if (j >= 0 && j < N * N) used[j] = 1; }
-      } else if (!path[i] && v < 0.012 && free(c, r, 1)) { put(pick(['rock', 'stump']), c, r); used[i] = 1; }
+        for (let dy = -3; dy <= 1; dy++) for (let dx = -2; dx <= 2; dx++) mark(c + dx, r + dy);
+      } else if (!path[i] && v < 0.012 && !this.near(wall, c, r, 1)) { put(pick(['rock', 'stump']), c, r); used[i] = 1; }
       else if (v < (path[i] ? 0.03 : 0.11)) { put(pick(dark[i] ? ['dtuft', 'dtuft2', 'bush'] : path[i] ? ['pebble', 'leaf', 'branch', 'tuft3'] : ['tuft', 'tuft2', 'tuft4', 'flowersY', 'flowersR', 'flowerP', 'mushR', 'mushB', 'bush', 'leaf', 'pebble']), c, r); used[i] = 1; }
     }
     items.sort((a, b) => (a[2] + D[a[0]][3]) - (b[2] + D[b[0]][3]));
-    for (const [name, x, y] of items) { const d = D[name]; g.drawImage(this.tiles, d[0], d[1] + 96, d[2], d[3], x, y, d[2], d[3]); }
+    for (const [name, x, y] of items) {   // lo que se pasa del borde se dibuja también del otro lado (el mapa se repite)
+      const d = D[name];
+      for (const ox of [-S, 0, S]) for (const oy of [-S, 0, S]) {
+        const X = x + ox, Y = y + oy; if (X + d[2] <= 0 || Y + d[3] <= 0 || X >= S || Y >= S) continue;
+        g.drawImage(this.tiles, d[0], d[1] + 96, d[2], d[3], X, Y, d[2], d[3]);
+      }
+    }
     // ---- datos para el resto de World (paredes en píxeles del mapa, igual que los JSON) ----
     for (let i = 0; i < N * N; i++) if (wall[i]) blocks.push([(i % N) * T, ((i / N) | 0) * T, T, T]);
-    const d = { id: 'woods_' + seed, name: 'Bosque', w: N * T, h: N * T, scale: 2, start: [cen * T, cen * T + 20], block: blocks, trunk: trunks };
+    const d = { id: 'woods_' + seed, name: 'Bosque', w: S, h: S, scale: 2, wrap: true, start: [cen * T, cen * T + 20], block: blocks, trunk: trunks };
     this.data = null; this.img = cv; this.flow = null;
     this.setData(d);
   },
@@ -194,7 +220,8 @@ const World = {
   startPos() { if (!this.data) return [0, 0]; const s = this.data.start || [this.data.w / 2, this.data.h / 2]; return [s[0] * this.data.scale, s[1] * this.data.scale - 40]; },
 
   // ---------- Coordenadas: mundo -> píxel del mapa (con espejo) ----------
-  local(v, size) { const k = Math.floor(v / size), m = v - k * size; return (k & 1) ? size - 1e-6 - m : m; },
+  // (los mapas con wrap, como el bosque procedural, se repiten tal cual; los demás, en espejo)
+  local(v, size) { const k = Math.floor(v / size), m = v - k * size; return this.data.wrap || !(k & 1) ? m : size - 1e-6 - m; },
   solid(wx, wy) {
     if (!this.grid) return false;
     const s = this.data.scale, mx = this.local(wx, this.size) / s, my = this.local(wy, this.size) / s;
@@ -313,6 +340,8 @@ const World = {
     const y0 = Math.floor((cam.y - H / 2) / S), y1 = Math.floor((cam.y + H / 2) / S);
     cx.imageSmoothingEnabled = false;
     for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) {
+      // con wrap: copias derechas, 1 px más grandes para que no se vea la costura entre una y otra
+      if (this.data.wrap) { cx.drawImage(this.img, 0, 0, this.img.width, this.img.height, tx * S, ty * S, S + 1, S + 1); continue; }
       const fx = tx & 1, fy = ty & 1;
       cx.save();
       cx.translate(tx * S + (fx ? S : 0), ty * S + (fy ? S : 0));
