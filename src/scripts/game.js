@@ -359,6 +359,9 @@ function buildMenuSel() {
   const row = document.createElement('div'); row.id = 'selrow';
   row.innerHTML = '<div id="selinfo"></div><button id="selbtn" class="alt">Elegir Digimon</button>';
   const bar = $('go').parentNode; bar.parentNode.insertBefore(row, bar);
+  // menú nuevo: tu Digimon va en la pantalla del Digivice y "Elegir Digimon" queda primero en la lista
+  if ($('dvscreen')) $('dvscreen').appendChild($('selinfo'));
+  if ($('mnu')) { $('mnu').insertBefore($('selbtn'), $('mnu').firstChild); row.remove(); }
   $('selbtn').onclick = openMenuPick;
 }
 function renderSel() {

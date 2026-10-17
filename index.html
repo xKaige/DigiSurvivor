@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>DigiSurvivor</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦖</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Orbitron:wght@700;900&display=swap">
   <link rel="stylesheet" href="src/styles/style.css">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <style id="hud-css">
@@ -42,17 +45,53 @@
   <div id="skbar"></div>
 
   <div id="ov">
-    <h1 id="t">DigiSurvivor</h1>
-    <p id="m">Sobreviví a las hordas de virus informáticos.</p>
-    <div style="margin:10px 0;">
-      <button id="go">1 Jugador</button>
-      <button id="go2">2 Jugadores Local</button>
-      <button id="tb">Árbol de Mejoras</button>
+    <!-- Decoración del menú (marco de pantalla de Digivice y lluvia binaria) -->
+    <div class="ovfx" aria-hidden="true">
+      <div class="bin"></div>
+      <i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i>
+      <div class="tag top">SISTEMA EN LÍNEA</div>
+      <div class="tag bot">CONEXIÓN ESTABLE</div>
+      <div class="side l">DIGITAL WORLD // ONLINE</div>
+      <div class="data"><span>DATOS</span><b></b><b></b><b></b><b></b><b class="off"></b></div>
+      <div class="reticle"></div>
     </div>
-    <div id="acc" style="margin:8px 0; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
-      <button id="login">Iniciar sesión con Google</button>
-      <button id="logout" style="display:none;">Cerrar sesión</button>
-      <span id="who"></span>
+
+    <div id="ovl">
+      <h1 id="t">DigiSurvivor</h1>
+      <p id="m">Sobreviví a las hordas de virus informáticos.</p>
+      <!-- Digivice: en la pantalla aparece tu Digimon (game.js mete ahí #selinfo) -->
+      <div id="dv">
+        <svg viewBox="0 0 320 320" aria-hidden="true">
+          <defs>
+            <path id="dvarc1" d="M70,160 A90,90 0 0 1 250,160"/>
+            <path id="dvarc2" d="M60,160 A100,100 0 0 0 260,160"/>
+          </defs>
+          <g class="gear"><circle cx="160" cy="160" r="150" class="o2"/><circle cx="160" cy="160" r="138" class="dash"/></g>
+          <path class="o1" d="M160,22 C245,22 298,82 298,160 C298,238 245,298 160,298 C75,298 22,238 22,160 C22,82 75,22 160,22Z"/>
+          <path class="o3" d="M160,46 C232,46 274,96 274,160 C274,224 232,274 160,274 C88,274 46,224 46,160 C46,96 88,46 160,46Z"/>
+          <path class="o2" d="M52,96 L36,70 L60,58 L78,82" />
+          <text class="dvtx"><textPath href="#dvarc1" startOffset="50%" text-anchor="middle">DIGIVICE</textPath></text>
+          <text class="dvtx"><textPath href="#dvarc2" startOffset="50%" text-anchor="middle">DIGIVICE</textPath></text>
+          <rect x="102" y="102" width="116" height="116" rx="10" class="o1"/>
+          <ellipse cx="252" cy="122" rx="14" ry="10" class="o2"/><ellipse cx="252" cy="198" rx="14" ry="10" class="o2"/>
+          <ellipse cx="68" cy="160" rx="10" ry="14" class="o2"/>
+        </svg>
+        <div id="dvscreen"></div>
+      </div>
+    </div>
+
+    <div id="ovr">
+      <div id="wal">Monedas: 0</div>
+      <nav id="mnu">
+        <button id="go">1 Jugador</button>
+        <button id="go2">2 Jugadores Local</button>
+        <button id="tb">Árbol de Mejoras</button>
+      </nav>
+      <div id="acc">
+        <button id="login">Iniciar sesión con Google</button>
+        <button id="logout" style="display:none;">Cerrar sesión</button>
+        <span id="who"></span>
+      </div>
     </div>
     <!-- El multijugador online solo aparece (y se conecta) cuando iniciás sesión; firebase.js lo muestra -->
     <div id="party-panel" style="display:none; flex-direction:column; align-items:center; margin-top:15px; border-top:1px solid #2ee6c8; padding-top:10px;">
@@ -65,8 +104,20 @@
       </div>
       <p id="party-status"></p>
     </div>
-    <div id="wal">Monedas: 0</div>
   </div>
+  <script>
+    // Lluvia binaria del menú (solo decoración)
+    (function () {
+      var b = document.querySelector('#ov .bin'); if (!b) return;
+      for (var i = 0; i < 18; i++) {
+        var s = document.createElement('span'), t = '';
+        for (var j = 0; j < 240; j++) t += (Math.random() < .5 ? '0' : '1') + (j % 8 === 7 ? '\n' : '');
+        s.textContent = t; s.style.left = (i * 5.6 + Math.random() * 2) + '%';
+        s.style.animationDuration = (14 + Math.random() * 16) + 's'; s.style.animationDelay = (-Math.random() * 30) + 's';
+        s.style.opacity = (.05 + Math.random() * .13).toFixed(2); b.appendChild(s);
+      }
+    })();
+  </script>
 
   <div id="up" style="display:none;">
     <h2>¡Subiste de nivel!</h2>
