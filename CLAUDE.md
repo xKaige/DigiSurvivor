@@ -10,6 +10,8 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 ## Stack y cómo correrlo
 - **Sitio estático, sin build, sin bundler, sin npm.** JS vanilla + Canvas 2D.
 - Probar en local: `npx serve` en la raíz (con doble clic no andan los `fetch` ni los módulos ES). En esta PC no hay Node: usar `py -m http.server 3000` (es lo que tiene `.claude/launch.json`).
+- Probar con el navegador integrado: si el panel está oculto, `requestAnimationFrame` se frena y las capturas salen viejas → avanzar la simulación a mano (`update(0.02)` en un for) y verificar con JS. Después de editar, forzar recarga: `fetch(url,{cache:'reload'})` + `location.reload()`.
+- Fuentes: Chakra Petch (todo) y Orbitron (títulos), desde Google Fonts en `index.html`.
 - Agregar `?test` a la URL (`TEST`) hace que **todas las ramas finales cumplan los requisitos**. No cambia los niveles de evolución (eso es `FAST`); el comentario en `game.js:20` lo explica mal.
 - Deploy: GitHub → Vercel (preset "Other", sin build command). Cada push republica. Ojo: se publica todo lo que esté en el repo (incluidos los `.bak`).
 - Dependencias externas por CDN: PeerJS 1.5.2 (unpkg) y Firebase 10.14.1 (gstatic).
@@ -24,7 +26,7 @@ src/scripts/game.js             # el juego + conexión online/lobby (script clá
 src/scripts/firebase.js         # login Google + guardado en Firestore (type="module")
 src/scripts/firebase-config.js  # config pública de Firebase (la importa firebase.js)
 src/scripts/social.js           # nick único, amigos, party e invitaciones (lo importa firebase.js)
-src/scripts/missions.js         # Misiones diarias (se carga después de game.js)
+src/scripts/missions.js         # Misiones diarias (se carga después de game.js; orden real: loader → skills → game → missions → firebase)
 src/scripts/map.js              # mapa de tiles (MAP_COLS/ROWS, mapData) — HOY NO SE CARGA en index.html
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
 src/data/skills.json            # catálogo de skills, elementos, maxLevel, maxActive, levelBonus
@@ -33,7 +35,7 @@ assets/sprites/creatures/<id>/  # spritesheets PNG de cada etapa/rama
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `game.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `game.js` → `missions.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 
@@ -58,12 +60,12 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Al subir de nivel (`levelUp`): si es nivel de evolución → `startEvo(etapa)`; si es `LINE_LEVEL` → `chooseLine()` (elegir rama final) → `startEvo(5)`; si no → cartas (`startCards`/`showCards`).
 - Cartas: mejoras de stat en `UP` (cada una suma 1 punto a FUE/VEL/VIT/INT) + cartas de skills de `SkillSys.cards(q)`. Se muestran 3 al azar.
 - Ramas finales: requisitos en `branches[].req` del JSON, comparados contra `tot(q, stat)` = puntos permanentes del árbol + puntos de la partida. Si no cumplís ninguna, todas quedan disponibles pero "inestables" (`weak`, bonos a la mitad).
-- **Los bonos de cada rama están hardcodeados por índice en `stepEvo`** (`line 0/1/2`), no en el JSON. Con 3 criaturas ya conviene pasarlo a datos (ej. un campo `bonus` en cada branch).
+- **Los bonos de cada rama están hardcodeados por índice en `stepEvo`** (`line 0/1/2`), no en el JSON. Con 15 criaturas conviene pasarlo a datos (ej. un campo `bonus` en cada branch).
 - `cardsAt` + 800 ms: protección contra clicks/teclas accidentales cuando aparecen cartas encadenadas.
 
 ### Skills (`skills.js` + `skills.json`)
 - `SkillSys` usa globals de `game.js` (`en, sh, ef, hit, cx, t, CR`) en tiempo de ejecución; se carga antes que `game.js`.
-- Skills **nuevas**: solo las de la etapa actual (`stages[s].skills`) o de la rama elegida (`branches[].skills`). `meta.anySkill: true` habilita todas (modo prueba; las 3 criaturas actuales lo tienen en `false`).
+- Skills **nuevas**: solo las de la etapa actual (`stages[s].skills`) o de la rama elegida (`branches[].skills`). `meta.anySkill: true` habilita todas (modo prueba; todas las criaturas lo tienen en `false`).
 - Tipos de skill (`type` en `skills.json`, implementados en `skills.js`): `melee_arc`, `cone`, `projectile` (con `count`/`spread` para abanicos, `pierce`, `explode`), `beam`, `orbit`, `nova` (pulso alrededor; `guard` = segundos de invulnerabilidad). Tipo nuevo = método nuevo en `SkillSys` con el mismo nombre.
 - Fuente de datos: las skills salen de https://dsrworldwiki.com/en/digimon/<slug> (Digimon Super Rumble). Cada etapa/rama guarda `wiki` (slug o `null`), `verified` y `note`; cada skill guarda `source`. Nombres en inglés como en la wiki; descripciones propias en español (no copiar textos de la wiki). Nombres que cambian: Growmon=Growlmon, Galgomon=Gargomon, Dukemon=Gallantmon, SaintGalgomon=MegaGargomon, Pokomon=Viximon (los nombres del juego son los japoneses; la wiki usa los de occidente). Las etapas bebé solo tienen ataque básico en la wiki.
 - Skills que ya tenés: se pueden seguir mejorando aunque cambies de etapa. Tope de nivel `maxLevel` (5) y de skills activas `maxActive` (4).
@@ -85,6 +87,14 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 
 ### Árbol de mejoras permanentes
 `TREE` (4 columnas). Se compra con monedas que se ganan al terminar la partida (`endRun`). Se aplica al inicio con `applyTree(q)`. Guardado en `save = {coins, lv:{clave:nivel}}`.
+
+## Interfaz (estilo "pantalla de Digivice")
+Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con esquinas cortadas, títulos en Orbitron con brillo, etiquetas `.ovfx` (esquinas `.cn`, `.tag`, `.side`, `.data`, `.reticle`). Variables `--cy`, `--cy2`, `--or`.
+- **Menú** `#ov`: `#ovl` (título `#t`, texto `#m`, Digivice SVG `#dv` con `#dvscreen`) y `#ovr` (`#wal`, botonera `#mnu`, cuenta `#acc`). `buildMenuSel` mete `#selinfo` (tu Digimon) en `#dvscreen` y `#selbtn` primero en `#mnu`. Lluvia binaria con un script inline en `index.html`. `endRun` reusa `#t`/`#m` para "Fuiste borrado".
+- **Selección de Digimon** (`askCreature`, `#up.pick`): grilla `.pk-grid` de `PICK_SLOTS` (40) casillas, las que sobran en negro; panel `#pk-detail` con el sprite animado (canvas, escala entera) y chips de evoluciones/formas finales clickeables (`pickShow(i, key)`). Teclas: flechas mueven, Enter elige, 1-9 atajo (`pickKey`). Clic selecciona, segundo clic elige.
+- **Subir de nivel / evolución final** (`#up` sin `.pick`): cartas `.card.lv` con etiqueta por tipo (`new`, `skup`, `stat`, `line`) y color del elemento de la skill (`--ac`).
+- **Amigos** (`social.js`, estilos inyectados en `injectStyles`), **Árbol** (`#tree`, nodos `.node` con estados `buy/poor/lock/max` y barritas de nivel), **Misiones** (`#missions`, lo arma `missions.js`), **Pausa** (`#pause`).
+- **HUD**: cajas de vida por jugador con número y rastro rojo de daño (`.lag`), parpadeo con <30%; barra de XP abajo con `NV` y "XP actual / necesaria"; triángulo de atributos SVG abajo a la izquierda; skills sobre la barra de XP. En <1000 px el reloj baja debajo de las barras.
 
 ## Sprites y criaturas
 - JSON en `src/data/creatures/<id>.json`: `attribute`, `stages[]` (etapas 0–4, con `skills`) y `branches[]` (formas finales con `id`, `req`, `desc`, `skills`).
@@ -125,11 +135,12 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Limitaciones conocidas: el cliente no ve partículas ni números de daño (no se sincronizan `pt`/`fx`), no hay interpolación, y mandar el estado completo cada frame es pesado.
 
 ## Cosas a tener en cuenta al cambiar código
-- Los ids del HTML (`#hud`, `#fill`, `#fill2`, `#xpf`, `#tm`, `#tr`, `#info`, `#pst`, `#up`, `#cards`, `#evt`, `#ov`, `#tree`, etc.) están acoplados a `game.js`. Si cambiás uno, cambialo en los dos lados.
+- Los ids del HTML (`#hud`, `#hp1box/#hp2box`, `#fill`, `#fill2`, `#lag1/#lag2`, `#hpt1/#hpt2`, `#xp`, `#xpf`, `#xpl`, `#xpt`, `#tm`, `#info`, `#pst`, `#leg`, `#up`, `#cards`, `#evt`, `#ov`, `#mnu`, `#dvscreen`, `#gver`, `#msb`, `#tree`, `#pause`, `#pcont`, `#pquit`, etc.) están acoplados a `game.js`/`missions.js`. Si cambiás uno, cambialo en los dos lados. (`#tr` ya no existe.)
 - `index.html` tiene un `<style id="hud-css">` de respaldo que duplica reglas de `style.css`.
 - Cualquier cambio en lo que afecta la simulación tiene que pensarse para los 3 modos: 1J, 2J local y online (host vs cliente).
 - Si agregás un campo nuevo al jugador (o a enemigos/efectos) que el cliente necesita ver, sumalo al payload de `sync`.
-- Antes de dar por terminado un cambio de jugabilidad, probalo con `npx serve` en 1J y 2J local.
+- Antes de dar por terminado un cambio de jugabilidad, probalo en local (ver arriba) en 1J y 2J local.
+- **Flujo con el usuario:** mostrar cómo quedó (captura) y **preguntar antes de cada push** (publica en Vercel). Commits con el trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. El usuario prefiere respuestas cortas y que no se gasten tokens de más.
 
 ## Referencias de diseño
 - Guía de evoluciones (inspiración para ramas y requisitos): https://humulos.com/digimon/vbdm/ex/#terrier_ex_anchor
@@ -147,4 +158,8 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Validación del guardado en servidor si se agrega ranking.
 - Actualizar el `README.md` a la estructura `src/`.
 - Git: el repo es https://github.com/xKaige/DigiSurvivor (rama `main`). Git está en `C:\Program Files\Git\cmd\git.exe`. Cada push a `main` publica en Vercel. El push se hace desde la terminal de la app (`run_in_terminal`), porque la consola de Claude no es interactiva y no puede usar el login guardado de Git Credential Manager si hace falta reautenticar.
+- **Evoluciones alternativas** (pendiente de analizar): los Digimon de los packs sin línea completa (Leomon, Tyrannomon, Shoutmon, Lopmon, Agumon negro…) podrían aparecer como Campeón/Perfecto alternativos de líneas existentes. Requiere que una etapa admita más de una opción (hoy cada etapa tiene un solo Digimon).
+- **Hosting para la 1.0**: plan = mudarse a **Cloudflare Pages** (gratis y permite uso comercial; Vercel Hobby no permite donaciones) + agregar el dominio nuevo en Firebase → Authentication → dominios autorizados. Para el online, un VPS chico (Hetzner/DigitalOcean/Vultr) con **PeerServer propio + TURN (coturn)**. Revisar las reglas de Firestore antes de lanzar (no están en el repo).
+- **Donaciones**: el botón "☕ Apoyá el proyecto" (https://cafecito.app/dreless) y el aviso "Fan game sin fines de lucro…" están en la **rama local `cafecito`** (sin subir). Mergear a `main` recién después de la mudanza a Cloudflare. El juego es 100% gratis: donar no da ninguna recompensa.
+- Misiones en Firestore: hoy el progreso de misiones es solo local; para sincronizarlo hay que ampliar `saveToCloud` y revisar las reglas.
 - Se probaron los sprites de batalla del ROM de Digimon World Dusk y **no gustaron** (se revirtió). No volver a proponerlos.
