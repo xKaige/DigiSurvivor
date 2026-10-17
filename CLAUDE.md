@@ -26,16 +26,22 @@ src/scripts/game.js             # el juego + conexión online/lobby (script clá
 src/scripts/firebase.js         # login Google + guardado en Firestore (type="module")
 src/scripts/firebase-config.js  # config pública de Firebase (la importa firebase.js)
 src/scripts/social.js           # nick único, amigos, party e invitaciones (lo importa firebase.js)
-src/scripts/missions.js         # Misiones diarias (se carga después de game.js; orden real: loader → skills → game → missions → firebase)
+src/scripts/bosses.js           # Bosses: jefes canon cada 2 min (se carga antes que game.js)
+src/scripts/missions.js         # Misiones diarias (se carga después de game.js)
+src/scripts/progress.js         # Progress: Digimon bloqueados, Digitamas, eclosión y Digimon Analyzer (después de missions.js)
 src/scripts/map.js              # mapa de tiles (MAP_COLS/ROWS, mapData) — HOY NO SE CARGA en index.html
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
 src/data/skills.json            # catálogo de skills, elementos, maxLevel, maxActive, levelBonus
 src/data/missions.json          # catálogo de misiones diarias (tipos, metas, recompensas)
+src/data/unlocks.json           # huevo de cada Digimon + misiones permanentes de desbloqueo
+src/data/bosses.json            # jefes: vida, atributo, técnicas (ring/fan/charge/summon), monedas
 assets/sprites/creatures/<id>/  # spritesheets PNG de cada etapa/rama
+assets/sprites/eggs/egg_NN.png  # Digitamas: tira de 20 cuadros de 24×29 (Digital Tamers, spr_egg01..17)
+assets/sprites/bosses/          # jefes en hojas 2×6 (Workshop; las de 7 filas sin la fila de baile)
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `game.js` → `missions.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → `game.js` → `missions.js` → `progress.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 
@@ -84,6 +90,19 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - El progreso se cuenta al terminar cada partida: `endRun` llama a `Missions.onRunEnd({kills, secs, lvl, stage, online, local2p, attr, coins, skillMax})` con los datos de TU jugador (en online el invitado es `P[1]`). Tipos que se suman entre partidas: `Missions.ADD`; el resto guarda el mejor valor.
 - Progreso en el navegador (`localStorage['digisurvivor_daily']`), **no en Firestore** (saveToCloud solo guarda coins/lv; no se tocó por las reglas). Las recompensas suman a `save.coins`. Ojo: en dos dispositivos se podría cobrar dos veces.
 - Botón `#msb` en el menú con aviso de misiones para reclamar.
+
+### Digimon bloqueados, Digitamas y Analyzer (`progress.js` + `unlocks.json`)
+- Al empezar solo se usan `STARTERS` (Guilmon, Renamon, Terriermon). El resto aparece como huevo en la grilla; al tocarlo muestra su misión (`Progress.lockedDetail`). `unlocked(id)` en game.js.
+- Misión cumplida (se revisa en `endRun` → `Progress.onRunEnd`) → ganás su Digitama → eclosiona al terminar `hatch` partidas más → animación `#hatch` en el menú (`showHatch`, cola `hatchQ`) con botón para elegirlo (`window.setPick`).
+- Tipos de misión: `reach_stage, survive, kills_total, runs_total, kills_with, stage_with, boss, analyzer` (ver `types` en el JSON). Usan estadísticas acumuladas de toda la vida.
+- Analyzer (`#anb` → `#analyzer`): registra cada forma alcanzada (`seeForm` en `start` y `stepEvo`, solo jugadores de este navegador: `mine()`) y cada jefe derrotado. Lo no visto sale como silueta.
+- Guardado en `localStorage['digisurvivor_prog']` (**no en Firestore**, como las misiones). `RESET_BEFORE` también lo borra.
+
+### Jefes (`bosses.js` + `bosses.json`)
+- Cada `every` (120 s; con `?test`, `testEvery` = 25 s) aparece el siguiente: DarkTyrannomon → Etemon → Megadramon → WaruMonzaemon → MetalEtemon → Machinedramon; después repite más fuerte (`cyc`). Si hay uno vivo, espera.
+- Viven en `en` con `bo` (índice), `mh`, timers `pt/at/wd/ch`. `Bosses.act` mueve y ataca (solo host/local); al morir `Bosses.onDeath` (lluvia de XP, `Bosses.down`). Monedas extra en `endRun` (`Bosses.coins()`).
+- Sync: los jefes mandan `bo, cyc, hp, mh, at`; las balas `r`; y `bd` = `Bosses.down`. La barra `#bossbar` y los avisos salen de `Bosses.hud()` (host y cliente).
+- Balance pensado a ojo con `FAST = true` (a los 2 min ya estás en forma final y DarkTyrannomon dura ~4 s). Con `FAST = false` hay que volver a probar la vida de los jefes.
 
 ### Árbol de mejoras permanentes
 `TREE` (4 columnas). Se compra con monedas que se ganan al terminar la partida (`endRun`). Se aplica al inicio con `applyTree(q)`. Guardado en `save = {coins, lv:{clave:nivel}}`.
@@ -161,5 +180,5 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - **Evoluciones alternativas** (pendiente de analizar): los Digimon de los packs sin línea completa (Leomon, Tyrannomon, Shoutmon, Lopmon, Agumon negro…) podrían aparecer como Campeón/Perfecto alternativos de líneas existentes. Requiere que una etapa admita más de una opción (hoy cada etapa tiene un solo Digimon).
 - **Hosting para la 1.0**: plan = mudarse a **Cloudflare Pages** (gratis y permite uso comercial; Vercel Hobby no permite donaciones) + agregar el dominio nuevo en Firebase → Authentication → dominios autorizados. Para el online, un VPS chico (Hetzner/DigitalOcean/Vultr) con **PeerServer propio + TURN (coturn)**. Revisar las reglas de Firestore antes de lanzar (no están en el repo).
 - **Donaciones**: el botón "☕ Apoyá el proyecto" (https://cafecito.app/dreless) y el aviso "Fan game sin fines de lucro…" están en la **rama local `cafecito`** (sin subir). Mergear a `main` recién después de la mudanza a Cloudflare. El juego es 100% gratis: donar no da ninguna recompensa.
-- Misiones en Firestore: hoy el progreso de misiones es solo local; para sincronizarlo hay que ampliar `saveToCloud` y revisar las reglas.
+- Misiones y desbloqueos en Firestore: hoy el progreso de misiones y de `digisurvivor_prog` (Digimon desbloqueados, Analyzer) es solo local; para sincronizarlo hay que ampliar `saveToCloud` y revisar las reglas.
 - Se probaron los sprites de batalla del ROM de Digimon World Dusk y **no gustaron** (se revirtió). No volver a proponerlos.

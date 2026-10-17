@@ -1,0 +1,32 @@
+{
+  "types": {
+    "reach_stage": "Mejor etapa alcanzada en una partida (3 Campeón, 4 Perfecto, 5 evolución final)",
+    "survive": "Mejor tiempo sobrevivido en una partida (segundos)",
+    "kills_total": "Virus eliminados sumando todas las partidas",
+    "runs_total": "Partidas terminadas en total",
+    "kills_with": "Virus eliminados en total jugando con el Digimon 'with'",
+    "stage_with": "Mejor etapa alcanzada con el Digimon 'with'",
+    "boss": "Veces que derrotaste al jefe 'boss'",
+    "analyzer": "Datos registrados en el Digimon Analyzer (formas + jefes)"
+  },
+  "eggs": {
+    "001_guilmon": "egg_02", "002_renamon": "egg_08", "003_terriermon": "egg_03", "005_veemon": "egg_07",
+    "006_gammamon": "egg_12", "007_pulsemon": "egg_16", "008_dorumon": "egg_09", "009_ryudamon": "egg_06",
+    "010_wormmon": "egg_04", "011_zubamon": "egg_10", "012_jellymon": "egg_13", "013_loogamon": "egg_11",
+    "014_herissmon": "egg_14", "015_kudamon": "egg_05", "016_commandramon": "egg_01"
+  },
+  "unlocks": [
+    { "cid": "005_veemon",       "type": "reach_stage", "goal": 3,    "hatch": 1, "name": "Digimental del Valor",   "desc": "Llegá a etapa Campeón en una partida" },
+    { "cid": "006_gammamon",     "type": "survive",     "goal": 300,  "hatch": 1, "name": "Señal persistente",      "desc": "Sobreviví 5 minutos en una partida" },
+    { "cid": "010_wormmon",      "type": "kills_with",  "with": "005_veemon", "goal": 300, "hatch": 1, "name": "Compañero de Veemon", "desc": "Eliminá 300 virus en total jugando con Veemon" },
+    { "cid": "007_pulsemon",     "type": "kills_total", "goal": 1500, "hatch": 1, "name": "Pulso de datos",         "desc": "Eliminá 1500 virus en total" },
+    { "cid": "008_dorumon",      "type": "boss",        "boss": "etemon", "goal": 1, "hatch": 1, "name": "El rey cae",  "desc": "Derrotá a Etemon" },
+    { "cid": "009_ryudamon",     "type": "reach_stage", "goal": 5,    "hatch": 1, "name": "Forma definitiva",       "desc": "Conseguí una evolución final" },
+    { "cid": "012_jellymon",     "type": "stage_with",  "with": "003_terriermon", "goal": 4, "hatch": 1, "name": "Tormenta de Terriermon", "desc": "Llegá a Perfecto con Terriermon" },
+    { "cid": "014_herissmon",    "type": "runs_total",  "goal": 15,   "hatch": 1, "name": "Tamer constante",        "desc": "Terminá 15 partidas" },
+    { "cid": "013_loogamon",     "type": "boss",        "boss": "warumonzaemon", "goal": 1, "hatch": 1, "name": "Juguetería rota", "desc": "Derrotá a WaruMonzaemon" },
+    { "cid": "011_zubamon",      "type": "analyzer",    "goal": 30,   "hatch": 1, "name": "Base de datos",          "desc": "Registrá 30 datos en el Digimon Analyzer" },
+    { "cid": "015_kudamon",      "type": "stage_with",  "with": "002_renamon", "goal": 5, "hatch": 1, "name": "Zorro sagrado", "desc": "Conseguí una evolución final con Renamon" },
+    { "cid": "016_commandramon", "type": "boss",        "boss": "machinedramon", "goal": 1, "hatch": 1, "name": "Caída del Dark Master", "desc": "Derrotá a Machinedramon" }
+  ]
+}

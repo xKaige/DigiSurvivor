@@ -301,3 +301,80 @@ body:not(.ingame) #hud,body:not(.ingame) #xp,body:not(.ingame) #timer,body:not(.
 @media (max-width:900px){#up.pick #cards{grid-template-columns:1fr}#up.pick .pk-detail{order:-1}#up.pick .pk-grid{grid-template-columns:repeat(5,minmax(0,1fr));max-height:none}}
 #up.pick{padding-top:84px}
 #ov .ovfx .ver{position:absolute;left:26px;bottom:22px;font:700 13px "Chakra Petch",sans-serif;letter-spacing:.14em;color:var(--cy);opacity:.75}
+
+/* ---------- Digitamas (progress.js): huevo animado con la tira de 20 cuadros de 24×29 ---------- */
+.egg{--s:3;display:inline-block;flex:0 0 auto;width:calc(24px*var(--s));height:calc(29px*var(--s));background-repeat:no-repeat;background-size:calc(480px*var(--s)) 100%;image-rendering:pixelated;animation:eggb 1.8s steps(20) infinite}
+.egg.fast{animation-duration:.5s}
+@keyframes eggb{to{background-position:calc(-480px*var(--s)) 0}}
+#up.pick .pk-slot.egg-slot{justify-content:center;background:linear-gradient(180deg,rgba(10,22,38,.8),rgba(2,8,16,.95))}
+#up.pick .pk-slot.egg-slot .egg{margin:auto 0 2px}
+#up.pick .pk-slot.egg-slot small{color:#7f95aa}
+#up.pick .egg-spr{align-items:center}
+.ul-ms{align-self:stretch;display:flex;flex-direction:column;gap:3px;text-align:left;font:600 14px 'Chakra Petch',sans-serif;color:#cfe6f5}
+.ul-ms b{font-size:16px;letter-spacing:.03em;text-transform:uppercase;color:var(--gold)}
+.ul-bar{position:relative;height:18px;margin-top:4px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.15);overflow:hidden}
+.ul-bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#8a6a10,#ffd23f);box-shadow:0 0 10px #ffd23f}
+.ul-bar em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 12px 'Chakra Petch',sans-serif;font-style:normal;color:#fff;text-shadow:0 0 3px #000,0 1px 2px #000}
+#up.pick .ul-st{color:#9fc0d6;border-color:#3a5a74;font-size:12px;box-shadow:none}
+
+/* ---------- Eclosión ---------- */
+#hatch{--cy:#3fd0ff;--or:#ff9a2e;position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(3,10,24,.85);backdrop-filter:blur(3px);font-family:'Chakra Petch',sans-serif}
+#hatch .hbox{display:flex;flex-direction:column;align-items:center;gap:12px;width:min(440px,100%);padding:22px 26px;text-align:center;color:var(--ink);
+  background:linear-gradient(180deg,rgba(14,52,90,.92),rgba(4,16,34,.97));border:3px solid var(--cy);border-radius:18px 4px 18px 4px;box-shadow:0 0 0 3px rgba(255,154,46,.75),0 0 30px rgba(63,208,255,.5)}
+#hatch small{font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cy)}
+#hatch h2{margin:0;font:900 clamp(22px,4vw,32px) 'Orbitron','Chakra Petch',sans-serif;text-transform:uppercase;color:#f2fbff;text-shadow:0 0 6px var(--cy),0 0 18px rgba(63,208,255,.6)}
+#hatch .hstage{position:relative;height:210px;display:flex;align-items:center;justify-content:center}
+#hatch .hstage canvas{image-rendering:pixelated;animation:hpop .5s ease-out}
+#hatch .hstage.flash::after{content:'';position:absolute;inset:-40px;background:radial-gradient(circle,#fff 0,rgba(255,255,255,.85) 35%,transparent 70%);animation:hflash .9s ease-out forwards}
+@keyframes hflash{0%{opacity:0;transform:scale(.3)}45%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(1.4)}}
+@keyframes hpop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+#hatch .hmsg{margin:0;font-size:16px}
+#hatch .hbtns{display:flex;gap:10px;width:100%}
+#hatch .hbtns button{flex:1;padding:12px;font:700 15px 'Chakra Petch',sans-serif;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;color:var(--cy);background:rgba(4,16,34,.85);border:2px solid var(--cy)}
+#hatch .hbtns .hok{color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);border-color:#ffd23f}
+#hatch .hbtns button:hover,#hatch .hbtns button:focus-visible{outline:none;border-color:#fff}
+
+/* ---------- Digimon Analyzer ---------- */
+#analyzer{--cy:#3fd0ff;--cy2:#1b6fa8;--or:#ff9a2e;position:fixed;inset:0;z-index:22;display:none;align-items:center;justify-content:center;padding:16px;text-align:left;background:rgba(3,10,24,.74);backdrop-filter:blur(2px);font-family:'Chakra Petch',sans-serif}
+#analyzer .box{width:min(860px,100%);max-height:90vh;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:22px 26px 20px;color:var(--ink);
+  background:linear-gradient(180deg,rgba(14,52,90,.92),rgba(4,16,34,.97));border:3px solid var(--cy);border-radius:18px 4px 18px 4px;box-shadow:0 0 0 3px rgba(255,154,46,.75),0 0 26px rgba(63,208,255,.45),inset 0 0 30px rgba(63,208,255,.15)}
+#analyzer .head{display:flex;align-items:flex-start;gap:16px}
+#analyzer .ttl{flex:1;display:flex;flex-direction:column}
+#analyzer h2{margin:0;font:900 clamp(22px,3.4vw,34px)/1.05 'Orbitron','Chakra Petch',sans-serif;text-transform:uppercase;letter-spacing:.03em;color:#f2fbff;text-shadow:0 0 6px var(--cy),0 0 18px rgba(63,208,255,.55)}
+#analyzer .ttl small{margin-top:4px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--cy)}
+#analyzer .reset{align-self:center;padding:6px 12px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9fc0d6;border:1px solid var(--cy2);border-radius:4px;white-space:nowrap}
+#analyzer .reset b{display:block;font-size:20px;color:var(--gold)}
+#an-x{flex:0 0 auto;width:48px;height:48px;font:700 22px 'Chakra Petch',sans-serif;color:#ff5c5c;background:rgba(4,16,34,.85);border:2px solid #ff5c5c;cursor:pointer;clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px)}
+#an-x:hover{color:#fff;background:rgba(255,92,92,.18)}
+#analyzer .an-tabs{display:flex;gap:8px}
+#analyzer .an-tabs button{flex:1;padding:8px;font:700 14px 'Chakra Petch',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;color:#9fc0d6;background:rgba(4,16,34,.85);border:2px solid #3a5a74}
+#analyzer .an-tabs button.on{color:#05101e;background:var(--cy);border-color:var(--cy);box-shadow:0 0 10px var(--cy)}
+#an-list{display:flex;flex-direction:column;gap:10px}
+#analyzer .an-row{--ac:var(--cy);display:flex;align-items:center;gap:14px;padding:10px 14px;background:linear-gradient(90deg,rgba(26,70,110,.5),rgba(8,26,48,.7));border:2px solid color-mix(in srgb,var(--ac) 65%,transparent);border-radius:10px 2px 10px 2px}
+#analyzer .an-row.lockd{--ac:#5a6f84;background:rgba(2,8,16,.75)}
+#analyzer .an-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+#analyzer .an-info>b{font-size:18px;letter-spacing:.02em;text-transform:uppercase;color:#f2fbff}
+#analyzer .an-info>b small{margin-left:6px;font-size:12px;color:var(--ac);letter-spacing:.06em}
+#analyzer .desc{font-size:14px;color:#cfe6f5}
+#analyzer .an-st{font-size:12px;font-weight:700;color:#9fc0d6}
+#analyzer .an-forms{display:flex;flex-wrap:wrap;gap:6px}
+#analyzer .an-f{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:78px;padding:4px 2px;background:rgba(2,8,18,.7);border:1px solid rgba(63,208,255,.3);border-radius:4px}
+#analyzer .an-f.fin{border-color:rgba(255,154,46,.6)}
+#analyzer .an-f img{image-rendering:pixelated;max-width:100%;object-fit:contain}
+#analyzer .an-f small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-weight:700;text-transform:uppercase;color:#cfe6f5}
+#analyzer .an-f.no img{filter:brightness(0);opacity:.55}
+#analyzer .an-f.no small{color:#55697c}
+#analyzer .boss .an-f{width:96px}
+#analyzer .foot{font-size:13px;color:#7fa0b8}
+@media (max-width:560px){#analyzer .head{flex-wrap:wrap}#analyzer .an-f{width:64px}}
+@media (prefers-reduced-motion:reduce){.egg{animation:none}}
+
+/* ---------- Barra del jefe (bosses.js) ---------- */
+#bossbar{--ac:#c05bff;position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:4;display:none;width:min(520px,calc(100% - 32px));pointer-events:none;font-family:'Chakra Petch',sans-serif;text-shadow:0 0 6px #000}
+#bossbar .bb-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+#bossbar b{font:900 18px 'Orbitron','Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#fff}
+#bossbar span{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ac)}
+#bossbar .bb-hp{height:14px;margin-top:3px;background:rgba(4,10,20,.9);border:2px solid var(--ac);box-shadow:0 0 10px var(--ac)}
+#bossbar .bb-hp i{display:block;height:100%;background:linear-gradient(90deg,#ff3d81,#ff9a2e);transition:width .15s}
+body:not(.ingame) #bossbar{display:none!important}
+@media (max-width:1000px){#bossbar{top:104px}}

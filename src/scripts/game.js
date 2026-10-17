@@ -35,7 +35,13 @@ async function initGame(ids) {
   await SkillSys.load();
   await Promise.all([...new Set(ids)].map(id => CreatureLoader.load(id)));
   await CreatureLoader.load(ENEMY_LINE).catch(e => console.error(e));
+  await Bosses.load().catch(e => console.error(e));
 }
+// Digimon desbloqueados (progress.js). Si progress.js no cargó, se puede usar cualquiera.
+const unlocked = id => typeof Progress === 'undefined' || Progress.has(id);
+// Jugadores de ESTE navegador (en online, solo el tuyo): para el Analyzer y las misiones
+const mine = () => isOnline ? [isHost ? P[0] : P[1]].filter(Boolean) : P;
+const seeForm = q => { if (typeof Progress !== 'undefined' && q) Progress.see(q.cid, (q.stage | 0) < 5 ? 'stage_' + (q.stage | 0) : 'branch_' + (q.branchId || '6_1')); };
 
 // ---------- Red: PeerJS + party ----------
 // El login, el Nick, la lista de amigos y las ventanas están en social.js; acá vive la conexión entre jugadores.
@@ -283,11 +289,12 @@ function applyOnlineSync(data) {
   if (data.sh) sh = data.sh;
   if (data.eb) eb = data.eb;
   if (data.ef) ef = data.ef;
+  if (data.bd) Bosses.down = data.bd;
 }
 
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
  if(pickRes){if(pickKey(e.key))e.preventDefault();else if(e.key==='Escape'&&!isOnline)pickCancel();return}
- if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline){if(selected)beginLocal(lastMode);else openMenuPick()}
+ if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline&&!(typeof Progress!=='undefined'&&(Progress.isOpen()||Progress.hatching))){if(selected)beginLocal(lastMode);else openMenuPick()}
  if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)togglePause()}
  if(paused&&!evo&&!menuPause&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
@@ -305,7 +312,7 @@ async function start(m,ids){
   await initGame(ids);
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);q.x=m===1?0:(i?40:-40);applyTree(q);P.push(q)}
   p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=5;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
   renderLegend();if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -332,6 +339,11 @@ async function askCreature(title, color) {
       if (!cr) { const d = document.createElement('div'); d.className = 'pk-slot lock'; d.innerHTML = '<span class="q">?</span><small>???</small>'; grid.appendChild(d); continue; }
       const C = CreatureLoader.cache[cr.id], M = C.meta, nm = (M.stages[2] || M.stages[0]).name, el = elOf(cr.id);
       const b = document.createElement('button'); b.className = 'pk-slot'; b.dataset.i = i;
+      if (!unlocked(cr.id)) {   // bloqueado: se ve su Digitama; al tocarlo muestra la misión para conseguirlo
+        b.classList.add('egg-slot'); b.style.setProperty('--ac', '#5a6f84');
+        b.innerHTML = '<span class="pk-n">' + String(i + 1).padStart(2, '0') + '</span>' + Progress.eggHtml(cr.id, 2) + '<small>' + (Progress.state(cr.id) === 'egg' ? 'Digitama' : '???') + '</small>';
+        b.onclick = () => pickShow(i); grid.appendChild(b); continue;
+      }
       b.style.setProperty('--ac', ELC[el]);
       b.innerHTML = '<span class="pk-n">' + String(i + 1).padStart(2, '0') + '</span>' + thumbOf(C, 'stage_2') + '<small>' + nm.replace(/-/g, '‑') + '</small>';
       b.onclick = () => { if (pickSel === i) pickDone(cr.id); else pickShow(i); };   // segundo clic = elegir
@@ -340,7 +352,7 @@ async function askCreature(title, color) {
     }
     const det = document.createElement('div'); det.className = 'pk-detail'; det.id = 'pk-detail';
     c.appendChild(grid); c.appendChild(det);
-    const prev = list.findIndex(x => x.id === selected);
+    const prev = list.findIndex(x => x.id === selected && unlocked(x.id));
     pickShow(prev >= 0 ? prev : 0);
     showUp();
   });
@@ -354,6 +366,7 @@ function pickShow(i, key) {
   pickSel = i;
   document.querySelectorAll('#cards .pk-slot').forEach(s => s.classList.toggle('on', +s.dataset.i === i));
   const C = CreatureLoader.cache[cr.id], M = C.meta, el = elOf(cr.id), nm = (M.stages[2] || M.stages[0]).name;
+  if (!unlocked(cr.id)) { clearInterval(pickAnim); const d = $('pk-detail'); d.style.setProperty('--ac', '#5a6f84'); d.innerHTML = Progress.lockedDetail(cr.id); return; }
   key = key || 'stage_2';
   const forms = M.stages.map(s => ({ key: 'stage_' + s.stage, name: s.name }));
   const finals = M.branches.map(b => ({ key: 'branch_' + b.id, name: b.name }));
@@ -391,7 +404,7 @@ function pickKey(k) {
   return false;
 }
 function pickDone(id) {
-  if (!pickRes || performance.now() - cardsAt < 400) return;   // evita clicks accidentales al aparecer
+  if (!pickRes || performance.now() - cardsAt < 400 || !unlocked(id)) return;   // evita clicks accidentales al aparecer (y elegir uno bloqueado)
   clearInterval(pickAnim);
   const r = pickRes; pickRes = pickRej = null; pickList = []; $('up').classList.remove('pick'); r(id);
 }
@@ -440,16 +453,24 @@ function renderSel() {
   ['go', 'go2'].forEach(id => { if ($(id)) $(id).disabled = !C; });
   if (C && !running) { P = [np(0, selected)]; p = P[0]; draw(); }   // el fondo muestra a tu Digimon
 }
+// Cambia tu Digimon elegido (lo usan la selección y la eclosión de un Digitama)
+window.setPick = function (id) {
+  if (!unlocked(id) || running) return;
+  selected = id; try { localStorage.setItem('digisurvivor_pick', id); } catch (e) {}
+  renderSel(); if (conn) sendTo(conn, { type: 'pick', c: selected }); lobbyChanged();
+};
+// progress.js terminó de cargar: si tenías elegido uno que ahora está bloqueado, se saca; y se muestran eclosiones pendientes
+window.onProgressReady = function () {
+  if (selected && !unlocked(selected)) { selected = null; try { localStorage.removeItem('digisurvivor_pick'); } catch (e) {} }
+  renderSel(); Progress.showHatch();
+};
 async function openMenuPick() {
   if (picking || running || pickRes) return;
   picking = true;
   try {
     const id = await askCreature('Elegí tu Digimon', '');
-    selected = id; $('up').style.display = 'none';
-    try { localStorage.setItem('digisurvivor_pick', id); } catch (e) {}
-    renderSel();
-    if (conn) sendTo(conn, { type: 'pick', c: selected });
-    lobbyChanged();
+    $('up').style.display = 'none';
+    window.setPick(id);
   } catch (e) { if (e && e.message !== 'cancel') console.error(e); }
   finally { picking = false; }
 }
@@ -498,7 +519,7 @@ const GAME_VERSION = '0.2';
 const RESET_BEFORE = null;
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
- s.coins=0;s.lv={};try{localStorage.removeItem('digisurvivor_daily')}catch(e){}return true}
+ s.coins=0;s.lv={};try{localStorage.removeItem('digisurvivor_daily');localStorage.removeItem('digisurvivor_prog')}catch(e){}if(typeof Progress!=='undefined')Progress.st=null;return true}
 let save={coins:0,lv:{}};
 try{const s=JSON.parse(localStorage.getItem('digisurvivor'));if(s&&s.lv)save=s}catch(e){}
 if(wipeIfOld(save)){save.updated=Date.now();try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}
@@ -534,12 +555,16 @@ function endRun(title){if(!running)return;
  running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
- const m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin);save.coins+=c;persist();
+ const bc=Bosses.coins(),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
  $('t').textContent=title;
- $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas.';
+ $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.';
  // misiones diarias (missions.js): cuenta la partida con los datos de TU jugador (en online el invitado es P[1])
  if(typeof Missions!=='undefined'){const me=(isOnline&&!isHost&&P[1])?P[1]:P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode===2,attr:me.el|0,coins:c,skillMax:Object.values(me.wp).some(v=>v>=SkillSys.maxLv())});
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
+ // progresión permanente (progress.js): Digitamas y desbloqueos
+ if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:q.stage|0})),bosses:Bosses.down.slice()});
+  if(r.eggs.length)$('m').textContent+=' ¡Conseguiste '+(r.eggs.length>1?r.eggs.length+' Digitamas':'un Digitama')+' ('+r.eggs.map(u=>u.name).join(', ')+')! '+(r.eggs.length>1?'Eclosionan':'Eclosiona')+' al terminar tu próxima partida.';
+  if(r.hatched.length)setTimeout(()=>Progress.showHatch(),700)}
  wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
 
 function drawBuddy(q,s,x,y,f,a){
@@ -601,16 +626,16 @@ function drawBuddy(q,s,x,y,f,a){
 
 // ---------- Enemigos con sprites (ENEMY_LINE) ----------
 // El tamaño sale del radio de colisión; el atributo se ve en el aro de color de la sombra.
-const enSpr=e=>{const C=CreatureLoader.cache[ENEMY_LINE];return C&&e.sk?C.canvases[e.sk]:null};
-const enH=e=>Math.max(50,e.r*4.2);
+const enSpr=e=>{if(e.bo!=null)return Bosses.sprite(e.bo);const C=CreatureLoader.cache[ENEMY_LINE];return C&&e.sk?C.canvases[e.sk]:null};
+const enH=e=>e.bo!=null?Bosses.h(e):Math.max(50,e.r*4.2);
 const enTop=e=>enSpr(e)?enH(e)/2:e.r;
 function drawEnemy(e){
  const S=enSpr(e);if(!S||!S.canvas)return false;
  const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),w=fw*h/fh;
- const stop=e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
+ const stop=e.bo!=null?e.at>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
- cx.strokeStyle=ELC[e.el];cx.lineWidth=2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,6,0,0,6.283);cx.stroke();
+ cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
  if(Math.cos(e.ang)<0)cx.scale(-1,1);
  if(e.fl>0)cx.filter='brightness(3)';
  cx.drawImage(cv,col*fw,row*fh,fw,fh,-w/2,-h/2,w,h);
@@ -629,6 +654,7 @@ function stepEvo(dt){evo.t+=dt;
    q.hp=q.max;
    for(let i=0;i<30;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');
   }
+  mine().forEach(seeForm);   // Digimon Analyzer
   // nombre(s) de la nueva forma de cada jugador (sin repetir)
   const names=P.map(q=>{const C=CR(q);if(!C)return '';const M=C.meta;const o=evo.s<5?M.stages[evo.s]:(M.branches[q.line]||M.branches[0]);return o?o.name:''}).filter((n,i,a)=>n&&a.indexOf(n)===i);
   $('evt').textContent='¡'+names.join(' y ')+'!';
@@ -807,7 +833,7 @@ function burst(x,y,c){for(let i=0;i<8;i++){const a=Math.random()*6.283,s=60+Math
 // HUD: vida (con rastro del daño recibido), experiencia con el nivel y virus eliminados. Lo usan el host y el cliente online.
 function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill2':'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3)};
  hb(0,P[0]);$('hp2box').style.display=mode===2?'':'none';if(mode===2)hb(1,P[1]);
- $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills+' virus'}
+ $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills+' virus';Bosses.hud()}
 
 function update(dt){
  t+=dt;SkillSys.renderBar(P);
@@ -818,12 +844,13 @@ function update(dt){
      conn.send({
        type: 'sync',
        P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, oa: q.oa, revP: q.revP })),
-       en: en.map(e => ({ x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun })),
+       en: en.map(e => e.bo != null ? { x: e.x, y: e.y, r: e.r, k: e.k, ti: 0, el: e.el, fl: e.fl, ang: e.ang, bo: e.bo, cyc: e.cyc, hp: e.hp, mh: e.mh, at: e.at }
+         : { x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun }),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
        sh: sh.map(s => ({ x: s.x, y: s.y, c: s.c, r: s.r })),
-       eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el })),
+       eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el, r: b.r })),
        ef: ef.map(o => ({ k: o.k, x: o.x, y: o.y, R: o.R, l: o.l, m: o.m, a: o.a, Lg: o.Lg, s: o.s, w: o.w, col: o.col })),
-       t, kills, lvl, need, xp
+       t, kills, lvl, need, xp, bd: Bosses.down
      });
    }
  }
@@ -876,6 +903,7 @@ function update(dt){
   if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*.5;d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  spawnT-=dt;const iv=Math.max(.2,1.1-t*.008)/(mode===2?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/60);i<n&&en.length<(mode===2?340:260);i++)spawn(Math.max(0,mt-1));spawnT+=iv}
+ Bosses.tick();
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
    if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el})}q.atkT=q.rate}}}
@@ -885,13 +913,14 @@ function update(dt){
  for(const q of al)SkillSys.update(q,dt);
  for(const e of en){let tg=null,dd=1e9;for(const q of al){if(q.dead)continue;const d=Math.hypot(q.x-e.x,q.y-e.y);if(d<dd){dd=d;tg=q}}
   if(!tg)break;const a=Math.atan2(tg.y-e.y,tg.x-e.x);e.ang=a;
-  if(!(e.gun&&dd<230)){e.x+=Math.cos(a)*e.sp*dt;e.y+=Math.sin(a)*e.sp*dt}e.fl-=dt;
+  if(e.bo!=null)Bosses.act(e,dt,tg,dd,a);   // jefes: su propio movimiento y ataques (bosses.js)
+  else if(!(e.gun&&dd<230)){e.x+=Math.cos(a)*e.sp*dt;e.y+=Math.sin(a)*e.sp*dt}e.fl-=dt;
   if(e.gun){e.cd-=dt;if(e.cd<=0&&dd<520){e.cd=2.2+Math.random();{const n=e.ti>=3?5:e.ti>=2?3:1,vb=230+25*e.ti;for(let j=0;j<n;j++){const aa=a+(j-(n-1)/2)*.28;eb.push({x:e.x,y:e.y,vx:Math.cos(aa)*vb,vy:Math.sin(aa)*vb,l:3,el:e.el,dm:e.dm})}}}}
   for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4)hurt(q,[7,5,12][e.k]*e.dm,e.el)}
- for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+4){hurt(q,6*b.dm,b.el);b.l=0}}eb=eb.filter(b=>b.l>0);
+ for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el);b.l=0}}eb=eb.filter(b=>b.l>0);
  for(let i=0;i<en.length;i++)for(let j=i+1;j<en.length;j++){const a=en[i],b=en[j],d=Math.hypot(a.x-b.x,a.y-b.y);
   if(d>0&&d<a.r*1.6){const k=(a.r*1.6-d)/2/d;a.x+=(a.x-b.x)*k;a.y+=(a.y-b.y)*k;b.x-=(a.x-b.x)*k;b.y-=(a.y-b.y)*k}}
- for(const e of en)if(e.hp<=0){kills++;gems.push({x:e.x,y:e.y,v:e.v});burst(e.x,e.y,ELC[e.el])}
+ for(const e of en)if(e.hp<=0){kills++;if(e.bo!=null)Bosses.onDeath(e);else gems.push({x:e.x,y:e.y,v:e.v});burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
@@ -929,7 +958,7 @@ function draw(){
   for(let i=0;i<e.ti;i++){cx.fillStyle='#ffd23f';cx.fillRect(e.x-(e.ti*5-1)+i*10,e.y-enTop(e)-10,7,5)}
   if(e.gun){cx.strokeStyle='rgba(255,255,255,.75)';cx.lineWidth=2;cx.beginPath();cx.arc(e.x,e.y,e.r+5,0,6.283);cx.stroke()}}
  for(const s of sh){cx.fillStyle=s.c||'#ffd23f';cx.beginPath();cx.arc(s.x,s.y,s.r||5,0,6.283);cx.fill()}
- for(const b of eb){cx.fillStyle=ELC[b.el];cx.strokeStyle='#fff';cx.lineWidth=2;cx.beginPath();cx.arc(b.x,b.y,6,0,6.283);cx.fill();cx.stroke()}
+ for(const b of eb){cx.fillStyle=ELC[b.el];cx.strokeStyle=b.r?'#ff9a2e':'#fff';cx.lineWidth=b.r?4:2;cx.beginPath();cx.arc(b.x,b.y,b.r||6,0,6.283);cx.fill();cx.stroke()}
  for(const o of ef)SkillSys.drawFx(o);
  for(const q of P)if(!q.dead)SkillSys.drawOrbits(q);
  for(const q of P){const s=q.stage|0,hh=96;
@@ -951,7 +980,8 @@ P=[np(0,'001_guilmon')];p=P[0];
 if($('party-panel'))$('party-panel').style.display='none';   // reemplazado por la ventana Amigos / Party (social.js)
 buildMenuSel();
 (async()=>{
-  try{await SkillSys.load();await Promise.all(CREATURES.map(c=>CreatureLoader.load(c.id).catch(e=>console.error(e))))}catch(e){console.error(e)}
-  if(selected&&!CreatureLoader.cache[selected])selected=null;
+  try{await SkillSys.load();Bosses.load().catch(e=>console.error(e));await Promise.all(CREATURES.map(c=>CreatureLoader.load(c.id).catch(e=>console.error(e))))}catch(e){console.error(e)}
+  if(selected&&(!CreatureLoader.cache[selected]||!unlocked(selected)))selected=null;
   renderSel();wal();draw();
+  if(typeof Progress!=='undefined')Progress.showHatch();   // eclosión pendiente (necesita los sprites cargados)
 })();
