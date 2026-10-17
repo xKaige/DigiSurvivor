@@ -300,3 +300,4 @@ body:not(.ingame) #hud,body:not(.ingame) #xp,body:not(.ingame) #timer,body:not(.
 #up.pick .pk-ok:hover,#up.pick .pk-ok:focus-visible{outline:none;border-color:#fff}
 @media (max-width:900px){#up.pick #cards{grid-template-columns:1fr}#up.pick .pk-detail{order:-1}#up.pick .pk-grid{grid-template-columns:repeat(5,minmax(0,1fr));max-height:none}}
 #up.pick{padding-top:84px}
+#ov .ovfx .ver{position:absolute;left:26px;bottom:22px;font:700 13px "Chakra Petch",sans-serif;letter-spacing:.14em;color:var(--cy);opacity:.75}

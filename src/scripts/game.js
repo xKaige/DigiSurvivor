@@ -489,11 +489,22 @@ const TREE=[
 {c:'Defensa',n:[{k:'d1',n:'Vitalidad',d:'+15 de vida máxima',m:5,b:25},{k:'d2',n:'Agilidad',d:'+5% de velocidad',m:5,b:35,r:'d1'},{k:'d3',n:'Coraza',d:'-8% de daño recibido',m:3,b:60,r:'d2'}]},
 {c:'Datos',n:[{k:'x1',n:'Imán',d:'+20% de alcance para juntar XP',m:3,b:25},{k:'x2',n:'Sintonía',d:'+15% de XP recibida',m:5,b:50,r:'x1'},{k:'x3',n:'Botín',d:'+20% de monedas por partida',m:3,b:60,r:'x2'}]},
 {c:'Entrenamiento',n:[{k:'tf',n:'Fuerza',d:'+1 punto permanente y +4% de daño',m:5,b:40},{k:'tv',n:'Velocidad',d:'+1 punto permanente y +3% de velocidad',m:5,b:40},{k:'ti',n:'Inteligencia',d:'+1 punto permanente y +6% de XP',m:5,b:40},{k:'th',n:'Vitalidad',d:'+1 punto permanente y +8 de vida',m:5,b:40}]}];
+// ---------- Versión y reinicio del progreso ----------
+// GAME_VERSION se muestra en el menú. Para reiniciar el progreso de TODOS (ej. al lanzar la versión final),
+// poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
+// a esa fecha vuelve a 0 una sola vez (monedas, árbol y misiones del día). Nick, amigos y Digimon elegido no se tocan.
+// Ej.: const RESET_BEFORE = Date.parse('2027-03-01T00:00:00-03:00');
+const GAME_VERSION = '0.2';
+const RESET_BEFORE = null;
+if($('gver'))$('gver').textContent='v'+GAME_VERSION;
+function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
+ s.coins=0;s.lv={};try{localStorage.removeItem('digisurvivor_daily')}catch(e){}return true}
 let save={coins:0,lv:{}};
 try{const s=JSON.parse(localStorage.getItem('digisurvivor'));if(s&&s.lv)save=s}catch(e){}
-function persist(){try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}if(window.onSave)window.onSave(save)}
+if(wipeIfOld(save)){save.updated=Date.now();try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}
+function persist(){save.updated=Date.now();try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}if(window.onSave)window.onSave(save)}
 window.getSave=()=>save;
-window.loadSave=s=>{save=s;try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}wal()};
+window.loadSave=s=>{save=s;if(wipeIfOld(save)){persist()}else{try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}wal()};   // si la cuenta tenía progreso viejo, se reinicia y se guarda en la nube
 function L(k){return save.lv[k]|0}
 function applyTree(q){q.dmg*=(1+.2*L('a1'))*(1+.04*L('tf'));q.rate*=Math.pow(.94,L('a2'));q.multi+=L('a3');q.max+=15*L('d1')+8*L('th');q.hp=q.max;q.sp*=(1+.05*L('d2'))*(1+.03*L('tv'));q.arm=.08*L('d3');q.mag*=1+.2*L('x1');q.xpm=(1+.15*L('x2'))*(1+.06*L('ti'));q.coin=1+.2*L('x3')}
 function wal(){$('wal').textContent='Monedas: '+save.coins;$('tw').textContent='Monedas: '+save.coins}

@@ -59,7 +59,7 @@ onAuthStateChanged(auth, async u => {
     const snap = await getDoc(doc(db, 'users', u.uid));
     if (snap.exists()) {
       const d = snap.data();
-      const loadedSave = { coins: d.coins | 0, lv: d.lv || {} };
+      const loadedSave = { coins: d.coins | 0, lv: d.lv || {}, updated: Number(d.updated) || 0 };   // updated: lo usa el reinicio de progreso (RESET_BEFORE en game.js)
       if (window.loadSave) window.loadSave(loadedSave);
     } else if (window.getSave) {
       await saveToCloud(window.getSave());
