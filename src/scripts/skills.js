@@ -106,7 +106,10 @@ const SkillSys = {
     }
   },
 
-  fired(q, k, cd) { q.wt[k] = cd; q.skT = .25; },
+  fired(q, k, cd) { q.wt[k] = cd; (q.wc || (q.wc = {}))[k] = cd; q.skT = .25; },
+  idle(q, k) { q.wt[k] = .25; (q.wc || (q.wc = {}))[k] = 0; },   // sin enemigos cerca: reintenta pronto, sin "apagar" el ícono
+  // tamaño visual de los efectos según lo grande que se dibuja el Digimon (q.dh lo guarda drawBuddy)
+  vis(q) { return Math.min(2.2, Math.max(1.2, ((q && q.dh) || 96) / 80)); },
 
   sweep(q, a, R, arc, dm, col, kind) {
     ef.push({ k: kind, x: q.x, y: q.y, a, R, s: arc, col, l: .25, m: .25 });
@@ -120,29 +123,29 @@ const SkillSys = {
 
   melee_arc(q, k, d, S, cd) {
     const R = d.range * S.area;
-    const b = this.near(q, R + 120); if (!b) { q.wt[k] = .25; return; }
+    const b = this.near(q, R + 120); if (!b) { this.idle(q, k); return; }
     this.sweep(q, Math.atan2(b.y - q.y, b.x - q.x), R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'arc');
-    this.impact(b.x, b.y, d.element, 46);
+    this.impact(b.x, b.y, d.element, 46 * this.vis(q));
     this.fired(q, k, cd);
   },
 
   cone(q, k, d, S, cd) {
     const R = d.range * S.area;
-    const b = this.near(q, R + 60); if (!b) { q.wt[k] = .25; return; }
+    const b = this.near(q, R + 60); if (!b) { this.idle(q, k); return; }
     this.sweep(q, Math.atan2(b.y - q.y, b.x - q.x), R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'cone');
-    this.impact(b.x, b.y, d.element, 54);
+    this.impact(b.x, b.y, d.element, 54 * this.vis(q));
     this.fired(q, k, cd);
   },
 
   projectile(q, k, d, S, cd) {
-    const b = this.near(q, 520); if (!b) { q.wt[k] = .25; return; }
+    const b = this.near(q, 520); if (!b) { this.idle(q, k); return; }
     // count + spread: varios proyectiles repartidos en abanico (spread = ángulo total en radianes)
     const a0 = Math.atan2(b.y - q.y, b.x - q.x), n = d.count || 1, sp = n > 1 ? (d.spread || .5) : 0;
     for (let i = 0; i < n; i++) {
       const a = a0 + (n > 1 ? -sp / 2 + sp * i / (n - 1) : 0);
       sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed,
         l: d.life || 1.2, pi: d.pierce || 0, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el,
-        ex: (d.explode || 0) * S.area, c: this.col(d), r: 8, fx: d.element });
+        ex: (d.explode || 0) * S.area, c: this.col(d), r: 8, fx: d.element, sz: 34 * this.vis(q) });
     }
     this.fired(q, k, cd);
   },
@@ -150,7 +153,7 @@ const SkillSys = {
   // Pulso alrededor del jugador. guard: segundos de invulnerabilidad (barreras tipo Mandara)
   nova(q, k, d, S, cd) {
     const R = d.radius * S.area;
-    if (!this.near(q, R + 40)) { q.wt[k] = .25; return; }
+    if (!this.near(q, R + 40)) { this.idle(q, k); return; }
     ef.push({ k: 'ring', x: q.x, y: q.y, R, col: this.col(d), l: .35, m: .35 });
     if (this.fxOf(d.element, 'nv')) ef.push({ k: 'nova', fx: d.element, x: q.x, y: q.y, R, l: .45, m: .45 });
     const dm = d.dmg * q.dmg * S.dmg;
@@ -162,7 +165,7 @@ const SkillSys = {
   // Explosión de un proyectil con área (se llama desde el bucle de proyectiles de game.js)
   explode(s, first) {
     ef.push({ k: 'ring', x: s.x, y: s.y, R: s.ex, col: s.c, l: .3, m: .3 });
-    this.impact(s.x, s.y, s.fx, Math.max(48, s.ex * 1.6));
+    this.impact(s.x, s.y, s.fx, Math.max((s.sz || 34) * 1.5, s.ex * 1.6));
     for (const e of en) {
       if (e === first) continue;
       if (Math.hypot(e.x - s.x, e.y - s.y) < s.ex + e.r) hit(e, s.d * .6, s.el);
@@ -170,11 +173,11 @@ const SkillSys = {
   },
 
   beam(q, k, d, S, cd) {
-    const b = this.near(q, d.range * S.area + 100); if (!b) { q.wt[k] = .25; return; }
+    const b = this.near(q, d.range * S.area + 100); if (!b) { this.idle(q, k); return; }
     const a = Math.atan2(b.y - q.y, b.x - q.x), Lg = d.range * S.area, W = d.width * S.area;
     const ca = Math.cos(a), sa = Math.sin(a), dm = d.dmg * q.dmg * S.dmg;
     ef.push({ k: 'ray', x: q.x, y: q.y, a, Lg, w: W, col: this.col(d), l: .25, m: .25 });
-    this.impact(b.x, b.y, d.element, 50);
+    this.impact(b.x, b.y, d.element, 50 * this.vis(q));
     for (const e of en) {
       const px = e.x - q.x, py = e.y - q.y, al = px * ca + py * sa;
       if (al > 0 && al < Lg && Math.abs(-px * sa + py * ca) < e.r + W / 2) hit(e, dm, q.el);
@@ -188,7 +191,7 @@ const SkillSys = {
   // proyectil con sprite (lo llama el dibujo de disparos de game.js). Devuelve false si no tiene sprite.
   drawShot(s) {
     const S = s.fx && this.fxOf(s.fx, 'pr'); if (!S) return false;
-    this.spr(S, t * 12, s.x, s.y, 30, s.a != null ? s.a : Math.atan2(s.vy, s.vx));
+    this.spr(S, t * 12, s.x, s.y, s.sz || 34, s.a != null ? s.a : Math.atan2(s.vy, s.vx));
     return true;
   },
 
@@ -214,7 +217,7 @@ const SkillSys = {
       cx.fillStyle = this.col(d); cx.strokeStyle = '#fff'; cx.lineWidth = 2;
       for (let i = 0; i < n; i++) {
         const a = q.oa + i * 6.283 / n, ox = q.x + Math.cos(a) * R, oy = q.y + Math.sin(a) * R;
-        if (P) { this.spr(P, t * 12 + i, ox, oy, 26, a + Math.PI / 2); continue; }
+        if (P) { this.spr(P, t * 12 + i, ox, oy, 28 * this.vis(q), a + Math.PI / 2); continue; }
         cx.beginPath(); cx.arc(ox, oy, 9, 0, 6.283); cx.fill(); cx.stroke();
       }
     }
@@ -251,17 +254,29 @@ const SkillSys = {
   renderBar(players) {
     const el = document.getElementById('skbar'); if (!el || !this.cat) return;
     const sig = players.length + '|' + players.map(q => Object.keys(q.wp).map(k => k + q.wp[k]).join(',')).join('|');
-    if (sig === this.sig) return;
-    this.sig = sig;
+    if (sig !== this.sig) { this.sig = sig; this.buildBar(players, el); }
+    this.cdBar(players);
+  },
+  buildBar(players, el) {
     const two = players.length > 1, pc = ['#2ee6c8', '#ff7ad9'], max = this.maxLv();
     el.innerHTML = players.map((q, i) => {
       const ks = Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) > 0);
       const slots = ks.length
         ? ks.map(k => { const d = this.def(k);
-            return '<div class="sk" style="--ac:' + this.col(d) + '"><div class="skbox' + (d.icon ? '' : ' el') + '"><img src="' + this.iconOf(d) + '" alt=""><b>' + q.wp[k] + '</b></div><div class="skname">' + d.name + '<br>Nv ' + q.wp[k] + '/' + max + '</div></div>'; }).join('')
+            return '<div class="sk" style="--ac:' + this.col(d) + '"><div class="skbox' + (d.icon ? '' : ' el') + '" data-q="' + i + '" data-k="' + k + '"><img src="' + this.iconOf(d) + '" alt=""><i class="cd"></i><b>' + q.wp[k] + '</b></div><div class="skname">' + d.name + '<br>Nv ' + q.wp[k] + '/' + max + '</div></div>'; }).join('')
         : '<div class="sk empty"><div class="skbox"></div><div class="skname">Sin skill</div></div>';
       return '<div class="skgrp">' + (two ? '<span class="skwho" style="color:' + pc[i] + '">J' + (i + 1) + '</span>' : '') + slots + '</div>';
     }).join('');
+  },
+
+  // Recarga de cada skill en la barra: el cuadrito se "apaga" al usarla y se va prendiendo de abajo hacia arriba
+  cdBar(players) {
+    document.querySelectorAll('#skbar .skbox[data-k]').forEach(b => {
+      const q = players[+b.dataset.q], k = b.dataset.k, tot = q && q.wc && q.wc[k];
+      const f = tot ? Math.max(0, Math.min(1, (q.wt[k] || 0) / tot)) : 0;
+      b.firstElementChild.nextElementSibling.style.height = (f * 100).toFixed(1) + '%';
+      b.classList.toggle('cool', f > 0);
+    });
   },
 
   clearBar() {

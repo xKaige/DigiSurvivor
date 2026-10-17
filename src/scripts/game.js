@@ -843,11 +843,11 @@ function update(dt){
    } else if (isHost && conn) {
      conn.send({
        type: 'sync',
-       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, oa: q.oa, revP: q.revP })),
+       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP })),
        en: en.map(e => e.bo != null ? { x: e.x, y: e.y, r: e.r, k: e.k, ti: 0, el: e.el, fl: e.fl, ang: e.ang, bo: e.bo, cyc: e.cyc, hp: e.hp, mh: e.mh, at: e.at }
          : { x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun }),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
-       sh: sh.map(s => s.fx ? { x: s.x, y: s.y, c: s.c, r: s.r, fx: s.fx, a: Math.atan2(s.vy, s.vx) } : { x: s.x, y: s.y, c: s.c, r: s.r }),
+       sh: sh.map(s => s.fx ? { x: s.x, y: s.y, c: s.c, r: s.r, fx: s.fx, sz: s.sz, a: Math.atan2(s.vy, s.vx) } : { x: s.x, y: s.y, c: s.c, r: s.r }),
        eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el, r: b.r })),
        ef: ef.map(o => ({ k: o.k, x: o.x, y: o.y, R: o.R, l: o.l, m: o.m, a: o.a, Lg: o.Lg, s: o.s, w: o.w, col: o.col, fx: o.fx })),
        t, kills, lvl, need, xp, bd: Bosses.down
