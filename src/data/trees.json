@@ -183,6 +183,76 @@
      "d": "-10% de daño recibido y +10% de vida"
     },
     {
+     "id": "vit10",
+     "t": "minor",
+     "n": "Vida II",
+     "x": 0,
+     "y": 1100,
+     "m": 5,
+     "fx": {
+      "hp": 6
+     },
+     "link": [
+      "vit9"
+     ],
+     "c": 12,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit11",
+     "t": "minor",
+     "n": "Regeneración II",
+     "x": 0,
+     "y": 1210,
+     "m": 5,
+     "fx": {
+      "regen": 0.15
+     },
+     "link": [
+      "vit10"
+     ],
+     "c": 13,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit12",
+     "t": "minor",
+     "n": "Constitución II",
+     "x": 0,
+     "y": 1320,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vit11"
+     ],
+     "c": 14,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit13",
+     "t": "major",
+     "n": "Inquebrantable",
+     "x": 0,
+     "y": 1430,
+     "m": 1,
+     "fx": {
+      "shield": 7,
+      "arm": 0.08
+     },
+     "link": [
+      "vit12"
+     ],
+     "c": 88,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "Bloqueás un golpe cada 7 segundos y recibís un 8% menos de daño"
+    },
+    {
      "id": "fue1",
      "t": "minor",
      "n": "Poder",
@@ -285,6 +355,76 @@
      "cl": 0,
      "arm": "FUE",
      "d": "+25% de daño contra Virus"
+    },
+    {
+     "id": "fue7",
+     "t": "minor",
+     "n": "Poder III",
+     "x": 0,
+     "y": -770,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "fue6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue8",
+     "t": "minor",
+     "n": "Antivirus II",
+     "x": 0,
+     "y": -880,
+     "m": 5,
+     "fx": {
+      "vs1": 0.03
+     },
+     "link": [
+      "fue7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue9",
+     "t": "minor",
+     "n": "Precisión II",
+     "x": 0,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fue8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue10",
+     "t": "major",
+     "n": "Espada Sagrada",
+     "x": 0,
+     "y": -1100,
+     "m": 1,
+     "fx": {
+      "dmgP": 0.1,
+      "critD": 0.2
+     },
+     "link": [
+      "fue9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "+10% de daño y +20% de daño crítico"
     },
     {
      "id": "vel1",
@@ -392,6 +532,76 @@
      "d": "Revivís compañeros el doble de rápido y vuelven con 75% de vida"
     },
     {
+     "id": "vel7",
+     "t": "minor",
+     "n": "Paso II",
+     "x": -770,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel8",
+     "t": "minor",
+     "n": "Reflejos II",
+     "x": -880,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dodge": 0.01
+     },
+     "link": [
+      "vel7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel9",
+     "t": "minor",
+     "n": "Cadencia II",
+     "x": -990,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "vel8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel10",
+     "t": "major",
+     "n": "Ángel Veloz",
+     "x": -1100,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "spP": 0.1,
+      "dodge": 0.05
+     },
+     "link": [
+      "vel9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "+10% de velocidad y +5% de esquiva"
+    },
+    {
      "id": "int1",
      "t": "minor",
      "n": "Concentración",
@@ -497,6 +707,76 @@
      "d": "Los ítems curan un 50% más y +0,5 de vida por segundo"
     },
     {
+     "id": "int7",
+     "t": "minor",
+     "n": "Concentración II",
+     "x": 770,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "int6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int8",
+     "t": "minor",
+     "n": "Estudio II",
+     "x": 880,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "xp": 0.02
+     },
+     "link": [
+      "int7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int9",
+     "t": "minor",
+     "n": "Alcance II",
+     "x": 990,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "area": 0.02
+     },
+     "link": [
+      "int8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int10",
+     "t": "major",
+     "n": "Revelación",
+     "x": 1100,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "cdr": 0.08,
+      "area": 0.08
+     },
+     "link": [
+      "int9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "INT",
+     "d": "-8% de recarga y +8% de área"
+    },
+    {
      "id": "xfueint1",
      "t": "attr",
      "n": "Vacuna: Purga",
@@ -529,6 +809,42 @@
       "int5"
      ],
      "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xfueint3",
+     "t": "attr",
+     "n": "Vacuna: Purga Mayor",
+     "x": 686,
+     "y": -686,
+     "m": 3,
+     "fx": {
+      "vs1": 0.04,
+      "cdr": 0.01
+     },
+     "link": [
+      "fue8",
+      "int8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xfueint4",
+     "t": "attr",
+     "n": "Vacuna: Luz Divina",
+     "x": 858,
+     "y": -858,
+     "m": 3,
+     "fx": {
+      "vs1": 0.05,
+      "area": 0.02
+     },
+     "link": [
+      "fue10",
+      "int10"
+     ],
+     "c": 14,
      "cl": 1
     },
     {
@@ -567,6 +883,41 @@
      "cl": 1
     },
     {
+     "id": "xintvit3",
+     "t": "attr",
+     "n": "Vacuna: Serenidad",
+     "x": 686,
+     "y": 686,
+     "m": 3,
+     "fx": {
+      "regen": 0.2
+     },
+     "link": [
+      "int8",
+      "vit8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xintvit4",
+     "t": "attr",
+     "n": "Vacuna: Gracia",
+     "x": 858,
+     "y": 858,
+     "m": 3,
+     "fx": {
+      "regen": 0.2,
+      "hpP": 0.02
+     },
+     "link": [
+      "int10",
+      "vit10"
+     ],
+     "c": 14,
+     "cl": 1
+    },
+    {
      "id": "xvitvel1",
      "t": "attr",
      "n": "Vacuna: Guardia",
@@ -599,6 +950,42 @@
       "vel5"
      ],
      "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel3",
+     "t": "attr",
+     "n": "Vacuna: Bastión Ágil",
+     "x": -686,
+     "y": 686,
+     "m": 3,
+     "fx": {
+      "arm": 0.015,
+      "spP": 0.01
+     },
+     "link": [
+      "vit8",
+      "vel8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel4",
+     "t": "attr",
+     "n": "Vacuna: Égida",
+     "x": -858,
+     "y": 858,
+     "m": 3,
+     "fx": {
+      "arm": 0.02,
+      "dodge": 0.01
+     },
+     "link": [
+      "vit10",
+      "vel10"
+     ],
+     "c": 14,
      "cl": 1
     },
     {
@@ -635,6 +1022,684 @@
      ],
      "c": 9,
      "cl": 1
+    },
+    {
+     "id": "xvelfue3",
+     "t": "attr",
+     "n": "Vacuna: Valor Sagrado",
+     "x": -686,
+     "y": -686,
+     "m": 3,
+     "fx": {
+      "dmgP": 0.02,
+      "spP": 0.01
+     },
+     "link": [
+      "vel8",
+      "fue8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue4",
+     "t": "attr",
+     "n": "Vacuna: Paladín",
+     "x": -858,
+     "y": -858,
+     "m": 3,
+     "fx": {
+      "dmgP": 0.03,
+      "crit": 0.01
+     },
+     "link": [
+      "vel10",
+      "fue10"
+     ],
+     "c": 14,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_1",
+     "t": "minor",
+     "n": "Vida IV",
+     "x": 86,
+     "y": 330,
+     "m": 5,
+     "fx": {
+      "hp": 6
+     },
+     "link": [
+      "vit3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_2",
+     "t": "minor",
+     "n": "Coraza IV",
+     "x": 172,
+     "y": 330,
+     "m": 5,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vitt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_3",
+     "t": "major",
+     "n": "Muralla",
+     "x": 257,
+     "y": 330,
+     "m": 1,
+     "fx": {
+      "hp": 20,
+      "arm": 0.02
+     },
+     "link": [
+      "vitt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt6_1",
+     "t": "minor",
+     "n": "Regeneración IV",
+     "x": -86,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "regen": 0.15
+     },
+     "link": [
+      "vit6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "vitt6_2",
+     "t": "minor",
+     "n": "Constitución IV",
+     "x": -172,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vitt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "vitt6_3",
+     "t": "major",
+     "n": "Fuente de Vida",
+     "x": -257,
+     "y": 660,
+     "m": 1,
+     "fx": {
+      "regen": 0.4
+     },
+     "link": [
+      "vitt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt9_1",
+     "t": "minor",
+     "n": "Botiquín IV",
+     "x": 86,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "healP": 0.06
+     },
+     "link": [
+      "vit9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "vitt9_2",
+     "t": "minor",
+     "n": "Coraza V",
+     "x": 172,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vitt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "vitt9_3",
+     "t": "major",
+     "n": "Armadura Santa",
+     "x": 257,
+     "y": 990,
+     "m": 1,
+     "fx": {
+      "arm": 0.04
+     },
+     "link": [
+      "vitt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt12_1",
+     "t": "minor",
+     "n": "Vida V",
+     "x": -86,
+     "y": 1320,
+     "m": 5,
+     "fx": {
+      "hp": 6
+     },
+     "link": [
+      "vit12"
+     ],
+     "c": 15,
+     "cl": 1
+    },
+    {
+     "id": "vitt12_2",
+     "t": "minor",
+     "n": "Regeneración V",
+     "x": -172,
+     "y": 1320,
+     "m": 5,
+     "fx": {
+      "regen": 0.15
+     },
+     "link": [
+      "vitt12_1"
+     ],
+     "c": 16,
+     "cl": 1
+    },
+    {
+     "id": "vitt12_3",
+     "t": "major",
+     "n": "Vigor",
+     "x": -257,
+     "y": 1320,
+     "m": 1,
+     "fx": {
+      "hpP": 0.06
+     },
+     "link": [
+      "vitt12_2"
+     ],
+     "c": 100,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet3_1",
+     "t": "minor",
+     "n": "Poder IV",
+     "x": 86,
+     "y": -330,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "fue3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_2",
+     "t": "minor",
+     "n": "Antivirus IV",
+     "x": 172,
+     "y": -330,
+     "m": 5,
+     "fx": {
+      "vs1": 0.03
+     },
+     "link": [
+      "fuet3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_3",
+     "t": "major",
+     "n": "Hoja Bendita",
+     "x": 257,
+     "y": -330,
+     "m": 1,
+     "fx": {
+      "dmgP": 0.04,
+      "vs1": 0.04
+     },
+     "link": [
+      "fuet3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet6_1",
+     "t": "minor",
+     "n": "Precisión IV",
+     "x": -86,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fue6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "fuet6_2",
+     "t": "minor",
+     "n": "Poder V",
+     "x": -172,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "fuet6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "fuet6_3",
+     "t": "major",
+     "n": "Golpe Justo",
+     "x": -257,
+     "y": -660,
+     "m": 1,
+     "fx": {
+      "crit": 0.03,
+      "critD": 0.08
+     },
+     "link": [
+      "fuet6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet9_1",
+     "t": "minor",
+     "n": "Poder VI",
+     "x": 86,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "fue9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "fuet9_2",
+     "t": "minor",
+     "n": "Antivirus V",
+     "x": 172,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "vs1": 0.03
+     },
+     "link": [
+      "fuet9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "fuet9_3",
+     "t": "major",
+     "n": "Cruzada",
+     "x": 257,
+     "y": -990,
+     "m": 1,
+     "fx": {
+      "vs1": 0.08
+     },
+     "link": [
+      "fuet9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt3_1",
+     "t": "minor",
+     "n": "Paso IV",
+     "x": -330,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "velt3_2",
+     "t": "minor",
+     "n": "Reflejos IV",
+     "x": -330,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "dodge": 0.01
+     },
+     "link": [
+      "velt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "velt3_3",
+     "t": "major",
+     "n": "Viento Sagrado",
+     "x": -330,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "spP": 0.05
+     },
+     "link": [
+      "velt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt6_1",
+     "t": "minor",
+     "n": "Cadencia IV",
+     "x": -660,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "vel6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "velt6_2",
+     "t": "minor",
+     "n": "Socorro IV",
+     "x": -660,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "revSpd": 0.1
+     },
+     "link": [
+      "velt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "velt6_3",
+     "t": "major",
+     "n": "Esquiva Celestial",
+     "x": -660,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "dodge": 0.03
+     },
+     "link": [
+      "velt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt9_1",
+     "t": "minor",
+     "n": "Paso V",
+     "x": -990,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "velt9_2",
+     "t": "minor",
+     "n": "Reflejos V",
+     "x": -990,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "dodge": 0.01
+     },
+     "link": [
+      "velt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "velt9_3",
+     "t": "major",
+     "n": "Socorro Rápido",
+     "x": -990,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "revSpd": 0.4
+     },
+     "link": [
+      "velt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt3_1",
+     "t": "minor",
+     "n": "Concentración IV",
+     "x": 330,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "int3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "intt3_2",
+     "t": "minor",
+     "n": "Estudio IV",
+     "x": 330,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "xp": 0.02
+     },
+     "link": [
+      "intt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "intt3_3",
+     "t": "major",
+     "n": "Sabiduría",
+     "x": 330,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "xp": 0.06,
+      "cdr": 0.02
+     },
+     "link": [
+      "intt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt6_1",
+     "t": "minor",
+     "n": "Alcance IV",
+     "x": 660,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "area": 0.02
+     },
+     "link": [
+      "int6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "intt6_2",
+     "t": "minor",
+     "n": "Medicina IV",
+     "x": 660,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "healP": 0.05
+     },
+     "link": [
+      "intt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "intt6_3",
+     "t": "major",
+     "n": "Plegaria",
+     "x": 660,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "healP": 0.15,
+      "regen": 0.15
+     },
+     "link": [
+      "intt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt9_1",
+     "t": "minor",
+     "n": "Concentración V",
+     "x": 990,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "int9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "intt9_2",
+     "t": "minor",
+     "n": "Estudio V",
+     "x": 990,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "xp": 0.02
+     },
+     "link": [
+      "intt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "intt9_3",
+     "t": "major",
+     "n": "Halo",
+     "x": 990,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "area": 0.06
+     },
+     "link": [
+      "intt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
     }
    ]
   },
@@ -819,6 +1884,76 @@
      "d": "Los enemigos que quedan con menos del 12% de vida mueren de un golpe"
     },
     {
+     "id": "fue10",
+     "t": "minor",
+     "n": "Furia III",
+     "x": 0,
+     "y": -1100,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.025
+     },
+     "link": [
+      "fue9"
+     ],
+     "c": 12,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue11",
+     "t": "minor",
+     "n": "Brutalidad II",
+     "x": 0,
+     "y": -1210,
+     "m": 5,
+     "fx": {
+      "critD": 0.04
+     },
+     "link": [
+      "fue10"
+     ],
+     "c": 13,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue12",
+     "t": "minor",
+     "n": "Mordida II",
+     "x": 0,
+     "y": -1320,
+     "m": 5,
+     "fx": {
+      "leech": 0.003
+     },
+     "link": [
+      "fue11"
+     ],
+     "c": 14,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue13",
+     "t": "major",
+     "n": "Devorador",
+     "x": 0,
+     "y": -1430,
+     "m": 1,
+     "fx": {
+      "leech": 0.03,
+      "dmgP": 0.08
+     },
+     "link": [
+      "fue12"
+     ],
+     "c": 88,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "Robás un 3% más del daño y +8% de daño"
+    },
+    {
      "id": "vel1",
      "t": "minor",
      "n": "Acecho",
@@ -923,6 +2058,76 @@
      "d": "Al eliminar un enemigo, +15% de velocidad por 2 s"
     },
     {
+     "id": "vel7",
+     "t": "minor",
+     "n": "Acecho III",
+     "x": -770,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel8",
+     "t": "minor",
+     "n": "Ráfaga II",
+     "x": -880,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "vel7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel9",
+     "t": "minor",
+     "n": "Esquiva II",
+     "x": -990,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dodge": 0.008
+     },
+     "link": [
+      "vel8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel10",
+     "t": "major",
+     "n": "Depredador",
+     "x": -1100,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "moveDmg": 0.1,
+      "spP": 0.08
+     },
+     "link": [
+      "vel9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "+10% de daño al moverte y +8% de velocidad"
+    },
+    {
      "id": "int1",
      "t": "minor",
      "n": "Código",
@@ -1025,6 +2230,76 @@
      "cl": 0,
      "arm": "INT",
      "d": "Los infectados explotan al morir y dañan a los de alrededor"
+    },
+    {
+     "id": "int7",
+     "t": "minor",
+     "n": "Código II",
+     "x": 770,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "int6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int8",
+     "t": "minor",
+     "n": "Persistencia II",
+     "x": 880,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dur": 0.03
+     },
+     "link": [
+      "int7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int9",
+     "t": "minor",
+     "n": "Carga II",
+     "x": 990,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spg": 0.05
+     },
+     "link": [
+      "int8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int10",
+     "t": "major",
+     "n": "Pandemia",
+     "x": 1100,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "dur": 0.15,
+      "area": 0.1
+     },
+     "link": [
+      "int9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "INT",
+     "d": "+15% de duración y +10% de área"
     },
     {
      "id": "vit1",
@@ -1132,6 +2407,76 @@
      "d": "La evolución oscura solo te baja hasta el 60% de vida, y +5% de daño"
     },
     {
+     "id": "vit7",
+     "t": "minor",
+     "n": "Carne II",
+     "x": 0,
+     "y": 770,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "vit6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit8",
+     "t": "minor",
+     "n": "Sangre II",
+     "x": 0,
+     "y": 880,
+     "m": 5,
+     "fx": {
+      "leech": 0.002
+     },
+     "link": [
+      "vit7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit9",
+     "t": "minor",
+     "n": "Resistencia II",
+     "x": 0,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vit8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit10",
+     "t": "major",
+     "n": "Regeneración Viral",
+     "x": 0,
+     "y": 1100,
+     "m": 1,
+     "fx": {
+      "regen": 0.6,
+      "lowRegen": 1
+     },
+     "link": [
+      "vit9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "+0,6 de vida por segundo, y +1 más con menos del 30% de vida"
+    },
+    {
      "id": "xfueint1",
      "t": "attr",
      "n": "Virus: Contagio",
@@ -1164,6 +2509,42 @@
       "int5"
      ],
      "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xfueint3",
+     "t": "attr",
+     "n": "Virus: Epidemia",
+     "x": 686,
+     "y": -686,
+     "m": 3,
+     "fx": {
+      "vs2": 0.04,
+      "dur": 0.02
+     },
+     "link": [
+      "fue8",
+      "int8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xfueint4",
+     "t": "attr",
+     "n": "Virus: Cepa Letal",
+     "x": 858,
+     "y": -858,
+     "m": 3,
+     "fx": {
+      "vs2": 0.05,
+      "critD": 0.03
+     },
+     "link": [
+      "fue10",
+      "int10"
+     ],
+     "c": 14,
      "cl": 1
     },
     {
@@ -1202,6 +2583,42 @@
      "cl": 1
     },
     {
+     "id": "xintvit3",
+     "t": "attr",
+     "n": "Virus: Huésped",
+     "x": 686,
+     "y": 686,
+     "m": 3,
+     "fx": {
+      "leech": 0.003,
+      "regen": 0.1
+     },
+     "link": [
+      "int8",
+      "vit8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xintvit4",
+     "t": "attr",
+     "n": "Virus: Simbionte",
+     "x": 858,
+     "y": 858,
+     "m": 3,
+     "fx": {
+      "leech": 0.004,
+      "hp": 6
+     },
+     "link": [
+      "int10",
+      "vit10"
+     ],
+     "c": 14,
+     "cl": 1
+    },
+    {
      "id": "xvitvel1",
      "t": "attr",
      "n": "Virus: Instinto Salvaje",
@@ -1234,6 +2651,42 @@
       "vel5"
      ],
      "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel3",
+     "t": "attr",
+     "n": "Virus: Bestia",
+     "x": -686,
+     "y": 686,
+     "m": 3,
+     "fx": {
+      "spP": 0.02,
+      "hp": 5
+     },
+     "link": [
+      "vit8",
+      "vel8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel4",
+     "t": "attr",
+     "n": "Virus: Instinto Puro",
+     "x": -858,
+     "y": 858,
+     "m": 3,
+     "fx": {
+      "spP": 0.02,
+      "dodge": 0.01
+     },
+     "link": [
+      "vit10",
+      "vel10"
+     ],
+     "c": 14,
      "cl": 1
     },
     {
@@ -1270,6 +2723,678 @@
      ],
      "c": 9,
      "cl": 1
+    },
+    {
+     "id": "xvelfue3",
+     "t": "attr",
+     "n": "Virus: Crueldad",
+     "x": -686,
+     "y": -686,
+     "m": 3,
+     "fx": {
+      "critD": 0.05
+     },
+     "link": [
+      "vel8",
+      "fue8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue4",
+     "t": "attr",
+     "n": "Virus: Carnicero",
+     "x": -858,
+     "y": -858,
+     "m": 3,
+     "fx": {
+      "critD": 0.05,
+      "dmgP": 0.02
+     },
+     "link": [
+      "vel10",
+      "fue10"
+     ],
+     "c": 14,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_1",
+     "t": "minor",
+     "n": "Furia IV",
+     "x": 86,
+     "y": -330,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.025
+     },
+     "link": [
+      "fue3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_2",
+     "t": "minor",
+     "n": "Instinto IV",
+     "x": 172,
+     "y": -330,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fuet3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_3",
+     "t": "major",
+     "n": "Colmillo",
+     "x": 257,
+     "y": -330,
+     "m": 1,
+     "fx": {
+      "critD": 0.1
+     },
+     "link": [
+      "fuet3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet6_1",
+     "t": "minor",
+     "n": "Brutalidad IV",
+     "x": -86,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "critD": 0.04
+     },
+     "link": [
+      "fue6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "fuet6_2",
+     "t": "minor",
+     "n": "Mordida IV",
+     "x": -172,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "leech": 0.003
+     },
+     "link": [
+      "fuet6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "fuet6_3",
+     "t": "major",
+     "n": "Sed",
+     "x": -257,
+     "y": -660,
+     "m": 1,
+     "fx": {
+      "leech": 0.01
+     },
+     "link": [
+      "fuet6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet9_1",
+     "t": "minor",
+     "n": "Furia V",
+     "x": 86,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.025
+     },
+     "link": [
+      "fue9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "fuet9_2",
+     "t": "minor",
+     "n": "Instinto V",
+     "x": 172,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fuet9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "fuet9_3",
+     "t": "major",
+     "n": "Masacre",
+     "x": 257,
+     "y": -990,
+     "m": 1,
+     "fx": {
+      "dmgP": 0.06
+     },
+     "link": [
+      "fuet9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet12_1",
+     "t": "minor",
+     "n": "Furia VI",
+     "x": -86,
+     "y": -1320,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.025
+     },
+     "link": [
+      "fue12"
+     ],
+     "c": 15,
+     "cl": 1
+    },
+    {
+     "id": "fuet12_2",
+     "t": "minor",
+     "n": "Brutalidad V",
+     "x": -172,
+     "y": -1320,
+     "m": 5,
+     "fx": {
+      "critD": 0.04
+     },
+     "link": [
+      "fuet12_1"
+     ],
+     "c": 16,
+     "cl": 1
+    },
+    {
+     "id": "fuet12_3",
+     "t": "major",
+     "n": "Asesino",
+     "x": -257,
+     "y": -1320,
+     "m": 1,
+     "fx": {
+      "crit": 0.03
+     },
+     "link": [
+      "fuet12_2"
+     ],
+     "c": 100,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt3_1",
+     "t": "minor",
+     "n": "Acecho IV",
+     "x": -330,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "velt3_2",
+     "t": "minor",
+     "n": "Ráfaga IV",
+     "x": -330,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "velt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "velt3_3",
+     "t": "major",
+     "n": "Emboscada",
+     "x": -330,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "moveDmg": 0.05
+     },
+     "link": [
+      "velt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt6_1",
+     "t": "minor",
+     "n": "Acecho V",
+     "x": -660,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "velt6_2",
+     "t": "minor",
+     "n": "Esquiva IV",
+     "x": -660,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "dodge": 0.008
+     },
+     "link": [
+      "velt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "velt6_3",
+     "t": "major",
+     "n": "Velocidad Letal",
+     "x": -660,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "rateP": 0.06
+     },
+     "link": [
+      "velt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt9_1",
+     "t": "minor",
+     "n": "Acecho VI",
+     "x": -990,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "velt9_2",
+     "t": "minor",
+     "n": "Ráfaga V",
+     "x": -990,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "velt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "velt9_3",
+     "t": "major",
+     "n": "Sombra",
+     "x": -990,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "dodge": 0.03
+     },
+     "link": [
+      "velt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt3_1",
+     "t": "minor",
+     "n": "Código IV",
+     "x": 330,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "int3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "intt3_2",
+     "t": "minor",
+     "n": "Persistencia IV",
+     "x": 330,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "dur": 0.03
+     },
+     "link": [
+      "intt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "intt3_3",
+     "t": "major",
+     "n": "Virulencia",
+     "x": 330,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "dur": 0.08
+     },
+     "link": [
+      "intt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt6_1",
+     "t": "minor",
+     "n": "Carga IV",
+     "x": 660,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "spg": 0.05
+     },
+     "link": [
+      "int6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "intt6_2",
+     "t": "minor",
+     "n": "Propagación IV",
+     "x": 660,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "area": 0.02
+     },
+     "link": [
+      "intt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "intt6_3",
+     "t": "major",
+     "n": "Mutágeno",
+     "x": 660,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "spg": 0.12
+     },
+     "link": [
+      "intt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt9_1",
+     "t": "minor",
+     "n": "Código V",
+     "x": 990,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "int9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "intt9_2",
+     "t": "minor",
+     "n": "Persistencia V",
+     "x": 990,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "dur": 0.03
+     },
+     "link": [
+      "intt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "intt9_3",
+     "t": "major",
+     "n": "Brote",
+     "x": 990,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "area": 0.06
+     },
+     "link": [
+      "intt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt3_1",
+     "t": "minor",
+     "n": "Carne IV",
+     "x": 86,
+     "y": 330,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "vit3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_2",
+     "t": "minor",
+     "n": "Sangre IV",
+     "x": 172,
+     "y": 330,
+     "m": 5,
+     "fx": {
+      "leech": 0.002
+     },
+     "link": [
+      "vitt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_3",
+     "t": "major",
+     "n": "Tejido Vivo",
+     "x": 257,
+     "y": 330,
+     "m": 1,
+     "fx": {
+      "regen": 0.3
+     },
+     "link": [
+      "vitt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt6_1",
+     "t": "minor",
+     "n": "Resistencia IV",
+     "x": -86,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vit6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "vitt6_2",
+     "t": "minor",
+     "n": "Mutación IV",
+     "x": -172,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "regen": 0.1
+     },
+     "link": [
+      "vitt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "vitt6_3",
+     "t": "major",
+     "n": "Hambre",
+     "x": -257,
+     "y": 660,
+     "m": 1,
+     "fx": {
+      "leech": 0.006
+     },
+     "link": [
+      "vitt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt9_1",
+     "t": "minor",
+     "n": "Carne V",
+     "x": 86,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "vit9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "vitt9_2",
+     "t": "minor",
+     "n": "Sangre V",
+     "x": 172,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "leech": 0.002
+     },
+     "link": [
+      "vitt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "vitt9_3",
+     "t": "major",
+     "n": "Coraza Orgánica",
+     "x": 257,
+     "y": 990,
+     "m": 1,
+     "fx": {
+      "hp": 15
+     },
+     "link": [
+      "vitt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
     }
    ]
   },
@@ -1454,6 +3579,76 @@
      "d": "Elegís entre una carta más al subir de nivel"
     },
     {
+     "id": "int10",
+     "t": "minor",
+     "n": "Persistencia II",
+     "x": 1100,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dur": 0.03
+     },
+     "link": [
+      "int9"
+     ],
+     "c": 12,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int11",
+     "t": "minor",
+     "n": "Batería II",
+     "x": 1210,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spg": 0.06
+     },
+     "link": [
+      "int10"
+     ],
+     "c": 13,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int12",
+     "t": "minor",
+     "n": "Memoria",
+     "x": 1320,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "int11"
+     ],
+     "c": 14,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int13",
+     "t": "major",
+     "n": "Supercomputadora",
+     "x": 1430,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "cdr": 0.08,
+      "spg": 0.15
+     },
+     "link": [
+      "int12"
+     ],
+     "c": 88,
+     "cl": 0,
+     "arm": "INT",
+     "d": "-8% de recarga y +15% de carga de SP"
+    },
+    {
      "id": "fue1",
      "t": "minor",
      "n": "Cálculo",
@@ -1557,6 +3752,76 @@
      "cl": 0,
      "arm": "FUE",
      "d": "Los críticos hacen +50% de daño"
+    },
+    {
+     "id": "fue7",
+     "t": "minor",
+     "n": "Cálculo II",
+     "x": 0,
+     "y": -770,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "fue6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue8",
+     "t": "minor",
+     "n": "Precisión II",
+     "x": 0,
+     "y": -880,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fue7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue9",
+     "t": "minor",
+     "n": "Optimización II",
+     "x": 0,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "critD": 0.04
+     },
+     "link": [
+      "fue8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue10",
+     "t": "major",
+     "n": "Exploit",
+     "x": 0,
+     "y": -1100,
+     "m": 1,
+     "fx": {
+      "crit": 0.06,
+      "vs0": 0.08
+     },
+     "link": [
+      "fue9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "+6% de crítico y +8% de daño contra Vacuna"
     },
     {
      "id": "vel1",
@@ -1663,6 +3928,76 @@
      "d": "Mientras te movés, tus skills recargan un 25% más rápido"
     },
     {
+     "id": "vel7",
+     "t": "minor",
+     "n": "Transferencia II",
+     "x": -770,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel8",
+     "t": "minor",
+     "n": "Recolector II",
+     "x": -880,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "magP": 0.06
+     },
+     "link": [
+      "vel7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel9",
+     "t": "minor",
+     "n": "Ciclo II",
+     "x": -990,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "vel8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel10",
+     "t": "major",
+     "n": "Fibra Óptica",
+     "x": -1100,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "spP": 0.08,
+      "rateP": 0.08
+     },
+     "link": [
+      "vel9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "+8% de velocidad y de ataque"
+    },
+    {
      "id": "vit1",
      "t": "minor",
      "n": "Integridad",
@@ -1767,6 +4102,76 @@
      "d": "Una vez por partida, al caer volvés con 50% de vida"
     },
     {
+     "id": "vit7",
+     "t": "minor",
+     "n": "Integridad II",
+     "x": 0,
+     "y": 770,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "vit6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit8",
+     "t": "minor",
+     "n": "Encriptado II",
+     "x": 0,
+     "y": 880,
+     "m": 5,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vit7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit9",
+     "t": "minor",
+     "n": "Redundancia II",
+     "x": 0,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vit8"
+     ],
+     "c": 11,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit10",
+     "t": "major",
+     "n": "Copia de Seguridad",
+     "x": 0,
+     "y": 1100,
+     "m": 1,
+     "fx": {
+      "arm": 0.06,
+      "bulletRes": 0.1
+     },
+     "link": [
+      "vit9"
+     ],
+     "c": 70,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "-6% de daño recibido y -10% de daño de balas"
+    },
+    {
      "id": "xfueint1",
      "t": "attr",
      "n": "Dato: Algoritmo",
@@ -1799,6 +4204,42 @@
       "int5"
      ],
      "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xfueint3",
+     "t": "attr",
+     "n": "Dato: Compilador",
+     "x": 686,
+     "y": -686,
+     "m": 3,
+     "fx": {
+      "vs0": 0.04,
+      "crit": 0.005
+     },
+     "link": [
+      "fue8",
+      "int8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xfueint4",
+     "t": "attr",
+     "n": "Dato: Kernel",
+     "x": 858,
+     "y": -858,
+     "m": 3,
+     "fx": {
+      "vs0": 0.05,
+      "cdr": 0.01
+     },
+     "link": [
+      "fue10",
+      "int10"
+     ],
+     "c": 14,
      "cl": 1
     },
     {
@@ -1837,6 +4278,42 @@
      "cl": 1
     },
     {
+     "id": "xintvit3",
+     "t": "attr",
+     "n": "Dato: Firmware",
+     "x": 686,
+     "y": 686,
+     "m": 3,
+     "fx": {
+      "cdr": 0.015,
+      "hp": 5
+     },
+     "link": [
+      "int8",
+      "vit8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xintvit4",
+     "t": "attr",
+     "n": "Dato: Sistema Estable",
+     "x": 858,
+     "y": 858,
+     "m": 3,
+     "fx": {
+      "cdr": 0.015,
+      "hpP": 0.02
+     },
+     "link": [
+      "int10",
+      "vit10"
+     ],
+     "c": 14,
+     "cl": 1
+    },
+    {
      "id": "xvitvel1",
      "t": "attr",
      "n": "Dato: Protocolo",
@@ -1869,6 +4346,42 @@
       "vel5"
      ],
      "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel3",
+     "t": "attr",
+     "n": "Dato: Router",
+     "x": -686,
+     "y": 686,
+     "m": 3,
+     "fx": {
+      "magP": 0.05,
+      "spP": 0.01
+     },
+     "link": [
+      "vit8",
+      "vel8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel4",
+     "t": "attr",
+     "n": "Dato: Red Mesh",
+     "x": -858,
+     "y": 858,
+     "m": 3,
+     "fx": {
+      "magP": 0.06,
+      "arm": 0.01
+     },
+     "link": [
+      "vit10",
+      "vel10"
+     ],
+     "c": 14,
      "cl": 1
     },
     {
@@ -1905,6 +4418,679 @@
      ],
      "c": 9,
      "cl": 1
+    },
+    {
+     "id": "xvelfue3",
+     "t": "attr",
+     "n": "Dato: Paquetes",
+     "x": -686,
+     "y": -686,
+     "m": 3,
+     "fx": {
+      "area": 0.02,
+      "rateP": 0.01
+     },
+     "link": [
+      "vel8",
+      "fue8"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue4",
+     "t": "attr",
+     "n": "Dato: Torrent",
+     "x": -858,
+     "y": -858,
+     "m": 3,
+     "fx": {
+      "area": 0.025,
+      "dmgP": 0.02
+     },
+     "link": [
+      "vel10",
+      "fue10"
+     ],
+     "c": 14,
+     "cl": 1
+    },
+    {
+     "id": "intt3_1",
+     "t": "minor",
+     "n": "Procesador IV",
+     "x": 330,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "cdr": 0.02
+     },
+     "link": [
+      "int3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "intt3_2",
+     "t": "minor",
+     "n": "Expansión IV",
+     "x": 330,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "area": 0.025
+     },
+     "link": [
+      "intt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "intt3_3",
+     "t": "major",
+     "n": "Paralelismo",
+     "x": 330,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "cdr": 0.03
+     },
+     "link": [
+      "intt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt6_1",
+     "t": "minor",
+     "n": "Persistencia IV",
+     "x": 660,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "dur": 0.03
+     },
+     "link": [
+      "int6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "intt6_2",
+     "t": "minor",
+     "n": "Batería IV",
+     "x": 660,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "spg": 0.06
+     },
+     "link": [
+      "intt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "intt6_3",
+     "t": "major",
+     "n": "Big Data",
+     "x": 660,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "area": 0.06
+     },
+     "link": [
+      "intt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt9_1",
+     "t": "minor",
+     "n": "Procesador V",
+     "x": 990,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "cdr": 0.02
+     },
+     "link": [
+      "int9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "intt9_2",
+     "t": "minor",
+     "n": "Expansión V",
+     "x": 990,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "area": 0.025
+     },
+     "link": [
+      "intt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "intt9_3",
+     "t": "major",
+     "n": "Latencia Cero",
+     "x": 990,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "dur": 0.08
+     },
+     "link": [
+      "intt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt12_1",
+     "t": "minor",
+     "n": "Persistencia V",
+     "x": 1320,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "dur": 0.03
+     },
+     "link": [
+      "int12"
+     ],
+     "c": 15,
+     "cl": 1
+    },
+    {
+     "id": "intt12_2",
+     "t": "minor",
+     "n": "Batería V",
+     "x": 1320,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "spg": 0.06
+     },
+     "link": [
+      "intt12_1"
+     ],
+     "c": 16,
+     "cl": 1
+    },
+    {
+     "id": "intt12_3",
+     "t": "major",
+     "n": "Overclock",
+     "x": 1320,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "spg": 0.12
+     },
+     "link": [
+      "intt12_2"
+     ],
+     "c": 100,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet3_1",
+     "t": "minor",
+     "n": "Cálculo IV",
+     "x": 86,
+     "y": -330,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "fue3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_2",
+     "t": "minor",
+     "n": "Antivacuna IV",
+     "x": 172,
+     "y": -330,
+     "m": 5,
+     "fx": {
+      "vs0": 0.03
+     },
+     "link": [
+      "fuet3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_3",
+     "t": "major",
+     "n": "Inyección",
+     "x": 257,
+     "y": -330,
+     "m": 1,
+     "fx": {
+      "dmgP": 0.05
+     },
+     "link": [
+      "fuet3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet6_1",
+     "t": "minor",
+     "n": "Precisión IV",
+     "x": -86,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fue6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "fuet6_2",
+     "t": "minor",
+     "n": "Optimización IV",
+     "x": -172,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "critD": 0.04
+     },
+     "link": [
+      "fuet6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "fuet6_3",
+     "t": "major",
+     "n": "Vulnerabilidad",
+     "x": -257,
+     "y": -660,
+     "m": 1,
+     "fx": {
+      "critD": 0.1
+     },
+     "link": [
+      "fuet6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet9_1",
+     "t": "minor",
+     "n": "Cálculo V",
+     "x": 86,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "fue9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "fuet9_2",
+     "t": "minor",
+     "n": "Precisión V",
+     "x": 172,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fuet9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "fuet9_3",
+     "t": "major",
+     "n": "Escaneo",
+     "x": 257,
+     "y": -990,
+     "m": 1,
+     "fx": {
+      "crit": 0.03
+     },
+     "link": [
+      "fuet9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt3_1",
+     "t": "minor",
+     "n": "Transferencia IV",
+     "x": -330,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "velt3_2",
+     "t": "minor",
+     "n": "Recolector IV",
+     "x": -330,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "magP": 0.06
+     },
+     "link": [
+      "velt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "velt3_3",
+     "t": "major",
+     "n": "Banda Ancha",
+     "x": -330,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "magP": 0.15
+     },
+     "link": [
+      "velt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt6_1",
+     "t": "minor",
+     "n": "Ciclo IV",
+     "x": -660,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "vel6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "velt6_2",
+     "t": "minor",
+     "n": "Caché IV",
+     "x": -660,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "cdr": 0.01
+     },
+     "link": [
+      "velt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "velt6_3",
+     "t": "major",
+     "n": "Ping",
+     "x": -660,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "rateP": 0.05
+     },
+     "link": [
+      "velt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt9_1",
+     "t": "minor",
+     "n": "Transferencia V",
+     "x": -990,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "velt9_2",
+     "t": "minor",
+     "n": "Recolector V",
+     "x": -990,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "magP": 0.06
+     },
+     "link": [
+      "velt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "velt9_3",
+     "t": "major",
+     "n": "Streaming",
+     "x": -990,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "spP": 0.05
+     },
+     "link": [
+      "velt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt3_1",
+     "t": "minor",
+     "n": "Integridad IV",
+     "x": 86,
+     "y": 330,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "vit3"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_2",
+     "t": "minor",
+     "n": "Encriptado IV",
+     "x": 172,
+     "y": 330,
+     "m": 5,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vitt3_1"
+     ],
+     "c": 7,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_3",
+     "t": "major",
+     "n": "Checksum",
+     "x": 257,
+     "y": 330,
+     "m": 1,
+     "fx": {
+      "bulletRes": 0.06
+     },
+     "link": [
+      "vitt3_2"
+     ],
+     "c": 46,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt6_1",
+     "t": "minor",
+     "n": "Redundancia IV",
+     "x": -86,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vit6"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "vitt6_2",
+     "t": "minor",
+     "n": "Filtro IV",
+     "x": -172,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "bulletRes": 0.03
+     },
+     "link": [
+      "vitt6_1"
+     ],
+     "c": 10,
+     "cl": 1
+    },
+    {
+     "id": "vitt6_3",
+     "t": "major",
+     "n": "RAID",
+     "x": -257,
+     "y": 660,
+     "m": 1,
+     "fx": {
+      "hpP": 0.05
+     },
+     "link": [
+      "vitt6_2"
+     ],
+     "c": 64,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt9_1",
+     "t": "minor",
+     "n": "Integridad V",
+     "x": 86,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "vit9"
+     ],
+     "c": 12,
+     "cl": 1
+    },
+    {
+     "id": "vitt9_2",
+     "t": "minor",
+     "n": "Encriptado V",
+     "x": 172,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vitt9_1"
+     ],
+     "c": 13,
+     "cl": 1
+    },
+    {
+     "id": "vitt9_3",
+     "t": "major",
+     "n": "Escudo Antivirus",
+     "x": 257,
+     "y": 990,
+     "m": 1,
+     "fx": {
+      "arm": 0.03
+     },
+     "link": [
+      "vitt9_2"
+     ],
+     "c": 82,
+     "cl": 0,
+     "notable": 1
     }
    ]
   },

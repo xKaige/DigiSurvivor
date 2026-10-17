@@ -173,7 +173,7 @@ const Trees = {
       return '<span class="tr-arm' + (a === T.fav ? ' fav' : '') + '" style="left:' + (d[0] * far - x0) + 'px;top:' + (d[1] * far - y0) + 'px">' + nm + (a === T.fav ? ' ★' : '') + '</span>'; }).join('');
     const nodes = T.nodes.map(n => {
       const st = this.state(k, n), lv = this.lv(k, n.id);
-      return '<button class="tr-n ' + n.t + ' ' + st + (lv ? ' own' : '') + (n.id === this.sel ? ' sel' : '') + '" data-id="' + n.id + '" style="left:' + (n.x - x0) + 'px;top:' + (n.y - y0) + 'px" title="' + n.n + '">' +
+      return '<button class="tr-n ' + n.t + (n.notable ? ' notable' : '') + ' ' + st + (lv ? ' own' : '') + (n.id === this.sel ? ' sel' : '') + '" data-id="' + n.id + '" style="left:' + (n.x - x0) + 'px;top:' + (n.y - y0) + 'px" title="' + n.n + '">' +
         (n.t === 'major' ? '<i>★</i>' : n.t === 'start' ? '<i>◆</i>' : '<i>' + lv + '</i>') +
         (n.t === 'major' || n.t === 'start' ? '<span>' + n.n + '</span>' : '') + '</button>';
     }).join('');
@@ -189,8 +189,9 @@ const Trees = {
     const k = this.tab, T = this.tree(k), n = this.node(k, this.sel) || T.nodes[0], el = $('tr-info'); if (!el) return;
     const lv = this.lv(k, n.id), st = this.state(k, n), cost = st === 'max' ? 0 : this.cost(n, lv);
     const pips = n.m > 1 ? '<div class="tr-pips">' + Array.from({ length: n.m }, (_, i) => '<u' + (i < lv ? ' class="on"' : '') + '></u>').join('') + '<small>' + lv + '/' + n.m + '</small></div>' : '';
-    const now = n.t === 'major' ? '' : lv ? this.fmt(n.fx, lv) : '', nxt = n.t === 'major' || lv >= n.m ? '' : this.fmt(n.fx, lv + 1);
-    let html = '<span class="tr-type ' + n.t + '">' + this.TYPE[n.t] + '</span><h3>' + n.n + '</h3>' + pips;
+    // los principales con descripción la muestran; los notables (puntas de las ramitas) muestran su efecto
+    const now = n.t === 'major' && n.d ? '' : lv ? this.fmt(n.fx, lv) : '', nxt = (n.t === 'major' && n.d) || lv >= n.m ? '' : this.fmt(n.fx, lv + 1);
+    let html = '<span class="tr-type ' + n.t + '">' + (n.notable ? 'Notable' : this.TYPE[n.t]) + '</span><h3>' + n.n + '</h3>' + pips;
     if (n.d) html += '<p class="tr-d">' + n.d + '</p>';
     if (now) html += '<p><b>Ahora:</b> ' + now + '</p>';
     if (nxt) html += '<p><b>' + (lv ? 'Próximo nivel' : 'Nivel 1') + ':</b> ' + nxt + '</p>';
@@ -211,12 +212,12 @@ const Trees = {
   paint() {
     const v = $('tr-view'), inn = $('tr-in'); if (!v || !inn || !this.box) return;
     // vista inicial: centrada en el Inicio, con todo el árbol si entra (y si no, sin achicar de más)
-    if (!this.view) { const s = Math.max(0.6, Math.min(1, Math.min(v.clientWidth / this.box.w, v.clientHeight / this.box.h) * 0.95)); this.view = { s, x: v.clientWidth / 2 + this.box.x0 * s, y: v.clientHeight / 2 + this.box.y0 * s }; }
+    if (!this.view) { const s = Math.max(0.55, Math.min(1, Math.min(v.clientWidth / this.box.w, v.clientHeight / this.box.h) * 0.95)); this.view = { s, x: v.clientWidth / 2 + this.box.x0 * s, y: v.clientHeight / 2 + this.box.y0 * s }; }
     inn.style.transform = 'translate(' + this.view.x + 'px,' + this.view.y + 'px) scale(' + this.view.s + ')';
   },
   zoom(f, cx_, cy_) {
     const v = $('tr-view'); if (!v || !this.view) return;
-    const s = Math.max(0.35, Math.min(2.2, this.view.s * f)), k = s / this.view.s;
+    const s = Math.max(0.2, Math.min(2.2, this.view.s * f)), k = s / this.view.s;
     const px = cx_ == null ? v.clientWidth / 2 : cx_, py = cy_ == null ? v.clientHeight / 2 : cy_;
     this.view.x = px - (px - this.view.x) * k; this.view.y = py - (py - this.view.y) * k; this.view.s = s;
   },
@@ -250,7 +251,7 @@ const Trees = {
 .tr-n i{font-style:normal}
 .tr-n span{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:6px;white-space:nowrap;font:700 12px 'Chakra Petch',sans-serif;color:#f2fbff;text-shadow:0 0 4px #000,0 0 8px #000;pointer-events:none}
 .tr-n.attr{border-radius:4px;transform:translate(-50%,-50%) rotate(45deg);width:30px;height:30px}.tr-n.attr i{transform:rotate(-45deg)}
-.tr-n.major{width:52px;height:52px;font-size:22px;border-radius:12px}
+.tr-n.major{width:52px;height:52px;font-size:22px;border-radius:12px}.tr-n.notable{width:40px;height:40px;font-size:16px;border-radius:50%}
 .tr-n.start{width:60px;height:60px;font-size:24px;border-color:var(--ac);color:var(--ac);box-shadow:0 0 16px var(--ac)}
 .tr-n.lock{opacity:.4}
 .tr-n.buy{border-color:#ffd23f;box-shadow:0 0 12px rgba(255,210,63,.7);color:#ffd23f}

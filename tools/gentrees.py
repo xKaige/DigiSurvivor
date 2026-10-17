@@ -98,15 +98,73 @@ TAMER = {'name': 'Tamer', 'col': '#4dffb8', 'cur': 'coins', 'about': 'Mejoras de
           mi('Fortuna', {'luck': 0.03}),
           ma('Visión de Tamer', {'cards': 1}, 'Elegís entre una carta más al subir de nivel')])}}
 
+# ---- Ampliación (~100 nodos por árbol). Los nodos de arriba NO se tocan (ids y efectos), así no se rompe lo comprado. ----
+# EXT: nodos que se agregan al final de cada rama (la rama sigue derecho; el último es un principal nuevo)
+EXT = {
+ 'vac': {'VIT': [mi('Vida II', {'hp': 6}), mi('Regeneración II', {'regen': 0.15}), mi('Constitución II', {'hpP': 0.02}),
+                 ma('Inquebrantable', {'shield': 7, 'arm': 0.08}, 'Bloqueás un golpe cada 7 segundos y recibís un 8% menos de daño')],
+         'FUE': [mi('Poder III', {'dmgP': 0.02}), mi('Antivirus II', {'vs1': 0.03}), mi('Precisión II', {'crit': 0.01}),
+                 ma('Espada Sagrada', {'dmgP': 0.1, 'critD': 0.2}, '+10% de daño y +20% de daño crítico')],
+         'VEL': [mi('Paso II', {'spP': 0.02}), mi('Reflejos II', {'dodge': 0.01}), mi('Cadencia II', {'rateP': 0.02}),
+                 ma('Ángel Veloz', {'spP': 0.1, 'dodge': 0.05}, '+10% de velocidad y +5% de esquiva')],
+         'INT': [mi('Concentración II', {'cdr': 0.015}), mi('Estudio II', {'xp': 0.02}), mi('Alcance II', {'area': 0.02}),
+                 ma('Revelación', {'cdr': 0.08, 'area': 0.08}, '-8% de recarga y +8% de área')]},
+ 'vir': {'FUE': [mi('Furia III', {'dmgP': 0.025}), mi('Brutalidad II', {'critD': 0.04}), mi('Mordida II', {'leech': 0.003}),
+                 ma('Devorador', {'leech': 0.03, 'dmgP': 0.08}, 'Robás un 3% más del daño y +8% de daño')],
+         'VEL': [mi('Acecho III', {'spP': 0.02}), mi('Ráfaga II', {'rateP': 0.02}), mi('Esquiva II', {'dodge': 0.008}),
+                 ma('Depredador', {'moveDmg': 0.1, 'spP': 0.08}, '+10% de daño al moverte y +8% de velocidad')],
+         'INT': [mi('Código II', {'cdr': 0.015}), mi('Persistencia II', {'dur': 0.03}), mi('Carga II', {'spg': 0.05}),
+                 ma('Pandemia', {'dur': 0.15, 'area': 0.1}, '+15% de duración y +10% de área')],
+         'VIT': [mi('Carne II', {'hp': 5}), mi('Sangre II', {'leech': 0.002}), mi('Resistencia II', {'hpP': 0.02}),
+                 ma('Regeneración Viral', {'regen': 0.6, 'lowRegen': 1}, '+0,6 de vida por segundo, y +1 más con menos del 30% de vida')]},
+ 'dat': {'INT': [mi('Persistencia II', {'dur': 0.03}), mi('Batería II', {'spg': 0.06}), mi('Memoria', {'cdr': 0.015}),
+                 ma('Supercomputadora', {'cdr': 0.08, 'spg': 0.15}, '-8% de recarga y +15% de carga de SP')],
+         'FUE': [mi('Cálculo II', {'dmgP': 0.02}), mi('Precisión II', {'crit': 0.01}), mi('Optimización II', {'critD': 0.04}),
+                 ma('Exploit', {'crit': 0.06, 'vs0': 0.08}, '+6% de crítico y +8% de daño contra Vacuna')],
+         'VEL': [mi('Transferencia II', {'spP': 0.02}), mi('Recolector II', {'magP': 0.06}), mi('Ciclo II', {'rateP': 0.02}),
+                 ma('Fibra Óptica', {'spP': 0.08, 'rateP': 0.08}, '+8% de velocidad y de ataque')],
+         'VIT': [mi('Integridad II', {'hp': 5}), mi('Encriptado II', {'arm': 0.01}), mi('Redundancia II', {'hpP': 0.02}),
+                 ma('Copia de Seguridad', {'arm': 0.06, 'bulletRes': 0.1}, '-6% de daño recibido y -10% de daño de balas')]}}
+# NOTABLE: punta de cada ramita lateral (1 nivel, efecto más fuerte), en el orden en que salen de la rama
+NOTABLE = {
+ 'vac': {'FUE': [('Hoja Bendita', {'dmgP': 0.04, 'vs1': 0.04}), ('Golpe Justo', {'crit': 0.03, 'critD': 0.08}), ('Cruzada', {'vs1': 0.08})],
+         'VIT': [('Muralla', {'hp': 20, 'arm': 0.02}), ('Fuente de Vida', {'regen': 0.4}), ('Armadura Santa', {'arm': 0.04}), ('Vigor', {'hpP': 0.06})],
+         'VEL': [('Viento Sagrado', {'spP': 0.05}), ('Esquiva Celestial', {'dodge': 0.03}), ('Socorro Rápido', {'revSpd': 0.4})],
+         'INT': [('Sabiduría', {'xp': 0.06, 'cdr': 0.02}), ('Plegaria', {'healP': 0.15, 'regen': 0.15}), ('Halo', {'area': 0.06})]},
+ 'vir': {'FUE': [('Colmillo', {'critD': 0.1}), ('Sed', {'leech': 0.01}), ('Masacre', {'dmgP': 0.06}), ('Asesino', {'crit': 0.03})],
+         'VEL': [('Emboscada', {'moveDmg': 0.05}), ('Velocidad Letal', {'rateP': 0.06}), ('Sombra', {'dodge': 0.03})],
+         'INT': [('Virulencia', {'dur': 0.08}), ('Mutágeno', {'spg': 0.12}), ('Brote', {'area': 0.06})],
+         'VIT': [('Tejido Vivo', {'regen': 0.3}), ('Hambre', {'leech': 0.006}), ('Coraza Orgánica', {'hp': 15})]},
+ 'dat': {'INT': [('Paralelismo', {'cdr': 0.03}), ('Big Data', {'area': 0.06}), ('Latencia Cero', {'dur': 0.08}), ('Overclock', {'spg': 0.12})],
+         'FUE': [('Inyección', {'dmgP': 0.05}), ('Vulnerabilidad', {'critD': 0.1}), ('Escaneo', {'crit': 0.03})],
+         'VEL': [('Banda Ancha', {'magP': 0.15}), ('Ping', {'rateP': 0.05}), ('Streaming', {'spP': 0.05})],
+         'VIT': [('Checksum', {'bulletRes': 0.06}), ('RAID', {'hpP': 0.05}), ('Escudo Antivirus', {'arm': 0.03})]}}
+# LINKS2: conectores de los anillos 8 y 10 (los de los anillos 2 y 5 están en TREES[...]['links'])
+LINKS2 = {
+ 'vac': {('FUE', 'INT'): [at('Purga Mayor', {'vs1': 0.04, 'cdr': 0.01}), at('Luz Divina', {'vs1': 0.05, 'area': 0.02})],
+         ('INT', 'VIT'): [at('Serenidad', {'regen': 0.2}), at('Gracia', {'regen': 0.2, 'hpP': 0.02})],
+         ('VIT', 'VEL'): [at('Bastión Ágil', {'arm': 0.015, 'spP': 0.01}), at('Égida', {'arm': 0.02, 'dodge': 0.01})],
+         ('VEL', 'FUE'): [at('Valor Sagrado', {'dmgP': 0.02, 'spP': 0.01}), at('Paladín', {'dmgP': 0.03, 'crit': 0.01})]},
+ 'vir': {('FUE', 'INT'): [at('Epidemia', {'vs2': 0.04, 'dur': 0.02}), at('Cepa Letal', {'vs2': 0.05, 'critD': 0.03})],
+         ('INT', 'VIT'): [at('Huésped', {'leech': 0.003, 'regen': 0.1}), at('Simbionte', {'leech': 0.004, 'hp': 6})],
+         ('VIT', 'VEL'): [at('Bestia', {'spP': 0.02, 'hp': 5}), at('Instinto Puro', {'spP': 0.02, 'dodge': 0.01})],
+         ('VEL', 'FUE'): [at('Crueldad', {'critD': 0.05}), at('Carnicero', {'critD': 0.05, 'dmgP': 0.02})]},
+ 'dat': {('FUE', 'INT'): [at('Compilador', {'vs0': 0.04, 'crit': 0.005}), at('Kernel', {'vs0': 0.05, 'cdr': 0.01})],
+         ('INT', 'VIT'): [at('Firmware', {'cdr': 0.015, 'hp': 5}), at('Sistema Estable', {'cdr': 0.015, 'hpP': 0.02})],
+         ('VIT', 'VEL'): [at('Router', {'magP': 0.05, 'spP': 0.01}), at('Red Mesh', {'magP': 0.06, 'arm': 0.01})],
+         ('VEL', 'FUE'): [at('Paquetes', {'area': 0.02, 'rateP': 0.01}), at('Torrent', {'area': 0.025, 'dmgP': 0.02})]}}
+PERP = {'FUE': (1, 0), 'VIT': (1, 0), 'INT': (0, 1), 'VEL': (0, 1)}
+ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']
+
 def cost(t, depth, tamer):
     if tamer: return {'minor': [30 + 15 * depth, 1], 'major': [200 + 100 * depth, 0]}[t]
     return {'minor': [2 + depth, 1], 'attr': [4 + depth, 1], 'major': [10 + 6 * depth, 0]}[t]
 
-def build(T, tamer=False):
+def build(T, tamer=False, key=None):
     nodes = [{'id': 'start', 't': 'start', 'n': 'Inicio', 'x': 0, 'y': 0, 'm': 1, 'fx': {}, 'link': [], 'd': T['about']}]
     arms = {}
     for arm, spec in T['arms'].items():
-        title, lst = (spec if tamer else (ARMN[arm], spec))
+        title, lst = (spec if tamer else (ARMN[arm], spec + EXT[key][arm]))
         dx, dy = DIRS[arm]; prev = 'start'; ids = []
         for i, nd in enumerate(lst, 1):
             nid = arm.lower() + str(i)
@@ -118,7 +176,7 @@ def build(T, tamer=False):
         arms[arm] = ids
     if not tamer:
         for (a, b), lst in T['links'].items():
-            for k, (ring, nd) in enumerate(zip((2, 5), lst)):
+            for k, (ring, nd) in enumerate(zip((2, 5, 8, 10), lst + LINKS2[key][(a, b)])):
                 (ax, ay), (bx, by) = DIRS[a], DIRS[b]
                 r = STEP * ring * 0.78
                 nid = 'x' + a.lower() + b.lower() + str(k + 1)
@@ -126,11 +184,36 @@ def build(T, tamer=False):
                 n = {'id': nid, 't': 'attr', 'n': T['name'] + ': ' + nd['n'], 'x': round((ax + bx) * r), 'y': round((ay + by) * r), 'm': nd['m'],
                      'fx': nd['fx'], 'link': [arms[a][ring - 1], arms[b][ring - 1]], 'c': c[0], 'cl': c[1]}
                 nodes.append(n)
+        # ramitas laterales: salen de los nodos 3, 6, 9 (y 12 en la rama larga), alternando el lado: 2 secundarios + un notable
+        for arm, ids in arms.items():
+            dx, dy = DIRS[arm]; px, py = PERP[arm]
+            tmpl = [n for n in T['arms'][arm] + EXT[key][arm] if n['t'] == 'minor']
+            used = {}
+            for w, k in enumerate(range(3, len(ids) + 1, 3)):
+                if w >= len(NOTABLE[key][arm]): break
+                side = 1 if w % 2 == 0 else -1
+                bx, by = dx * STEP * k, dy * STEP * k; prev = ids[k - 1]
+                for j in (1, 2, 3):
+                    nid = arm.lower() + 't' + str(k) + '_' + str(j)
+                    x, y = round(bx + side * px * STEP * 0.78 * j), round(by + side * py * STEP * 0.78 * j)
+                    if j < 3:
+                        t0 = tmpl[(w * 2 + j - 1) % len(tmpl)]
+                        parts = t0['n'].rsplit(' ', 1)
+                        base = parts[0] if len(parts) == 2 and parts[1] in ROMAN else t0['n']
+                        used[base] = used.get(base, 3) + 1
+                        nd = {'t': 'minor', 'n': base + ' ' + ROMAN[used[base]], 'fx': t0['fx'], 'm': 5}
+                    else:
+                        nm, fx = NOTABLE[key][arm][w]
+                        nd = {'t': 'major', 'n': nm, 'fx': fx, 'm': 1}
+                    c = cost(nd['t'], k + j, False)
+                    n = {'id': nid, 't': nd['t'], 'n': nd['n'], 'x': x, 'y': y, 'm': nd['m'], 'fx': nd['fx'], 'link': [prev], 'c': c[0], 'cl': c[1]}
+                    if nd['t'] == 'major': n['notable'] = 1
+                    nodes.append(n); prev = nid
     return {'name': T['name'], 'col': T['col'], 'cur': T['cur'], 'fav': T.get('fav'), 'about': T['about'],
             'arms': {k: (v[0] if tamer else ARMN[k]) for k, v in T['arms'].items()}, 'nodes': nodes}
 
 data = {'note': 'Generado por gentrees.py (sesión 0.6). c = costo base, cl = 1 si el costo se multiplica por el nivel.',
-        'trees': {k: build(v) for k, v in TREES.items()}}
+        'trees': {k: build(v, key=k) for k, v in TREES.items()}}
 data['trees']['tam'] = build(TAMER, True)
 json.dump(data, open(out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 for k, v in data['trees'].items(): print(k, len(v['nodes']), 'nodos')
