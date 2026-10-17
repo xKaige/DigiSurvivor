@@ -352,6 +352,19 @@ async function initSocial(ctx) {
   };
   window.onLobby = onLobby;
   window.onRunStart = closePanel;
+  // Desafío diario (challenge.js): challenges/{día}/scores/{uid} = { nick, score, cid, at }. Las reglas de Firestore
+  // tienen que dejar leer a cualquier usuario con sesión y escribir solo el documento propio.
+  window.challengeCloud = {
+    submit: (day, score, cid) => S === s ? s.fb.setDoc(s.fb.doc(s.db, 'challenges', day, 'scores', s.uid), { nick, score, cid: cid || '', at: Date.now() }) : Promise.resolve(),
+    async board(day) {
+      if (S !== s) return [];
+      const fr = await s.fb.getDocs(s.fb.collection(s.db, 'users', s.uid, 'friends'));
+      const ids = [s.uid, ...fr.docs.map(d => d.id)];
+      const snaps = await Promise.all(ids.map(id => s.fb.getDoc(s.fb.doc(s.db, 'challenges', day, 'scores', id)).catch(() => null)));
+      return snaps.map((p, i) => p && p.exists() ? Object.assign({ me: ids[i] === s.uid }, p.data()) : null)
+        .filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 20);
+    }
+  };
   window.onPeerOpen = id => { if (S === s) s.fb.setDoc(profileRef(), { peerId: id, seen: Date.now() }, { merge: true }).catch(e => console.error(e)); };
   window.Lobby.setSelf(s.uid, nick);
   await loadFriends();                       // para saber quiénes son amigos antes de recibir invitaciones
@@ -371,7 +384,7 @@ function stopSocial() {
   const b = $$('soc-btn'); if (b) b.style.display = 'none';
   const nb = $$('nickbox'); if (nb) nb.remove();
   const ib = $$('invbox'); if (ib) ib.innerHTML = '';
-  window.isFriendUid = null; window.onLobby = null; window.onPeerOpen = null; window.onRunStart = null;
+  window.isFriendUid = null; window.onLobby = null; window.onPeerOpen = null; window.onRunStart = null; window.challengeCloud = null;
   if (window.Lobby) window.Lobby.leave();
   if (window.stopPeer) window.stopPeer();
   const who = $$('who'); if (who) who.textContent = '';

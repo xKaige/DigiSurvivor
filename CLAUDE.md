@@ -27,21 +27,26 @@ src/scripts/firebase.js         # login Google + guardado en Firestore (type="mo
 src/scripts/firebase-config.js  # config pública de Firebase (la importa firebase.js)
 src/scripts/social.js           # nick único, amigos, party e invitaciones (lo importa firebase.js)
 src/scripts/bosses.js           # Bosses: jefes canon cada 2 min (se carga antes que game.js)
+src/scripts/items.js            # Items: ítems en el piso (Carne, Digicore, Imán, Floppy, X-Antibody) (antes que game.js)
 src/scripts/missions.js         # Misiones diarias (se carga después de game.js)
-src/scripts/progress.js         # Progress: Digimon bloqueados, Digitamas, eclosión y Digimon Analyzer (después de missions.js)
+src/scripts/progress.js         # Progress: Digimon bloqueados, Digitamas, eclosión, Digimon Analyzer y Rango de Tamer
+src/scripts/challenge.js        # Challenge: desafío diario (reglas del día, récord y ranking de amigos)
+src/scripts/news.js             # News: botón "v0.x · Novedades" en la esquina del menú (lee changelog.json)
 src/scripts/map.js              # mapa de tiles (MAP_COLS/ROWS, mapData) — HOY NO SE CARGA en index.html
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
 src/data/skills.json            # catálogo de skills, elementos, maxLevel, maxActive, levelBonus
 src/data/missions.json          # catálogo de misiones diarias (tipos, metas, recompensas)
 src/data/unlocks.json           # huevo de cada Digimon + misiones permanentes de desbloqueo
 src/data/bosses.json            # jefes: vida, atributo, técnicas (ring/fan/charge/summon), monedas
+src/data/changelog.json         # novedades de cada versión (lo muestra news.js): ACTUALIZARLO en cada versión nueva
 assets/sprites/creatures/<id>/  # spritesheets PNG de cada etapa/rama
 assets/sprites/eggs/egg_NN.png  # Digitamas: tira de 20 cuadros de 24×29 (Digital Tamers, spr_egg01..17)
 assets/sprites/bosses/          # jefes en hojas 2×6 (Workshop; las de 7 filas sin la fila de baile)
+assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de spr_items)
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → `game.js` → `missions.js` → `progress.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → `items.js` → `game.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 
@@ -106,6 +111,24 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Sync: los jefes mandan `bo, cyc, hp, mh, at`; las balas `r`; y `bd` = `Bosses.down`. La barra `#bossbar` y los avisos salen de `Bosses.hud()` (host y cliente).
 - Balance pensado a ojo con `FAST = true` (a los 2 min ya estás en forma final y DarkTyrannomon dura ~4 s). Con `FAST = false` hay que volver a probar la vida de los jefes.
 
+### Evolución oscura y X-Antibody
+- Si al elegir la forma final no cumplís NINGÚN requisito, la única carta es la **evolución oscura** (`q.dark`): +7 daño, +1 proyectil, +8% velocidad, pero pierde 0,6% de la vida máxima por segundo (nunca baja de 1). Reemplaza al viejo modo "inestable" (`weak` quedó en el código pero ya no se usa).
+- Sprite: `dark` en el JSON de la criatura (Terriermon → Cherubimon Vicio, Gammamon → Chaosdramon, Jellymon → MarineDevimon). Sin `dark`, `darkSpr(C)` tiñe de violeta su primera forma final ("<nombre> Oscuro").
+- `formKey(q, s)` da la clave de canvas de la forma actual (`stage_N`, `branch_<id>` o `dark`); `formName` su nombre.
+- **X-Antibody** (`q.xa`): ítem que a veces sueltan los jefes. +25% daño, +10% velocidad. Si la línea tiene `x` en su JSON (Dorumon: DexDorugamon, DexDoruGreymon, DexDorugoramon) usa esos sprites (`x_<clave>`); si no, un "glitch" violeta.
+- `dark` y `xa` van en el sync. El Analyzer registra también la forma oscura y las X.
+
+### Ítems (`items.js`)
+- Los virus sueltan uno con prob. `DROP` (1,8%; ×3 con el desafío "Lluvia de ítems"), sorteado por peso `w`. Los jefes: Recovery Floppy + 50% X-Antibody. Duran 30 s. Sync: `it`.
+
+### Rango de Tamer (`progress.js`)
+- XP de cuenta por partida = virus + segundos/3 + 40 por jefe + 15 × etapa máxima. `RANKS` (8 rangos, de Tamer Novato a Leyenda Digital). Al subir: 100 × rango monedas. Se ve bajo las monedas (`#rank`). Local, como el resto de `digisurvivor_prog`.
+
+### Desafío diario (`challenge.js`)
+- Reglas del día sorteadas por fecha (día argentino): 1 de atributo (`a0/a1/a2`) + 2 de `boss60, swarm, fast, notree, glass, items`. Solo 1J. game.js/bosses.js/items.js preguntan `chal(id)` / `Challenge.has(id)`.
+- Puntaje = virus + 2 × segundos + 150 × jefes. Récord del día en `localStorage['digisurvivor_chal']`.
+- Ranking de amigos en Firestore: `challenges/{día}/scores/{uid}` = `{nick, score, cid, at}` vía `window.challengeCloud` (social.js). **Requiere reglas**: leer con sesión iniciada y escribir solo el documento propio. Si las reglas no lo permiten, la ventana avisa y el resto funciona.
+
 ### Árbol de mejoras permanentes
 `TREE` (4 columnas). Se compra con monedas que se ganan al terminar la partida (`endRun`). Se aplica al inicio con `applyTree(q)`. Guardado en `save = {coins, lv:{clave:nivel}}`.
 
@@ -169,7 +192,9 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 
 ## Pendientes / ideas
 - Pasar `FAST` a `false` para producción.
-- **Versión actual: 0.3** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.
+- Al subir de versión: actualizar `GAME_VERSION` y sumar la entrada en `src/data/changelog.json`.
+- Mostrar el Rango de Tamer en el perfil de amigos (necesita un campo nuevo en `profiles` y revisar reglas).
+- **Versión actual: 0.4** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.
 - Corregir el comentario de `?test` en `game.js:20`.
 - Más líneas evolutivas en `src/data/creatures/`.
 - Mover los bonos de rama de `stepEvo` al JSON.

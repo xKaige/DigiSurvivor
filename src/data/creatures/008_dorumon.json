@@ -128,5 +128,20 @@
       "verified": false,
       "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
     }
-  ]
+  ],
+  "x": {
+    "stage_3": {
+      "name": "DexDorugamon",
+      "file": "dexdorugamon_x4.png"
+    },
+    "stage_4": {
+      "name": "DexDoruGreymon",
+      "file": "dexdorugreymon_x5.png"
+    },
+    "branch_6_1": {
+      "name": "DexDorugoramon",
+      "file": "dexdorugoramon_x6.png"
+    }
+  },
+  "xSource": "Workshop 3215570196"
 }

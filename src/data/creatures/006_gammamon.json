@@ -91,5 +91,13 @@
       "verified": false,
       "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
     }
-  ]
+  ],
+  "dark": {
+    "name": "Chaosdramon",
+    "file": "chaosdramon_dark.png",
+    "cols": 2,
+    "rows": 6,
+    "desc": "Un dragón máquina sin control",
+    "source": "Workshop 2924252315"
+  }
 }

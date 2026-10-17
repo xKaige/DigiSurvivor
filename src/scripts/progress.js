@@ -9,6 +9,11 @@
 // - Todo se guarda en el navegador (localStorage 'digisurvivor_prog'), igual que las misiones diarias: no va a Firestore.
 const STARTERS = ['001_guilmon', '002_renamon', '003_terriermon'];
 const STAGE_NAMES = ['Bebé', 'Bebé II', 'Novato', 'Campeón', 'Perfecto', 'Final'];
+// Rango de Tamer: experiencia de cuenta que suma cada partida. Al subir de rango ganás monedas (100 × rango).
+const RANKS = [
+  { xp: 0, n: 'Tamer Novato' }, { xp: 300, n: 'Tamer Aprendiz' }, { xp: 1000, n: 'Tamer' }, { xp: 2500, n: 'Tamer Veterano' },
+  { xp: 5000, n: 'Niño Elegido' }, { xp: 9000, n: 'Guardián del Digimundo' }, { xp: 15000, n: 'Caballero Real' }, { xp: 25000, n: 'Leyenda Digital' }
+];
 
 const Progress = {
   KEY: 'digisurvivor_prog',
@@ -23,7 +28,7 @@ const Progress = {
   },
 
   // ---------- Estado guardado ----------
-  blank() { return { kills: 0, runs: 0, bestStage: 0, bestSecs: 0, cidKills: {}, cidStage: {}, bosses: {}, seen: {}, eggs: {}, unl: {}, hatchQ: [] }; },
+  blank() { return { txp: 0, kills: 0, runs: 0, bestStage: 0, bestSecs: 0, cidKills: {}, cidStage: {}, bosses: {}, seen: {}, eggs: {}, unl: {}, hatchQ: [] }; },
   read() {
     if (this.st) return this.st;
     let s = null;
@@ -39,12 +44,35 @@ const Progress = {
   unlockOf(cid) { return this.data && this.data.unlocks.find(u => u.cid === cid); },
   eggOf(cid) { return this.data && this.data.eggs[cid] || 'egg_01'; },
 
+  // ---------- Rango de Tamer ----------
+  rank(xpv = this.read().txp) {
+    let i = 0; while (i + 1 < RANKS.length && xpv >= RANKS[i + 1].xp) i++;
+    const nx = RANKS[i + 1];
+    return { i, n: RANKS[i].n, xp: xpv, from: RANKS[i].xp, to: nx ? nx.xp : null };
+  },
+  renderRank() {
+    let el = document.getElementById('rank');
+    if (!el) {
+      const w = document.getElementById('wal'); if (!w) return;
+      el = document.createElement('div'); el.id = 'rank'; w.parentNode.insertBefore(el, w.nextSibling);
+    }
+    const r = this.rank(), f = r.to ? (r.xp - r.from) / (r.to - r.from) : 1;
+    el.innerHTML = '<span class="rk-i">' + (r.i + 1) + '</span><div class="rk-t"><b>' + r.n + '</b><div class="rk-bar"><i style="width:' + (f * 100).toFixed(1) + '%"></i></div>' +
+      '<small>' + (r.to ? r.xp + ' / ' + r.to + ' XP de Tamer' : 'Rango máximo · ' + r.xp + ' XP') + '</small></div>';
+  },
+
   // ---------- Analyzer ----------
   see(cid, key) { const s = this.read(), k = cid + ':' + key; if (!s.seen[k]) { s.seen[k] = 1; this.write(); } },
   seenCount() { const s = this.read(); return Object.keys(s.seen).length + Object.keys(s.bosses).length; },
+  // formas que registra el Analyzer: etapas, formas finales, evolución oscura y formas X-Antibody
+  forms(C) {
+    const M = C.meta;
+    return [...M.stages.map(x => ({ k: 'stage_' + x.stage, n: x.name })), ...M.branches.map(x => ({ k: 'branch_' + x.id, n: x.name, fin: 1 })),
+      { k: 'dark', n: darkName(C), fin: 1, dk: 1 }, ...Object.keys(M.x || {}).map(k => ({ k: 'x_' + k, n: M.x[k].name, fin: 1, xx: 1 }))];
+  },
   totalData() {
     let n = 0;
-    for (const c of CREATURES) { const C = CreatureLoader.cache[c.id]; if (C) n += C.meta.stages.length + C.meta.branches.length; }
+    for (const c of CREATURES) { const C = CreatureLoader.cache[c.id]; if (C) n += this.forms(C).length; }
     return n + (Bosses.data ? Bosses.data.list.length : 0);
   },
 
@@ -81,8 +109,12 @@ const Progress = {
   // Se llama al terminar cada partida. r = { kills, secs, pl: [{cid, stage}] (tus jugadores), bosses: [ids] }
   // Devuelve { eggs: [unlock] nuevos, hatched: [cid] } y deja en cola la animación de eclosión.
   onRunEnd(r) {
-    if (!this.data) return { eggs: [], hatched: [] };
+    if (!this.data) return { eggs: [], hatched: [], txp: 0, rankUp: null, reward: 0 };
     const s = this.read(), hatched = [], eggs = [];
+    const r0 = this.rank(s.txp).i, txp = (r.kills | 0) + Math.floor(r.secs / 3) + 40 * r.bosses.length + 15 * Math.max(0, ...r.pl.map(q => q.stage));
+    s.txp += txp;
+    const r1 = this.rank(s.txp), reward = r1.i > r0 ? 100 * (r1.i - r0) * r1.i : 0;
+    if (reward) { save.coins += reward; persist(); wal(); }
     s.kills += r.kills | 0; s.runs++;
     s.bestSecs = Math.max(s.bestSecs, Math.floor(r.secs));
     for (const q of r.pl) {
@@ -99,8 +131,8 @@ const Progress = {
       if (this.has(u.cid) || s.eggs[u.cid] || this.value(u) < u.goal) continue;
       s.eggs[u.cid] = { left: u.hatch || 1 }; eggs.push(u);
     }
-    this.write();
-    return { eggs, hatched };
+    this.write(); this.renderRank();
+    return { eggs, hatched, txp, rankUp: r1.i > r0 ? r1.n : null, reward };
   },
 
   // ---------- Dibujos ----------
@@ -109,7 +141,7 @@ const Progress = {
     return '<span class="egg ' + cls + '" style="--s:' + sc + ';background-image:url(assets/sprites/eggs/' + this.eggOf(cid) + '.png)"></span>';
   },
   thumb(C, key, h = 48) {
-    const s = C && C.canvases[key]; if (!s) return '';
+    const s = C && (key === 'dark' && C.meta ? darkSpr(C) : C.canvases[key]); if (!s) return '';
     const fw = s.canvas.width / s.cols, fh = s.canvas.height / s.rows;
     const c = document.createElement('canvas'); c.width = fw; c.height = fh;
     c.getContext('2d').drawImage(s.canvas, 0, 0, fw, fh, 0, 0, fw, fh);
@@ -204,10 +236,10 @@ const Progress = {
             '<span class="an-st">' + this.stateText(c.id) + '</span></div></div>';
           continue;
         }
-        const forms = [...M.stages.map(x => ({ k: 'stage_' + x.stage, n: x.name })), ...M.branches.map(x => ({ k: 'branch_' + x.id, n: x.name, fin: 1 }))];
+        const forms = this.forms(C);
         const got = forms.filter(f => s.seen[c.id + ':' + f.k]).length;
         h += '<div class="an-row" style="--ac:' + ELC[el] + '"><div class="an-info"><b>' + this.rookie(c.id) + ' <small>' + ATTR[el] + ' · ' + got + '/' + forms.length + '</small></b><div class="an-forms">' +
-          forms.map(f => { const ok = s.seen[c.id + ':' + f.k]; return '<span class="an-f' + (ok ? '' : ' no') + (f.fin ? ' fin' : '') + '" title="' + (ok ? f.n : '???') + '">' + this.thumb(C, f.k, 44) + '<small>' + (ok ? f.n : '???') + '</small></span>'; }).join('') +
+          forms.map(f => { const ok = s.seen[c.id + ':' + f.k]; return '<span class="an-f' + (ok ? '' : ' no') + (f.fin ? ' fin' : '') + (f.dk ? ' dk' : '') + (f.xx ? ' xx' : '') + '" title="' + (ok ? f.n : '???') + '">' + this.thumb(C, f.k, 44) + '<small>' + (ok ? f.n : '???') + '</small></span>'; }).join('') +
           '</div></div></div>';
       }
       if (!h && this.tab === 'egg') h ='<div class="an-row"><div class="an-info"><span class="desc">¡Ya eclosionaron todos los Digitamas!</span></div></div>';
@@ -230,6 +262,7 @@ const Progress = {
   try { await Progress.load(); } catch (e) { console.error(e); return; }
   const b = document.getElementById('anb');
   if (b) b.onclick = () => Progress.open();
+  Progress.renderRank();
   if (window.onProgressReady) window.onProgressReady();   // game.js revisa el Digimon elegido y muestra eclosiones pendientes
 })();
 addEventListener('keydown', e => { if (e.key === 'Escape' && Progress.isOpen()) Progress.close(); });

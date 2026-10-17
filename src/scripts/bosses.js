@@ -35,7 +35,7 @@ const Bosses = {
   def(i) { return this.data && this.data.list[i]; },
   sprite(i) { const b = this.def(i); return b ? this.spr[b.id] : null; },
   elOf(b) { return b.attribute === 'Virus' ? 1 : b.attribute === 'Dato' ? 2 : 0; },
-  every() { return this.data ? (TEST ? this.data.testEvery : this.data.every) : 1e9; },
+  every() { return this.data ? (TEST ? this.data.testEvery : typeof Challenge !== 'undefined' && Challenge.has('boss60') ? 60 : this.data.every) : 1e9; },
 
   // al empezar cada partida
   reset() { this.n = 0; this.down = []; this.shown = this.shownName = null; this.next = this.every(); this.hideBar(); },
@@ -100,6 +100,7 @@ const Bosses = {
     this.down.push(B.id);
     for (let j = 0; j < 16; j++) { const g = Math.random() * 6.283, r = 10 + Math.random() * 60; gems.push({ x: e.x + Math.cos(g) * r, y: e.y + Math.sin(g) * r, v: 8 + 4 * e.cyc }); }
     for (let j = 0; j < 40; j++) burst(e.x, e.y, j % 2 ? '#fff' : ELC[e.el]);
+    Items.bossDrop(e.x, e.y);   // Recovery Floppy y, a veces, X-Antibody
   },
 
   // ---------- Dibujo y HUD (anfitrión y cliente) ----------

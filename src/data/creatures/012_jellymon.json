@@ -110,5 +110,13 @@
       "verified": false,
       "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
     }
-  ]
+  ],
+  "dark": {
+    "name": "MarineDevimon",
+    "file": "marinedevimon_dark.png",
+    "cols": 2,
+    "rows": 6,
+    "desc": "El mar oscuro se traga su forma",
+    "source": "Workshop 2925436143"
+  }
 }

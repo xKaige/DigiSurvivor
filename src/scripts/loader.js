@@ -48,6 +48,10 @@ const CreatureLoader = {
     const promises = [];
     data.stages.forEach(s => promises.push(loadSprite(`stage_${s.stage}`, s.file, s.cols, s.rows)));
     data.branches.forEach(b => promises.push(loadSprite(`branch_${b.id}`, b.file, b.cols, b.rows)));
+    // evolución oscura propia (si no tiene, game.js genera una teñida a partir de su primera forma final)
+    if (data.dark) promises.push(loadSprite('dark', data.dark.file, data.dark.cols, data.dark.rows));
+    // formas X-Antibody: x = { stage_3: {name, file}, branch_6_1: {...} } -> canvases x_stage_3, x_branch_6_1
+    for (const k in (data.x || {})) promises.push(loadSprite('x_' + k, data.x[k].file));
 
     await Promise.all(promises);
     this.cache[creatureId] = loadedData;

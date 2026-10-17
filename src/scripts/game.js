@@ -41,7 +41,29 @@ async function initGame(ids) {
 const unlocked = id => typeof Progress === 'undefined' || Progress.has(id);
 // Jugadores de ESTE navegador (en online, solo el tuyo): para el Analyzer y las misiones
 const mine = () => isOnline ? [isHost ? P[0] : P[1]].filter(Boolean) : P;
-const seeForm = q => { if (typeof Progress !== 'undefined' && q) Progress.see(q.cid, (q.stage | 0) < 5 ? 'stage_' + (q.stage | 0) : 'branch_' + (q.branchId || '6_1')); };
+// Clave de canvas de la forma de q en la etapa s: stage_N, branch_<id> o 'dark' (evolución oscura)
+const formKey = (q, s) => { if (s < 5) return 'stage_' + s; if (q.dark) return 'dark'; const C = CR(q), b = C && C.meta.branches[q.line || 0]; return 'branch_' + (q.branchId || (b ? b.id : '6_1')); };
+// Evolución oscura: sprite propio (JSON "dark") o, si no tiene, su primera forma final teñida de violeta (se genera una vez)
+function darkSpr(C) {
+  if (!C) return null;
+  if (C.canvases.dark) return C.canvases.dark;
+  if (C.canvases.darkGen) return C.canvases.darkGen;
+  const b = C.meta.branches[0], S = b && C.canvases['branch_' + b.id]; if (!S) return null;
+  const cv = document.createElement('canvas'); cv.width = S.canvas.width; cv.height = S.canvas.height;
+  const g = cv.getContext('2d'); g.drawImage(S.canvas, 0, 0);
+  g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(48,0,72,.62)'; g.fillRect(0, 0, cv.width, cv.height);
+  return (C.canvases.darkGen = { canvas: cv, cols: S.cols, rows: S.rows });
+}
+const darkName = C => (C.meta.dark && C.meta.dark.name) || (C.meta.branches[0].name + ' Oscuro');
+// Nombre de la forma (con X-Antibody, el de su forma X si existe)
+const formName = (q, s) => { const C = CR(q); if (!C) return ''; const M = C.meta, k = formKey(q, s);
+  if (q.xa && M.x && M.x[k]) return M.x[k].name; if (k === 'dark') return darkName(C);
+  const o = s < 5 ? M.stages[s] : (M.branches.find(b => 'branch_' + b.id === k) || M.branches[0]); return o ? o.name : ''; };
+const seeForm = q => { if (typeof Progress === 'undefined' || !q) return; const k = formKey(q, q.stage | 0), C = CR(q);
+  Progress.see(q.cid, k); if (q.xa && C && C.canvases['x_' + k]) Progress.see(q.cid, 'x_' + k); };
+// Reglas del desafío diario (challenge.js) activas en esta partida
+const chal = id => typeof Challenge !== 'undefined' && Challenge.has(id);
+window.onXAntibody = q => { Bosses.banner('¡X-Antibody! ' + (formName(q, q.stage | 0) || '')); seeForm(q); };
 
 // ---------- Red: PeerJS + party ----------
 // El login, el Nick, la lista de amigos y las ventanas están en social.js; acá vive la conexión entre jugadores.
@@ -268,7 +290,7 @@ function applyCardOp(targetP, data) {
   else if (data.op === 'hp') { targetP.max += 25; targetP.hp = Math.min(targetP.max, targetP.hp + 25); }
   else if (data.op === 'mag') targetP.mag *= 1.6;
   else if (data.op === 'wp' && data.wpKey) { if (SkillSys.canTake(targetP, data.wpKey)) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; }
-  else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; }
+  else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; targetP.dark = !!data.dark; }
 }
 
 // Invitado: responde con su Digimon y arranca
@@ -290,11 +312,12 @@ function applyOnlineSync(data) {
   if (data.eb) eb = data.eb;
   if (data.ef) ef = data.ef;
   if (data.bd) Bosses.down = data.bd;
+  if (data.it) Items.on = data.it;
 }
 
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
  if(pickRes){if(pickKey(e.key))e.preventDefault();else if(e.key==='Escape'&&!isOnline)pickCancel();return}
- if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline&&!(typeof Progress!=='undefined'&&(Progress.isOpen()||Progress.hatching))){if(selected)beginLocal(lastMode);else openMenuPick()}
+ if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline&&!(typeof Progress!=='undefined'&&(Progress.isOpen()||Progress.hatching))&&!document.querySelector('#news[style*="flex"],#challenge[style*="flex"],#missions[style*="flex"]')){if(selected)beginLocal(lastMode);else openMenuPick()}
  if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)togglePause()}
  if(paused&&!evo&&!menuPause&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
@@ -310,9 +333,9 @@ function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'
 async function start(m,ids){
   ids=ids&&ids.length?ids:['001_guilmon'];
   await initGame(ids);
-  mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);q.x=m===1?0:(i?40:-40);applyTree(q);P.push(q)}
+  mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);q.x=m===1?0:(i?40:-40);if(!chal('notree'))applyTree(q);if(chal('glass')){q.max=Math.round(q.max/2);q.hp=q.max;q.dmg*=1.5}P.push(q)}
   p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=5;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
   renderLegend();if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -515,7 +538,7 @@ const TREE=[
 // poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
 // a esa fecha vuelve a 0 una sola vez (monedas, árbol y misiones del día). Nick, amigos y Digimon elegido no se tocan.
 // Ej.: const RESET_BEFORE = Date.parse('2027-03-01T00:00:00-03:00');
-const GAME_VERSION = '0.3';
+const GAME_VERSION = '0.4';
 const RESET_BEFORE = null;
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
@@ -564,21 +587,18 @@ function endRun(title){if(!running)return;
  // progresión permanente (progress.js): Digitamas y desbloqueos
  if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:q.stage|0})),bosses:Bosses.down.slice()});
   if(r.eggs.length)$('m').textContent+=' ¡Conseguiste '+(r.eggs.length>1?r.eggs.length+' Digitamas':'un Digitama')+' ('+r.eggs.map(u=>u.name).join(', ')+')! '+(r.eggs.length>1?'Eclosionan':'Eclosiona')+' al terminar tu próxima partida.';
+  $('m').textContent+=' +'+r.txp+' XP de Tamer'+(r.rankUp?'. ¡Subiste a '+r.rankUp+'! (+'+r.reward+' monedas)':'')+'.';
   if(r.hatched.length)setTimeout(()=>Progress.showHatch(),700)}
+ if(typeof Challenge!=='undefined')$('m').textContent+=Challenge.onRunEnd({kills,secs:t,bosses:Bosses.down.length,cid:(mine()[0]||P[0]).cid});
  wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
 
 function drawBuddy(q,s,x,y,f,a){
  const C=CR(q);
  if(!C)return;
 
- let spriteInfo = null;
- if(s < 5){
-  spriteInfo = C.canvases[`stage_${s}`];
- }else{
-  const bi = C.meta.branches[q.line || 0];
-  const branchKey = q.branchId || (bi ? bi.id : '6_1');
-  spriteInfo = C.canvases[`branch_${branchKey}`];
- }
+ // forma actual; con X-Antibody usa su forma X si la línea la tiene
+ const fk = formKey(q, s), xs = q.xa && C.canvases['x_' + fk];
+ const spriteInfo = xs || (fk === 'dark' ? darkSpr(C) : C.canvases[fk]);
 
  if(!spriteInfo) return;
 
@@ -611,6 +631,9 @@ function drawBuddy(q,s,x,y,f,a){
  cx.ellipse(0, 46, w * .35, 5, 0, 0, 6.283);
  cx.fill();
 
+ if(q.xa){cx.strokeStyle='#c05bff';cx.lineWidth=2;cx.beginPath();cx.ellipse(0,46,w*.46,9,0,0,6.283);cx.stroke()}   // X-Antibody
+ if(fk === 'dark' && !q.dead){cx.globalAlpha=a*(.3+.15*Math.sin(t*5));cx.fillStyle='#6a12d8';cx.beginPath();cx.ellipse(0,48-h*.45,w*.42,h*.5,0,0,6.283);cx.fill();cx.globalAlpha=a}   // aura oscura
+
  if(mode === 2){
   cx.strokeStyle = PC[q.id];
   cx.lineWidth = 3;
@@ -621,6 +644,8 @@ function drawBuddy(q,s,x,y,f,a){
 
  if(f < 0) cx.scale(-1, 1);
  cx.drawImage(cv, col * fw, row * fh, fw, fh, -w / 2, 48 - h, w, h);
+ // X-Antibody sin forma X propia: "glitch" violeta intermitente
+ if(q.xa && !xs && !q.dead && Math.floor(t * 10) % 3 === 0){cx.globalAlpha=a*.45;cx.filter='hue-rotate(260deg) saturate(3)';cx.drawImage(cv, col * fw, row * fh, fw, fh, -w / 2 + (Math.random() * 6 - 3), 48 - h, w, h);cx.filter='none'}
  cx.restore();
 }
 
@@ -648,6 +673,7 @@ function stepEvo(dt){evo.t+=dt;
    const s=q.stage=evo.s;q.r=[14,16,19,22,25,28][s] || 20;
    const wk=q.weak?.5:1;
    if(s<5){q.dmg+=1.5;q.max+=30}
+   else if(q.dark){q.dmg+=7;q.multi+=1;q.sp*=1.08;q.max+=40}                    // evolución oscura
    else if(q.line===0){q.dmg+=3*wk;q.max+=60*wk;if(!q.weak)q.pierce++}            // línea 0: pesado
    else if(q.line===1){q.dmg+=1*wk;q.multi+=q.weak?1:2;q.sp*=q.weak?1.07:1.15}   // línea 1: veloz
    else{q.dmg+=5*wk}                                                              // línea 2: poderoso
@@ -656,7 +682,7 @@ function stepEvo(dt){evo.t+=dt;
   }
   mine().forEach(seeForm);   // Digimon Analyzer
   // nombre(s) de la nueva forma de cada jugador (sin repetir)
-  const names=P.map(q=>{const C=CR(q);if(!C)return '';const M=C.meta;const o=evo.s<5?M.stages[evo.s]:(M.branches[q.line]||M.branches[0]);return o?o.name:''}).filter((n,i,a)=>n&&a.indexOf(n)===i);
+  const names=P.map(q=>formName(q,evo.s)).filter((n,i,a)=>n&&a.indexOf(n)===i);
   $('evt').textContent='¡'+names.join(' y ')+'!';
  }
  if(evo.t>=2.8){
@@ -681,7 +707,7 @@ function setHead(txt){$('up').classList.remove('pick');const h=$('up').querySele
 let cardsAt = 0;
 function showUp(){ cardsAt = performance.now(); $('up').style.display = 'flex'; }
 function thumbOf(C, key){
-  const s = C && C.canvases[key]; if(!s) return '';
+  const s = C && (key === 'dark' ? darkSpr(C) : C.canvases[key]); if(!s) return '';
   const fw = s.canvas.width / s.cols, fh = s.canvas.height / s.rows;
   const c = document.createElement('canvas'); c.width = fw; c.height = fh;
   c.getContext('2d').drawImage(s.canvas, 0, 0, fw, fh, 0, 0, fw, fh);
@@ -707,20 +733,25 @@ function chooseLine(){
       branchId: b.id,
       d: b.desc,
       req: Object.entries(b.req).map(([k, v]) => `${SN[k]} ${Math.min(tot(p, k), Math.ceil(v * REQ_FACTOR))}/${Math.ceil(v * REQ_FACTOR)}`).join(' · '),
-      f: () => { p.line = idx; p.branchId = b.id; p.weak = !anyOk; }
+      f: () => { p.line = idx; p.branchId = b.id; p.weak = !anyOk; p.dark = false; }
     };
   });
+  // sin ningún requisito cumplido: la única salida es la evolución oscura (más daño, pero pierde vida de a poco)
+  if (!anyOk) cur = [{ n: darkName(C), lock: false, weak: false, dark: 1, op: 'line', lineIdx: 0, branchId: null,
+    d: ((C.meta.dark && C.meta.dark.desc) || 'La oscuridad consume a tu compañero') + '. +7 de daño y +1 proyectil, pero pierde vida de a poco',
+    req: 'ningún requisito cumplido', f: () => { p.line = 0; p.branchId = null; p.weak = false; p.dark = true; } }];
 
   const c=$('cards');c.innerHTML='';
   cur.forEach((u,i)=>{
     const b=document.createElement('button');
     b.className='card lv line';
     b.disabled=u.lock;
-    b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(u.lock?'Bloqueada':'Evolución final')+'</span>'+thumbOf(C,'branch_'+u.branchId)+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span><em>Requiere: '+u.req+'</em>';
+    b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(u.lock?'Bloqueada':u.dark?'Evolución oscura':'Evolución final')+'</span>'+thumbOf(C,u.dark?'dark':'branch_'+u.branchId)+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span><em>'+(u.dark?'Motivo: ':'Requiere: ')+u.req+'</em>';
+    if(u.dark)b.classList.add('dark');
     b.onclick=()=>choose(u);
     c.appendChild(b);
   });
-  if(!anyOk && $('up').querySelector('p')) $('up').querySelector('p').textContent='No cumplís ningún requisito: la evolución será inestable (bonos a la mitad)';
+  if(!anyOk && $('up').querySelector('p')) $('up').querySelector('p').textContent='No cumplís ningún requisito: la oscuridad toma a tu compañero';
   showUp();
 }
 
@@ -781,7 +812,7 @@ function choose(u){
   const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c)q.st[u.c]++;p=P[0];pending.shift();
 
   if (isOnline) {
-    const payload = { type: isHost ? 'host_choice' : 'client_choice', op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak };
+    const payload = { type: isHost ? 'host_choice' : 'client_choice', op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark };
     if (conn) conn.send(payload);
 
     if (isHost) {
@@ -827,7 +858,7 @@ function spawn(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  // sk: sprite de ENEMY_LINE. Etapa = tier; los tanques van una etapa arriba (en el tope, una de las ramas finales al azar)
  const es=ti+(k===2?1:0),sk=es<5?'stage_'+es:'branch_6_'+(1+Math.floor(Math.random()*3));
  const HM=[1,1.5,2.2,3,4,5.5][ti],T=[{hp:b,sp:1,r:12,v:3},{hp:Math.max(1,Math.ceil(b/2)),sp:1.9,r:9,v:4},{hp:b*4,sp:.55,r:21,v:10}][k];
- en.push({x:cam.x+Math.cos(a)*d,y:cam.y+Math.sin(a)*d,k,ti,sk,hp:T.hp*HM,sp:(55+Math.random()*25+t*.4)*T.sp*(1+.05*ti),r:T.r*(1+.12*ti),v:T.v*(1+.5*ti),dm:[1,1.2,1.4,1.7,2,2.4][ti],fl:0,ang:0,el:Math.floor(Math.random()*3),gun:k!==1&&t>15&&Math.random()<Math.min(.4,(t-15)/150)+.08*ti,cd:1+Math.random()*2})}
+ en.push({x:cam.x+Math.cos(a)*d,y:cam.y+Math.sin(a)*d,k,ti,sk,hp:T.hp*HM,sp:(55+Math.random()*25+t*.4)*T.sp*(1+.05*ti)*(chal('fast')?1.3:1),r:T.r*(1+.12*ti),v:T.v*(1+.5*ti),dm:[1,1.2,1.4,1.7,2,2.4][ti],fl:0,ang:0,el:Math.floor(Math.random()*3),gun:k!==1&&t>15&&Math.random()<Math.min(.4,(t-15)/150)+.08*ti,cd:1+Math.random()*2})}
 function burst(x,y,c){for(let i=0;i<8;i++){const a=Math.random()*6.283,s=60+Math.random()*120;pt.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.4,c})}}
 
 // HUD: vida (con rastro del daño recibido), experiencia con el nivel y virus eliminados. Lo usan el host y el cliente online.
@@ -843,13 +874,14 @@ function update(dt){
    } else if (isHost && conn) {
      conn.send({
        type: 'sync',
-       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP })),
+       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP, dark: q.dark, xa: q.xa })),
        en: en.map(e => e.bo != null ? { x: e.x, y: e.y, r: e.r, k: e.k, ti: 0, el: e.el, fl: e.fl, ang: e.ang, bo: e.bo, cyc: e.cyc, hp: e.hp, mh: e.mh, at: e.at }
          : { x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun }),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
        sh: sh.map(s => s.fx ? { x: s.x, y: s.y, c: s.c, r: s.r, fx: s.fx, sz: s.sz, a: Math.atan2(s.vy, s.vx) } : { x: s.x, y: s.y, c: s.c, r: s.r }),
        eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el, r: b.r })),
        ef: ef.map(o => ({ k: o.k, x: o.x, y: o.y, R: o.R, l: o.l, m: o.m, a: o.a, Lg: o.Lg, s: o.s, w: o.w, col: o.col, fx: o.fx })),
+       it: Items.on.map(i => ({ x: i.x, y: i.y, k: i.k, l: i.l })),
        t, kills, lvl, need, xp, bd: Bosses.down
      });
    }
@@ -881,6 +913,7 @@ function update(dt){
   q.moving = !!(dx || dy);
   if(dx||dy){const l=Math.hypot(dx,dy);q.x+=dx/l*q.sp*dt;q.y+=dy/l*q.sp*dt;if(dx)q.face=dx}
   q.inv-=dt;
+  if(q.dark&&(q.stage|0)>=5)q.hp=Math.max(1,q.hp-q.max*.006*dt);   // la oscuridad lo va consumiendo (nunca lo mata sola)
  }
 
  const al=P.filter(q=>!q.dead);
@@ -901,7 +934,7 @@ function update(dt){
   let rv=0;for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R)rv=Math.max(rv,a.revSpd||1);
   d.revP=rv?(d.revP||0)+dt*rv:Math.max(0,(d.revP||0)-dt);
   if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*.5;d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
- spawnT-=dt;const iv=Math.max(.2,1.1-t*.008)/(mode===2?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
+ spawnT-=dt;const iv=Math.max(.2,1.1-t*.008)/(mode===2?1.5:1)/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/60);i<n&&en.length<(mode===2?340:260);i++)spawn(Math.max(0,mt-1));spawnT+=iv}
  Bosses.tick();
  for(const q of al){q.atkT-=dt;
@@ -920,12 +953,13 @@ function update(dt){
  for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el);b.l=0}}eb=eb.filter(b=>b.l>0);
  for(let i=0;i<en.length;i++)for(let j=i+1;j<en.length;j++){const a=en[i],b=en[j],d=Math.hypot(a.x-b.x,a.y-b.y);
   if(d>0&&d<a.r*1.6){const k=(a.r*1.6-d)/2/d;a.x+=(a.x-b.x)*k;a.y+=(a.y-b.y)*k;b.x-=(a.x-b.x)*k;b.y-=(a.y-b.y)*k}}
- for(const e of en)if(e.hp<=0){kills++;if(e.bo!=null)Bosses.onDeath(e);else gems.push({x:e.x,y:e.y,v:e.v});burst(e.x,e.y,ELC[e.el])}
+ for(const e of en)if(e.hp<=0){kills++;if(e.bo!=null)Bosses.onDeath(e);else{gems.push({x:e.x,y:e.y,v:e.v});Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
-  if(tg){if(td<tg.mag){const a=Math.atan2(tg.y-g.y,tg.x-g.x);g.x+=Math.cos(a)*380*dt;g.y+=Math.sin(a)*380*dt}if(td<tg.r+8){xp+=g.v*tg.xpm;g.dead=1}}}
+  if(tg){if(td<tg.mag||Items.magT>0){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm;g.dead=1}}}
  gems=gems.filter(g=>!g.dead);
+ Items.update(dt);
  if(xp>=need)levelUp();
  for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
@@ -950,6 +984,7 @@ function draw(){
  cx.save();cx.translate(ox,oy);
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
+ Items.draw();
  for(const e of en){const C=e.fl>0?'#fff':ELC[e.el],D='#050b1a';cx.fillStyle=C;
   if(drawEnemy(e)){}
   else if(e.k===1){cx.save();cx.translate(e.x,e.y);cx.rotate(e.ang);cx.beginPath();cx.moveTo(e.r*1.4,0);cx.lineTo(-e.r,-e.r);cx.lineTo(-e.r*.5,0);cx.lineTo(-e.r,e.r);cx.fill();cx.restore()}
