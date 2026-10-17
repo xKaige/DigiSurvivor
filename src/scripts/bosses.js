@@ -52,7 +52,8 @@ const Bosses = {
     const L = this.data.list, i = this.n % L.length, cyc = Math.floor(this.n / L.length), B = L[i];
     this.n++;
     const a = Math.random() * 6.283, d = Math.hypot(W, H) / 2 + 60;
-    const hp = B.hp * (1 + cyc * 1.5) * (mode === 2 ? 1.6 : 1);
+    // la vida escala con la etapa del más evolucionado (0,5× en Bebé … 1,75× en forma final), el ciclo y la cantidad de jugadores
+    const st = Math.max(...P.map(q => q.stage | 0)), hp = B.hp * (0.5 + 0.25 * st) * (1 + cyc * 1.5) * (mode === 2 ? 1.6 : 1);
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
       hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
       pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0 });

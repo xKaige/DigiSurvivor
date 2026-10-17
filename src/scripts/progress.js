@@ -250,7 +250,7 @@ const Progress = {
         const img = S ? this.thumb({ canvases: { x: S } }, 'x', 64) : '';
         h += '<div class="an-row boss' + (n ? '' : ' no') + '" style="--ac:' + ELC[el] + '"><span class="an-f' + (n ? '' : ' no') + '">' + img + '</span><div class="an-info">' +
           '<b>' + (n ? B.name : '???') + ' <small>' + B.level + ' · ' + B.attribute + '</small></b>' +
-          '<span class="desc">' + (n ? B.desc : 'Aparece a los ' + (i + 1) * 2 + ' minutos de partida. Derrotalo para registrar sus datos.') + '</span>' +
+          '<span class="desc">' + (n ? B.desc : 'Aparece a los ' + (() => { const s = (i + 1) * Bosses.data.every; return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); })() + ' de partida. Derrotalo para registrar sus datos.') + '</span>' +
           (n ? '<span class="an-st">Técnicas: ' + [...new Set(B.atk.map(a => a.n))].join(', ') + ' · Derrotado ' + n + (n > 1 ? ' veces' : ' vez') + '</span>' : '') +
           '</div></div>';
       });

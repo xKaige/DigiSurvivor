@@ -49,8 +49,10 @@ const Enemies = {
     this.roster = [];
     for (let ti = 0; ti <= 4; ti++) {
       const cand = sh(L.map((d, i) => i).filter(i => L[i].tier === ti || L[i].tier === ti + 1));
-      const basic = cand.find(i => L[i].kind === 'swarm' || L[i].kind === 'chaser');
-      const pick = basic != null ? [basic] : [];
+      // uno común (swarm/chaser) y un tirador si hay; después, como mucho 1 especie por comportamiento especial
+      const basic = cand.find(i => L[i].kind === 'swarm' || L[i].kind === 'chaser'), shoot = cand.find(i => L[i].kind === 'shooter');
+      const pick = [basic, shoot].filter(i => i != null), cnt = k => pick.filter(i => L[i].kind === k).length;
+      for (const i of cand) { if (pick.length >= n) break; const k = L[i].kind; if (!pick.includes(i) && (k === 'swarm' || k === 'chaser' || cnt(k) < 1)) pick.push(i); }
       for (const i of cand) { if (pick.length >= n) break; if (!pick.includes(i)) pick.push(i); }
       this.roster.push(pick);
     }
@@ -67,7 +69,7 @@ const Enemies = {
 
   // ---------- Aparición y números (balance) ----------
   // vida = (2 + t/45) × [nivel] × kind.hp · velocidad con tope · daño por nivel. group: los "swarm" vienen de a 3.
-  HPT: 52,          // cada HPT segundos los enemigos ganan la vida base de uno nuevo
+  HPT: 60,          // cada HPT segundos los enemigos ganan la vida base de uno nuevo
   HM: [1, 1.45, 2.1, 2.85, 3.9, 5.1],
   DM: [1, 1.15, 1.3, 1.5, 1.75, 2],
   spawn(ti, group) {
@@ -151,7 +153,7 @@ const Enemies = {
       const n = e.ti >= 3 ? 3 : 1;
       for (let j = 0; j < n; j++) {
         const aa = e.la + (j - (n - 1) / 2) * 0.16;
-        eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 400, vy: Math.sin(aa) * 400, l: 2.2, el: e.el, dm: e.dm, r: 7 });
+        eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 380, vy: Math.sin(aa) * 380, l: 2.2, el: e.el, dm: e.dm, r: 8 });
       }
     }
     e.st = 0; e.ac = K.cd * (0.8 + Math.random() * 0.4);

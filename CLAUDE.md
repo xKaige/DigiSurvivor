@@ -70,7 +70,8 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → 
 Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), multi, pierce, mag, arm, xpm, coin, stage (0–5), line (índice de rama), branchId, weak, st {FUE,VEL,VIT,INT}, wp {skillKey: nivel} (skills activas), wt (timers de skills), revP/revSpd (revivir)`.
 
 ### Progresión
-- `FAST = true` en `game.js` → evoluciones en niveles 2,3,4,5 (`EVO_LEVELS`) y rama final en nivel 6 (`LINE_LEVEL`), con requisitos al 40% (`REQ_FACTOR`). **Está en modo prueba; para la versión real va `false`** (niveles 3,6,9,12 y 15).
+- `FAST = false` en `game.js` → evoluciones **cada 5 niveles** (5, 10, 15, 20; `EVO_LEVELS`) y rama final en el 25 (`LINE_LEVEL`), con requisitos completos (`REQ_FACTOR` 1). Con `FAST = true` (para probar) vuelven a ser 2,3,4,5 y 6 con requisitos al 40%.
+- Curva de XP: `need = need × XP_GROW + XP_ADD` empezando en `XP_START` (hoy 1,12 / 5 / 6). Con un bot que junta bien la XP: Bebé II ~0:25–0:45, Novato ~1:30–2:30, Campeón ~3:45–4:30, Perfecto ~6.
 - Al subir de nivel (`levelUp`): si es nivel de evolución → `startEvo(etapa)`; si es `LINE_LEVEL` → `chooseLine()` (elegir rama final) → `startEvo(5)`; si no → cartas (`startCards`/`showCards`).
 - Cartas: mejoras de stat en `UP` (cada una suma 1 punto a FUE/VEL/VIT/INT) + cartas de skills de `SkillSys.cards(q)`. Se muestran 3 al azar.
 - Ramas finales: requisitos en `branches[].req` del JSON, comparados contra `tot(q, stat)` = puntos permanentes del árbol + puntos de la partida. Si no cumplís ninguna, todas quedan disponibles pero "inestables" (`weak`, bonos a la mitad).
@@ -93,7 +94,9 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Comportamientos: `swarm` (de a 3, rápidos), `chaser`, `dasher` (marca una línea y embiste), `shooter` (se mantiene lejos, apunta con línea fina y dispara), `bomber` (marca un círculo donde estás y explota), `leaper` (marca dónde cae y salta), `tank` (pisotón en anillo). Los especiales tienen recarga (`cd` del kind) y **siempre avisan**: efectos `wline`/`wcirc` en `ef` (los dibuja `Enemies.drawWarn`), y el daño se resuelve al final contra la posición de ese momento (`Enemies.bombs` + `tick`). Los primeros 20 s casi no salen especiales.
 - Enemigo: `et` (índice en la lista), `kd` (kind), `st` (0 normal, 1 preparando, 2 embistiendo/saltando), `ac` (recarga). Sync: `et, st`. Daño por contacto `Enemies.touch(e)` (×1,6 embistiendo). La embestida de los jefes también marca su recorrido.
 - Si `enemies.json` no carga, queda la aparición vieja (`spawnOld`, línea `ENEMY_LINE` 004_impmon con `sk`).
-- **Balance** (medido con un bot que esquiva y junta XP; ver `HPT`, `HM`, `DM` en enemies.js y `XP_GROW/XP_ADD` en game.js): vida = (2 + t/52) × HM[nivel] × kind.hp; velocidad con tope (+45 máx. por tiempo); aparición cada máx(0,3 s, 1 − t·0,004), tandas +1 cada 2 min, tope 150 (1J) / 200 (2J). XP por nivel: need × 1,2 + 4 (antes ×1,3: en el late game ya casi no se subía). Con esto el bot muere entre los 9 y 10 minutos.
+- **Balance** (medido con un bot que esquiva y junta XP; ver `HPT`, `HM`, `DM` en enemies.js y `XP_GROW/XP_ADD/XP_START` en game.js): vida = (2 + t/60) × HM[nivel] × kind.hp; velocidad con tope (+45 máx. por tiempo); aparición cada máx(0,3 s, 0,75 − t·0,003), tandas +1 cada 2 min. El bot muere cerca de los 8 min.
+- **Rendimiento** (topes en game.js): `MAX_EN` 110 enemigos (1J) / `MAX_EN2` 140 (2J), `MAX_FX` 70 números de daño, `MAX_PT` 450 partículas, `MAX_GEMS` 220 gemas (de ahí en más la XP se suma a una gema existente con `dropGem`). Los enemigos fuera de pantalla no se dibujan, y el destello al recibir un golpe usa una silueta blanca precalculada (`whiteOf`) en vez de `cx.filter`, que era muy lento. Con esto, ~2 ms por cuadro (simulación y dibujo).
+- Plantel por nivel: un común (swarm/chaser) + un tirador si hay, y como mucho una especie por comportamiento especial; así no salen todos embistiendo.
 - HUD: `hudBars()` actualiza vida (con rastro de daño), experiencia (NV y XP actual / necesaria) y virus eliminados, en host y cliente online. La leyenda de atributos (`renderLegend`) es un triángulo SVG. Ya no se muestra "Enemigos: X" bajo el reloj.
 - Revivir: un compañero vivo parado sobre el sprite de un jugador caído lo revive en `REVIVE_TIME` (5 s) dentro de `REVIVE_R`. `q.revSpd` queda para futuras pasivas.
 
@@ -112,7 +115,7 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Guardado en `localStorage['digisurvivor_prog']` (**no en Firestore**, como las misiones). `RESET_BEFORE` también lo borra.
 
 ### Jefes (`bosses.js` + `bosses.json`)
-- Cada `every` (120 s; con `?test`, `testEvery` = 25 s) aparece el siguiente: DarkTyrannomon → Etemon → Megadramon → WaruMonzaemon → MetalEtemon → Machinedramon; después repite más fuerte (`cyc`). Si hay uno vivo, espera.
+- Cada `every` (150 s; con `?test`, `testEvery` = 25 s) aparece el siguiente. Su vida escala con la etapa del jugador más evolucionado (×0,5 en Bebé … ×1,75 en forma final). Orden: DarkTyrannomon → Etemon → Megadramon → WaruMonzaemon → MetalEtemon → Machinedramon; después repite más fuerte (`cyc`). Si hay uno vivo, espera.
 - Viven en `en` con `bo` (índice), `mh`, timers `pt/at/wd/ch`. `Bosses.act` mueve y ataca (solo host/local); al morir `Bosses.onDeath` (lluvia de XP, `Bosses.down`). Monedas extra en `endRun` (`Bosses.coins()`).
 - Sync: los jefes mandan `bo, cyc, hp, mh, at`; las balas `r`; y `bd` = `Bosses.down`. La barra `#bossbar` y los avisos salen de `Bosses.hud()` (host y cliente).
 - Balance pensado a ojo con `FAST = true` (a los 2 min ya estás en forma final y DarkTyrannomon dura ~4 s). Con `FAST = false` hay que volver a probar la vida de los jefes.
@@ -198,7 +201,6 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - Habilidades de Digimon (inspiración para skills/ataques): https://dsrworldwiki.com/en/digimon/
 
 ## Pendientes / ideas
-- Pasar `FAST` a `false` para producción.
 - Al subir de versión: actualizar `GAME_VERSION` y sumar la entrada en `src/data/changelog.json`.
 - Mostrar el Rango de Tamer en el perfil de amigos (necesita un campo nuevo en `profiles` y revisar reglas).
 - **Versión actual: 0.5** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.

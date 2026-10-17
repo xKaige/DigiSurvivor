@@ -26,12 +26,12 @@ const REVIVE_TIME = 5, REVIVE_R = 48;
 // Niveles de evolución. Para probar rápido abrí la página con ?test al final de la URL (ej: index.html?test)
 const TEST = new URLSearchParams(location.search).has('test');
 // FAST = true: niveles bajos para probar todo rápido. Poné false para los niveles normales (3,6,9,12 y 15).
-const FAST = true;
-const EVO_LEVELS = FAST ? [2,3,4,5] : [3,6,9,12];   // etapas 1,2,3,4
-const LINE_LEVEL = FAST ? 6 : 15;                    // elección de la evolución final (rama)
+const FAST = false;
+const EVO_LEVELS = FAST ? [2,3,4,5] : [5,10,15,20];  // etapas 1,2,3,4 (cada 5 niveles)
+const LINE_LEVEL = FAST ? 6 : 25;                    // elección de la evolución final (rama)
 const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisitos de stats de las ramas se achican
 // Experiencia para el próximo nivel: need = need × XP_GROW + XP_ADD (más bajo = se sigue subiendo en el late game)
-let XP_GROW = 1.2, XP_ADD = 4;
+let XP_GROW = 1.12, XP_ADD = 5, XP_START = 6;
 
 async function initGame(ids) {
   await SkillSys.load();
@@ -325,7 +325,9 @@ addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('
  if(paused&&!evo&&!menuPause&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
-function dmgNum(x,y,v,col,sz){fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
+// Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
+const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EN=110,MAX_EN2=140;   // MAX_EN: enemigos a la vez (1J / 2J)
+function dmgNum(x,y,v,col,sz){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
 function hit(e,d,el){const m=mult(el|0,e.el),v=d*m;e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,v,m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',m>1?30:m<1?14:18)}
 function hurt(q,d,el){if(q.dead)return;const m=mult(el,q.el|0),v=d*m*(1-q.arm);q.hp-=v;q.inv=.45;burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.dead=true;q.hp=0;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
 function permS(k){return {FUE:L('tf'),VEL:L('tv'),INT:L('ti'),VIT:L('th')}[k]|0}
@@ -337,7 +339,7 @@ async function start(m,ids){
   ids=ids&&ids.length?ids:['001_guilmon'];
   await initGame(ids);
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);q.x=m===1?0:(i?40:-40);if(!chal('notree'))applyTree(q);if(chal('glass')){q.max=Math.round(q.max/2);q.hp=q.max;q.dmg*=1.5}P.push(q)}
-  p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=5;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
+  p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
@@ -657,6 +659,8 @@ function drawBuddy(q,s,x,y,f,a){
 const enSpr=e=>{if(e.bo!=null)return Bosses.sprite(e.bo);if(e.et!=null)return Enemies.sprite(e.et);const C=CreatureLoader.cache[ENEMY_LINE];return C&&e.sk?C.canvases[e.sk]:null};
 const enH=e=>e.bo!=null?Bosses.h(e):Math.max(50,e.r*4.2);
 const enTop=e=>enSpr(e)?enH(e)/2:e.r;
+// silueta blanca de una hoja (se genera una vez): reemplaza a cx.filter='brightness(3)', que es muy lento
+function whiteOf(S){if(S.white)return S.white;const c=document.createElement('canvas');c.width=S.canvas.width;c.height=S.canvas.height;const g=c.getContext('2d');g.drawImage(S.canvas,0,0);g.globalCompositeOperation='source-atop';g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);return S.white=c}
 function drawEnemy(e){
  const S=enSpr(e);if(!S||!S.canvas)return false;
  const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),w=fw*h/fh;
@@ -665,8 +669,7 @@ function drawEnemy(e){
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
  cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
  if(Math.cos(e.ang)<0)cx.scale(-1,1);
- if(e.fl>0)cx.filter='brightness(3)';
- cx.drawImage(cv,col*fw,row*fh,fw,fh,-w/2,-h/2,w,h);
+ cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh,fw,fh,-w/2,-h/2,w,h);   // golpeado: silueta blanca
  cx.restore();return true}
 
 function startEvo(s){evo={t:0,s,done:0};const v=$('evt');v.style.display='block';v.textContent='¡Tu compañero está digievolucionando!'}
@@ -865,8 +868,10 @@ function spawnOld(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  const es=ti+(k===2?1:0),sk=es<5?'stage_'+es:'branch_6_'+(1+Math.floor(Math.random()*3));
  const HM=[1,1.5,2.2,3,4,5.5][ti],T=[{hp:b,sp:1,r:12,v:3},{hp:Math.max(1,Math.ceil(b/2)),sp:1.9,r:9,v:4},{hp:b*4,sp:.55,r:21,v:10}][k];
  en.push({x:cam.x+Math.cos(a)*d,y:cam.y+Math.sin(a)*d,k,ti,sk,hp:T.hp*HM,sp:(55+Math.random()*25+t*.4)*T.sp*(1+.05*ti)*(chal('fast')?1.3:1),r:T.r*(1+.12*ti),v:T.v*(1+.5*ti),dm:[1,1.2,1.4,1.7,2,2.4][ti],fl:0,ang:0,el:Math.floor(Math.random()*3),gun:k!==1&&t>15&&Math.random()<Math.min(.4,(t-15)/150)+.08*ti,cd:1+Math.random()*2})}
-function burst(x,y,c){for(let i=0;i<8;i++){const a=Math.random()*6.283,s=60+Math.random()*120;pt.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.4,c})}}
+function burst(x,y,c){if(pt.length>=MAX_PT)return;for(let i=0;i<8;i++){const a=Math.random()*6.283,s=60+Math.random()*120;pt.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.4,c})}}
 
+// Gema de XP. Con demasiadas en el piso, la experiencia se suma a una que ya existe (se ve dorada si vale más de 5)
+function dropGem(x,y,v){if(gems.length<MAX_GEMS){gems.push({x,y,v});return}const g=gems[Math.floor(Math.random()*gems.length)];g.v+=v}
 // HUD: vida (con rastro del daño recibido), experiencia con el nivel y virus eliminados. Lo usan el host y el cliente online.
 function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill2':'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3)};
  hb(0,P[0]);$('hp2box').style.display=mode===2?'':'none';if(mode===2)hb(1,P[1]);
@@ -940,9 +945,9 @@ function update(dt){
   let rv=0;for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R)rv=Math.max(rv,a.revSpd||1);
   d.revP=rv?(d.revP||0)+dt*rv:Math.max(0,(d.revP||0)-dt);
   if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*.5;d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
- // ritmo de aparición: intervalo con piso de 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
- spawnT-=dt;const iv=Math.max(.3,1-t*.004)/(mode===2?1.4:1)/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);i<n&&en.length<(mode===2?200:150);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
+ // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
+ spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(mode===2?1.4:1)/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);i<n&&en.length<(mode===2?MAX_EN2:MAX_EN);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
  Bosses.tick();Enemies.tick(dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
@@ -961,7 +966,7 @@ function update(dt){
  for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el);b.l=0}}eb=eb.filter(b=>b.l>0);
  for(let i=0;i<en.length;i++)for(let j=i+1;j<en.length;j++){const a=en[i],b=en[j],d=Math.hypot(a.x-b.x,a.y-b.y);
   if(d>0&&d<a.r*1.6&&a.st!==2&&b.st!==2){const k=(a.r*1.6-d)/2/d;a.x+=(a.x-b.x)*k;a.y+=(a.y-b.y)*k;b.x-=(a.x-b.x)*k;b.y-=(a.y-b.y)*k}}
- for(const e of en)if(e.hp<=0){kills++;if(e.bo!=null)Bosses.onDeath(e);else{gems.push({x:e.x,y:e.y,v:e.v});Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
+ for(const e of en)if(e.hp<=0){kills++;if(e.bo!=null)Bosses.onDeath(e);else{dropGem(e.x,e.y,e.v);Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
@@ -993,7 +998,9 @@ function draw(){
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
  Items.draw();
- for(const e of en){const C=e.fl>0?'#fff':ELC[e.el],D='#050b1a';cx.fillStyle=C;
+ const vx0=cam.x-W/2-160,vx1=cam.x+W/2+160,vy0=cam.y-H/2-200,vy1=cam.y+H/2+200;
+ for(const e of en){if(e.bo==null&&(e.x<vx0||e.x>vx1||e.y<vy0||e.y>vy1))continue;   // fuera de pantalla: no se dibuja
+  const C=e.fl>0?'#fff':ELC[e.el],D='#050b1a';cx.fillStyle=C;
   if(drawEnemy(e)){}
   else if(e.k===1){cx.save();cx.translate(e.x,e.y);cx.rotate(e.ang);cx.beginPath();cx.moveTo(e.r*1.4,0);cx.lineTo(-e.r,-e.r);cx.lineTo(-e.r*.5,0);cx.lineTo(-e.r,e.r);cx.fill();cx.restore()}
   else if(e.k===2){cx.fillRect(e.x-e.r,e.y-e.r,e.r*2,e.r*2);cx.fillStyle=D;cx.fillRect(e.x-e.r+4,e.y-e.r+4,e.r*2-8,e.r*2-8);cx.fillStyle=C;cx.fillRect(e.x-8,e.y-7,5,6);cx.fillRect(e.x+3,e.y-7,5,6);cx.fillRect(e.x-8,e.y+4,16,3)}

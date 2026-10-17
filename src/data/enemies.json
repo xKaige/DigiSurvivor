@@ -26,7 +26,7 @@
       "r": 14,
       "touch": 8,
       "xp": 4,
-      "w": 1.4,
+      "w": 1.0,
       "cd": 4.0,
       "d": "Marca una línea y embiste por ahí"
     },
@@ -36,7 +36,7 @@
       "r": 13,
       "touch": 6,
       "xp": 4,
-      "w": 1.2,
+      "w": 1.5,
       "cd": 3.2,
       "d": "Se mantiene lejos y dispara con aviso"
     },
@@ -46,7 +46,7 @@
       "r": 14,
       "touch": 6,
       "xp": 4,
-      "w": 1.0,
+      "w": 1.1,
       "cd": 4.5,
       "d": "Marca un círculo donde estás y explota"
     },
@@ -56,7 +56,7 @@
       "r": 13,
       "touch": 7,
       "xp": 4,
-      "w": 1.2,
+      "w": 1.0,
       "cd": 4.0,
       "d": "Salta hacia donde estás y cae con fuerza"
     },
