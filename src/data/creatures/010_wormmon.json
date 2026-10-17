@@ -1,0 +1,133 @@
+{
+  "id": "010_wormmon",
+  "name": "Línea Wormmon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars. Evoluciones y skills: Wikimon (canon)",
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Leafmon",
+      "file": "leafmon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 1,
+      "name": "Minomon",
+      "file": "minomon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 2,
+      "name": "Wormmon",
+      "file": "wormmon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "nebaneba_net",
+        "silk_thread"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 3,
+      "name": "Stingmon",
+      "file": "stingmon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "spiking_finish",
+        "moon_shooter"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 4,
+      "name": "Dinobeemon",
+      "file": "dinobeemon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "hell_masquerade",
+        "irritant_buzz"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Imperialdramon Dragon Mode",
+      "file": "imperialdramondragonmode_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "splendor_blade",
+        "positron_laser",
+        "mega_death"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    },
+    {
+      "id": "6_2",
+      "name": "Imperialdramon Fighter Mode",
+      "file": "imperialdramonfightermode_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "splendor_blade",
+        "giga_death",
+        "positron_laser"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    },
+    {
+      "id": "6_3",
+      "name": "Imperialdramon Paladin Mode",
+      "file": "imperialdramonpaladinmode_6_3.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 4
+      },
+      "desc": "Poderoso: +5 de daño",
+      "skills": [
+        "omega_blade",
+        "giga_death",
+        "positron_laser"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    }
+  ]
+}

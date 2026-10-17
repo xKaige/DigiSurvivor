@@ -1,0 +1,114 @@
+{
+  "id": "012_jellymon",
+  "name": "Línea Jellymon",
+  "attribute": "Dato",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars. Evoluciones y skills: Wikimon (canon)",
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Puyomon",
+      "file": "puyomon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 1,
+      "name": "Puyoyomon",
+      "file": "puyoyomon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 2,
+      "name": "Jellymon",
+      "file": "jellymon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bibi_thunder",
+        "volt_knuckle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 3,
+      "name": "TeslaJellymon",
+      "file": "teslajellymon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "physalist",
+        "punischone",
+        "vorsprite"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 4,
+      "name": "Thetismon",
+      "file": "thetismon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "biri_smasher",
+        "hammer_thunder"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "AncientMermaimon",
+      "file": "ancientmermaimon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "great_maelstrom",
+        "crystal_billow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    },
+    {
+      "id": "6_2",
+      "name": "MarinAngemon",
+      "file": "marinangemon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "ocean_love",
+        "marine_squadron",
+        "extra_smile"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    }
+  ]
+}

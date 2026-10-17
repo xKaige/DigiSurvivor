@@ -41,7 +41,7 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `game.js` → `f
 - `P` = array de jugadores (1 o 2), `p` = jugador "actual" (lo usan las cartas de mejora vía closures `f:()=>p.dmg++`).
 - `en` enemigos, `sh` disparos del jugador, `eb` balas enemigas, `gems` XP, `pt` partículas, `fx` números de daño, `ef` efectos (anillo/rayo/skills).
 - `t` tiempo de partida, `lvl`, `xp`, `need`, `kills`, `running`, `paused`, `evo` (animación de digievolución en curso), `mode` (1 o 2).
-- `CREATURES` = lista de criaturas disponibles (`001_guilmon`, `002_renamon`, `003_terriermon`, `005_veemon`). Cada jugador tiene la suya en `q.cid`; `CR(q)` devuelve su entrada de `CreatureLoader.cache`: `{ meta: <json>, canvases: { stage_0..stage_4, branch_6_1.. } }`.
+- `CREATURES` = lista de criaturas disponibles (15: `001_guilmon` … `016_commandramon`; `004_impmon` no es jugable, es la línea de enemigos). Cada jugador tiene la suya en `q.cid`; `CR(q)` devuelve su entrada de `CreatureLoader.cache`: `{ meta: <json>, canvases: { stage_0..stage_4, branch_6_1.. } }`.
 
 ### Pausa y HUD
 - **Escape pausa** (`togglePause`, flag `menuPause`): menú con Continuar / Abandonar partida. Nunca termina la partida directo. En online no frena la simulación (solo abre el menú). Con cartas o digievolución en pantalla, Escape no hace nada.
@@ -99,7 +99,10 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
   3. Crear `src/data/creatures/<NNN_nombre>.json` (con `wiki`, `verified`, `note`) y sumar sus skills a `skills.json`.
   4. Validar que todas las skills y PNG referenciados existan. Las ramas siguen el orden de bonos de `stepEvo`: 6_1 pesado, 6_2 veloz, 6_3 oscuro/poderoso.
 - **Otra fuente de sprites: Digital Tamers: Reborn** (juego de PC en GameMaker; el exe está en `C:\Users\dario_lv7\OneDrive\Escritorio\rom Digi\`, fuera del repo). Es un autoextraíble IExpress: adentro hay un `.cab` con `data.win`, que tiene ~566 Digimon como sprites `d<ID>_<anim>` (idle, walk, atk01, atk02, dmg, lose, win, jump, eat). Se extrae sin ejecutar nada (sacar el CABINET del exe → `expand.exe -F:data.win`). Los nombres por ID se sacan de STRG pero **la lista se corre en IDs altos**: verificar siempre a ojo. Hojas armadas **al doble** (nearest), cuadro de 64 si entra o múltiplo de 32 más grande. Filas: 0 idle, 1 walk, 2 lose, 3 idle, 4 dmg, 5 atk01. `005_veemon` sale de acá (IDs en el campo `sprite` de cada etapa: `dtr:d<ID>`). Los packs del Workshop parecen redibujos x2 de este juego.
-- Packs usados: 2944839923 (Guilmon), 2976689900 (Renamon), 2916279274 (Terriermon + Devas/Cherubimon), 2952066637 (Impmon). Sin usar: 2916848304 (línea Veemon; se prefirió Digital Tamers).
+- Packs usados: 2944839923 (Guilmon), 2976689900 (Renamon), 2916279274 (Terriermon + Devas/Cherubimon), 2952066637 (Impmon), 2924252315 (Gammamon), 3215599434 (Pulsemon, Kudamon), 3215570196 (Dorumon), 3209711219 (Ryudamon, Commandramon), 3203454378 (Wormmon), 2929205990 (Zubamon), 2925436143 (Jellymon), 3206026992 (Loogamon, Herissmon). Sin usar: 2916848304 (Veemon, se prefirió Digital Tamers), 2935847371 (Medabots).
+- **Hojas de 7 filas** (128×448, avatares con baile: idle, walk, sit, stand, jump, dance, attack): al importar se saca la fila 5 (dance) y quedan en 2×6.
+- Sprites sueltos de los packs que no se usaron porque les faltan bebés o novato para armar una línea completa: Shoutmon (X4, DX, X7, Omega), Leomon/SaberLeomon, Lopmon (Turuiemon, Andiramon, Cherubimon), Tyrannomon, Agumon negro (DarkTyrannomon, MetalTyrannomon, Machinedramon), Etemon, Monzaemon, Numemon, Andromon y varios más. Sirven para líneas futuras o para enemigos.
+- Líneas 006–016: evoluciones y skills del **canon (Wikimon)**, porque casi ninguno está en la wiki DSR (`source: canon:wikimon`, `verified: false`). Se leyeron con la API de Wikimon (`/api.php?action=parse&page=<nombre>&prop=wikitext&format=json&redirects=1`): ataques en la sección "Attack Techniques", atributo en `|a1=`, evoluciones en "Evolves From/To".
 - Selección: en 1J/2J local desde el menú; online con `openMenuPick` y el mensaje `pick`.
 
 ## Guardado y Firebase

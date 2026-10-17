@@ -1,0 +1,94 @@
+{
+  "id": "011_zubamon",
+  "name": "Línea Zubamon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars. Evoluciones y skills: Wikimon (canon)",
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Sakumon",
+      "file": "sakumon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 1,
+      "name": "Sakuttomon",
+      "file": "sakuttomon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 2,
+      "name": "Zubamon",
+      "file": "zubamon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "twenty_dive",
+        "twenty_scratch"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 3,
+      "name": "Zubaeagermon",
+      "file": "zubaeagermon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "road_two_decade",
+        "vingtieme"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 4,
+      "name": "Duramon",
+      "file": "duramon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "grasslash",
+        "blindead"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Durandamon",
+      "file": "durandamon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "zwanglanze",
+        "thron_messer"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    }
+  ]
+}

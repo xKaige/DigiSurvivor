@@ -1,0 +1,114 @@
+{
+  "id": "007_pulsemon",
+  "name": "Línea Pulsemon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars. Evoluciones y skills: Wikimon (canon)",
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Dokimon",
+      "file": "dokimon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 1,
+      "name": "Bibimon",
+      "file": "bibimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 2,
+      "name": "Pulsemon",
+      "file": "pulsemon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "elec_rush",
+        "petit_impulse"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 3,
+      "name": "Bulkmon",
+      "file": "bulkmon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "electrical_fist",
+        "thunder_dread"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 4,
+      "name": "Boutmon",
+      "file": "boutmon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "raigekishou",
+        "budenhadan",
+        "jinrai_kaitengeki"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Kazuchimon",
+      "file": "kazuchimon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "nitou_seirai",
+        "shidou_ittetsu",
+        "shinden_shouraikou"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    },
+    {
+      "id": "6_2",
+      "name": "Fenriloogamon: Takemikazuchi",
+      "file": "fenriloogamontakemikazuchi_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "shukyoku_senjin",
+        "zetsugoku_buto"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "id": "015_kudamon",
+  "name": "Línea Kudamon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars. Evoluciones y skills: Wikimon (canon)",
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Dokimon",
+      "file": "dokimon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 1,
+      "name": "Bibimon",
+      "file": "bibimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 2,
+      "name": "Kudamon",
+      "file": "kudamon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "dangan_senpu",
+        "zekkou_shou"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 3,
+      "name": "Reppamon",
+      "file": "reppamon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "kurukuru_rekkuzan",
+        "shinku_kamaitachi"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 4,
+      "name": "Kyukimon",
+      "file": "kyukimon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "blade_twister",
+        "sanrensei",
+        "ryoute_no_kama"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Raijinmon",
+      "file": "raijinmon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "elekugel",
+        "blitz_arm",
+        "bark_storm"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    },
+    {
+      "id": "6_2",
+      "name": "Mitamamon",
+      "file": "mitamamon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "gouenrin",
+        "kaijinraidou"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    },
+    {
+      "id": "6_3",
+      "name": "Raidenmon",
+      "file": "raidenmon_6_3.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 4
+      },
+      "desc": "Poderoso: +5 de daño",
+      "skills": [
+        "kirlian_brand",
+        "rising_sun",
+        "discharge_bomb"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    }
+  ]
+}

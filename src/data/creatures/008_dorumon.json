@@ -1,0 +1,132 @@
+{
+  "id": "008_dorumon",
+  "name": "Línea Dorumon",
+  "attribute": "Dato",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars. Evoluciones y skills: Wikimon (canon)",
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Dodomon",
+      "file": "dodomon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 1,
+      "name": "Dorimon",
+      "file": "dorimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 2,
+      "name": "Dorumon",
+      "file": "dorumon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "dash_metal",
+        "metal_cannon"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 3,
+      "name": "Dorugamon",
+      "file": "dorugamon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "power_metal",
+        "cannonball"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 4,
+      "name": "DoruGreymon",
+      "file": "dorugreymon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "metal_meteor",
+        "bloody_tower"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Dorugoramon",
+      "file": "dorugoramon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "brave_metal",
+        "doru_din"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    },
+    {
+      "id": "6_2",
+      "name": "Alphamon",
+      "file": "alphamon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "seiken_gradalpha",
+        "digitalize_of_soul",
+        "alpha_inforce"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    },
+    {
+      "id": "6_3",
+      "name": "Alphamon: Ouryuken",
+      "file": "alphamonouryuken_6_3.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 4
+      },
+      "desc": "Poderoso: +5 de daño",
+      "skills": [
+        "ouryuken",
+        "seiken_gradalpha",
+        "alpha_inforce"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    }
+  ]
+}

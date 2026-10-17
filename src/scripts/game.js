@@ -6,7 +6,11 @@ const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>documen
 
 // Criaturas jugables. Cada una necesita la carpeta assets/sprites/creatures/<id>/ y el archivo src/data/creatures/<id>.json
 // Para sumar otra: agregala acá (y creá su JSON). Si falta el JSON, simplemente no aparece en la selección.
-const CREATURES = [{ id: '001_guilmon' }, { id: '002_renamon' }, { id: '003_terriermon' }, { id: '005_veemon' }];
+const CREATURES = [
+  { id: '001_guilmon' }, { id: '002_renamon' }, { id: '003_terriermon' }, { id: '005_veemon' }, { id: '006_gammamon' },
+  { id: '007_pulsemon' }, { id: '008_dorumon' }, { id: '009_ryudamon' }, { id: '010_wormmon' }, { id: '011_zubamon' },
+  { id: '012_jellymon' }, { id: '013_loogamon' }, { id: '014_herissmon' }, { id: '015_kudamon' }, { id: '016_commandramon' }
+];
 // Criatura de un jugador (cada jugador elige la suya; guarda su id en q.cid)
 const CR = q => CreatureLoader.cache[(q && q.cid) || '001_guilmon'] || null;
 // Línea que se usa para dibujar a los enemigos (no hace falta que sea jugable). Si no carga, se dibujan con formas.

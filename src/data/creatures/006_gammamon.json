@@ -1,0 +1,95 @@
+{
+  "id": "006_gammamon",
+  "name": "Línea Gammamon",
+  "attribute": "Virus",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars. Evoluciones y skills: Wikimon (canon)",
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Curimon",
+      "file": "curimon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 1,
+      "name": "Gurimon",
+      "file": "gurimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: usa solo el disparo básico"
+    },
+    {
+      "stage": 2,
+      "name": "Gammamon",
+      "file": "gammamon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "horn_attack",
+        "breaclaw"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 3,
+      "name": "BetelGammamon",
+      "file": "betelgammamon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "sorblow",
+        "sorshot"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    },
+    {
+      "stage": 4,
+      "name": "WezenGammamon",
+      "file": "wezengammamon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "sedna",
+        "albion"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Canoweissmon",
+      "file": "canoweissmon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "gallia_fissure",
+        "dragonia",
+        "meteor_lux"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+    }
+  ]
+}
