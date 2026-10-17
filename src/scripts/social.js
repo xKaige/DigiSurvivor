@@ -28,37 +28,69 @@ function el(tag, props, ...kids) {
 function injectStyles() {
   if ($$('soc-style')) return;
   const st = document.createElement('style'); st.id = 'soc-style';
+  // Mismo estilo que el menú (pantalla de Digivice): cian + naranja, marcos con esquinas cortadas
+  const cut = n => 'clip-path:polygon(' + n + 'px 0,calc(100% - ' + n + 'px) 0,100% ' + n + 'px,100% calc(100% - ' + n + 'px),calc(100% - ' + n + 'px) 100%,' + n + 'px 100%,0 calc(100% - ' + n + 'px),0 ' + n + 'px)';
   st.textContent = [
-    '#social{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(5,11,26,.88);z-index:20;text-align:left}',
-    '#social .box{width:min(580px,94vw);max-height:88vh;overflow:auto;background:#0a1a33;border:2px solid var(--teal);padding:16px;display:flex;flex-direction:column;gap:12px}',
-    '#social .head{display:flex;align-items:center;justify-content:space-between;gap:10px}',
-    '#social h2{margin:0;font-size:26px;color:var(--teal)}',
-    '#social .tabs{display:flex;gap:8px}',
-    '#social button,#nickbox button,#invbox button{font:inherit;font-weight:700;cursor:pointer;padding:8px 14px;border:2px solid var(--teal);background:transparent;color:var(--teal);margin:0}',
-    '#social button.on,#nickbox button.main,#invbox button.main{background:var(--gold);color:var(--bg);border-color:var(--gold)}',
-    '#social button:disabled,#nickbox button:disabled{opacity:.4;cursor:not-allowed}',
-    '#social .row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid #123259;flex-wrap:wrap}',
-    '#social .grow{flex:1;min-width:120px;font-weight:700;font-size:18px}',
-    '#social input,#nickbox input{font:inherit;padding:8px 10px;background:#050b1a;color:var(--ink);border:2px solid var(--teal);min-width:0;flex:1}',
-    '#social .add{display:flex;gap:8px}',
-    '#social .dim{color:#7fa0b8;font-size:14px}',
+    '#social,#nickbox,#invbox{--cy:#3fd0ff;--cy2:#1b6fa8;--or:#ff9a2e;font-family:"Chakra Petch",system-ui,sans-serif}',
+    '#social{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(3,10,24,.72);backdrop-filter:blur(2px);z-index:20;text-align:left;padding:16px}',
+    // marco doble: borde naranja afuera y cian adentro
+    '#social .box{position:relative;width:min(680px,100%);max-height:90vh;display:flex;flex-direction:column;gap:14px;padding:22px 26px 26px;overflow:auto;color:var(--ink);' +
+      'background:linear-gradient(180deg,rgba(14,52,90,.92),rgba(4,16,34,.97));border:3px solid var(--cy);box-shadow:0 0 0 3px rgba(255,154,46,.75),0 0 26px rgba(63,208,255,.45),inset 0 0 30px rgba(63,208,255,.15);border-radius:18px 4px 18px 4px}',
+    '#social .head{display:flex;align-items:flex-start;gap:16px}',
+    '#social .ttl{display:flex;flex-direction:column}',
+    '#social h2{margin:0;font:900 clamp(28px,4vw,40px)/1 Orbitron,"Chakra Petch",sans-serif;text-transform:uppercase;letter-spacing:.03em;color:#f2fbff;text-shadow:0 0 6px var(--cy),0 0 18px rgba(63,208,255,.55)}',
+    '#social .ttl small{margin-top:4px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--cy)}',
+    '#social .deco{flex:1;display:flex;flex-direction:column;gap:2px;padding:6px 10px;margin:0 6px;font:600 10px/1.25 "Chakra Petch",monospace;letter-spacing:.08em;color:var(--cy);opacity:.6;border-left:2px solid var(--cy2);border-right:2px solid var(--cy2);min-width:0;overflow:hidden;white-space:nowrap}',
+    '#social button,#nickbox button,#invbox button{font:700 15px "Chakra Petch",sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:9px 16px;margin:0;color:var(--cy);background:rgba(4,16,34,.85);border:2px solid var(--cy);box-shadow:0 0 8px rgba(63,208,255,.25);' + cut(8) + ';transition:border-color .12s,color .12s,box-shadow .12s}',
+    '#social button:hover:not(:disabled),#social button:focus-visible,#nickbox button:hover:not(:disabled),#invbox button:hover{outline:none;color:#fff;border-color:var(--or);box-shadow:0 0 12px rgba(255,154,46,.5)}',
+    '#social button.on,#nickbox button.main,#invbox button.main{color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);border-color:#ffd23f;box-shadow:0 0 14px rgba(255,210,63,.55)}',
+    '#social button.on:hover:not(:disabled),#nickbox button.main:hover:not(:disabled),#invbox button.main:hover{color:#1a1000;border-color:#fff}',
+    '#social button:disabled,#nickbox button:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}',
+    '#soc-x{flex:0 0 auto;width:48px;height:48px;padding:0!important;font-size:22px!important;color:#ff5c5c!important;border-color:#ff5c5c!important;box-shadow:0 0 12px rgba(255,92,92,.55)!important}',
+    '#soc-x:hover{background:rgba(255,92,92,.15)!important}',
+    '#social .tabs{display:flex;gap:12px}',
+    '#social .tabs button{min-width:150px;padding:10px 22px;font-size:18px}',
+    '#social .add{display:flex;gap:12px;align-items:stretch}',
+    '#social input,#nickbox input{flex:1;min-width:0;padding:12px 14px;font:600 17px "Chakra Petch",sans-serif;color:var(--ink);background:rgba(4,20,40,.9);border:2px solid var(--cy);box-shadow:inset 0 0 12px rgba(63,208,255,.2);' + cut(8) + '}',
+    '#social input::placeholder,#nickbox input::placeholder{color:#6f93ad}',
+    '#social input:focus,#nickbox input:focus{outline:none;border-color:var(--or)}',
+    '#social #friend-add{padding:10px 26px;font-size:18px}',
+    '#social .list{display:flex;flex-direction:column;gap:10px;min-height:120px;max-height:46vh;overflow-y:auto;padding:12px;background:rgba(2,10,22,.6);border:2px solid var(--cy2);box-shadow:0 0 0 2px rgba(255,154,46,.45),inset 0 0 16px rgba(63,208,255,.12);border-radius:10px 2px 10px 2px}',
+    '#social .row{display:flex;align-items:center;gap:12px;padding:10px 14px;flex-wrap:wrap;background:linear-gradient(90deg,rgba(26,70,110,.45),rgba(8,26,48,.6));border:1px solid rgba(63,208,255,.55);border-radius:6px}',
+    '#social .grow{flex:1;min-width:120px;font-weight:700;font-size:19px;color:#f2fbff}',
+    '#social .st{margin-right:6px}#social .st.on{color:#4dffb8}',
+    '#social .row button{padding:6px 14px;font-size:14px;text-transform:none;letter-spacing:.02em}',
+    '#social .del-btn{color:#ff6b6b!important;border-color:#ff5c5c!important;box-shadow:0 0 8px rgba(255,92,92,.35)!important}',
+    '#social .del-btn:hover{background:rgba(255,92,92,.15)!important;color:#fff!important}',
+    '#social .dim{color:#7fa0b8;font-size:14px}#social .empty{margin:auto;text-align:center}',
     '#social .msg{color:var(--gold);font-size:15px;min-height:18px}',
-    '#social .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;background:#516a80}',
-    '#social .dot.on{background:#43ff7a}',
+    '#social .dot{width:12px;height:12px;border-radius:50%;display:inline-block;background:#516a80;box-shadow:0 0 0 2px rgba(255,255,255,.08)}',
+    '#social .dot.on{background:#43ff7a;box-shadow:0 0 8px #43ff7a}',
     '#social .chip{display:flex;align-items:center;gap:8px;font-size:15px}',
-    '#social .chip img{height:48px;image-rendering:pixelated}',
+    '#social .chip img{height:48px!important;margin:0!important;image-rendering:pixelated}',
+    '#social #pm-start{align-self:stretch;padding:14px;font-size:18px}',
+    '#social #pm-leave{align-self:flex-start;color:#ff6b6b;border-color:#ff5c5c}',
     '#invbox{position:fixed;top:12px;right:12px;display:flex;flex-direction:column;gap:8px;z-index:40;text-align:left}',
-    '#invbox .inv{background:#0a1a33;border:2px solid var(--gold);padding:10px 12px;display:flex;flex-direction:column;gap:8px;max-width:300px}',
+    '#invbox .inv{display:flex;flex-direction:column;gap:10px;max-width:320px;padding:12px 16px;color:var(--ink);background:linear-gradient(180deg,rgba(14,52,90,.95),rgba(4,16,34,.97));border:2px solid var(--or);box-shadow:0 0 16px rgba(255,154,46,.45);border-radius:10px 2px 10px 2px}',
     '#invbox .inv div{display:flex;gap:8px}',
-    '#nickbox{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,11,26,.96);z-index:50;text-align:left}',
-    '#nickbox .box{width:min(440px,92vw);background:#0a1a33;border:2px solid var(--gold);padding:18px;display:flex;flex-direction:column;gap:12px}',
-    '#nickbox h2{margin:0;color:var(--gold)}',
+    '#nickbox{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(3,10,24,.94);z-index:50;text-align:left;padding:16px}',
+    '#nickbox .box{width:min(460px,100%);display:flex;flex-direction:column;gap:12px;padding:22px 24px;color:var(--ink);background:linear-gradient(180deg,rgba(14,52,90,.92),rgba(4,16,34,.97));border:3px solid var(--cy);box-shadow:0 0 0 3px rgba(255,154,46,.75),0 0 24px rgba(63,208,255,.45);border-radius:16px 4px 16px 4px}',
+    '#nickbox h2{margin:0;font:900 28px Orbitron,"Chakra Petch",sans-serif;text-transform:uppercase;color:#f2fbff;text-shadow:0 0 6px var(--cy),0 0 16px rgba(63,208,255,.5)}',
+    '#nickbox .dim{color:#9fc0d6;font-size:14px}',
     '#nickbox .err{color:#ff6b6b;min-height:20px;font-size:15px}',
-    '#nickbox .row{display:flex;gap:8px}',
+    '#nickbox .row{display:flex;gap:10px}',
     '#soc-btn{position:relative}',
-    '#soc-btn .bd{position:absolute;top:-6px;right:-6px;background:#ff3d81;color:#fff;border-radius:10px;padding:0 6px;font-size:13px;line-height:18px}'
+    '#soc-btn .bd{position:absolute;top:6px;right:40px;background:#ff3d81;color:#fff;border-radius:10px;padding:0 7px;font-size:13px;line-height:20px;box-shadow:0 0 8px #ff3d81}',
+    '@media (max-width:560px){#social .deco{display:none}#social .tabs button{min-width:0;flex:1}#social .add{flex-wrap:wrap}#social #friend-add{flex:1}}'
   ].join('');
   document.head.appendChild(st);
+}
+
+// Bloque de "datos" decorativo de la cabecera (estilo pantalla de Digivice)
+function decoData() {
+  const d = el('div', { class: 'deco', 'aria-hidden': 'true' });
+  ['ENLACE = CONECTADO [OK]', 'RED DIGITAL // CANAL 07', 'COMPAÑEROS = SINCRONIZADOS', 'SEÑAL ' + '▮'.repeat(5) + '▯'].forEach(t => d.appendChild(el('span', { text: t })));
+  return d;
 }
 
 // ---------- Armado de la interfaz (una sola vez) ----------
@@ -72,7 +104,10 @@ function buildUI() {
   if (!$$('social')) {
     const panel = el('div', { id: 'social' },
       el('div', { class: 'box' },
-        el('div', { class: 'head' }, el('h2', { text: 'Amigos' }), el('button', { id: 'soc-x', text: 'X', onclick: () => closePanel() })),
+        el('div', { class: 'head' },
+          el('div', { class: 'ttl' }, el('h2', { text: 'Amigos' }), el('small', { text: 'Enlace de comunicación en línea' })),
+          decoData(),
+          el('button', { id: 'soc-x', text: 'X', 'aria-label': 'Cerrar', onclick: () => closePanel() })),
         el('div', { class: 'tabs' },
           el('button', { id: 'tab-friends', text: 'Amigos', onclick: () => setTab('friends') }),
           el('button', { id: 'tab-party', text: 'Party', onclick: () => setTab('party') })),
@@ -216,12 +251,13 @@ function renderFriends(body) {
   inp.onkeyup = e => e.stopPropagation();
   body.appendChild(el('div', { class: 'add' }, inp, el('button', { id: 'friend-add', class: 'on', text: 'Agregar', onclick: () => addFriend(inp.value) })));
   body.appendChild(el('div', { class: 'msg', id: 'soc-msg', text: S.msg || st.note || '' }));
-  if (!S.friends.length) body.appendChild(el('div', { class: 'dim', text: 'Todavía no tenés amigos. Agregá a alguien con su Nick.' }));
+  const list = el('div', { class: 'list' }); body.appendChild(list);
+  if (!S.friends.length) list.appendChild(el('div', { class: 'dim empty', text: 'Todavía no tenés amigos. Agregá a alguien con su Nick.' }));
   S.friends.forEach(f => {
     const row = el('div', { class: 'row', 'data-uid': f.uid },
       el('span', { class: 'dot' + (f.online ? ' on' : '') }),
       el('span', { class: 'grow', text: f.nick }),
-      el('span', { class: 'dim', text: f.online ? 'En línea' : 'Desconectado' }));
+      el('span', { class: 'dim st' + (f.online ? ' on' : ''), text: f.online ? 'En línea' : 'Desconectado' }));
     const inv = el('button', { class: 'inv-btn', text: 'Invitar', onclick: () => inviteFriend(f) });
     inv.disabled = !f.online || !!st.role || !st.ready;
     row.appendChild(inv);
@@ -232,7 +268,7 @@ function renderFriends(body) {
       setTimeout(() => { if (del.isConnected) { delete del.dataset.sure; del.textContent = 'Eliminar'; } }, 3000);
     };
     row.appendChild(del);
-    body.appendChild(row);
+    list.appendChild(row);
   });
 }
 
@@ -247,7 +283,7 @@ function renderParty(body) {
   const mine = el('div', { class: 'row', id: 'pm-me' }, el('span', { class: 'grow', text: S.nick + (host ? ' (líder)' : '') }), chip(st.selected),
     el('button', { id: 'pm-pick', text: 'Elegir Digimon', onclick: () => window.Lobby.pick() }));
   const theirs = el('div', { class: 'row', id: 'pm-other' }, el('span', { class: 'grow', text: (other.nick || '...') + (host ? '' : ' (líder)') }), chip(other.c));
-  body.appendChild(mine); body.appendChild(theirs);
+  body.appendChild(el('div', { class: 'list' }, mine, theirs));
   const ready = !!st.selected && !!other.c;
   if (host) {
     const go = el('button', { id: 'pm-start', class: 'on', text: 'Iniciar partida', onclick: () => window.Lobby.startOnline() });
