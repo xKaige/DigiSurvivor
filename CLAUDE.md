@@ -167,7 +167,7 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 
 ## Pendientes / ideas
 - Pasar `FAST` a `false` para producción.
-- **Versión actual: 0.2** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.
+- **Versión actual: 0.3** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.
 - Corregir el comentario de `?test` en `game.js:20`.
 - Más líneas evolutivas en `src/data/creatures/`.
 - Mover los bonos de rama de `stepEvo` al JSON.
