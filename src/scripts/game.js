@@ -31,7 +31,7 @@ const EVO_LEVELS = FAST ? [2,3,4,5] : [5,10,15,20];  // etapas 1,2,3,4 (cada 5 n
 const LINE_LEVEL = FAST ? 6 : 25;                    // elección de la evolución final (rama)
 const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisitos de stats de las ramas se achican
 // Experiencia para el próximo nivel: need = need × XP_GROW + XP_ADD (más bajo = se sigue subiendo en el late game)
-let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7;
+let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7, XP_GAIN = 0.55;   // XP_GAIN: multiplicador de toda la XP que juntás
 
 async function initGame(ids) {
   await SkillSys.load();
@@ -327,7 +327,7 @@ addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
-const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EN=110,MAX_EN2=140;   // MAX_EN: enemigos a la vez (1J / 2J)
+const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=110,MAX_EN2=140;   // MAX_EN: enemigos a la vez (1J / 2J)
 function dmgNum(x,y,v,col,sz){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
 function hit(e,d,el){const m=mult(el|0,e.el),v=d*m;e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,v,m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',m>1?30:m<1?14:18)}
 function hurt(q,d,el){if(q.dead)return;const m=mult(el,q.el|0),v=d*m*(1-q.arm);q.hp-=v;q.inv=.45;burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.dead=true;q.hp=0;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
@@ -989,11 +989,11 @@ function update(dt){
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
-  if(tg){if(td<tg.mag||Items.magT>0){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm;g.dead=1}}}
+  if(tg){if(td<tg.mag||Items.magT>0){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN;g.dead=1}}}
  gems=gems.filter(g=>!g.dead);
  Items.update(dt);
  if(xp>=need)levelUp();
- for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);
+ for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);if(ef.length>MAX_EF){const wn=ef.filter(o=>o.k==='wline'||o.k==='wcirc'),vi=ef.filter(o=>o.k!=='wline'&&o.k!=='wcirc');ef=wn.concat(vi.slice(Math.max(0,vi.length-(MAX_EF-wn.length))))}   // tope de efectos (los avisos de ataque nunca se descartan)
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
  if(P.every(q=>q.dead))endRun('Fuiste borrado');
  hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
@@ -1045,7 +1045,12 @@ function draw(){
  cx.restore();
 }
 
-function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(evo)stepEvo(dt);else if(!paused)update(dt);draw();if(running)requestAnimationFrame(loop)}
+// Loop principal. Si algo tira un error, se registra en la consola y el juego SIGUE (antes se congelaba para siempre).
+let loopErrs=0;
+function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;
+ try{if(evo)stepEvo(dt);else if(!paused)update(dt)}catch(e){if(loopErrs++<20)console.error('Error en la simulación:',e)}
+ try{draw()}catch(e){if(loopErrs++<20)console.error('Error al dibujar:',e)}
+ if(running)requestAnimationFrame(loop)}
 P=[np(0,'001_guilmon')];p=P[0];
 if($('party-panel'))$('party-panel').style.display='none';   // reemplazado por la ventana Amigos / Party (social.js)
 buildMenuSel();

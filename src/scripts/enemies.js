@@ -24,7 +24,9 @@ const Enemies = {
       img.onload = () => {
         const cv = document.createElement('canvas'); cv.width = img.naturalWidth; cv.height = img.naturalHeight;
         cv.getContext('2d').drawImage(img, 0, 0);
-        this.spr[x.id] = { canvas: cv, cols: 2, rows: 6 }; res();
+        this.spr[x.id] = { canvas: cv, cols: 2, rows: 6 };
+        if (typeof whiteOf === 'function') whiteOf(this.spr[x.id]);   // silueta del golpe, generada al cargar (no en plena pelea)
+        res();
       };
       img.onerror = () => { console.error('No se pudo cargar el enemigo:', x.file); res(); };
       img.src = 'assets/sprites/enemies/' + x.file;

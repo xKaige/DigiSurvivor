@@ -119,10 +119,12 @@ const World = {
   relocate(dt) {
     if (!this.flow || (this.relocT -= dt) > 0) return;
     this.relocT = 1.5;
+    let budget = 6;   // como mucho 6 mudanzas por vez (cada una busca lugar libre: es trabajo)
     for (const e of en) {
+      if (budget <= 0) break;
       const v = this.reach(e.x, e.y + this.foot(e));
       if (v !== 65535 && v !== -1) continue;   // tiene camino: queda donde está (65535 = encerrado, -1 = demasiado lejos)
-      const sp = this.spawnPos(e); if (sp) { e.x = sp[0]; e.y = sp[1]; e.st = 0; }
+      const sp = this.spawnPos(e); budget--; if (sp) { e.x = sp[0]; e.y = sp[1]; e.st = 0; }
     }
   },
   // ángulo hacia el jugador siguiendo el mapa de distancias (o directo si está fuera del mapa o hay vista libre)
