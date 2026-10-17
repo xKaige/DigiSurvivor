@@ -2,6 +2,12 @@
 
 Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero que ataca solo, juntás XP de los virus que matás, subís de nivel, elegís mejoras y skills, y tu compañero digievoluciona. Hay 1 jugador, 2 jugadores local (mismo teclado) y 2 jugadores online (PeerJS, invitando amigos).
 
+## Estado actual (última sesión, oct 2026)
+- Versión publicada: **0.5**. Después de la 0.5 se subieron (sin versión nueva): evoluciones cada 5 niveles, menos lag, skills de bebé, **mapa Boot Jungle con paredes**, reemplazo de skills + nivel 10 en formas finales + mejoras visibles por nivel, loop a prueba de errores, XP calibrada para el mapa (`XP_GAIN` 0,55), eclosión de Digitamas desde el Analyzer y **tamaño parejo de sprites**.
+- Sin probar con dos personas: todo lo online de 0.4–0.5 (enemigos nuevos, avisos, ítems, jefes, mapa, reemplazo de skills) y el guardado de `prog` en la cuenta.
+- Reglas de Firestore pendientes de revisar/agregar: `challenges/{día}/scores/{uid}` (ranking del desafío) y el campo `prog` en `users/{uid}`.
+- Próximo parche grande pensado: **mapas** (más zonas de Digital Tamers, selector, lava que daña en Magma Mountain, copas de árbol por encima). Después: analizar **más atributos** para los personajes (lo pidió el usuario, "después lo analizamos").
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.
@@ -12,7 +18,7 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - Probar en local: `npx serve` en la raíz (con doble clic no andan los `fetch` ni los módulos ES). En esta PC no hay Node: usar `py -m http.server 3000` (es lo que tiene `.claude/launch.json`).
 - Probar con el navegador integrado: si el panel está oculto, `requestAnimationFrame` se frena y las capturas salen viejas → avanzar la simulación a mano (`update(0.02)` en un for) y verificar con JS. Después de editar, forzar recarga: `fetch(url,{cache:'reload'})` + `location.reload()`.
 - Fuentes: Chakra Petch (todo) y Orbitron (títulos), desde Google Fonts en `index.html`.
-- Agregar `?test` a la URL (`TEST`) hace que **todas las ramas finales cumplan los requisitos**. No cambia los niveles de evolución (eso es `FAST`); el comentario en `game.js:20` lo explica mal.
+- Agregar `?test` a la URL (`TEST`) hace que **todas las ramas finales cumplan los requisitos** y que los jefes salgan cada 25 s. No cambia los niveles de evolución (eso es `FAST`); el comentario junto a `const TEST` en game.js lo explica mal.
 - Deploy: GitHub → Vercel (preset "Other", sin build command). Cada push republica. Ojo: se publica todo lo que esté en el repo (incluidos los `.bak`).
 - Dependencias externas por CDN: PeerJS 1.5.2 (unpkg) y Firebase 10.14.1 (gstatic).
 
@@ -26,7 +32,7 @@ src/scripts/game.js             # el juego + conexión online/lobby (script clá
 src/scripts/firebase.js         # login Google + guardado en Firestore (type="module")
 src/scripts/firebase-config.js  # config pública de Firebase (la importa firebase.js)
 src/scripts/social.js           # nick único, amigos, party e invitaciones (lo importa firebase.js)
-src/scripts/bosses.js           # Bosses: jefes canon cada 2 min (se carga antes que game.js)
+src/scripts/bosses.js           # Bosses: jefes canon cada 2:30 (se carga antes que game.js)
 src/scripts/enemies.js          # Enemies: plantel de enemigos, comportamientos con aviso y balance de aparición (antes que game.js)
 src/scripts/items.js            # Items: ítems en el piso (Carne, Digicore, Imán, Floppy, X-Antibody) (antes que game.js)
 src/scripts/missions.js         # Misiones diarias (se carga después de game.js)
@@ -35,7 +41,7 @@ src/scripts/challenge.js        # Challenge: desafío diario (reglas del día, r
 src/scripts/news.js             # News: botón "v0.x · Novedades" en la esquina del menú (lee changelog.json)
 src/scripts/map.js              # World: mapa del Digimundo con relieve (fondo en espejo, paredes, mapa de distancias)
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
-src/data/skills.json            # catálogo de skills, elementos, maxLevel, maxActive, levelBonus
+src/data/skills.json            # catálogo de skills, elementos, maxLevel/maxLevelFinal, maxActive, fx y fxSprites
 src/data/missions.json          # catálogo de misiones diarias (tipos, metas, recompensas)
 src/data/unlocks.json           # huevo de cada Digimon + misiones permanentes de desbloqueo
 src/data/bosses.json            # jefes: vida, atributo, técnicas (ring/fan/charge/summon), monedas
@@ -47,6 +53,8 @@ assets/sprites/eggs/egg_NN.png  # Digitamas: tira de 20 cuadros de 24×29 (Digit
 assets/sprites/bosses/          # jefes en hojas 2×6 (Workshop; las de 7 filas sin la fila de baile)
 assets/maps/<id>.webp           # imagen del mapa (Digital Tamers, 1024×1024)
 assets/sprites/enemies/         # sprites de enemigos (Workshop, hojas 2×6)
+assets/sprites/skills/          # íconos de skills (dsrworldwiki) y de elementos (el_<elemento>.webp)
+assets/sprites/fx/              # efectos animados (Digital Tamers, tiras horizontales)
 assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de spr_items)
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
@@ -66,17 +74,17 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → 
 - El HUD (barras, reloj, leyenda, skills) solo se ve con `body.ingame`, que pone `start()` y saca `endRun()`.
 
 ### Loop
-`loop()` → si `evo` corre `stepEvo`, si no y no está en pausa corre `update(dt)` → siempre `draw()`. `dt` está topeado a 0.05.
+`loop()` → si `evo` corre `stepEvo`, si no y no está en pausa corre `update(dt)` → siempre `draw()`. `dt` está topeado a 0.05. Las dos partes van en `try/catch`: un error se ve en la consola y el juego sigue.
 
 ### Jugador (`np(i, cid)`)
-Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), multi, pierce, mag, arm, xpm, coin, stage (0–5), line (índice de rama), branchId, weak, st {FUE,VEL,VIT,INT}, wp {skillKey: nivel} (skills activas), wt (timers de skills), revP/revSpd (revivir)`.
+Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), multi, pierce, mag, arm, xpm, coin, stage (0–5), line (índice de rama), branchId, dark (evolución oscura), xa (X-Antibody), weak (viejo, sin uso), st {FUE,VEL,VIT,INT}, wp {skillKey: nivel} (skills activas), wt/wc (recarga restante / total de cada skill, para la barra), dh (alto dibujado), revP/revSpd (revivir)`.
 
 ### Progresión
 - `FAST = false` en `game.js` → evoluciones **cada 5 niveles** (5, 10, 15, 20; `EVO_LEVELS`) y rama final en el 25 (`LINE_LEVEL`), con requisitos completos (`REQ_FACTOR` 1). Con `FAST = true` (para probar) vuelven a ser 2,3,4,5 y 6 con requisitos al 40%.
 - Curva de XP: `need = need × XP_GROW + XP_ADD` empezando en `XP_START` (hoy 1,13 / 6 / 7), y toda la XP que juntás se multiplica por `XP_GAIN` (0,55: con el mapa los enemigos llegan todos y la XP se había disparado). Medido con un bot que recorre el mapa: Bebé II ~1:15, Novato ~2:20, Campeón ~4:00, Perfecto ~6:20, forma final ~7:45.
 - Al subir de nivel (`levelUp`): si es nivel de evolución → `startEvo(etapa)`; si es `LINE_LEVEL` → `chooseLine()` (elegir rama final) → `startEvo(5)`; si no → cartas (`startCards`/`showCards`).
-- Cartas: mejoras de stat en `UP` (cada una suma 1 punto a FUE/VEL/VIT/INT) + cartas de skills de `SkillSys.cards(q)`. Se muestran 3 al azar.
-- Ramas finales: requisitos en `branches[].req` del JSON, comparados contra `tot(q, stat)` = puntos permanentes del árbol + puntos de la partida. Si no cumplís ninguna, todas quedan disponibles pero "inestables" (`weak`, bonos a la mitad).
+- Cartas: hasta 2 de skills (`SkillSys.cards(q)`: nuevas de tu etapa/rama y mejoras de las que tenés) + mejoras de stat de `UP` (cada una suma 1 punto a FUE/VEL/VIT/INT); se muestran 3. Las evoluciones también dan cartas al terminar la animación.
+- Ramas finales: requisitos en `branches[].req` del JSON, comparados contra `tot(q, stat)` = puntos permanentes del árbol + puntos de la partida. Si no cumplís ninguna, la única opción es la **evolución oscura** (ver más abajo).
 - **Los bonos de cada rama están hardcodeados por índice en `stepEvo`** (`line 0/1/2`), no en el JSON. Con 15 criaturas conviene pasarlo a datos (ej. un campo `bonus` en cada branch).
 - `cardsAt` + 800 ms: protección contra clicks/teclas accidentales cuando aparecen cartas encadenadas.
 
@@ -107,7 +115,7 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Cada día se sortean `perDay` (3) misiones, una por tier (fácil/media/difícil) y sin repetir tipo. El sorteo sale de la fecha: son las mismas para todos.
 - El día cambia a las **00:00 de Argentina** (`utcOffsetHours: -3`).
 - El progreso se cuenta al terminar cada partida: `endRun` llama a `Missions.onRunEnd({kills, secs, lvl, stage, online, local2p, attr, coins, skillMax})` con los datos de TU jugador (en online el invitado es `P[1]`). Tipos que se suman entre partidas: `Missions.ADD`; el resto guarda el mejor valor.
-- Progreso en el navegador (`localStorage['digisurvivor_daily']`), **no en Firestore** (saveToCloud solo guarda coins/lv; no se tocó por las reglas). Las recompensas suman a `save.coins`. Ojo: en dos dispositivos se podría cobrar dos veces.
+- Progreso en el navegador (`localStorage['digisurvivor_daily']`), **no en Firestore**. Las recompensas suman a `save.coins`. Ojo: en dos dispositivos se podría cobrar dos veces.
 - Botón `#msb` en el menú con aviso de misiones para reclamar.
 
 ### Digimon bloqueados, Digitamas y Analyzer (`progress.js` + `unlocks.json`)
@@ -115,13 +123,13 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Misión cumplida (se revisa en `endRun` → `Progress.onRunEnd`) → ganás su Digitama, que queda **listo para eclosionar**: en el Analyzer (solapa Digitamas, que se abre sola si hay huevos listos) la fila brilla y con un clic (`Progress.hatchNow`) se desbloquea y sale la animación `#hatch` (`showHatch`, cola `hatchQ`) con botón para elegirlo (`window.setPick`). El botón del Analyzer en el menú muestra cuántos hay listos (`Progress.badge`). El campo `hatch` de unlocks.json ya no se usa.
 - Tipos de misión: `reach_stage, survive, kills_total, runs_total, kills_with, stage_with, boss, analyzer` (ver `types` en el JSON). Usan estadísticas acumuladas de toda la vida.
 - Analyzer (`#anb` → `#analyzer`): registra cada forma alcanzada (`seeForm` en `start` y `stepEvo`, solo jugadores de este navegador: `mine()`) y cada jefe derrotado. Lo no visto sale como silueta.
-- Guardado en `localStorage['digisurvivor_prog']` (**no en Firestore**, como las misiones). `RESET_BEFORE` también lo borra.
+- Guardado en `localStorage['digisurvivor_prog']` y, con sesión iniciada, en la cuenta (`users/{uid}.prog`, ver Rango de Tamer). `RESET_BEFORE` también lo borra.
 
 ### Jefes (`bosses.js` + `bosses.json`)
 - Cada `every` (150 s; con `?test`, `testEvery` = 25 s) aparece el siguiente. Su vida escala con la etapa del jugador más evolucionado (×0,5 en Bebé … ×1,75 en forma final). Orden: DarkTyrannomon → Etemon → Megadramon → WaruMonzaemon → MetalEtemon → Machinedramon; después repite más fuerte (`cyc`). Si hay uno vivo, espera.
 - Viven en `en` con `bo` (índice), `mh`, timers `pt/at/wd/ch`. `Bosses.act` mueve y ataca (solo host/local); al morir `Bosses.onDeath` (lluvia de XP, `Bosses.down`). Monedas extra en `endRun` (`Bosses.coins()`).
 - Sync: los jefes mandan `bo, cyc, hp, mh, at`; las balas `r`; y `bd` = `Bosses.down`. La barra `#bossbar` y los avisos salen de `Bosses.hud()` (host y cliente).
-- Balance pensado a ojo con `FAST = true` (a los 2 min ya estás en forma final y DarkTyrannomon dura ~4 s). Con `FAST = false` hay que volver a probar la vida de los jefes.
+- Balance: con `FAST = false` el bot de prueba todavía no mataba jefes (llega al primero en Novato/Campeón); conviene probar jugando y ajustar `hp` en bosses.json o la escala por etapa en `Bosses.spawn`. Los jefes también chocan con las paredes del mapa y aparecen en lugares conectados.
 
 ### Evolución oscura y X-Antibody
 - Si al elegir la forma final no cumplís NINGÚN requisito, la única carta es la **evolución oscura** (`q.dark`): +7 daño, +1 proyectil, +8% velocidad, pero pierde 0,4% de la vida máxima por segundo hasta quedar al 35% (antes bajaba hasta 1 y cualquier golpe te mataba). Reemplaza al viejo modo "inestable" (`weak` quedó en el código pero ya no se usa).
@@ -182,12 +190,15 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 
 ## Guardado y Firebase
 - Sin sesión: `localStorage['digisurvivor']`.
-- Con sesión Google: Firestore `users/<uid>` con `{coins, lv, updated}`.
+- Con sesión Google: Firestore `users/<uid>` con `{coins, lv, updated, prog}` (`prog` = rango, desbloqueos, Digitamas y Analyzer; se escribe aparte con `merge`).
+- Desafío diario: `challenges/{día}/scores/{uid}` `{nick, score, cid, at}`.
 - `social.js` además usa: `nicks/{nick en minúsculas}` `{uid, nick}` (nick único), `profiles/{uid}` `{nick, nickLower, peerId, seen}` (perfil público; `seen` = en línea) y `users/{uid}/friends/{amigoUid}` `{at}` (amistad mutua, se escribe en las dos listas). Las reglas de Firestore tienen que contemplar todo esto.
 - Puente entre módulos (globals en `window`):
   - `game.js` expone `getSave`, `loadSave`, `initPeer`, `stopPeer` y `Lobby` (acciones de la ventana Amigos/Party: `setSelf, state, info, pick, invite`, …).
-  - `firebase.js` define `onSave` (lo llama `persist()`).
-  - `social.js` define `isFriendUid`, `onLobby`, `onRunStart`, `onPeerOpen` (y los pone en `null` en `stopSocial`).
+  - `firebase.js` define `onSave` (lo llama `persist()`) y `onProgSave` (lo llama `Progress.write()`).
+  - `progress.js` define `getProg`, `loadProg` (los usa firebase.js al iniciar/cerrar sesión) y `onProgressReady` lo define game.js.
+  - `game.js` además expone `setPick` (elegir Digimon) y `onXAntibody`.
+  - `social.js` define `isFriendUid`, `onLobby`, `onRunStart`, `onPeerOpen` y `challengeCloud` (y los pone en `null` en `stopSocial`).
 - La config de Firebase es pública por diseño; la seguridad está en las reglas. El guardado se puede editar desde el navegador (no hay validación en servidor).
 
 ## Multijugador online (PeerJS)
@@ -200,12 +211,14 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - Limitaciones conocidas: el cliente no ve partículas ni números de daño (no se sincronizan `pt`/`fx`), no hay interpolación, y mandar el estado completo cada frame es pesado.
 
 ## Cosas a tener en cuenta al cambiar código
-- Los ids del HTML (`#hud`, `#hp1box/#hp2box`, `#fill`, `#fill2`, `#lag1/#lag2`, `#hpt1/#hpt2`, `#xp`, `#xpf`, `#xpl`, `#xpt`, `#tm`, `#info`, `#pst`, `#leg`, `#up`, `#cards`, `#evt`, `#ov`, `#mnu`, `#dvscreen`, `#gver`, `#msb`, `#tree`, `#pause`, `#pcont`, `#pquit`, etc.) están acoplados a `game.js`/`missions.js`. Si cambiás uno, cambialo en los dos lados. (`#tr` ya no existe.)
+- Los ids del HTML (`#hud`, `#hp1box/#hp2box`, `#fill`, `#fill2`, `#lag1/#lag2`, `#hpt1/#hpt2`, `#xp`, `#xpf`, `#xpl`, `#xpt`, `#tm`, `#info`, `#pst`, `#leg`, `#up`, `#cards`, `#evt`, `#ov`, `#mnu`, `#dvscreen`, `#gver`, `#msb`, `#anb`, `#chb`, `#tree`, `#pause`, `#pcont`, `#pquit`, etc.) están acoplados a los scripts. Otros los crean los propios scripts: `#analyzer`, `#hatch`, `#rank`, `#bossbar`, `#challenge`, `#news`/`#news-btn`, `#missions`. Si cambiás uno, cambialo en los dos lados. (`#tr` ya no existe.)
 - `index.html` tiene un `<style id="hud-css">` de respaldo que duplica reglas de `style.css`.
 - Cualquier cambio en lo que afecta la simulación tiene que pensarse para los 3 modos: 1J, 2J local y online (host vs cliente).
 - Si agregás un campo nuevo al jugador (o a enemigos/efectos) que el cliente necesita ver, sumalo al payload de `sync`.
 - Antes de dar por terminado un cambio de jugabilidad, probalo en local (ver arriba) en 1J y 2J local.
 - **Flujo con el usuario:** mostrar cómo quedó (captura) y **preguntar antes de cada push** (publica en Vercel). Commits con el trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. El usuario prefiere respuestas cortas y que no se gasten tokens de más.
+- **Versiones:** `GAME_VERSION` y `changelog.json` solo se suben en cambios grandes (y cuando el usuario lo pide); ajustes y arreglos van sin versión nueva.
+- **Probar balance con el bot**: en el navegador integrado se puede simular una partida a mano (desactivar `requestAnimationFrame`, llamar `update(0.02)` en un for, mover con `keys.w/a/s/d`, elegir cartas con `choose(cur[0])`). Sirve para medir tiempos de evolución y rendimiento; ojo que un bot juega peor que una persona.
 
 ## Referencias de diseño
 - Guía de evoluciones (inspiración para ramas y requisitos): https://humulos.com/digimon/vbdm/ex/#terrier_ex_anchor
@@ -215,7 +228,9 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - Al subir de versión: actualizar `GAME_VERSION` y sumar la entrada en `src/data/changelog.json`.
 - Mostrar el Rango de Tamer en el perfil de amigos (necesita un campo nuevo en `profiles` y revisar reglas).
 - **Versión actual: 0.5** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.
-- Corregir el comentario de `?test` en `game.js:20`.
+- Corregir el comentario de `?test` en game.js.
+- Mapas: más zonas (hay 17 en Digital Tamers: Boot Jungle, Dina Plains, Modular Forest, Snow Land, SB Valley, Wave Coast, Clear Oasis, Net Ocean, Jagged Rocks, Slippery Swamp, Drive Savanna, Chrome Mines, Link Ruins, Sewer Road, Mecha Plant, Sizzling Desert, Magma Mountain), selector en el menú (las `bg_Btl_*` de 426×240 sirven de vista previa), `obj_Lava` que daña, enemigos por hábitat.
+- Ideas de la lista que quedaron sin hacer: Jogress en 2J (V-mon + Wormmon → Paildramon, sprite ya en el pack), Armor Digievolución (Digimental → Flamedramon), vínculo por compañero, zonas que cambian durante la partida.
 - Más líneas evolutivas en `src/data/creatures/`.
 - Mover los bonos de rama de `stepEvo` al JSON.
 - Sacar los `.bak` del repo (o sumarlos al `.gitignore`) para que no se publiquen.
@@ -228,3 +243,4 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - **Donaciones**: el botón "☕ Apoyá el proyecto" (https://cafecito.app/dreless) y el aviso "Fan game sin fines de lucro…" están en la **rama local `cafecito`** (sin subir). Mergear a `main` recién después de la mudanza a Cloudflare. El juego es 100% gratis: donar no da ninguna recompensa.
 - Misiones en Firestore: hoy el progreso de misiones diarias es solo local (los desbloqueos/rango ya van a la cuenta); para sincronizarlo hay que ampliar `saveToCloud` y revisar las reglas.
 - Se probaron los sprites de batalla del ROM de Digimon World Dusk y **no gustaron** (se revirtió). No volver a proponerlos.
+- **Herramientas de extracción** (Python + Pillow, se corren con `py -P`): el `data.win` de Digital Tamers ya extraído y el lector `gm.py` (chunks SPRT/TXTR/TPAG/BGND/ROOM/OBJT) quedaron en la carpeta temporal de una sesión anterior: `C:\Users\dario_lv7\AppData\Local\Temp\claude\C--Users-dario-lv7-OneDrive-Escritorio-digisurvivor\8b34e111-4c53-4418-8970-cb0faf56b98e\scratchpad\` (`dtr\data.win`, `gm.py`). Es una carpeta temporal: si se borra, volver a sacar el CABINET del exe. Recetas usadas: sprites `spr_*` → tiras; `BGND` = fondos/mapas (offset +16 = TPAG); `ROOM` (+48 = lista de instancias: x, y, objeto, …, escala en +20/+24) con `obj_Block` (paredes, sprite 16×16), `obj_Lava`, `obj_Tree01`, `obj_SPAWN_*`.
