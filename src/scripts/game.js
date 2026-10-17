@@ -282,7 +282,7 @@ function applyOnlineSync(data) {
 }
 
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
- if(pickRes){if(/^[1-3]$/.test(e.key)&&pickList[e.key-1])pickDone(pickList[e.key-1].id);else if(e.key==='Escape'&&!isOnline)pickCancel();return}
+ if(pickRes){if(/^[1-9]$/.test(e.key)&&pickList[e.key-1])pickDone(pickList[e.key-1].id);else if(e.key==='Escape'&&!isOnline)pickCancel();return}
  if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline){if(selected)beginLocal(lastMode);else openMenuPick()}
  if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)endRun('Run terminada')}
  if(paused&&!evo&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
@@ -314,13 +314,22 @@ async function askCreature(title, color) {
   if (!list.length) throw new Error('No hay criaturas cargadas');
   return new Promise((res, rej) => {
     pickRes = res; pickRej = rej; pickList = list;
+    $('up').classList.add('pick');   // estilo "pantalla de Digivice" (ver style.css)
     const h = $('up').querySelector('h2'); h.textContent = title; h.style.color = color || '';
-    $('up').querySelector('p').textContent = 'Elegí con el mouse o con las teclas 1, 2 o 3';
+    const nums = list.map((_, i) => i + 1);
+    $('up').querySelector('p').textContent = 'Elegí con el mouse o con las teclas ' + nums.slice(0, -1).join(', ') + (nums.length > 1 ? ' o ' : '') + nums[nums.length - 1];
     const c = $('cards'); c.innerHTML = '';
+    // líneas "de datos" decorativas de cada tarjeta
+    const deco = () => '<span class="pc-deco" aria-hidden="true">' + [70, 55, 82, 40, 64].map(w => '<i style="width:' + (w - 15 + Math.random() * 30 | 0) + '%"></i>').join('') + '<u><b></b><b></b><b></b><b class="off"></b></u></span>';
     list.forEach((cr, i) => {
-      const C = CreatureLoader.cache[cr.id], M = C.meta, nm = (M.stages[2] || M.stages[0]).name;
-      const b = document.createElement('button'); b.className = 'card';
-      b.innerHTML = thumbOf(C, 'stage_2') + '<b>' + (i + 1) + '. ' + nm + '</b>' + M.stages.map(s => s.name).join(' → ') + '<em><span style="color:' + ELC[elOf(cr.id)] + '">●</span> ' + ATTR[elOf(cr.id)] + '</em>';
+      const C = CreatureLoader.cache[cr.id], M = C.meta, nm = (M.stages[2] || M.stages[0]).name, el = elOf(cr.id);
+      const b = document.createElement('button'); b.className = 'card pc';
+      b.style.setProperty('--ac', ELC[el]);
+      b.innerHTML = deco() + '<span class="pc-img">' + thumbOf(C, 'stage_2') + '</span>' +
+        '<b>' + String(i + 1).padStart(2, '0') + '. ' + nm.replace(/-/g, '‑') + '</b>' +
+        '<span class="pc-line">' + M.stages.map(s => s.name.replace(/-/g, '‑')).join(' → ') + '</span>' +
+        '<em><span style="color:' + ELC[el] + '">●</span> ' + ATTR[el] + '</em>' +
+        '<span class="pc-type">Tipo ' + ATTR[el] + '</span>';
       b.onclick = () => pickDone(cr.id);
       c.appendChild(b);
     });
@@ -329,12 +338,12 @@ async function askCreature(title, color) {
 }
 function pickDone(id) {
   if (!pickRes || performance.now() - cardsAt < 400) return;   // evita clicks accidentales al aparecer
-  const r = pickRes; pickRes = pickRej = null; pickList = []; r(id);
+  const r = pickRes; pickRes = pickRej = null; pickList = []; $('up').classList.remove('pick'); r(id);
 }
 function pickCancel() {
   if (!pickRej) return;
   const j = pickRej; pickRes = pickRej = null; pickList = [];
-  $('up').style.display = 'none'; j(new Error('cancel'));
+  $('up').classList.remove('pick'); $('up').style.display = 'none'; j(new Error('cancel'));
 }
 // Partida local. El Jugador 1 usa el Digimon elegido en el menú; en 2 jugadores, el Jugador 2 elige el suyo acá.
 async function beginLocal(m) {
@@ -539,7 +548,7 @@ function stepEvo(dt){evo.t+=dt;
  }}
 
 const SN={FUE:'Fuerza',VEL:'Velocidad',VIT:'Vitalidad',INT:'Inteligencia'};
-function setHead(txt){const h=$('up').querySelector('h2');h.textContent=txt+(mode===2&&!txt.startsWith('ESPERANDO')?' · Jugador '+(p.id+1):'');h.style.color=mode===2?PC[p.id]:''}
+function setHead(txt){$('up').classList.remove('pick');const h=$('up').querySelector('h2');h.textContent=txt+(mode===2&&!txt.startsWith('ESPERANDO')?' · Jugador '+(p.id+1):'');h.style.color=mode===2?PC[p.id]:''}
 
 // Evita que un click o tecla de la pantalla anterior elija una carta sin querer
 // (en modo FAST los niveles se encadenan y la elección aparece justo donde estaba la carta anterior).
