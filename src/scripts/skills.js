@@ -309,7 +309,7 @@ const SkillSys = {
     this.cdBar(players);
   },
   buildBar(players, el) {
-    const two = players.length > 1, pc = ['#2ee6c8', '#ff7ad9'], max = this.maxLv();
+    const two = players.length > 1, pc = PC, max = this.maxLv();   // PC: color de cada jugador (game.js)
     el.innerHTML = players.map((q, i) => {
       const ks = Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) > 0);
       const slots = ks.length

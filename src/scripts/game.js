@@ -2,7 +2,8 @@ const cv=document.getElementById('c'),cx=cv.getContext('2d');
 let W,H;function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}addEventListener('resize',rs);rs();
 const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
-const PC=['#2ee6c8','#ff7ad9'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>document.getElementById(id);
+// Hasta MAX_PLAYERS jugadores (hoy el menú ofrece 1 y 2; el código ya acepta 3 y 4: ver inputOf y el HUD)
+const MAX_PLAYERS=4,PC=['#2ee6c8','#ff7ad9','#ffd23f','#7aa8ff'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>document.getElementById(id);
 
 // Criaturas jugables. Cada una necesita la carpeta assets/sprites/creatures/<id>/ y el archivo src/data/creatures/<id>.json
 // Para sumar otra: agregala acá (y creá su JSON). Si falta el JSON, simplemente no aparece en la selección.
@@ -44,7 +45,7 @@ async function initGame(ids) {
 // Digimon desbloqueados (progress.js). Si progress.js no cargó, se puede usar cualquiera.
 const unlocked = id => typeof Progress === 'undefined' || Progress.has(id);
 // Jugadores de ESTE navegador (en online, solo el tuyo): para el Analyzer y las misiones
-const mine = () => isOnline ? [isHost ? P[0] : P[1]].filter(Boolean) : P;
+const mine = () => isOnline ? [P[myIdx]].filter(Boolean) : P;
 // Clave de canvas de la forma de q en la etapa s: stage_N, branch_<id> o 'dark' (evolución oscura)
 const formKey = (q, s) => { if (s < 5) return 'stage_' + s; if (q.dark) return 'dark'; const C = CR(q), b = C && C.meta.branches[q.line || 0]; return 'branch_' + (q.branchId || (b ? b.id : '6_1')); };
 // Evolución oscura: sprite propio (JSON "dark") o, si no tiene, su primera forma final teñida de violeta (se genera una vez)
@@ -73,8 +74,13 @@ window.onXAntibody = q => { Bosses.banner('¡X-Antibody! ' + (formName(q, q.stag
 // El login, el Nick, la lista de amigos y las ventanas están en social.js; acá vive la conexión entre jugadores.
 // Una invitación viaja por una conexión de control; si el invitado acepta, él se conecta al que invitó
 // (que pasa a ser el anfitrión/líder) y ahí queda armado el party. El líder inicia la partida.
-let peer = null, myPeerId = null, conn = null, isHost = false, isOnline = false, remoteKeys = {};
-let hostDone = false, clientDone = false;
+let peer = null, myPeerId = null, conn = null, isHost = false, isOnline = false;
+// myIdx: índice de MI jugador en P (online: el anfitrión es 0). rk: teclas de cada jugador remoto (índice -> teclas).
+// picked: jugadores que ya eligieron carta / rama en esta ronda (online se espera a todos).
+let myIdx = 0, rk = {}, picked = new Set();
+// conexiones de juego abiertas (hoy una sola; con más invitados, el anfitrión tendría una por jugador)
+const conns = () => [conn].filter(Boolean);
+const sendAll = (m, except) => conns().forEach(c => { if (c !== except) sendTo(c, m); });
 // Selección de criatura
 let pickRes = null, pickRej = null, pickList = [], picking = false, hostPick = null;
 // Digimon elegido en el menú principal (se recuerda entre partidas)
@@ -111,7 +117,7 @@ window.initPeer = function () {
       // alguien a quien invité se une a mi party: yo soy el líder/anfitrión
       if (conn || !pendingInv[md.uid]) { try { c.close(); } catch (e) {} return; }
       delete pendingInv[md.uid];
-      conn = c; isHost = true; isOnline = false;
+      conn = c; c.pi = 1; isHost = true; isOnline = false; myIdx = 0;
       party = { uid: md.uid, nick: String(md.nick || '').slice(0, 20), c: null };
       setupConn(c);
       lobbyMsg(party.nick + ' se unió al party');
@@ -181,7 +187,7 @@ window.Lobby = {
     setTimeout(() => { try { inv.c.close(); } catch (e) {} }, 500);
     while (inbox.length) sendTo(inbox.pop().c, { type: 'decline', busy: 1 });   // las demás invitaciones se rechazan
     const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick } });
-    conn = c; isHost = false; isOnline = false;
+    conn = c; isHost = false; isOnline = false; myIdx = 1;
     party = { uid: inv.uid, nick: inv.nick, c: null };
     setupConn(c);
     setTimeout(() => { if (conn === c && !c.open) { try { c.close(); } catch (e) {} connClosed(c); } }, 12000);
@@ -209,7 +215,7 @@ function connClosed(c) {
   if (conn !== c) return;
   const was = party && party.nick;
   if (running && isOnline) endRun('Se perdió la conexión con el otro jugador');
-  conn = null; isHost = false; isOnline = false; hostPick = null; party = null;
+  conn = null; isHost = false; isOnline = false; hostPick = null; party = null; myIdx = 0; rk = {};
   lobbyMsg(was ? 'El party con ' + was + ' se cerró' : '');
 }
 
@@ -225,7 +231,7 @@ function setupConn(c) {
       if (party) party.c = validId(data.c);
       lobbyChanged();
     } else if (data.type === 'input') {
-      remoteKeys = data.keys || {};
+      rk[c.pi || 1] = data.keys || {};
     } else if (data.type === 'start') {
       if (isHost) return;
       isOnline = true;
@@ -243,38 +249,32 @@ function setupConn(c) {
       applyOnlineSync(data);
     } else if (data.type === 'trigger_levelup') {
       paused = true;
-      hostDone = false; clientDone = false;
-      pending = [P[1]];
+      picked = new Set();
+      pending = [P[myIdx]];
       showCards();
     } else if (data.type === 'trigger_line') {
       paused = true;
-      hostDone = false; clientDone = false;
-      pending = [P[1]];
+      picked = new Set();
+      pending = [P[myIdx]];
       chooseLine();
     } else if (data.type === 'trigger_evo') {
       $('up').style.display = 'none';
       startEvo(data.stage);
     } else if (data.type === 'client_choice') {
-      if (isHost && P[1]) {
-        applyCardOp(P[1], data);
-        clientDone = true;
-        if (hostDone) {
-          if (cardMode === 'line') {
-            if (conn) conn.send({ type: 'trigger_evo', stage: 5 });
-            $('up').style.display = 'none';
-            startEvo(5);
-          } else {
-            $('up').style.display = 'none';
-            paused = false;
-            last = performance.now();
-            if (conn) conn.send({ type: 'resume_game' });
-          }
-        }
+      // un invitado eligió: el anfitrión lo aplica, se lo pasa a los demás y, si ya eligieron todos, sigue
+      const i = c.pi || 1;
+      if (isHost && P[i]) {
+        applyCardOp(P[i], data);
+        picked.add(i);
+        sendAll(Object.assign({}, data, { type: 'host_choice', i }), c);
+        allPicked();
       }
     } else if (data.type === 'host_choice') {
-      if (!isHost && P[0]) {
-        applyCardOp(P[0], data);
-        hostDone = true;
+      // elección de otro jugador (i; si no viene, es el anfitrión)
+      const i = data.i == null ? 0 : data.i;
+      if (!isHost && P[i] && i !== myIdx) {
+        applyCardOp(P[i], data);
+        picked.add(i);
       }
     } else if (data.type === 'end') {
       if (running) endRun(data.title || 'Run terminada');
@@ -286,6 +286,13 @@ function setupConn(c) {
   });
 }
 
+// Online (anfitrión): si ya eligieron todos, sigue la partida (o arranca la evolución final)
+function allPicked() {
+  if (!isHost || picked.size < P.length) return;
+  $('up').style.display = 'none';
+  if (cardMode === 'line') { sendAll({ type: 'trigger_evo', stage: 5 }); startEvo(5); }
+  else { paused = false; last = performance.now(); sendAll({ type: 'resume_game' }); }
+}
 function applyCardOp(targetP, data) {
   if (data.c) targetP.st[data.c]++;
   if (Stats.cardOf(data.op)) Stats.card(targetP, data.op);   // carta de stat (stats.js)
@@ -323,7 +330,7 @@ addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
-const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=110,MAX_EN2=140;   // MAX_EN: enemigos a la vez (1J / 2J)
+const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=110;   // MAX_EN: enemigos a la vez con 1 jugador (+30 por cada jugador más)
 function dmgNum(x,y,v,col,sz,txt){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:txt||String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
 // q: quién golpea (para el crítico, las pasivas y a quién se le cuenta la muerte; ver stats.js)
 function hit(e,d,el,q){const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.hp0=e.hp;
@@ -340,11 +347,11 @@ async function start(m,ids,los){
   ids=ids&&ids.length?ids:['001_guilmon'];los=los||[];
   await initGame(ids);
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
-  mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),sp=World.freeSpot(s0[0]+(m===1?0:(i?40:-40)),s0[1]);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
+  mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
-  $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
+  hudBoxes(m);rk={};picked=new Set();
   renderLegend();if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
 }
 
@@ -451,7 +458,7 @@ async function beginLocal(m) {
   picking = true;
   try {
     const ids = [selected];
-    if (m === 2) ids.push(await askCreature('Jugador 2: elegí tu Digimon', PC[1]));
+    for (let i = 1; i < m; i++) ids.push(await askCreature('Jugador ' + (i + 1) + ': elegí tu Digimon', PC[i]));
     $('up').style.display = 'none';
     await start(m, ids);
   } catch (e) { if (e && e.message !== 'cancel') console.error(e); }
@@ -521,7 +528,7 @@ function renderLegend() {
     const [x, y] = pt[i];
     s += '<circle cx="' + x + '" cy="' + y + '" r="14" fill="rgba(4,16,34,.9)" stroke="' + ELC[e] + '" stroke-width="' + (i ? 2 : 3.5) + '"/>' +
       '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + ELC[e] + '"/>' +
-      '<text x="' + x + '" y="' + (i ? y + 30 : y - 19) + '" text-anchor="middle" fill="' + ELC[e] + '">' + ATTR[e] + (i === 0 ? (mode === 2 ? ' (J1)' : ' (vos)') : '') + '</text>';
+      '<text x="' + x + '" y="' + (i ? y + 30 : y - 19) + '" text-anchor="middle" fill="' + ELC[e] + '">' + ATTR[e] + (i === 0 ? (mode > 1 ? ' (J1)' : ' (vos)') : '') + '</text>';
   });
   s += '<text x="80" y="88" text-anchor="middle" class="lgx">x1,5</text></svg>';
   $('leg').innerHTML = s;
@@ -567,7 +574,7 @@ function endRun(title){if(!running)return;
  const trTxt=Trees.onRunEnd(mine(),t);
  $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.'+trTxt;
  // misiones diarias (missions.js): cuenta la partida con los datos de TU jugador (en online el invitado es P[1])
- if(typeof Missions!=='undefined'){const me=(isOnline&&!isHost&&P[1])?P[1]:P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode===2,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
+ if(typeof Missions!=='undefined'){const me=(isOnline&&P[myIdx])||P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode>1,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
  // progresión permanente (progress.js): Digitamas y desbloqueos
  if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:q.stage|0})),bosses:Bosses.down.slice()});
@@ -627,7 +634,7 @@ function drawBuddy(q,s,x,y,f,a){
  if(q.xa){cx.strokeStyle='#c05bff';cx.lineWidth=2;cx.beginPath();cx.ellipse(0,46,w*.46,9,0,0,6.283);cx.stroke()}   // X-Antibody
  if(fk === 'dark' && !q.dead){cx.globalAlpha=a*(.3+.15*Math.sin(t*5));cx.fillStyle='#6a12d8';cx.beginPath();cx.ellipse(0,48-h*.45,w*.42,h*.5,0,0,6.283);cx.fill();cx.globalAlpha=a}   // aura oscura
 
- if(mode === 2){
+ if(mode > 1){
   cx.strokeStyle = PC[q.id];
   cx.lineWidth = 3;
   cx.beginPath();
@@ -685,7 +692,7 @@ function stepEvo(dt){evo.t+=dt;
   setTimeout(()=>{if(!evo)v.style.display='none'},2600);
   if (isOnline) {
     if (isHost) {
-      if (conn) conn.send({ type: 'trigger_levelup' });
+      sendAll({ type: 'trigger_levelup' });
       startCards();
     }
   } else {
@@ -694,7 +701,7 @@ function stepEvo(dt){evo.t+=dt;
  }}
 
 const SN={FUE:'Fuerza',VEL:'Velocidad',VIT:'Vitalidad',INT:'Inteligencia'};
-function setHead(txt){$('up').classList.remove('pick');const h=$('up').querySelector('h2');h.textContent=txt+(mode===2&&!txt.startsWith('ESPERANDO')?' · Jugador '+(p.id+1):'');h.style.color=mode===2?PC[p.id]:''}
+function setHead(txt){$('up').classList.remove('pick');const h=$('up').querySelector('h2');h.textContent=txt+(mode>1&&!txt.startsWith('ESPERANDO')?' · Jugador '+(p.id+1):'');h.style.color=mode>1?PC[p.id]:''}
 
 // Evita que un click o tecla de la pantalla anterior elija una carta sin querer
 // (en modo FAST los niveles se encadenan y la elección aparece justo donde estaba la carta anterior).
@@ -709,8 +716,8 @@ function thumbOf(C, key){
 }
 
 function chooseLine(){
-  hostDone = false; clientDone = false; paused = true;
-  p = isOnline ? (isHost ? P[0] : P[1]) : pending[0];
+  paused = true;
+  p = isOnline ? P[myIdx] : pending[0];
   cardMode='line'; setHead('¡Elegí tu evolución final!');
 
   const C = CR(p), branches = C.meta.branches;
@@ -758,13 +765,13 @@ function levelUp(){
   if(EL.includes(lvl)){
     const nextStage = EL.indexOf(lvl) + 1;
     startEvo(nextStage);
-    if (isOnline && isHost && conn) conn.send({ type: 'trigger_evo', stage: nextStage });
+    if (isOnline && isHost) sendAll({ type: 'trigger_evo', stage: nextStage });
     return;
   }
   if(lvl===LINE_LEVEL){
     if (isOnline) {
-      pending = [isHost ? P[0] : P[1]];
-      if (isHost && conn) conn.send({ type: 'trigger_line' });
+      pending = [P[myIdx]]; picked = new Set();
+      if (isHost) sendAll({ type: 'trigger_line' });
     } else {
       pending = [...P];
     }
@@ -772,8 +779,8 @@ function levelUp(){
     return;
   }
   if (isOnline) {
-    pending = [isHost ? P[0] : P[1]];
-    if (isHost && conn) conn.send({ type: 'trigger_levelup' });
+    pending = [P[myIdx]];
+    if (isHost) sendAll({ type: 'trigger_levelup' });
   } else {
     pending = [...P];
   }
@@ -781,9 +788,9 @@ function levelUp(){
 }
 
 function startCards(){
-  hostDone = false; clientDone = false;
+  picked = new Set();
   if (isOnline) {
-    pending = [isHost ? P[0] : P[1]];
+    pending = [P[myIdx]];
   } else {
     pending = [...P];
   }
@@ -830,40 +837,20 @@ function choose(u){
   const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c){q.st[u.c]++;Stats.card(q,u.op)}p=P[0];pending.shift();
 
   if (isOnline) {
-    const payload = { type: isHost ? 'host_choice' : 'client_choice', op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark, rep: u.rep };
-    if (conn) conn.send(payload);
-
-    if (isHost) {
-      hostDone = true;
-      if (!clientDone) {
-        setHead('ESPERANDO A JUGADOR 2');
-        $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">Jugador 1 listo. Esperando a que Jugador 2 elija...</p>';
-        return;
-      }
-    } else {
-      clientDone = true;
-      if (!hostDone) {
-        setHead('ESPERANDO A JUGADOR 1');
-        $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">Jugador 2 listo. Esperando a que Jugador 1 elija...</p>';
-        return;
-      }
+    const payload = { type: isHost ? 'host_choice' : 'client_choice', i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark, rep: u.rep };
+    sendAll(payload);
+    picked.add(myIdx);
+    if (picked.size < P.length) {
+      setHead('ESPERANDO A LOS DEMÁS');
+      $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">Jugador ' + (myIdx + 1) + ' listo. Esperando a que elijan los demás (' + picked.size + '/' + P.length + ')...</p>';
+      return;
     }
   }
 
   if(pending.length){modo==='line'?chooseLine():showCards();return}
 
   if (isOnline) {
-    if (isHost && hostDone && clientDone) {
-      if (modo === 'line') {
-        if (conn) conn.send({ type: 'trigger_evo', stage: 5 });
-        $('up').style.display = 'none';
-        startEvo(5);
-      } else {
-        $('up').style.display = 'none';
-        paused = false; last = performance.now();
-        if (conn) conn.send({ type: 'resume_game' });
-      }
-    }
+    allPicked();
   } else {
     $('up').style.display = 'none';
     if (modo === 'line') startEvo(5);
@@ -884,6 +871,17 @@ function burst(x,y,c){if(pt.length>=MAX_PT)return;for(let i=0;i<8;i++){const a=M
 
 // Gema de XP. Con demasiadas en el piso, la experiencia se suma a una que ya existe (se ve dorada si vale más de 5)
 function dropGem(x,y,v){if(gems.length<MAX_GEMS){gems.push({x,y,v});return}const g=gems[Math.floor(Math.random()*gems.length)];g.v+=v}
+// Dirección que elige cada jugador. Local: J1 WASD (con 1 jugador también flechas o joystick), J2 flechas, J3 y J4 joysticks
+// (el primero y el segundo que estén conectados). Online: el anfitrión mueve a los remotos con las teclas que mandan (rk).
+const KB=k=>[(k.d||k.arrowright?1:0)-(k.a||k.arrowleft?1:0),(k.s||k.arrowdown?1:0)-(k.w||k.arrowup?1:0)];
+function pad(n){const g=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean)[n]:null;if(!g)return[0,0];let x=g.axes[0]||0,y=g.axes[1]||0;if(Math.hypot(x,y)<.25){x=0;y=0}
+ const b=g.buttons;if(b[15]&&b[15].pressed)x=1;if(b[14]&&b[14].pressed)x=-1;if(b[13]&&b[13].pressed)y=1;if(b[12]&&b[12].pressed)y=-1;return[x,y]}
+function inputOf(q){
+ if(isOnline){if(q.id===myIdx)return KB(keys);return isHost?KB(rk[q.id]||{}):[0,0]}
+ if(mode===1){const k=KB(keys);return k[0]||k[1]?k:pad(0)}
+ if(q.id===0)return[(keys.d?1:0)-(keys.a?1:0),(keys.s?1:0)-(keys.w?1:0)];
+ if(q.id===1)return[(keys.arrowright?1:0)-(keys.arrowleft?1:0),(keys.arrowdown?1:0)-(keys.arrowup?1:0)];
+ return pad(q.id-2)}
 // cuántas cartas se muestran al subir de nivel (3 + pasivas del árbol, hasta 5)
 function nCards(q){return Math.min(5,3+((q&&q.m&&q.m.cards)|0))}
 // Momentai (Terriermon): el disparo básico rebota al enemigo más cercano que todavía no golpeó
@@ -894,8 +892,12 @@ function bossReward(e){for(const q of P){if(!q.vp)continue;q.vp.bo++;if(Math.ran
 // niveles de evolución de esta partida (Inicio rápido, del árbol de Tamer: la primera llega un nivel antes)
 function evoLevels(){return P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LEVELS.slice(1)]:EVO_LEVELS}
 // HUD: vida (con rastro del daño recibido), experiencia con el nivel y virus eliminados. Lo usan el host y el cliente online.
-function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill2':'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3)};
- hb(0,P[0]);$('hp2box').style.display=mode===2?'':'none';if(mode===2)hb(1,P[1]);
+// Cajas de vida: la 1 y la 2 están en index.html; la 3 y la 4 se crean copiando la 2 (mismos ids con otro número)
+function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)continue;const b=$('hp2box').cloneNode(true);b.id='hp'+i+'box';b.className='hpbox p'+i;
+  b.querySelectorAll('[id]').forEach(e=>{e.id=e.id.replace(/2$/,String(i))});$('hp'+(i-1)+'box').after(b)}
+ for(let i=1;i<=MAX_PLAYERS;i++){const b=$('hp'+i+'box');if(!b)continue;b.style.display=i<=m?'':'none';const l=$('l'+i);if(l)l.textContent=m>1?'J'+i:''}}
+function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill'+n:'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3)};
+ P.forEach((q,i)=>hb(i,q));
  $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills+' virus';Bosses.hud()}
 
 function update(dt){
@@ -921,34 +923,14 @@ function update(dt){
 
  for(const q of P){
   if(q.dead)continue;
-  let dx=0, dy=0;
-  if(mode===1){
-    dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);
-    dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0);
-  } else if(q.id===0){
-    dx=(keys.d?1:0)-(keys.a?1:0);
-    dy=(keys.s?1:0)-(keys.w?1:0);
-  } else if(q.id===1){
-    if(isOnline) {
-      if(isHost) {
-        dx=(remoteKeys.d||remoteKeys.arrowright?1:0)-(remoteKeys.a||remoteKeys.arrowleft?1:0);
-        dy=(remoteKeys.s||remoteKeys.arrowdown?1:0)-(remoteKeys.w||remoteKeys.arrowup?1:0);
-      } else {
-        dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);
-        dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0);
-      }
-    } else {
-      dx=(keys.arrowright?1:0)-(keys.arrowleft?1:0);
-      dy=(keys.arrowdown?1:0)-(keys.arrowup?1:0);
-    }
-  }
+  const [dx,dy]=inputOf(q);
   q.moving = !!(dx || dy);
   if(dx||dy){const l=Math.hypot(dx,dy),v=Stats.speedOf(q);World.move(q,dx/l*v*dt,dy/l*v*dt);if(dx)q.face=dx}   // choca con las paredes (map.js)
   q.inv-=dt;
  }
 
  const al=P.filter(q=>!q.dead);
- if(al.length && mode===2){
+ if(al.length && mode>1){
    for(const q of al){
      q.x=Math.max(cam.x-W/2+40,Math.min(cam.x+W/2-40,q.x));
      q.y=Math.max(cam.y-H/2+40,Math.min(cam.y+H/2-40,q.y));
@@ -966,8 +948,8 @@ function update(dt){
   d.revP=rv?(d.revP||0)+dt*rv:Math.max(0,(d.revP||0)-dt);
   if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
- spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(mode===2?1.4:1)/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);i<n&&en.length<(mode===2?MAX_EN2:MAX_EN);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
+ spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);i<n&&en.length<MAX_EN+30*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
  Bosses.tick();Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
@@ -998,7 +980,7 @@ function update(dt){
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
  if(P.every(q=>q.dead))endRun('Fuiste borrado');
  hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
- $('pst').textContent=P.map(q=>(mode===2?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
+ $('pst').textContent=P.map(q=>(mode>1?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
 }
 
 function draw(){
@@ -1050,8 +1032,8 @@ function dEn(e){
 function dPl(q){const s=q.stage|0,hh=96;
   if(q.dead)drawBuddy(q,s,q.x,q.y,q.face,.25);
   else if(!evo&&(q.inv<=0||Math.floor(t*20)%2))drawBuddy(q,s,q.x,q.y,q.face,1);
-  if(mode===2){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (pararse encima para revivir)':'J'+(q.id+1),q.x,q.y+48-(q.dh||hh)-8)}
-  if(q.dead&&mode===2){const pr=Math.min(1,(q.revP||0)/REVIVE_TIME);cx.lineWidth=3;cx.strokeStyle='rgba(255,210,63,.35)';cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,0,6.283);cx.stroke();if(pr>0){cx.strokeStyle='#ffd23f';cx.lineWidth=6;cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,-Math.PI/2,-Math.PI/2+6.283*pr);cx.stroke()}}}
+  if(mode>1){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (pararse encima para revivir)':'J'+(q.id+1),q.x,q.y+48-(q.dh||hh)-8)}
+  if(q.dead&&mode>1){const pr=Math.min(1,(q.revP||0)/REVIVE_TIME);cx.lineWidth=3;cx.strokeStyle='rgba(255,210,63,.35)';cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,0,6.283);cx.stroke();if(pr>0){cx.strokeStyle='#ffd23f';cx.lineWidth=6;cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,-Math.PI/2,-Math.PI/2+6.283*pr);cx.stroke()}}}
 
 // Loop principal. Si algo tira un error, se registra en la consola y el juego SIGUE (antes se congelaba para siempre).
 let loopErrs=0;
