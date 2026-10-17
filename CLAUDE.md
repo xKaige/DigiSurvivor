@@ -67,7 +67,7 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Triángulo elemental `mult(atacante, defensor)`: 0 Vacuna › 1 Virus › 2 Dato › 0 Vacuna. ×1.5 ventaja, ×0.5 desventaja. El atributo del jugador sale de `attribute` en el JSON de su criatura (`elOf(cid)`; si falta, Vacuna).
 - Enemigos: 3 tipos `k` (normal, rápido, tanque), tier `ti` según la etapa máxima de los jugadores, algunos con arma (`gun`).
 - **Se dibujan con los sprites de `ENEMY_LINE` (`004_impmon`)** en `drawEnemy`. Cada enemigo guarda `sk` (clave de canvas: `stage_<ti>`; los tanques una etapa más, y desde el tope una rama `branch_6_N` al azar). `sk` va en el `sync`. Tamaño = `enH(e)` (a partir de `e.r`). El atributo se ve en el aro de color bajo los pies y el golpe recibido con `brightness`. Si la línea no carga, vuelve a las formas geométricas viejas.
-- El texto "Enemigos: X" del HUD usa los nombres de las etapas de `ENEMY_LINE`.
+- HUD: `hudBars()` actualiza vida (con rastro de daño), experiencia (NV y XP actual / necesaria) y virus eliminados, en host y cliente online. La leyenda de atributos (`renderLegend`) es un triángulo SVG. Ya no se muestra "Enemigos: X" bajo el reloj.
 - Revivir: un compañero vivo parado sobre el sprite de un jugador caído lo revive en `REVIVE_TIME` (5 s) dentro de `REVIVE_R`. `q.revSpd` queda para futuras pasivas.
 
 ### Árbol de mejoras permanentes
