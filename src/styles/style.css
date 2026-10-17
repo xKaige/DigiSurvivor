@@ -263,3 +263,40 @@ body:not(.ingame) #hud,body:not(.ingame) #xp,body:not(.ingame) #timer,body:not(.
 #missions .foot{font-size:13px;color:#7fa0b8}
 @media (max-width:560px){#missions .head{flex-wrap:wrap}#missions .ms{flex-direction:column;align-items:stretch}#missions .ms .rw{flex-direction:row;align-items:center;justify-content:space-between}}
 @media (prefers-reduced-motion:reduce){#missions .ms.ok{animation:none}}
+
+/* ---------- Selección de Digimon: grilla + panel de detalle ---------- */
+#up.pick #cards{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,330px);gap:clamp(14px,2vw,26px);align-items:start;width:min(1240px,100%);max-width:none;margin-top:10px}
+#up.pick .pk-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;max-height:min(62vh,560px);overflow-y:auto;padding:14px;
+  background:rgba(2,10,22,.65);border:2px solid var(--or);border-radius:14px 3px 14px 3px;box-shadow:0 0 14px rgba(255,154,46,.35),inset 0 0 18px rgba(63,208,255,.1)}
+#up.pick .pk-slot{--ac:var(--cy);position:relative;aspect-ratio:1/1.1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;padding:6px 3px 5px;
+  background:linear-gradient(180deg,rgba(18,60,100,.55),rgba(4,16,34,.9));border:2px solid rgba(63,208,255,.55);border-radius:6px;color:var(--ink);cursor:pointer;font:700 10px 'Chakra Petch',sans-serif;
+  transition:transform .1s,border-color .1s,box-shadow .1s}
+#up.pick .pk-slot img{flex:1;min-height:0;width:100%;height:auto!important;max-height:72px;object-fit:contain;margin:0!important;image-rendering:pixelated}
+#up.pick .pk-slot small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;letter-spacing:.04em;text-transform:uppercase}
+#up.pick .pk-slot .pk-n{position:absolute;top:3px;left:5px;font-size:10px;color:var(--ac);opacity:.9}
+#up.pick button.pk-slot:hover,#up.pick button.pk-slot:focus-visible{outline:none;transform:translateY(-2px);border-color:#fff;box-shadow:0 0 12px var(--ac)}
+#up.pick .pk-slot.on{border-color:var(--or);box-shadow:0 0 0 2px var(--or),0 0 16px rgba(255,154,46,.7);background:linear-gradient(180deg,rgba(60,50,20,.6),rgba(20,16,6,.9))}
+#up.pick .pk-slot.on small{color:var(--gold)}
+#up.pick .pk-slot.lock{cursor:default;background:#02060d;border-color:rgba(63,208,255,.18);box-shadow:inset 0 0 12px rgba(0,0,0,.8)}
+#up.pick .pk-slot.lock .q{flex:1;display:flex;align-items:center;font:900 26px 'Orbitron',sans-serif;color:rgba(63,208,255,.14)}
+#up.pick .pk-slot.lock small{color:rgba(159,192,214,.25)}
+#up.pick .pk-detail{--ac:var(--cy);display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 16px 18px;text-align:center;
+  background:linear-gradient(180deg,rgba(18,60,100,.6),rgba(4,16,34,.95));border:2px solid var(--cy);border-radius:3px 14px 3px 14px;box-shadow:0 0 0 2px rgba(255,154,46,.55),0 0 18px rgba(63,208,255,.35)}
+#up.pick .pk-spr{position:relative;width:100%;height:210px;display:flex;align-items:flex-end;justify-content:center;
+  background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--ac) 30%,transparent),transparent 62%),repeating-linear-gradient(0deg,rgba(63,208,255,.06) 0 2px,transparent 2px 4px);border-bottom:1px solid rgba(63,208,255,.3)}
+#up.pick .pk-spr canvas{max-width:100%;max-height:206px;image-rendering:pixelated}
+#up.pick .pk-viewing{position:absolute;top:4px;left:6px;font:700 11px 'Chakra Petch',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--cy);opacity:.85}
+#up.pick .pk-name{font:700 26px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#4dffb8;text-shadow:0 0 8px rgba(77,255,184,.45)}
+#up.pick .pk-lbl{align-self:stretch;margin-top:2px;font:700 11px 'Chakra Petch',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9fc0d6;text-align:left}
+#up.pick .pk-lbl small{letter-spacing:.04em;text-transform:none;font-weight:600;opacity:.8}
+#up.pick .pk-evo{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:5px 4px}
+#up.pick .pk-evo i{font-style:normal;color:var(--or);font-weight:700}
+#up.pick .pk-f{padding:4px 9px;font:700 13px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#eafaff;background:rgba(4,16,34,.85);border:1px solid rgba(63,208,255,.5);border-radius:4px;cursor:pointer}
+#up.pick .pk-f:hover,#up.pick .pk-f:focus-visible{outline:none;border-color:#fff}
+#up.pick .pk-f.on{color:#05101e;background:var(--ac);border-color:var(--ac);box-shadow:0 0 10px var(--ac)}
+#up.pick .pk-detail .pc-type{align-self:stretch;margin-top:4px}
+#up.pick .pk-ok{align-self:stretch;margin-top:2px;padding:12px;font:700 17px 'Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#1a1000;cursor:pointer;
+  background:linear-gradient(180deg,#ffe066,#ffb800);border:2px solid #ffd23f;box-shadow:0 0 14px rgba(255,210,63,.55);clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)}
+#up.pick .pk-ok:hover,#up.pick .pk-ok:focus-visible{outline:none;border-color:#fff}
+@media (max-width:900px){#up.pick #cards{grid-template-columns:1fr}#up.pick .pk-detail{order:-1}#up.pick .pk-grid{grid-template-columns:repeat(5,minmax(0,1fr));max-height:none}}
+#up.pick{padding-top:84px}

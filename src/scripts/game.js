@@ -282,7 +282,7 @@ function applyOnlineSync(data) {
 }
 
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
- if(pickRes){if(/^[1-9]$/.test(e.key)&&pickList[e.key-1])pickDone(pickList[e.key-1].id);else if(e.key==='Escape'&&!isOnline)pickCancel();return}
+ if(pickRes){if(pickKey(e.key))e.preventDefault();else if(e.key==='Escape'&&!isOnline)pickCancel();return}
  if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline){if(selected)beginLocal(lastMode);else openMenuPick()}
  if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)togglePause()}
  if(paused&&!evo&&!menuPause&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
@@ -318,31 +318,82 @@ async function askCreature(title, color) {
     $('up').classList.add('pick');   // estilo "pantalla de Digivice" (ver style.css)
     const h = $('up').querySelector('h2'); h.textContent = title; h.style.color = color || '';
     const nums = list.map((_, i) => i + 1);
-    $('up').querySelector('p').textContent = 'Elegí con el mouse o con las teclas ' + nums.slice(0, -1).join(', ') + (nums.length > 1 ? ' o ' : '') + nums[nums.length - 1];
+    $('up').querySelector('p').textContent = 'Hacé clic en un Digimon (o usá las flechas) y confirmá con Enter. Atajo: teclas ' + nums.slice(0, 9).join(', ');
     const c = $('cards'); c.innerHTML = '';
-    // líneas "de datos" decorativas de cada tarjeta
-    const deco = () => '<span class="pc-deco" aria-hidden="true">' + [70, 55, 82, 40, 64].map(w => '<i style="width:' + (w - 15 + Math.random() * 30 | 0) + '%"></i>').join('') + '<u><b></b><b></b><b></b><b class="off"></b></u></span>';
-    list.forEach((cr, i) => {
+    // Grilla: los Digimon que hay + casillas vacías ("en negro") para los que se vayan sumando
+    const grid = document.createElement('div'); grid.className = 'pk-grid';
+    const slots = Math.max(PICK_SLOTS, Math.ceil(list.length / PICK_COLS) * PICK_COLS);
+    for (let i = 0; i < slots; i++) {
+      const cr = list[i];
+      if (!cr) { const d = document.createElement('div'); d.className = 'pk-slot lock'; d.innerHTML = '<span class="q">?</span><small>???</small>'; grid.appendChild(d); continue; }
       const C = CreatureLoader.cache[cr.id], M = C.meta, nm = (M.stages[2] || M.stages[0]).name, el = elOf(cr.id);
-      const b = document.createElement('button'); b.className = 'card pc';
+      const b = document.createElement('button'); b.className = 'pk-slot'; b.dataset.i = i;
       b.style.setProperty('--ac', ELC[el]);
-      b.innerHTML = deco() + '<span class="pc-img">' + thumbOf(C, 'stage_2') + '</span>' +
-        '<b>' + String(i + 1).padStart(2, '0') + '. ' + nm.replace(/-/g, '‑') + '</b>' +
-        '<span class="pc-line">' + M.stages.map(s => s.name.replace(/-/g, '‑')).join(' → ') + '</span>' +
-        '<em><span style="color:' + ELC[el] + '">●</span> ' + ATTR[el] + '</em>' +
-        '<span class="pc-type">Tipo ' + ATTR[el] + '</span>';
-      b.onclick = () => pickDone(cr.id);
-      c.appendChild(b);
-    });
+      b.innerHTML = '<span class="pk-n">' + String(i + 1).padStart(2, '0') + '</span>' + thumbOf(C, 'stage_2') + '<small>' + nm.replace(/-/g, '‑') + '</small>';
+      b.onclick = () => { if (pickSel === i) pickDone(cr.id); else pickShow(i); };   // segundo clic = elegir
+      b.ondblclick = () => pickDone(cr.id);
+      grid.appendChild(b);
+    }
+    const det = document.createElement('div'); det.className = 'pk-detail'; det.id = 'pk-detail';
+    c.appendChild(grid); c.appendChild(det);
+    const prev = list.findIndex(x => x.id === selected);
+    pickShow(prev >= 0 ? prev : 0);
     showUp();
   });
 }
+// ---------- Panel de detalle de la selección ----------
+const PICK_COLS = 8, PICK_SLOTS = 40;
+let pickSel = 0, pickAnim = null;
+// Muestra el Digimon i de la lista. key = qué forma se ve en grande ('stage_0'..'stage_4' o 'branch_<id>')
+function pickShow(i, key) {
+  const cr = pickList[i]; if (!cr) return;
+  pickSel = i;
+  document.querySelectorAll('#cards .pk-slot').forEach(s => s.classList.toggle('on', +s.dataset.i === i));
+  const C = CreatureLoader.cache[cr.id], M = C.meta, el = elOf(cr.id), nm = (M.stages[2] || M.stages[0]).name;
+  key = key || 'stage_2';
+  const forms = M.stages.map(s => ({ key: 'stage_' + s.stage, name: s.name }));
+  const finals = M.branches.map(b => ({ key: 'branch_' + b.id, name: b.name }));
+  const shown = [...forms, ...finals].find(f => f.key === key) || forms[0];
+  const chip = f => '<button class="pk-f' + (f.key === shown.key ? ' on' : '') + '" data-k="' + f.key + '">' + f.name.replace(/-/g, '‑') + '</button>';
+  const d = $('pk-detail'); d.style.setProperty('--ac', ELC[el]);
+  d.innerHTML = '<div class="pk-spr"><canvas id="pk-cv"></canvas><span class="pk-viewing">' + shown.name + '</span></div>' +
+    '<b class="pk-name">' + String(i + 1).padStart(2, '0') + '. ' + nm.replace(/-/g, '‑') + '</b>' +
+    '<div class="pk-lbl">Evoluciones <small>(tocá una para verla)</small></div>' +
+    '<div class="pk-evo">' + forms.map(chip).join('<i>→</i>') + '</div>' +
+    '<div class="pk-lbl">Formas finales</div><div class="pk-evo fin">' + finals.map(chip).join('') + '</div>' +
+    '<span class="pc-type">Tipo ' + ATTR[el] + '</span>' +
+    '<button class="pk-ok">Elegir a ' + nm.replace(/-/g, '‑') + '</button>';
+  d.querySelectorAll('.pk-f').forEach(b => b.onclick = () => pickShow(i, b.dataset.k));
+  d.querySelector('.pk-ok').onclick = () => pickDone(cr.id);
+  // sprite en grande, animado (fila 0 = quieto, alterna las dos columnas), escala entera para que no se deforme el pixel art
+  clearInterval(pickAnim);
+  const S = C.canvases[shown.key], cv = $('pk-cv'); if (!S || !cv) return;
+  const fw = S.canvas.width / S.cols, fh = S.canvas.height / S.rows, sc = Math.max(1, Math.floor(200 / Math.max(fw, fh)));
+  cv.width = fw * sc; cv.height = fh * sc;
+  const g = cv.getContext('2d'); g.imageSmoothingEnabled = false;
+  let f = 0;
+  const paint = () => { g.clearRect(0, 0, cv.width, cv.height); g.drawImage(S.canvas, f * fw, 0, fw, fh, 0, 0, fw * sc, fh * sc); f = 1 - f; };
+  paint(); pickAnim = setInterval(paint, 380);
+}
+// Teclado en la selección: flechas mueven, Enter elige, 1-9 elige directo. Devuelve true si usó la tecla.
+function pickKey(k) {
+  if (!pickRes) return false;
+  const n = pickList.length;
+  if (/^[1-9]$/.test(k)) { if (pickList[k - 1]) pickDone(pickList[k - 1].id); return true; }
+  if (k === 'Enter') { if (pickList[pickSel]) pickDone(pickList[pickSel].id); return true; }
+  const gr = document.querySelector('#cards .pk-grid'), cols = gr ? getComputedStyle(gr).gridTemplateColumns.split(' ').length : PICK_COLS;   // columnas reales (cambian en pantallas angostas)
+  const mv = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -cols, ArrowDown: cols }[k];
+  if (mv) { const j = pickSel + mv; if (j >= 0 && j < n) pickShow(j); return true; }
+  return false;
+}
 function pickDone(id) {
   if (!pickRes || performance.now() - cardsAt < 400) return;   // evita clicks accidentales al aparecer
+  clearInterval(pickAnim);
   const r = pickRes; pickRes = pickRej = null; pickList = []; $('up').classList.remove('pick'); r(id);
 }
 function pickCancel() {
   if (!pickRej) return;
+  clearInterval(pickAnim);
   const j = pickRej; pickRes = pickRej = null; pickList = [];
   $('up').classList.remove('pick'); $('up').style.display = 'none'; j(new Error('cancel'));
 }
