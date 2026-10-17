@@ -293,7 +293,7 @@ function applyCardOp(targetP, data) {
   else if (data.op === 'sp') targetP.sp *= 1.15;
   else if (data.op === 'hp') { targetP.max += 25; targetP.hp = Math.min(targetP.max, targetP.hp + 25); }
   else if (data.op === 'mag') targetP.mag *= 1.6;
-  else if (data.op === 'wp' && data.wpKey) { if (SkillSys.canTake(targetP, data.wpKey)) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; }
+  else if (data.op === 'wp' && data.wpKey) { SkillSys.forget(targetP, data.rep); if (SkillSys.canTake(targetP, data.wpKey)) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; }
   else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; targetP.dark = !!data.dark; }
 }
 
@@ -323,7 +323,7 @@ addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('
  if(pickRes){if(pickKey(e.key))e.preventDefault();else if(e.key==='Escape'&&!isOnline)pickCancel();return}
  if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline&&!(typeof Progress!=='undefined'&&(Progress.isOpen()||Progress.hatching))&&!document.querySelector('#news[style*="flex"],#challenge[style*="flex"],#missions[style*="flex"]')){if(selected)beginLocal(lastMode);else openMenuPick()}
  if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)togglePause()}
- if(paused&&!evo&&!menuPause&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
+ if(paused&&!evo&&!menuPause&&/^[1-5]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
@@ -588,7 +588,7 @@ function endRun(title){if(!running)return;
  $('t').textContent=title;
  $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.';
  // misiones diarias (missions.js): cuenta la partida con los datos de TU jugador (en online el invitado es P[1])
- if(typeof Missions!=='undefined'){const me=(isOnline&&!isHost&&P[1])?P[1]:P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode===2,attr:me.el|0,coins:c,skillMax:Object.values(me.wp).some(v=>v>=SkillSys.maxLv())});
+ if(typeof Missions!=='undefined'){const me=(isOnline&&!isHost&&P[1])?P[1]:P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode===2,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
  // progresión permanente (progress.js): Digitamas y desbloqueos
  if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:q.stage|0})),bosses:Bosses.down.slice()});
@@ -800,26 +800,44 @@ function startCards(){
   showCards();
 }
 
-function showCards(){
+// keep: volver a mostrar las mismas cartas (al cancelar un reemplazo de skill)
+function showCards(keep){
   paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');
   $('up').querySelector('p').textContent='Elegí con el mouse o con las teclas 1, 2 o 3';
-  {const sk=SkillSys.cards(p).slice(0,2),st=UP.filter(u=>['dmg','sp','hp','mag'].includes(u.op)).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,3)}
+  if(keep)cur=keep;else{const sk=SkillSys.cards(p).slice(0,2),st=UP.filter(u=>['dmg','sp','hp','mag'].includes(u.op)).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,3)}
   const c=$('cards');c.innerHTML='';
   // tipo de carta: skill nueva / mejora de skill / mejora de stat (cada una con su etiqueta y color)
   cur.forEach((u,i)=>{const b=document.createElement('button'),sk=u.op==='wp',nw=sk&&u.tag==='Skill NUEVA',sd=sk&&SkillSys.def(u.wpKey);
    b.className='card lv '+(nw?'new':sk?'skup':'stat');if(sd)b.style.setProperty('--ac',SkillSys.col(sd));
-   b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(nw?'Skill nueva':sk?'Mejora de skill':'Mejora')+'</span><b>'+u.n+'</b><span class="kd">'+u.d+'</span>'+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag&&!nw?'<em>'+u.tag+'</em>':'');
+   b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(nw?'Skill nueva':sk?'Mejora de skill':'Mejora')+'</span><b>'+u.n+'</b><span class="kd">'+u.d+'</span>'+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag&&!nw?'<em>'+u.tag+'</em>':nw&&u.full?'<em>Tenés las 4 ocupadas: elegís cuál reemplazar</em>':'');
    b.onclick=()=>choose(u);c.appendChild(b)});
+  showUp();
+}
+// Con las 4 skills ocupadas: elegir cuál olvidar para aprender la nueva (u). "Volver" regresa a las cartas.
+function showReplace(u){
+  const q=pending[0],prev=cur;setHead('Reemplazá una skill');
+  $('up').querySelector('p').textContent='Para aprender '+u.n+' tenés que olvidar una de estas (teclas 1 a 5)';
+  cur=Object.keys(q.wp).filter(k=>SkillSys.def(k)&&q.wp[k]>0).map(k=>({n:SkillSys.def(k).name,k,pickRep:u}));
+  cur.push({n:'Volver',back:prev});
+  const c=$('cards');c.innerHTML='';
+  cur.forEach((o,i)=>{const b=document.createElement('button'),d=o.k&&SkillSys.def(o.k);
+   b.className='card lv '+(d?'rep':'stat');if(d)b.style.setProperty('--ac',SkillSys.col(d));
+   b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(d?'Olvidar':'Cancelar')+'</span>'+(d?'<img class="kic" src="'+SkillSys.iconOf(d)+'" alt="">':'')+'<b>'+o.n+'</b>'+
+    (d?'<em>Nivel '+q.wp[o.k]+'/'+SkillSys.maxOf(o.k)+' · se reemplaza por '+u.n+'</em>':'<span class="kd">Volver a las cartas</span>');
+   b.onclick=()=>choose(o);c.appendChild(b)});
   showUp();
 }
 
 function choose(u){
   if(performance.now() - cardsAt < 800) return;   // ignora clicks/teclas accidentales justo al aparecer
   if(!pending.length) return;                      // ya elegiste (esperando al otro jugador): ignora teclas repetidas
+  if(u.back){showCards(u.back);return}             // cancelar el reemplazo
+  if(u.pickRep){const o=u.pickRep;o.rep=u.k;choose(o);return}   // eligió qué skill olvidar
+  if(u.op==='wp'&&u.fresh&&u.full&&!u.rep&&!SkillSys.canTake(pending[0],u.wpKey)){showReplace(u);return}   // 4 ocupadas: preguntar cuál reemplazar
   const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c)q.st[u.c]++;p=P[0];pending.shift();
 
   if (isOnline) {
-    const payload = { type: isHost ? 'host_choice' : 'client_choice', op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark };
+    const payload = { type: isHost ? 'host_choice' : 'client_choice', op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark, rep: u.rep };
     if (conn) conn.send(payload);
 
     if (isHost) {

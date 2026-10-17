@@ -1,11 +1,6 @@
 {
   "maxLevel": 5,
   "maxActive": 4,
-  "levelBonus": {
-    "dmg": 0.3,
-    "area": 0.1,
-    "cd": 0.05
-  },
   "elements": {
     "fire": "#ff7a2e",
     "earth": "#b08a5a",
@@ -236,6 +231,7 @@
       "nv": "spexp02"
     }
   },
+  "maxLevelFinal": 10,
   "skills": {
     "hot_bite": {
       "name": "Hot Bite",
@@ -358,7 +354,8 @@
       "range": 135,
       "arc": 2.8,
       "source": "dsrworldwiki:gallantmon",
-      "icon": "dukemon_1.webp"
+      "icon": "dukemon_1.webp",
+      "final": true
     },
     "royal_saber": {
       "name": "Royal Saber",
@@ -370,7 +367,8 @@
       "range": 400,
       "width": 22,
       "source": "dsrworldwiki:gallantmon",
-      "icon": "dukemon_2.webp"
+      "icon": "dukemon_2.webp",
+      "final": true
     },
     "final_elysion": {
       "name": "Final Elysion",
@@ -382,7 +380,8 @@
       "range": 480,
       "width": 46,
       "source": "dsrworldwiki:gallantmon",
-      "icon": "dukemon_3.webp"
+      "icon": "dukemon_3.webp",
+      "final": true
     },
     "dynas": {
       "name": "Dynas",
@@ -393,7 +392,8 @@
       "cd": 0.8,
       "range": 130,
       "arc": 2.6,
-      "source": "canon:wikimon (no está en DSR)"
+      "source": "canon:wikimon (no está en DSR)",
+      "final": true
     },
     "final_crest": {
       "name": "Final Crest",
@@ -407,7 +407,8 @@
       "pierce": 4,
       "count": 3,
       "spread": 0.4,
-      "source": "canon:wikimon (no está en DSR)"
+      "source": "canon:wikimon (no está en DSR)",
+      "final": true
     },
     "rage_of_wyvern": {
       "name": "Rage of Wyvern",
@@ -418,7 +419,8 @@
       "cd": 3.0,
       "range": 460,
       "width": 40,
-      "source": "canon:wikimon (no está en DSR)"
+      "source": "canon:wikimon (no está en DSR)",
+      "final": true
     },
     "demons_disaster": {
       "name": "Demon's Disaster",
@@ -432,7 +434,8 @@
       "pierce": 1,
       "count": 5,
       "spread": 0.5,
-      "source": "canon:wikimon (no está en DSR)"
+      "source": "canon:wikimon (no está en DSR)",
+      "final": true
     },
     "judecca_prison": {
       "name": "Judecca Prison",
@@ -443,7 +446,8 @@
       "cd": 2.6,
       "range": 230,
       "arc": 1.2,
-      "source": "canon:wikimon (no está en DSR)"
+      "source": "canon:wikimon (no está en DSR)",
+      "final": true
     },
     "waking_dead": {
       "name": "Waking Dead",
@@ -453,7 +457,8 @@
       "dmg": 3.4,
       "cd": 4.5,
       "radius": 190,
-      "source": "canon:wikimon (no está en DSR)"
+      "source": "canon:wikimon (no está en DSR)",
+      "final": true
     },
     "sozan": {
       "name": "Sozan",
@@ -570,7 +575,8 @@
       "range": 130,
       "arc": 3.2,
       "source": "dsrworldwiki:kuzuhamon",
-      "icon": "kuzuhamon_1.webp"
+      "icon": "kuzuhamon_1.webp",
+      "final": true
     },
     "ura_izuna": {
       "name": "Ura Izuna",
@@ -583,7 +589,8 @@
       "life": 1.2,
       "explode": 70,
       "source": "dsrworldwiki:kuzuhamon",
-      "icon": "kuzuhamon_2.webp"
+      "icon": "kuzuhamon_2.webp",
+      "final": true
     },
     "taizoukai_mandara": {
       "name": "Taizoukai Mandara",
@@ -595,7 +602,8 @@
       "radius": 150,
       "guard": 1.2,
       "source": "dsrworldwiki:kuzuhamon",
-      "icon": "kuzuhamon_3.webp"
+      "icon": "kuzuhamon_3.webp",
+      "final": true
     },
     "jouenkobu": {
       "name": "Jouenkobu",
@@ -608,7 +616,8 @@
       "life": 1.1,
       "explode": 50,
       "source": "dsrworldwiki:sakuyamon",
-      "icon": "sakuyamon_1.webp"
+      "icon": "sakuyamon_1.webp",
+      "final": true
     },
     "izuna": {
       "name": "Izuna",
@@ -623,7 +632,8 @@
       "count": 4,
       "spread": 1.0,
       "source": "dsrworldwiki:sakuyamon",
-      "icon": "sakuyamon_2.webp"
+      "icon": "sakuyamon_2.webp",
+      "final": true
     },
     "kongoukai_mandara": {
       "name": "Kongoukai Mandara",
@@ -635,7 +645,8 @@
       "radius": 170,
       "guard": 1.2,
       "source": "dsrworldwiki:sakuyamon",
-      "icon": "sakuyamon_3.webp"
+      "icon": "sakuyamon_3.webp",
+      "final": true
     },
     "blazing_fire": {
       "name": "Blazing Fire",
@@ -749,7 +760,8 @@
       "range": 130,
       "arc": 2.6,
       "source": "dsrworldwiki:megagargomon",
-      "icon": "saintgalgomon_1.webp"
+      "icon": "saintgalgomon_1.webp",
+      "final": true
     },
     "burst_shot": {
       "name": "Burst Shot",
@@ -763,7 +775,8 @@
       "count": 10,
       "spread": 2.4,
       "source": "dsrworldwiki:megagargomon",
-      "icon": "saintgalgomon_2.webp"
+      "icon": "saintgalgomon_2.webp",
+      "final": true
     },
     "giant_missile": {
       "name": "Giant Missile",
@@ -776,7 +789,8 @@
       "life": 1.6,
       "explode": 120,
       "source": "dsrworldwiki:megagargomon",
-      "icon": "saintgalgomon_3.webp"
+      "icon": "saintgalgomon_3.webp",
+      "final": true
     },
     "summon": {
       "name": "Summon",
@@ -1092,7 +1106,8 @@
       "range": 130,
       "arc": 2.4,
       "source": "dsrworldwiki:ulforceveedramon",
-      "icon": "ulforcevdramon_1.webp"
+      "icon": "ulforcevdramon_1.webp",
+      "final": true
     },
     "shining_v_force": {
       "name": "Shining V Force",
@@ -1103,7 +1118,8 @@
       "cd": 3.4,
       "radius": 220,
       "source": "dsrworldwiki:ulforceveedramon",
-      "icon": "ulforcevdramon_2.webp"
+      "icon": "ulforcevdramon_2.webp",
+      "final": true
     },
     "dragon_impulse_x": {
       "name": "Dragon Impulse X",
@@ -1118,7 +1134,8 @@
       "count": 2,
       "spread": 0.5,
       "source": "dsrworldwiki:ulforceveedramon",
-      "icon": "ulforcevdramon_3.webp"
+      "icon": "ulforcevdramon_3.webp",
+      "final": true
     },
     "splendor_blade": {
       "name": "Splendor Blade",
@@ -1130,7 +1147,8 @@
       "range": 140,
       "arc": 2.4,
       "source": "dsrworldwiki:imperialdramon-dragonmode + imperialdramon-fightermode",
-      "icon": "imperialdramon_dragonmode_1.webp"
+      "icon": "imperialdramon_dragonmode_1.webp",
+      "final": true
     },
     "positron_laser": {
       "name": "Positron Laser",
@@ -1142,7 +1160,8 @@
       "range": 480,
       "width": 36,
       "source": "dsrworldwiki:imperialdramon-dragonmode + imperialdramon-fightermode",
-      "icon": "imperialdramon_dragonmode_2.webp"
+      "icon": "imperialdramon_dragonmode_2.webp",
+      "final": true
     },
     "mega_death": {
       "name": "Mega Death",
@@ -1153,7 +1172,8 @@
       "cd": 4.0,
       "radius": 240,
       "source": "dsrworldwiki:imperialdramon-dragonmode",
-      "icon": "imperialdramon_dragonmode_3.webp"
+      "icon": "imperialdramon_dragonmode_3.webp",
+      "final": true
     },
     "giga_death": {
       "name": "Giga Death",
@@ -1166,7 +1186,8 @@
       "life": 1.4,
       "explode": 130,
       "source": "dsrworldwiki:imperialdramon-fightermode",
-      "icon": "imperialdramon_2.webp"
+      "icon": "imperialdramon_2.webp",
+      "final": true
     },
     "horn_attack": {
       "name": "Horn Attack",
@@ -1247,7 +1268,8 @@
       "cd": 1.0,
       "range": 135,
       "arc": 2.4,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "dragonia": {
       "name": "Dragonia",
@@ -1258,7 +1280,8 @@
       "cd": 2.4,
       "range": 420,
       "width": 34,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "meteor_lux": {
       "name": "Meteor Lux",
@@ -1268,7 +1291,8 @@
       "dmg": 3.4,
       "cd": 4.0,
       "radius": 230,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "elec_rush": {
       "name": "Elec Rush",
@@ -1355,7 +1379,8 @@
       "cd": 0.9,
       "range": 135,
       "arc": 2.6,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "shidou_ittetsu": {
       "name": "Shidou Ittetsu",
@@ -1366,7 +1391,8 @@
       "cd": 4.5,
       "radius": 190,
       "guard": 1.0,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "shinden_shouraikou": {
       "name": "Shinden Shouraikou",
@@ -1377,7 +1403,8 @@
       "cd": 2.8,
       "range": 460,
       "width": 30,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "shukyoku_senjin": {
       "name": "Shūkyoku Senjin Takemikazuchi",
@@ -1388,7 +1415,8 @@
       "cd": 1.0,
       "range": 150,
       "arc": 2.8,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "zetsugoku_buto": {
       "name": "Zetsugoku Butō Takemikazuchi",
@@ -1402,7 +1430,8 @@
       "count": 4,
       "spread": 1.2,
       "pierce": 3,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "dash_metal": {
       "name": "Dash Metal",
@@ -1484,7 +1513,8 @@
       "cd": 1.1,
       "range": 140,
       "arc": 2.4,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "doru_din": {
       "name": "DORU Din",
@@ -1498,7 +1528,8 @@
       "count": 3,
       "spread": 0.6,
       "explode": 60,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "seiken_gradalpha": {
       "name": "Seiken Gradalpha",
@@ -1509,7 +1540,8 @@
       "cd": 2.6,
       "range": 460,
       "width": 34,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "digitalize_of_soul": {
       "name": "Digitalize of Soul",
@@ -1519,7 +1551,8 @@
       "dmg": 3.4,
       "cd": 4.2,
       "radius": 220,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "alpha_inforce": {
       "name": "Alpha inForce",
@@ -1530,7 +1563,8 @@
       "cd": 0.9,
       "range": 140,
       "arc": 2.6,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "ouryuken": {
       "name": "Kyūkyoku Senjin Ouryūken",
@@ -1541,7 +1575,8 @@
       "cd": 1.1,
       "range": 160,
       "arc": 3.0,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "kabutogaeshi": {
       "name": "Kabutogaeshi",
@@ -1626,7 +1661,8 @@
       "count": 2,
       "spread": 0.4,
       "pierce": 4,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "ougai": {
       "name": "Ougai",
@@ -1637,7 +1673,8 @@
       "cd": 2.6,
       "range": 220,
       "arc": 1.2,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "nebaneba_net": {
       "name": "Nebaneba Net",
@@ -1716,7 +1753,8 @@
       "cd": 1.0,
       "range": 160,
       "arc": 2.8,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "twenty_dive": {
       "name": "Twenty Dive",
@@ -1792,7 +1830,8 @@
       "cd": 1.0,
       "range": 150,
       "arc": 2.6,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "thron_messer": {
       "name": "Thron Messer",
@@ -1802,7 +1841,8 @@
       "dmg": 3.6,
       "cd": 3.2,
       "radius": 210,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "bibi_thunder": {
       "name": "Bibi Thunder",
@@ -1889,7 +1929,8 @@
       "dmg": 3.8,
       "cd": 3.6,
       "radius": 230,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "crystal_billow": {
       "name": "Crystal Billow",
@@ -1902,7 +1943,8 @@
       "life": 1.0,
       "count": 6,
       "spread": 1.0,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "ocean_love": {
       "name": "Ocean Love",
@@ -1913,7 +1955,8 @@
       "cd": 1.0,
       "radius": 80,
       "count": 4,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "marine_squadron": {
       "name": "Marine Squadron",
@@ -1927,7 +1970,8 @@
       "count": 4,
       "spread": 1.4,
       "pierce": 2,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "extra_smile": {
       "name": "Extra Smile",
@@ -1938,7 +1982,8 @@
       "cd": 2.6,
       "range": 440,
       "width": 30,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "howling_fire": {
       "name": "Howling Fire",
@@ -2024,7 +2069,8 @@
       "dmg": 4.0,
       "cd": 3.6,
       "radius": 240,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "jotunheimr_gale": {
       "name": "Jötunheimr Gale",
@@ -2038,7 +2084,8 @@
       "count": 4,
       "spread": 1.2,
       "pierce": 3,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "lightning_fur": {
       "name": "Lightning Fur",
@@ -2116,7 +2163,8 @@
       "cd": 1.0,
       "range": 140,
       "arc": 2.0,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "qualialise_blast": {
       "name": "Qualialise Blast",
@@ -2127,7 +2175,8 @@
       "cd": 2.4,
       "range": 240,
       "arc": 1.2,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "spiral_vanish": {
       "name": "Spiral Vanish",
@@ -2138,7 +2187,8 @@
       "cd": 2.8,
       "range": 460,
       "width": 30,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "desperate_vortex": {
       "name": "Desperate Vortex",
@@ -2152,7 +2202,8 @@
       "count": 3,
       "spread": 0.6,
       "pierce": 4,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "predators_bite": {
       "name": "Predator's Bite",
@@ -2163,7 +2214,8 @@
       "cd": 1.2,
       "range": 130,
       "arc": 1.8,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "spiral_hell": {
       "name": "Spiral Hell",
@@ -2173,7 +2225,8 @@
       "dmg": 3.8,
       "cd": 3.4,
       "radius": 220,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "dangan_senpu": {
       "name": "Dangan Senpū",
@@ -2261,7 +2314,8 @@
       "dmg": 3.8,
       "cd": 3.2,
       "radius": 220,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "blitz_arm": {
       "name": "Blitz Arm",
@@ -2272,7 +2326,8 @@
       "cd": 0.8,
       "range": 130,
       "arc": 1.8,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "bark_storm": {
       "name": "Bark Storm",
@@ -2286,7 +2341,8 @@
       "count": 5,
       "spread": 1.4,
       "explode": 50,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "gouenrin": {
       "name": "Gouenrin",
@@ -2300,7 +2356,8 @@
       "count": 2,
       "spread": 0.5,
       "explode": 60,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "kaijinraidou": {
       "name": "Kaijinraidou",
@@ -2311,7 +2368,8 @@
       "cd": 2.6,
       "range": 480,
       "width": 24,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "kirlian_brand": {
       "name": "Kirlian Brand",
@@ -2321,7 +2379,8 @@
       "dmg": 3.6,
       "cd": 3.0,
       "radius": 200,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "rising_sun": {
       "name": "Rising Sun",
@@ -2335,7 +2394,8 @@
       "count": 2,
       "spread": 0.4,
       "explode": 90,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "discharge_bomb": {
       "name": "Discharge Bomb",
@@ -2346,7 +2406,8 @@
       "cd": 2.4,
       "range": 400,
       "width": 28,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "m16_assassin": {
       "name": "M16 Assassin",
@@ -2434,7 +2495,8 @@
       "count": 2,
       "spread": 0.3,
       "explode": 60,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "gigastick_lance": {
       "name": "Gigastick Lance",
@@ -2445,7 +2507,8 @@
       "cd": 2.2,
       "range": 420,
       "width": 20,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "demon_stab": {
       "name": "Demon Stab",
@@ -2456,7 +2519,8 @@
       "cd": 1.2,
       "range": 140,
       "arc": 1.6,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "genocide_rain": {
       "name": "Genocide Rain",
@@ -2469,7 +2533,8 @@
       "life": 1.0,
       "count": 10,
       "spread": 1.6,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "exa_destroyer": {
       "name": "Exa Destroyer",
@@ -2483,7 +2548,8 @@
       "count": 2,
       "spread": 0.4,
       "explode": 110,
-      "source": "canon:wikimon"
+      "source": "canon:wikimon",
+      "final": true
     },
     "bubble_blow": {
       "name": "Bubble Blow",

@@ -215,6 +215,9 @@ canvas{display:block;width:100%;height:100%}
 #up .card.lv.stat{--ac:#ffd23f}
 #up .card.lv.line{--ac:#4dffb8}#up .card.lv.line img{height:84px!important;margin:4px 0 0!important;image-rendering:pixelated}
 #up .card.lv:disabled{opacity:.4;cursor:not-allowed;filter:saturate(.4)}
+/* reemplazar skill (4 ocupadas): carta de la skill que se olvida */
+#up .card.lv.rep .kt{background:#ff5c5c;color:#fff}
+#up .card.lv.rep .kic{width:56px;height:56px;object-fit:contain;margin-top:6px}
 @media (prefers-reduced-motion:reduce){#up .card.lv.new{animation:none}}
 
 /* ---------- El HUD solo se ve durante la partida (body.ingame lo pone start() y lo saca endRun()) ---------- */
