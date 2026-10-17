@@ -1,0 +1,45 @@
+{
+  "perDay": 3,
+  "utcOffsetHours": -3,
+  "types": {
+    "kills_run": "Virus eliminados en UNA partida (se guarda el mejor)",
+    "kills_day": "Virus eliminados sumando todas las partidas del día",
+    "survive": "Segundos sobrevividos en UNA partida",
+    "runs_day": "Partidas terminadas en el día",
+    "reach_stage": "Etapa alcanzada en una partida (2 Novato, 3 Campeón, 4 Perfecto, 5 evolución final)",
+    "reach_level": "Nivel alcanzado en una partida",
+    "local2p_run": "Partidas de 2 jugadores local",
+    "online_run": "Partidas online con un amigo",
+    "play_attr": "Partidas con un Digimon del atributo 'attr' (0 Vacuna, 1 Virus, 2 Dato)",
+    "coins_day": "Monedas ganadas jugando en el día (sin contar recompensas de misiones)",
+    "skill_max": "Partidas terminando con una skill al nivel máximo"
+  },
+  "missions": [
+    { "id": "k80",    "tier": 1, "type": "kills_run",   "goal": 80,  "reward": 30, "name": "Limpieza rápida",     "desc": "Eliminá 80 virus en una sola partida" },
+    { "id": "s120",   "tier": 1, "type": "survive",     "goal": 120, "reward": 30, "name": "Primer aguante",      "desc": "Sobreviví 2 minutos en una partida" },
+    { "id": "r2",     "tier": 1, "type": "runs_day",    "goal": 2,   "reward": 25, "name": "Calentando motores",  "desc": "Terminá 2 partidas" },
+    { "id": "st2",    "tier": 1, "type": "reach_stage", "goal": 2,   "reward": 30, "name": "Primer paso",         "desc": "Llegá a etapa Novato en una partida" },
+    { "id": "lv5",    "tier": 1, "type": "reach_level", "goal": 5,   "reward": 30, "name": "Entrenamiento",       "desc": "Llegá al nivel 5 en una partida" },
+    { "id": "kd200",  "tier": 1, "type": "kills_day",   "goal": 200, "reward": 35, "name": "Antivirus",           "desc": "Eliminá 200 virus en el día" },
+
+    { "id": "k200",   "tier": 2, "type": "kills_run",   "goal": 200, "reward": 60, "name": "Barrida de datos",    "desc": "Eliminá 200 virus en una sola partida" },
+    { "id": "s300",   "tier": 2, "type": "survive",     "goal": 300, "reward": 70, "name": "Resistencia",         "desc": "Sobreviví 5 minutos en una partida" },
+    { "id": "st3",    "tier": 2, "type": "reach_stage", "goal": 3,   "reward": 60, "name": "Campeón digital",     "desc": "Llegá a etapa Campeón en una partida" },
+    { "id": "lv10",   "tier": 2, "type": "reach_level", "goal": 10,  "reward": 70, "name": "Tamer en ascenso",    "desc": "Llegá al nivel 10 en una partida" },
+    { "id": "l2p",    "tier": 2, "type": "local2p_run", "goal": 1,   "reward": 60, "name": "Mismo teclado",       "desc": "Jugá una partida de 2 jugadores local" },
+    { "id": "aVac",   "tier": 2, "type": "play_attr", "attr": 0, "goal": 1, "reward": 50, "name": "Escudo Vacuna",  "desc": "Terminá una partida con un Digimon de atributo Vacuna" },
+    { "id": "aVir",   "tier": 2, "type": "play_attr", "attr": 1, "goal": 1, "reward": 50, "name": "Código Virus",   "desc": "Terminá una partida con un Digimon de atributo Virus" },
+    { "id": "aDat",   "tier": 2, "type": "play_attr", "attr": 2, "goal": 1, "reward": 50, "name": "Flujo de Datos", "desc": "Terminá una partida con un Digimon de atributo Dato" },
+    { "id": "kd500",  "tier": 2, "type": "kills_day",   "goal": 500, "reward": 80, "name": "Cortafuegos",         "desc": "Eliminá 500 virus en el día" },
+    { "id": "c150",   "tier": 2, "type": "coins_day",   "goal": 150, "reward": 70, "name": "Minero de bits",      "desc": "Ganá 150 monedas jugando en el día" },
+
+    { "id": "onl",    "tier": 3, "type": "online_run",  "goal": 1,   "reward": 150, "name": "Enlace con amigos",  "desc": "Jugá una partida online con un amigo" },
+    { "id": "st5",    "tier": 3, "type": "reach_stage", "goal": 5,   "reward": 150, "name": "Evolución final",    "desc": "Conseguí una evolución final en una partida" },
+    { "id": "st4",    "tier": 3, "type": "reach_stage", "goal": 4,   "reward": 120, "name": "Perfección",         "desc": "Llegá a etapa Perfecto en una partida" },
+    { "id": "s600",   "tier": 3, "type": "survive",     "goal": 600, "reward": 160, "name": "Superviviente",      "desc": "Sobreviví 10 minutos en una partida" },
+    { "id": "k400",   "tier": 3, "type": "kills_run",   "goal": 400, "reward": 140, "name": "Exterminador",       "desc": "Eliminá 400 virus en una sola partida" },
+    { "id": "lv15",   "tier": 3, "type": "reach_level", "goal": 15,  "reward": 140, "name": "Tamer veterano",     "desc": "Llegá al nivel 15 en una partida" },
+    { "id": "skmax",  "tier": 3, "type": "skill_max",   "goal": 1,   "reward": 130, "name": "Técnica perfecta",   "desc": "Terminá una partida con una skill al nivel máximo" },
+    { "id": "r5",     "tier": 3, "type": "runs_day",    "goal": 5,   "reward": 120, "name": "Maratón digital",    "desc": "Terminá 5 partidas" }
+  ]
+}

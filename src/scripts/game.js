@@ -471,6 +471,9 @@ function endRun(title){if(!running)return;
  const m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin);save.coins+=c;persist();
  $('t').textContent=title;
  $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas.';
+ // misiones diarias (missions.js): cuenta la partida con los datos de TU jugador (en online el invitado es P[1])
+ if(typeof Missions!=='undefined'){const me=(isOnline&&!isHost&&P[1])?P[1]:P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode===2,attr:me.el|0,coins:c,skillMax:Object.values(me.wp).some(v=>v>=SkillSys.maxLv())});
+  if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
  wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
 
 function drawBuddy(q,s,x,y,f,a){

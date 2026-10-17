@@ -225,3 +225,41 @@ body:not(.ingame) #hud,body:not(.ingame) #xp,body:not(.ingame) #timer,body:not(.
 #pause #pquit{color:#ff8a8a;border-color:#ff5c5c;box-shadow:0 0 10px rgba(255,92,92,.35)}
 #pause button:hover,#pause button:focus-visible{outline:none;color:#fff;border-color:#fff}
 #pause small{font:600 12px 'Chakra Petch',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--cy);opacity:.7}
+
+/* ---------- Misiones diarias (missions.js) ---------- */
+#mnu #msb .bd{position:absolute;top:8px;right:44px;min-width:22px;padding:0 7px;font-size:13px;line-height:22px;color:#fff;background:#ff3d81;border-radius:11px;box-shadow:0 0 8px #ff3d81}
+#missions{--cy:#3fd0ff;--cy2:#1b6fa8;--or:#ff9a2e;position:fixed;inset:0;z-index:22;display:none;align-items:center;justify-content:center;padding:16px;text-align:left;background:rgba(3,10,24,.74);backdrop-filter:blur(2px);font-family:'Chakra Petch',sans-serif}
+#missions .box{width:min(720px,100%);max-height:90vh;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:22px 26px 20px;color:var(--ink);
+  background:linear-gradient(180deg,rgba(14,52,90,.92),rgba(4,16,34,.97));border:3px solid var(--cy);border-radius:18px 4px 18px 4px;box-shadow:0 0 0 3px rgba(255,154,46,.75),0 0 26px rgba(63,208,255,.45),inset 0 0 30px rgba(63,208,255,.15)}
+#missions .head{display:flex;align-items:flex-start;gap:16px}
+#missions .ttl{flex:1;display:flex;flex-direction:column}
+#missions h2{margin:0;font:900 clamp(24px,3.6vw,36px)/1.05 'Orbitron','Chakra Petch',sans-serif;text-transform:uppercase;letter-spacing:.03em;color:#f2fbff;text-shadow:0 0 6px var(--cy),0 0 18px rgba(63,208,255,.55)}
+#missions .ttl small{margin-top:4px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--cy)}
+#missions .reset{align-self:center;padding:6px 12px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9fc0d6;border:1px solid var(--cy2);border-radius:4px;white-space:nowrap}
+#missions .reset b{display:block;font-size:20px;letter-spacing:.06em;color:var(--gold)}
+#ms-x{flex:0 0 auto;width:48px;height:48px;font:700 22px 'Chakra Petch',sans-serif;color:#ff5c5c;background:rgba(4,16,34,.85);border:2px solid #ff5c5c;box-shadow:0 0 12px rgba(255,92,92,.55);cursor:pointer;
+  clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px)}
+#ms-x:hover,#ms-x:focus-visible{outline:none;color:#fff;background:rgba(255,92,92,.18)}
+#ms-list{display:flex;flex-direction:column;gap:12px}
+#missions .ms{--ac:#4dffb8;display:flex;align-items:center;gap:16px;padding:14px 16px;background:linear-gradient(90deg,rgba(26,70,110,.5),rgba(8,26,48,.7));border:2px solid color-mix(in srgb,var(--ac) 70%,transparent);border-radius:10px 2px 10px 2px;box-shadow:inset 0 0 14px color-mix(in srgb,var(--ac) 10%,transparent)}
+#missions .ms.t2{--ac:#3fd0ff}#missions .ms.t3{--ac:#ff9a2e}
+#missions .ms .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+#missions .ms .tier{align-self:flex-start;padding:1px 8px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#05101e;background:var(--ac);border-radius:3px}
+#missions .ms b{font-size:19px;letter-spacing:.02em;text-transform:uppercase;color:#f2fbff}
+#missions .ms .desc{font-size:14px;color:#cfe6f5}
+#missions .ms .bar{position:relative;height:18px;margin-top:4px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.15);overflow:hidden}
+#missions .ms .bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,color-mix(in srgb,var(--ac) 60%,#000),var(--ac));box-shadow:0 0 10px var(--ac)}
+#missions .ms .bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;text-shadow:0 0 3px #000,0 1px 2px #000}
+#missions .ms .rw{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:120px;text-align:center}
+#missions .ms .coin{font-size:20px;font-weight:700;color:var(--gold);text-shadow:0 0 8px rgba(255,210,63,.5)}
+#missions .ms .rw button{padding:9px 12px;font:700 14px 'Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;color:#9fc0d6;background:rgba(4,16,34,.85);border:2px solid #3a5a74;
+  clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)}
+#missions .ms.ok{animation:msok 1.4s ease-in-out infinite}
+@keyframes msok{50%{box-shadow:0 0 18px rgba(255,210,63,.55),inset 0 0 14px rgba(255,210,63,.15)}}
+#missions .ms.ok .rw button{color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);border-color:#ffd23f;cursor:pointer}
+#missions .ms.ok .rw button:hover{border-color:#fff}
+#missions .ms.got{opacity:.6}#missions .ms.got .rw button{color:#4dffb8;border-color:#4dffb8}
+#missions .ms .rw button:disabled{cursor:default}
+#missions .foot{font-size:13px;color:#7fa0b8}
+@media (max-width:560px){#missions .head{flex-wrap:wrap}#missions .ms{flex-direction:column;align-items:stretch}#missions .ms .rw{flex-direction:row;align-items:center;justify-content:space-between}}
+@media (prefers-reduced-motion:reduce){#missions .ms.ok{animation:none}}

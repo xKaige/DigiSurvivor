@@ -24,9 +24,11 @@ src/scripts/game.js             # el juego + conexión online/lobby (script clá
 src/scripts/firebase.js         # login Google + guardado en Firestore (type="module")
 src/scripts/firebase-config.js  # config pública de Firebase (la importa firebase.js)
 src/scripts/social.js           # nick único, amigos, party e invitaciones (lo importa firebase.js)
+src/scripts/missions.js         # Misiones diarias (se carga después de game.js)
 src/scripts/map.js              # mapa de tiles (MAP_COLS/ROWS, mapData) — HOY NO SE CARGA en index.html
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
 src/data/skills.json            # catálogo de skills, elementos, maxLevel, maxActive, levelBonus
+src/data/missions.json          # catálogo de misiones diarias (tipos, metas, recompensas)
 assets/sprites/creatures/<id>/  # spritesheets PNG de cada etapa/rama
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
@@ -73,6 +75,13 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - **Se dibujan con los sprites de `ENEMY_LINE` (`004_impmon`)** en `drawEnemy`. Cada enemigo guarda `sk` (clave de canvas: `stage_<ti>`; los tanques una etapa más, y desde el tope una rama `branch_6_N` al azar). `sk` va en el `sync`. Tamaño = `enH(e)` (a partir de `e.r`). El atributo se ve en el aro de color bajo los pies y el golpe recibido con `brightness`. Si la línea no carga, vuelve a las formas geométricas viejas.
 - HUD: `hudBars()` actualiza vida (con rastro de daño), experiencia (NV y XP actual / necesaria) y virus eliminados, en host y cliente online. La leyenda de atributos (`renderLegend`) es un triángulo SVG. Ya no se muestra "Enemigos: X" bajo el reloj.
 - Revivir: un compañero vivo parado sobre el sprite de un jugador caído lo revive en `REVIVE_TIME` (5 s) dentro de `REVIVE_R`. `q.revSpd` queda para futuras pasivas.
+
+### Misiones diarias (`missions.js` + `missions.json`)
+- Cada día se sortean `perDay` (3) misiones, una por tier (fácil/media/difícil) y sin repetir tipo. El sorteo sale de la fecha: son las mismas para todos.
+- El día cambia a las **00:00 de Argentina** (`utcOffsetHours: -3`).
+- El progreso se cuenta al terminar cada partida: `endRun` llama a `Missions.onRunEnd({kills, secs, lvl, stage, online, local2p, attr, coins, skillMax})` con los datos de TU jugador (en online el invitado es `P[1]`). Tipos que se suman entre partidas: `Missions.ADD`; el resto guarda el mejor valor.
+- Progreso en el navegador (`localStorage['digisurvivor_daily']`), **no en Firestore** (saveToCloud solo guarda coins/lv; no se tocó por las reglas). Las recompensas suman a `save.coins`. Ojo: en dos dispositivos se podría cobrar dos veces.
+- Botón `#msb` en el menú con aviso de misiones para reclamar.
 
 ### Árbol de mejoras permanentes
 `TREE` (4 columnas). Se compra con monedas que se ganan al terminar la partida (`endRun`). Se aplica al inicio con `applyTree(q)`. Guardado en `save = {coins, lv:{clave:nivel}}`.
