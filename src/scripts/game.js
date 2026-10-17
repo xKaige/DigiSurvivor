@@ -598,6 +598,12 @@ function endRun(title){if(!running)return;
  if(typeof Challenge!=='undefined')$('m').textContent+=Challenge.onRunEnd({kills,secs:t,bosses:Bosses.down.length,cid:(mine()[0]||P[0]).cid});
  wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
 
+// Alto en pantalla del dibujo de un compañero según su etapa (Bebé, Bebé II, Novato, Campeón, Perfecto, forma final)
+const BUDDY_H=[34,42,62,82,98,114];
+// Caja del dibujo real (sin transparencia) en el cuadro "quieto" de una hoja; se calcula una vez y queda guardada en S.cb
+function cbox(S){if(S.cb)return S.cb;const fw=Math.floor(S.canvas.width/S.cols),fh=Math.floor(S.canvas.height/S.rows);let x0=fw,y0=fh,x1=-1,y1=-1;
+ try{const d=S.canvas.getContext('2d').getImageData(0,0,fw,fh).data;for(let y=0;y<fh;y++)for(let x=0;x<fw;x++)if(d[(y*fw+x)*4+3]>24){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}}catch(e){}
+ if(x1<x0){x0=0;y0=0;x1=fw-1;y1=fh-1}return S.cb={x0,y0,x1:x1+1,y1:y1+1}}
 function drawBuddy(q,s,x,y,f,a){
  const C=CR(q);
  if(!C)return;
@@ -611,9 +617,11 @@ function drawBuddy(q,s,x,y,f,a){
  const cv = spriteInfo.canvas;
  const cols = spriteInfo.cols, rows = spriteInfo.rows;
  const fw = cv.width / cols, fh = cv.height / rows;
- // 1,5 px de pantalla por píxel de la hoja: un cuadro de 64 ocupa 96 px y uno más grande (Digimon grandes) crece en proporción.
- // Los pies quedan siempre a +48 de q.y (donde quedaban con los cuadros de 64).
- const h = fh * 1.5, w = fw * 1.5;
+ // Tamaño parejo por etapa: se mide el dibujo real (sin el relleno transparente, cbox) y se escala para que mida
+ // BUDDY_H[etapa] de alto (o su ancho, si es muy ancho). Así no importa de qué pack venga ni cuánto relleno tenga la hoja.
+ // Los pies (el borde de abajo del dibujo) quedan siempre a +48 de q.y.
+ const B = cbox(spriteInfo), k = BUDDY_H[Math.min(5, s)] / Math.max(B.y1 - B.y0, (B.x1 - B.x0) * 0.75);
+ const h = (B.y1 - B.y0) * k, w = (B.x1 - B.x0) * k, ox = (B.x0 + B.x1) / 2 * k;
  q.dh = h;
 
  let row = 0, col = 0;
@@ -649,9 +657,9 @@ function drawBuddy(q,s,x,y,f,a){
  }
 
  if(f < 0) cx.scale(-1, 1);
- cx.drawImage(cv, col * fw, row * fh, fw, fh, -w / 2, 48 - h, w, h);
+ cx.drawImage(cv, col * fw, row * fh, fw, fh, -ox, 48 - B.y1 * k, fw * k, fh * k);
  // X-Antibody sin forma X propia: "glitch" violeta intermitente
- if(q.xa && !xs && !q.dead && Math.floor(t * 10) % 3 === 0){cx.globalAlpha=a*.45;cx.filter='hue-rotate(260deg) saturate(3)';cx.drawImage(cv, col * fw, row * fh, fw, fh, -w / 2 + (Math.random() * 6 - 3), 48 - h, w, h);cx.filter='none'}
+ if(q.xa && !xs && !q.dead && Math.floor(t * 10) % 3 === 0){cx.globalAlpha=a*.45;cx.filter='hue-rotate(260deg) saturate(3)';cx.drawImage(cv, col * fw, row * fh, fw, fh, -ox + (Math.random() * 6 - 3), 48 - B.y1 * k, fw * k, fh * k);cx.filter='none'}
  cx.restore();
 }
 
@@ -662,15 +670,21 @@ const enH=e=>e.bo!=null?Bosses.h(e):Math.max(50,e.r*4.2);
 const enTop=e=>enSpr(e)?enH(e)/2:e.r;
 // silueta blanca de una hoja (se genera una vez): reemplaza a cx.filter='brightness(3)', que es muy lento
 function whiteOf(S){if(S.white)return S.white;const c=document.createElement('canvas');c.width=S.canvas.width;c.height=S.canvas.height;const g=c.getContext('2d');g.drawImage(S.canvas,0,0);g.globalCompositeOperation='source-atop';g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);return S.white=c}
+// Alto en pantalla del dibujo de un enemigo según el nivel de su especie (un poco más chicos que los compañeros)
+const ENEMY_H=[30,36,54,70,84,98];
 function drawEnemy(e){
  const S=enSpr(e);if(!S||!S.canvas)return false;
- const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),w=fw*h/fh;
+ // alto del dibujo real: enemigos según el nivel de su especie (ENEMY_H, tanques más grandes y enjambres más chicos),
+ // jefes según su tamaño; los pies quedan donde siempre (abajo, en h/2), que es donde chocan con las paredes
+ const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),B=cbox(S),dd=e.et!=null&&Enemies.def(e.et);
+ const th=e.bo!=null?h*.68:dd?ENEMY_H[Math.min(5,dd.tier)]*(e.kd==='tank'?1.25:e.kd==='swarm'?.85:1):h*.62;
+ const kk=th/Math.max(B.y1-B.y0,(B.x1-B.x0)*.75),w=(B.x1-B.x0)*kk*1.35;
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
  cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
  if(Math.cos(e.ang)<0)cx.scale(-1,1);
- cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh,fw,fh,-w/2,-h/2,w,h);   // golpeado: silueta blanca
+ cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh,fw,fh,-(B.x0+B.x1)/2*kk,h/2-2-B.y1*kk,fw*kk,fh*kk);   // golpeado: silueta blanca
  cx.restore();return true}
 
 function startEvo(s){evo={t:0,s,done:0};const v=$('evt');v.style.display='block';v.textContent='¡Tu compañero está digievolucionando!'}
