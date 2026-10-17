@@ -284,8 +284,8 @@ function applyOnlineSync(data) {
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
  if(pickRes){if(/^[1-9]$/.test(e.key)&&pickList[e.key-1])pickDone(pickList[e.key-1].id);else if(e.key==='Escape'&&!isOnline)pickCancel();return}
  if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline){if(selected)beginLocal(lastMode);else openMenuPick()}
- if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)endRun('Run terminada')}
- if(paused&&!evo&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
+ if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)togglePause()}
+ if(paused&&!evo&&!menuPause&&/^[1-3]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 function dmgNum(x,y,v,col,sz){fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
@@ -301,6 +301,7 @@ async function start(m,ids){
   await initGame(ids);
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);q.x=m===1?0:(i?40:-40);applyTree(q);P.push(q)}
   p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=5;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
   renderLegend();if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -452,10 +453,20 @@ function renderTree(){const c=$('cols');c.innerHTML='';
    b.onclick=()=>{save.coins-=cost;save.lv[n.k]=lv+1;persist();wal();renderTree()};col.appendChild(b)});c.appendChild(col)})}
 $('tb').onclick=()=>{treeOpen=true;renderTree();wal();$('tree').style.display='flex'};
 $('tx').onclick=()=>{treeOpen=false;$('tree').style.display='none'};
+// Pausa con Escape. En online no se frena la simulación (el otro jugador sigue): solo se abre el menú.
+let menuPause=false;
+function togglePause(){if(menuPause){menuPause=false;$('pause').style.display='none';if(!isOnline){paused=false;last=performance.now()}return}
+ if(paused||evo||pickRes)return;   // con cartas o digievolución en pantalla, Escape no hace nada
+ menuPause=true;if(!isOnline)paused=true;
+ $('pnote').textContent=isOnline?'Partida online: el juego sigue corriendo mientras estás acá':'El juego está en pausa';
+ $('pause').style.display='flex';$('pcont').focus()}
+$('pcont').onclick=()=>{if(menuPause)togglePause()};
+$('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
  if(isOnline&&isHost&&conn){try{conn.send({type:'end',title:title})}catch(e){}}
  running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();
+ menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
  const m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin);save.coins+=c;persist();
  $('t').textContent=title;

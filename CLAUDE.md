@@ -41,6 +41,10 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `game.js` → `f
 - `t` tiempo de partida, `lvl`, `xp`, `need`, `kills`, `running`, `paused`, `evo` (animación de digievolución en curso), `mode` (1 o 2).
 - `CREATURES` = lista de criaturas disponibles (`001_guilmon`, `002_renamon`, `003_terriermon`, `005_veemon`). Cada jugador tiene la suya en `q.cid`; `CR(q)` devuelve su entrada de `CreatureLoader.cache`: `{ meta: <json>, canvases: { stage_0..stage_4, branch_6_1.. } }`.
 
+### Pausa y HUD
+- **Escape pausa** (`togglePause`, flag `menuPause`): menú con Continuar / Abandonar partida. Nunca termina la partida directo. En online no frena la simulación (solo abre el menú). Con cartas o digievolución en pantalla, Escape no hace nada.
+- El HUD (barras, reloj, leyenda, skills) solo se ve con `body.ingame`, que pone `start()` y saca `endRun()`.
+
 ### Loop
 `loop()` → si `evo` corre `stepEvo`, si no y no está en pausa corre `update(dt)` → siempre `draw()`. `dt` está topeado a 0.05.
 

@@ -209,3 +209,19 @@ canvas{display:block;width:100%;height:100%}
 #up .card.lv.line{--ac:#4dffb8}#up .card.lv.line img{height:84px!important;margin:4px 0 0!important;image-rendering:pixelated}
 #up .card.lv:disabled{opacity:.4;cursor:not-allowed;filter:saturate(.4)}
 @media (prefers-reduced-motion:reduce){#up .card.lv.new{animation:none}}
+
+/* ---------- El HUD solo se ve durante la partida (body.ingame lo pone start() y lo saca endRun()) ---------- */
+body:not(.ingame) #hud,body:not(.ingame) #xp,body:not(.ingame) #timer,body:not(.ingame) #leg,body:not(.ingame) #pst,body:not(.ingame) #skbar{display:none!important}
+
+/* ---------- Pausa ---------- */
+#pause{--cy:#3fd0ff;--cy2:#1b6fa8;--or:#ff9a2e;position:fixed;inset:0;z-index:35;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(3,10,24,.78);backdrop-filter:blur(3px)}
+#pause .pbox{display:flex;flex-direction:column;align-items:stretch;gap:12px;width:min(380px,100%);padding:24px 28px 20px;text-align:center;color:var(--ink);
+  background:linear-gradient(180deg,rgba(14,52,90,.92),rgba(4,16,34,.97));border:3px solid var(--cy);border-radius:18px 4px 18px 4px;box-shadow:0 0 0 3px rgba(255,154,46,.75),0 0 26px rgba(63,208,255,.45)}
+#pause h2{margin:0;font:900 40px 'Orbitron','Chakra Petch',sans-serif;text-transform:uppercase;letter-spacing:.06em;color:#f2fbff;text-shadow:0 0 6px var(--cy),0 0 20px rgba(63,208,255,.6)}
+#pause p{margin:0 0 4px;font:600 14px 'Chakra Petch',sans-serif;color:#9fc0d6}
+#pause button{padding:13px 20px;font:700 18px 'Chakra Petch',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#eafaff;cursor:pointer;background:linear-gradient(180deg,rgba(26,80,130,.55),rgba(6,24,48,.85));border:2px solid var(--cy);
+  box-shadow:0 0 12px rgba(63,208,255,.35);clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px)}
+#pause #pcont{border-color:var(--or);box-shadow:0 0 14px rgba(255,154,46,.5)}
+#pause #pquit{color:#ff8a8a;border-color:#ff5c5c;box-shadow:0 0 10px rgba(255,92,92,.35)}
+#pause button:hover,#pause button:focus-visible{outline:none;color:#fff;border-color:#fff}
+#pause small{font:600 12px 'Chakra Petch',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--cy);opacity:.7}
