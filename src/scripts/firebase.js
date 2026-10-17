@@ -21,6 +21,12 @@ async function saveToCloud(saveData) {
     await setDoc(doc(db, 'users', uid), {
       coins: saveData.coins,
       lv: saveData.lv || {},
+      // 0.6: datos de cada atributo, Chips de Reformateo, árboles y vínculo (trees.js)
+      ac: saveData.ac || [0, 0, 0],
+      rc: saveData.rc | 0,
+      tr: saveData.tr || {},
+      bond: saveData.bond || {},
+      v: saveData.v || 2,
       updated: Date.now()
     }, { merge: true });
   } catch (err) {
@@ -51,7 +57,7 @@ if ($('logout')) {
     signOut(auth).then(() => {
       localStorage.removeItem('digisurvivor');
       localStorage.removeItem('digisurvivor_prog');
-      if (window.loadSave) window.loadSave({ coins: 0, lv: {} });
+      if (window.loadSave) window.loadSave({ coins: 0, lv: {}, ac: [0, 0, 0], rc: 0, tr: {}, bond: {} });
       if (window.loadProg) window.loadProg(null);   // el rango y los desbloqueos son de la cuenta: se vuelve a cero
     });
   };
@@ -75,7 +81,7 @@ onAuthStateChanged(auth, async u => {
     const snap = await getDoc(doc(db, 'users', u.uid));
     if (snap.exists()) {
       const d = snap.data();
-      const loadedSave = { coins: d.coins | 0, lv: d.lv || {}, updated: Number(d.updated) || 0 };   // updated: lo usa el reinicio de progreso (RESET_BEFORE en game.js)
+      const loadedSave = { coins: d.coins | 0, lv: d.lv || {}, ac: d.ac, rc: d.rc | 0, tr: d.tr, bond: d.bond, v: d.v, updated: Number(d.updated) || 0 };   // updated: lo usa el reinicio de progreso (RESET_BEFORE en game.js)
       if (window.loadSave) window.loadSave(loadedSave);
       // progreso de la cuenta; si la cuenta todavía no tiene, se sube el del navegador
       if (d.prog && window.loadProg) window.loadProg(d.prog);

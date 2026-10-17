@@ -71,7 +71,7 @@ const Stats = {
     // contadores de la partida (evoluciones estilo V-Pet) y estado de las pasivas
     q.vp = { k: 0, bo: 0, care: 0, nh: 0, nhb: 0, dp: 0, rc: 0 };
     q.spv = 0; q.emp = 0; q.casts = 0; q.shT = 0; q.valT = 0; q.ksT = 0; q.puT = 3; q.calm = 0; q.low = 0; q.near = 0; q.nearT = 0;
-    q.ls = 0; q.bk = 0;
+    q.ls = 0; q.bk = 0; q.rr = q.m.reroll | 0;   // rr: re-sorteos de cartas que quedan (árbol de Tamer)
     this.calc(q, true);
   },
 

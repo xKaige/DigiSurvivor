@@ -1,0 +1,2215 @@
+{
+ "note": "Generado por gentrees.py (sesión 0.6). c = costo base, cl = 1 si el costo se multiplica por el nivel.",
+ "trees": {
+  "vac": {
+   "name": "Vacuna",
+   "col": "#4db8ff",
+   "cur": "vac",
+   "fav": "VIT",
+   "about": "Los protectores: aguantar, curarse y proteger al compañero",
+   "arms": {
+    "VIT": "Vitalidad",
+    "FUE": "Fuerza",
+    "VEL": "Velocidad",
+    "INT": "Inteligencia"
+   },
+   "nodes": [
+    {
+     "id": "start",
+     "t": "start",
+     "n": "Inicio",
+     "x": 0,
+     "y": 0,
+     "m": 1,
+     "fx": {},
+     "link": [],
+     "d": "Los protectores: aguantar, curarse y proteger al compañero"
+    },
+    {
+     "id": "vit1",
+     "t": "minor",
+     "n": "Vida",
+     "x": 0,
+     "y": 110,
+     "m": 5,
+     "fx": {
+      "hp": 6
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit2",
+     "t": "minor",
+     "n": "Coraza",
+     "x": 0,
+     "y": 220,
+     "m": 5,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vit1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit3",
+     "t": "major",
+     "n": "Escudo Sagrado",
+     "x": 0,
+     "y": 330,
+     "m": 1,
+     "fx": {
+      "shield": 10
+     },
+     "link": [
+      "vit2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "Bloqueás un golpe cada 10 segundos"
+    },
+    {
+     "id": "vit4",
+     "t": "minor",
+     "n": "Regeneración",
+     "x": 0,
+     "y": 440,
+     "m": 5,
+     "fx": {
+      "regen": 0.15
+     },
+     "link": [
+      "vit3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit5",
+     "t": "minor",
+     "n": "Constitución",
+     "x": 0,
+     "y": 550,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vit4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit6",
+     "t": "major",
+     "n": "Último Bastión",
+     "x": 0,
+     "y": 660,
+     "m": 1,
+     "fx": {
+      "lastStand": 1
+     },
+     "link": [
+      "vit5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "Una vez por partida, un golpe mortal te deja con 1 de vida y 3 s invulnerable"
+    },
+    {
+     "id": "vit7",
+     "t": "minor",
+     "n": "Botiquín",
+     "x": 0,
+     "y": 770,
+     "m": 5,
+     "fx": {
+      "healP": 0.06
+     },
+     "link": [
+      "vit6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit8",
+     "t": "minor",
+     "n": "Coraza II",
+     "x": 0,
+     "y": 880,
+     "m": 5,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vit7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit9",
+     "t": "major",
+     "n": "Fortaleza Sagrada",
+     "x": 0,
+     "y": 990,
+     "m": 1,
+     "fx": {
+      "arm": 0.1,
+      "hpP": 0.1
+     },
+     "link": [
+      "vit8"
+     ],
+     "c": 64,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "-10% de daño recibido y +10% de vida"
+    },
+    {
+     "id": "fue1",
+     "t": "minor",
+     "n": "Poder",
+     "x": 0,
+     "y": -110,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue2",
+     "t": "minor",
+     "n": "Antivirus",
+     "x": 0,
+     "y": -220,
+     "m": 5,
+     "fx": {
+      "vs1": 0.03
+     },
+     "link": [
+      "fue1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue3",
+     "t": "major",
+     "n": "Purificación",
+     "x": 0,
+     "y": -330,
+     "m": 1,
+     "fx": {
+      "purify": 1
+     },
+     "link": [
+      "fue2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "Cada Virus que eliminás te cura un 1% de la vida"
+    },
+    {
+     "id": "fue4",
+     "t": "minor",
+     "n": "Precisión",
+     "x": 0,
+     "y": -440,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fue3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue5",
+     "t": "minor",
+     "n": "Poder II",
+     "x": 0,
+     "y": -550,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "fue4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue6",
+     "t": "major",
+     "n": "Juicio",
+     "x": 0,
+     "y": -660,
+     "m": 1,
+     "fx": {
+      "vs1": 0.25
+     },
+     "link": [
+      "fue5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "+25% de daño contra Virus"
+    },
+    {
+     "id": "vel1",
+     "t": "minor",
+     "n": "Paso",
+     "x": -110,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel2",
+     "t": "minor",
+     "n": "Reflejos",
+     "x": -220,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dodge": 0.01
+     },
+     "link": [
+      "vel1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel3",
+     "t": "major",
+     "n": "Paso Ligero",
+     "x": -330,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "dodge": 0.08
+     },
+     "link": [
+      "vel2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "+8% de chance de esquivar golpes"
+    },
+    {
+     "id": "vel4",
+     "t": "minor",
+     "n": "Cadencia",
+     "x": -440,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "vel3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel5",
+     "t": "minor",
+     "n": "Socorro",
+     "x": -550,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "revSpd": 0.1
+     },
+     "link": [
+      "vel4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel6",
+     "t": "major",
+     "n": "Rescate",
+     "x": -660,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "revSpd": 1,
+      "revHP": 0.25
+     },
+     "link": [
+      "vel5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "Revivís compañeros el doble de rápido y vuelven con 75% de vida"
+    },
+    {
+     "id": "int1",
+     "t": "minor",
+     "n": "Concentración",
+     "x": 110,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int2",
+     "t": "minor",
+     "n": "Estudio",
+     "x": 220,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "xp": 0.02
+     },
+     "link": [
+      "int1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int3",
+     "t": "major",
+     "n": "Aura Curativa",
+     "x": 330,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "aura": 1
+     },
+     "link": [
+      "int2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "INT",
+     "d": "Los compañeros cerca tuyo se curan 1,5 de vida por segundo"
+    },
+    {
+     "id": "int4",
+     "t": "minor",
+     "n": "Alcance",
+     "x": 440,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "area": 0.02
+     },
+     "link": [
+      "int3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int5",
+     "t": "minor",
+     "n": "Medicina",
+     "x": 550,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "healP": 0.05
+     },
+     "link": [
+      "int4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int6",
+     "t": "major",
+     "n": "Bendición",
+     "x": 660,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "healP": 0.5,
+      "regen": 0.5
+     },
+     "link": [
+      "int5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "INT",
+     "d": "Los ítems curan un 50% más y +0,5 de vida por segundo"
+    },
+    {
+     "id": "xfueint1",
+     "t": "attr",
+     "n": "Vacuna: Purga",
+     "x": 172,
+     "y": -172,
+     "m": 3,
+     "fx": {
+      "vs1": 0.03
+     },
+     "link": [
+      "fue2",
+      "int2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xfueint2",
+     "t": "attr",
+     "n": "Vacuna: Juicio Lúcido",
+     "x": 429,
+     "y": -429,
+     "m": 3,
+     "fx": {
+      "vs1": 0.03,
+      "cdr": 0.01
+     },
+     "link": [
+      "fue5",
+      "int5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xintvit1",
+     "t": "attr",
+     "n": "Vacuna: Calma",
+     "x": 172,
+     "y": 172,
+     "m": 3,
+     "fx": {
+      "regen": 0.1
+     },
+     "link": [
+      "int2",
+      "vit2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xintvit2",
+     "t": "attr",
+     "n": "Vacuna: Templanza",
+     "x": 429,
+     "y": 429,
+     "m": 3,
+     "fx": {
+      "regen": 0.15,
+      "hp": 4
+     },
+     "link": [
+      "int5",
+      "vit5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel1",
+     "t": "attr",
+     "n": "Vacuna: Guardia",
+     "x": -172,
+     "y": 172,
+     "m": 3,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vit2",
+      "vel2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel2",
+     "t": "attr",
+     "n": "Vacuna: Guardia Ágil",
+     "x": -429,
+     "y": 429,
+     "m": 3,
+     "fx": {
+      "arm": 0.01,
+      "dodge": 0.01
+     },
+     "link": [
+      "vit5",
+      "vel5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue1",
+     "t": "attr",
+     "n": "Vacuna: Coraje",
+     "x": -172,
+     "y": -172,
+     "m": 3,
+     "fx": {
+      "dmgP": 0.015
+     },
+     "link": [
+      "vel2",
+      "fue2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue2",
+     "t": "attr",
+     "n": "Vacuna: Carga Sagrada",
+     "x": -429,
+     "y": -429,
+     "m": 3,
+     "fx": {
+      "dmgP": 0.02,
+      "spP": 0.01
+     },
+     "link": [
+      "vel5",
+      "fue5"
+     ],
+     "c": 9,
+     "cl": 1
+    }
+   ]
+  },
+  "vir": {
+   "name": "Virus",
+   "col": "#c05bff",
+   "cur": "vir",
+   "fav": "FUE",
+   "about": "Los agresivos: mucho daño a cambio de riesgo",
+   "arms": {
+    "FUE": "Fuerza",
+    "VEL": "Velocidad",
+    "INT": "Inteligencia",
+    "VIT": "Vitalidad"
+   },
+   "nodes": [
+    {
+     "id": "start",
+     "t": "start",
+     "n": "Inicio",
+     "x": 0,
+     "y": 0,
+     "m": 1,
+     "fx": {},
+     "link": [],
+     "d": "Los agresivos: mucho daño a cambio de riesgo"
+    },
+    {
+     "id": "fue1",
+     "t": "minor",
+     "n": "Furia",
+     "x": 0,
+     "y": -110,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.025
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue2",
+     "t": "minor",
+     "n": "Instinto",
+     "x": 0,
+     "y": -220,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fue1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue3",
+     "t": "major",
+     "n": "Berserker",
+     "x": 0,
+     "y": -330,
+     "m": 1,
+     "fx": {
+      "berserk": 1
+     },
+     "link": [
+      "fue2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "Con menos del 30% de vida hacés +40% de daño"
+    },
+    {
+     "id": "fue4",
+     "t": "minor",
+     "n": "Brutalidad",
+     "x": 0,
+     "y": -440,
+     "m": 5,
+     "fx": {
+      "critD": 0.04
+     },
+     "link": [
+      "fue3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue5",
+     "t": "minor",
+     "n": "Mordida",
+     "x": 0,
+     "y": -550,
+     "m": 5,
+     "fx": {
+      "leech": 0.003
+     },
+     "link": [
+      "fue4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue6",
+     "t": "major",
+     "n": "Sed de Datos",
+     "x": 0,
+     "y": -660,
+     "m": 1,
+     "fx": {
+      "leech": 0.04
+     },
+     "link": [
+      "fue5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "Robás un 4% del daño que hacés"
+    },
+    {
+     "id": "fue7",
+     "t": "minor",
+     "n": "Furia II",
+     "x": 0,
+     "y": -770,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.025
+     },
+     "link": [
+      "fue6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue8",
+     "t": "minor",
+     "n": "Instinto II",
+     "x": 0,
+     "y": -880,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fue7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue9",
+     "t": "major",
+     "n": "Ejecución",
+     "x": 0,
+     "y": -990,
+     "m": 1,
+     "fx": {
+      "execute": 0.12
+     },
+     "link": [
+      "fue8"
+     ],
+     "c": 64,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "Los enemigos que quedan con menos del 12% de vida mueren de un golpe"
+    },
+    {
+     "id": "vel1",
+     "t": "minor",
+     "n": "Acecho",
+     "x": -110,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel2",
+     "t": "minor",
+     "n": "Ráfaga",
+     "x": -220,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "vel1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel3",
+     "t": "major",
+     "n": "Frenesí",
+     "x": -330,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "moveDmg": 0.15
+     },
+     "link": [
+      "vel2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "Mientras te movés hacés +15% de daño"
+    },
+    {
+     "id": "vel4",
+     "t": "minor",
+     "n": "Acecho II",
+     "x": -440,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "vel3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel5",
+     "t": "minor",
+     "n": "Esquiva",
+     "x": -550,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dodge": 0.008
+     },
+     "link": [
+      "vel4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel6",
+     "t": "major",
+     "n": "Cazador",
+     "x": -660,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "killSpeed": 1
+     },
+     "link": [
+      "vel5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "Al eliminar un enemigo, +15% de velocidad por 2 s"
+    },
+    {
+     "id": "int1",
+     "t": "minor",
+     "n": "Código",
+     "x": 110,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.015
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int2",
+     "t": "minor",
+     "n": "Persistencia",
+     "x": 220,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dur": 0.03
+     },
+     "link": [
+      "int1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int3",
+     "t": "major",
+     "n": "Infección",
+     "x": 330,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "infect": 1
+     },
+     "link": [
+      "int2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "INT",
+     "d": "Tus golpes infectan: el enemigo pierde un 20% extra en 3 s"
+    },
+    {
+     "id": "int4",
+     "t": "minor",
+     "n": "Carga",
+     "x": 440,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spg": 0.05
+     },
+     "link": [
+      "int3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int5",
+     "t": "minor",
+     "n": "Propagación",
+     "x": 550,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "area": 0.02
+     },
+     "link": [
+      "int4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int6",
+     "t": "major",
+     "n": "Corrupción",
+     "x": 660,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "corrupt": 1
+     },
+     "link": [
+      "int5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "INT",
+     "d": "Los infectados explotan al morir y dañan a los de alrededor"
+    },
+    {
+     "id": "vit1",
+     "t": "minor",
+     "n": "Carne",
+     "x": 0,
+     "y": 110,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit2",
+     "t": "minor",
+     "n": "Sangre",
+     "x": 0,
+     "y": 220,
+     "m": 5,
+     "fx": {
+      "leech": 0.002
+     },
+     "link": [
+      "vit1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit3",
+     "t": "major",
+     "n": "Sangre Fría",
+     "x": 0,
+     "y": 330,
+     "m": 1,
+     "fx": {
+      "lowRegen": 2
+     },
+     "link": [
+      "vit2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "Con menos del 30% de vida te curás 2 por segundo"
+    },
+    {
+     "id": "vit4",
+     "t": "minor",
+     "n": "Resistencia",
+     "x": 0,
+     "y": 440,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vit3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit5",
+     "t": "minor",
+     "n": "Mutación",
+     "x": 0,
+     "y": 550,
+     "m": 5,
+     "fx": {
+      "regen": 0.1
+     },
+     "link": [
+      "vit4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit6",
+     "t": "major",
+     "n": "Oscuridad Dominada",
+     "x": 0,
+     "y": 660,
+     "m": 1,
+     "fx": {
+      "darkMaster": 1,
+      "dmgP": 0.05
+     },
+     "link": [
+      "vit5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "La evolución oscura solo te baja hasta el 60% de vida, y +5% de daño"
+    },
+    {
+     "id": "xfueint1",
+     "t": "attr",
+     "n": "Virus: Contagio",
+     "x": 172,
+     "y": -172,
+     "m": 3,
+     "fx": {
+      "vs2": 0.03
+     },
+     "link": [
+      "fue2",
+      "int2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xfueint2",
+     "t": "attr",
+     "n": "Virus: Plaga",
+     "x": 429,
+     "y": -429,
+     "m": 3,
+     "fx": {
+      "vs2": 0.03,
+      "dur": 0.02
+     },
+     "link": [
+      "fue5",
+      "int5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xintvit1",
+     "t": "attr",
+     "n": "Virus: Parásito",
+     "x": 172,
+     "y": 172,
+     "m": 3,
+     "fx": {
+      "leech": 0.002
+     },
+     "link": [
+      "int2",
+      "vit2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xintvit2",
+     "t": "attr",
+     "n": "Virus: Simbiosis",
+     "x": 429,
+     "y": 429,
+     "m": 3,
+     "fx": {
+      "leech": 0.002,
+      "regen": 0.1
+     },
+     "link": [
+      "int5",
+      "vit5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel1",
+     "t": "attr",
+     "n": "Virus: Instinto Salvaje",
+     "x": -172,
+     "y": 172,
+     "m": 3,
+     "fx": {
+      "spP": 0.015
+     },
+     "link": [
+      "vit2",
+      "vel2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel2",
+     "t": "attr",
+     "n": "Virus: Huida",
+     "x": -429,
+     "y": 429,
+     "m": 3,
+     "fx": {
+      "spP": 0.015,
+      "hp": 4
+     },
+     "link": [
+      "vit5",
+      "vel5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue1",
+     "t": "attr",
+     "n": "Virus: Saña",
+     "x": -172,
+     "y": -172,
+     "m": 3,
+     "fx": {
+      "critD": 0.03
+     },
+     "link": [
+      "vel2",
+      "fue2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue2",
+     "t": "attr",
+     "n": "Virus: Golpe Bajo",
+     "x": -429,
+     "y": -429,
+     "m": 3,
+     "fx": {
+      "critD": 0.04,
+      "crit": 0.005
+     },
+     "link": [
+      "vel5",
+      "fue5"
+     ],
+     "c": 9,
+     "cl": 1
+    }
+   ]
+  },
+  "dat": {
+   "name": "Dato",
+   "col": "#ffb02e",
+   "cur": "dat",
+   "fav": "INT",
+   "about": "Los técnicos: skills, control del campo y eficiencia",
+   "arms": {
+    "INT": "Inteligencia",
+    "FUE": "Fuerza",
+    "VEL": "Velocidad",
+    "VIT": "Vitalidad"
+   },
+   "nodes": [
+    {
+     "id": "start",
+     "t": "start",
+     "n": "Inicio",
+     "x": 0,
+     "y": 0,
+     "m": 1,
+     "fx": {},
+     "link": [],
+     "d": "Los técnicos: skills, control del campo y eficiencia"
+    },
+    {
+     "id": "int1",
+     "t": "minor",
+     "n": "Procesador",
+     "x": 110,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.02
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int2",
+     "t": "minor",
+     "n": "Expansión",
+     "x": 220,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "area": 0.025
+     },
+     "link": [
+      "int1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int3",
+     "t": "major",
+     "n": "Sobrecarga",
+     "x": 330,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "overload": 1
+     },
+     "link": [
+      "int2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "INT",
+     "d": "Cada 5 skills que usás, la quinta sale dos veces"
+    },
+    {
+     "id": "int4",
+     "t": "minor",
+     "n": "Persistencia",
+     "x": 440,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dur": 0.03
+     },
+     "link": [
+      "int3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int5",
+     "t": "minor",
+     "n": "Batería",
+     "x": 550,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spg": 0.06
+     },
+     "link": [
+      "int4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int6",
+     "t": "major",
+     "n": "Compresión",
+     "x": 660,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "slots": 1
+     },
+     "link": [
+      "int5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "INT",
+     "d": "Podés tener una skill activa más (5 en vez de 4)"
+    },
+    {
+     "id": "int7",
+     "t": "minor",
+     "n": "Procesador II",
+     "x": 770,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.02
+     },
+     "link": [
+      "int6"
+     ],
+     "c": 9,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int8",
+     "t": "minor",
+     "n": "Expansión II",
+     "x": 880,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "area": 0.025
+     },
+     "link": [
+      "int7"
+     ],
+     "c": 10,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int9",
+     "t": "major",
+     "n": "Aprendizaje",
+     "x": 990,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "cards": 1
+     },
+     "link": [
+      "int8"
+     ],
+     "c": 64,
+     "cl": 0,
+     "arm": "INT",
+     "d": "Elegís entre una carta más al subir de nivel"
+    },
+    {
+     "id": "fue1",
+     "t": "minor",
+     "n": "Cálculo",
+     "x": 0,
+     "y": -110,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.02
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue2",
+     "t": "minor",
+     "n": "Antivacuna",
+     "x": 0,
+     "y": -220,
+     "m": 5,
+     "fx": {
+      "vs0": 0.03
+     },
+     "link": [
+      "fue1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue3",
+     "t": "major",
+     "n": "Análisis",
+     "x": 0,
+     "y": -330,
+     "m": 1,
+     "fx": {
+      "vs0": 0.1,
+      "crit": 0.05
+     },
+     "link": [
+      "fue2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "+10% de daño contra Vacuna y +5% de crítico"
+    },
+    {
+     "id": "fue4",
+     "t": "minor",
+     "n": "Precisión",
+     "x": 0,
+     "y": -440,
+     "m": 5,
+     "fx": {
+      "crit": 0.01
+     },
+     "link": [
+      "fue3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue5",
+     "t": "minor",
+     "n": "Optimización",
+     "x": 0,
+     "y": -550,
+     "m": 5,
+     "fx": {
+      "critD": 0.04
+     },
+     "link": [
+      "fue4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue6",
+     "t": "major",
+     "n": "Punto Débil",
+     "x": 0,
+     "y": -660,
+     "m": 1,
+     "fx": {
+      "critD": 0.5
+     },
+     "link": [
+      "fue5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "Los críticos hacen +50% de daño"
+    },
+    {
+     "id": "vel1",
+     "t": "minor",
+     "n": "Transferencia",
+     "x": -110,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spP": 0.02
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel2",
+     "t": "minor",
+     "n": "Recolector",
+     "x": -220,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "magP": 0.06
+     },
+     "link": [
+      "vel1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel3",
+     "t": "major",
+     "n": "Campo de Datos",
+     "x": -330,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "slowAura": 1
+     },
+     "link": [
+      "vel2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "Los enemigos cerca tuyo van un 20% más lentos"
+    },
+    {
+     "id": "vel4",
+     "t": "minor",
+     "n": "Ciclo",
+     "x": -440,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "rateP": 0.02
+     },
+     "link": [
+      "vel3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel5",
+     "t": "minor",
+     "n": "Caché",
+     "x": -550,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.01
+     },
+     "link": [
+      "vel4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel6",
+     "t": "major",
+     "n": "Recarga Dinámica",
+     "x": -660,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "moveCdr": 0.25
+     },
+     "link": [
+      "vel5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "Mientras te movés, tus skills recargan un 25% más rápido"
+    },
+    {
+     "id": "vit1",
+     "t": "minor",
+     "n": "Integridad",
+     "x": 0,
+     "y": 110,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "start"
+     ],
+     "c": 3,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit2",
+     "t": "minor",
+     "n": "Encriptado",
+     "x": 0,
+     "y": 220,
+     "m": 5,
+     "fx": {
+      "arm": 0.01
+     },
+     "link": [
+      "vit1"
+     ],
+     "c": 4,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit3",
+     "t": "major",
+     "n": "Firewall",
+     "x": 0,
+     "y": 330,
+     "m": 1,
+     "fx": {
+      "bulletRes": 0.25
+     },
+     "link": [
+      "vit2"
+     ],
+     "c": 28,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "Las balas enemigas te hacen un 25% menos"
+    },
+    {
+     "id": "vit4",
+     "t": "minor",
+     "n": "Redundancia",
+     "x": 0,
+     "y": 440,
+     "m": 5,
+     "fx": {
+      "hpP": 0.02
+     },
+     "link": [
+      "vit3"
+     ],
+     "c": 6,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit5",
+     "t": "minor",
+     "n": "Filtro",
+     "x": 0,
+     "y": 550,
+     "m": 5,
+     "fx": {
+      "bulletRes": 0.03
+     },
+     "link": [
+      "vit4"
+     ],
+     "c": 7,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit6",
+     "t": "major",
+     "n": "Respaldo",
+     "x": 0,
+     "y": 660,
+     "m": 1,
+     "fx": {
+      "backup": 1
+     },
+     "link": [
+      "vit5"
+     ],
+     "c": 46,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "Una vez por partida, al caer volvés con 50% de vida"
+    },
+    {
+     "id": "xfueint1",
+     "t": "attr",
+     "n": "Dato: Algoritmo",
+     "x": 172,
+     "y": -172,
+     "m": 3,
+     "fx": {
+      "vs0": 0.03
+     },
+     "link": [
+      "fue2",
+      "int2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xfueint2",
+     "t": "attr",
+     "n": "Dato: Heurística",
+     "x": 429,
+     "y": -429,
+     "m": 3,
+     "fx": {
+      "vs0": 0.03,
+      "crit": 0.005
+     },
+     "link": [
+      "fue5",
+      "int5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xintvit1",
+     "t": "attr",
+     "n": "Dato: Compilación",
+     "x": 172,
+     "y": 172,
+     "m": 3,
+     "fx": {
+      "cdr": 0.01
+     },
+     "link": [
+      "int2",
+      "vit2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xintvit2",
+     "t": "attr",
+     "n": "Dato: Depuración",
+     "x": 429,
+     "y": 429,
+     "m": 3,
+     "fx": {
+      "cdr": 0.01,
+      "hp": 4
+     },
+     "link": [
+      "int5",
+      "vit5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel1",
+     "t": "attr",
+     "n": "Dato: Protocolo",
+     "x": -172,
+     "y": 172,
+     "m": 3,
+     "fx": {
+      "magP": 0.04
+     },
+     "link": [
+      "vit2",
+      "vel2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel2",
+     "t": "attr",
+     "n": "Dato: Ancho de Banda",
+     "x": -429,
+     "y": 429,
+     "m": 3,
+     "fx": {
+      "magP": 0.04,
+      "spP": 0.01
+     },
+     "link": [
+      "vit5",
+      "vel5"
+     ],
+     "c": 9,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue1",
+     "t": "attr",
+     "n": "Dato: Paquete",
+     "x": -172,
+     "y": -172,
+     "m": 3,
+     "fx": {
+      "area": 0.015
+     },
+     "link": [
+      "vel2",
+      "fue2"
+     ],
+     "c": 6,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue2",
+     "t": "attr",
+     "n": "Dato: Ráfaga de Datos",
+     "x": -429,
+     "y": -429,
+     "m": 3,
+     "fx": {
+      "area": 0.02,
+      "rateP": 0.01
+     },
+     "link": [
+      "vel5",
+      "fue5"
+     ],
+     "c": 9,
+     "cl": 1
+    }
+   ]
+  },
+  "tam": {
+   "name": "Tamer",
+   "col": "#4dffb8",
+   "cur": "coins",
+   "fav": null,
+   "about": "Mejoras de tu cuenta: sirven con cualquier Digimon",
+   "arms": {
+    "FUE": "Experiencia",
+    "INT": "Botín",
+    "VIT": "Logística",
+    "VEL": "Mando"
+   },
+   "nodes": [
+    {
+     "id": "start",
+     "t": "start",
+     "n": "Inicio",
+     "x": 0,
+     "y": 0,
+     "m": 1,
+     "fx": {},
+     "link": [],
+     "d": "Mejoras de tu cuenta: sirven con cualquier Digimon"
+    },
+    {
+     "id": "fue1",
+     "t": "minor",
+     "n": "Estudio",
+     "x": 0,
+     "y": -110,
+     "m": 5,
+     "fx": {
+      "xp": 0.03
+     },
+     "link": [
+      "start"
+     ],
+     "c": 45,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue2",
+     "t": "minor",
+     "n": "Estudio II",
+     "x": 0,
+     "y": -220,
+     "m": 5,
+     "fx": {
+      "xp": 0.03
+     },
+     "link": [
+      "fue1"
+     ],
+     "c": 60,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue3",
+     "t": "major",
+     "n": "Inicio Rápido",
+     "x": 0,
+     "y": -330,
+     "m": 1,
+     "fx": {
+      "quick": 1
+     },
+     "link": [
+      "fue2"
+     ],
+     "c": 500,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "La primera evolución llega un nivel antes"
+    },
+    {
+     "id": "fue4",
+     "t": "minor",
+     "n": "Maestría",
+     "x": 0,
+     "y": -440,
+     "m": 5,
+     "fx": {
+      "xp": 0.04
+     },
+     "link": [
+      "fue3"
+     ],
+     "c": 90,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "int1",
+     "t": "minor",
+     "n": "Ahorro",
+     "x": 110,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "coin": 0.06
+     },
+     "link": [
+      "start"
+     ],
+     "c": 45,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int2",
+     "t": "minor",
+     "n": "Cosecha",
+     "x": 220,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "acoin": 0.06
+     },
+     "link": [
+      "int1"
+     ],
+     "c": 60,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int3",
+     "t": "major",
+     "n": "Cazarrecompensas",
+     "x": 330,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "bossCoin": 0.5
+     },
+     "link": [
+      "int2"
+     ],
+     "c": 500,
+     "cl": 0,
+     "arm": "INT",
+     "d": "Los jefes dan un 50% más de monedas"
+    },
+    {
+     "id": "int4",
+     "t": "minor",
+     "n": "Suerte",
+     "x": 440,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "luck": 0.04
+     },
+     "link": [
+      "int3"
+     ],
+     "c": 90,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "vit1",
+     "t": "minor",
+     "n": "Imán",
+     "x": 0,
+     "y": 110,
+     "m": 5,
+     "fx": {
+      "magP": 0.06
+     },
+     "link": [
+      "start"
+     ],
+     "c": 45,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit2",
+     "t": "minor",
+     "n": "Reciclaje",
+     "x": 0,
+     "y": 220,
+     "m": 5,
+     "fx": {
+      "rcChance": 0.06
+     },
+     "link": [
+      "vit1"
+     ],
+     "c": 60,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit3",
+     "t": "major",
+     "n": "Mochila",
+     "x": 0,
+     "y": 330,
+     "m": 1,
+     "fx": {
+      "itemStart": 1
+     },
+     "link": [
+      "vit2"
+     ],
+     "c": 500,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "Empezás cada partida con una Carne al lado"
+    },
+    {
+     "id": "vit4",
+     "t": "minor",
+     "n": "Primeros Auxilios",
+     "x": 0,
+     "y": 440,
+     "m": 5,
+     "fx": {
+      "healP": 0.05
+     },
+     "link": [
+      "vit3"
+     ],
+     "c": 90,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vel1",
+     "t": "minor",
+     "n": "Socorrista",
+     "x": -110,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "revSpd": 0.1
+     },
+     "link": [
+      "start"
+     ],
+     "c": 45,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel2",
+     "t": "major",
+     "n": "Re-sortear",
+     "x": -220,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "reroll": 2
+     },
+     "link": [
+      "vel1"
+     ],
+     "c": 400,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "Dos veces por partida podés cambiar las cartas que te salieron"
+    },
+    {
+     "id": "vel3",
+     "t": "minor",
+     "n": "Fortuna",
+     "x": -330,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "luck": 0.03
+     },
+     "link": [
+      "vel2"
+     ],
+     "c": 75,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel4",
+     "t": "major",
+     "n": "Visión de Tamer",
+     "x": -440,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "cards": 1
+     },
+     "link": [
+      "vel3"
+     ],
+     "c": 600,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "Elegís entre una carta más al subir de nivel"
+    }
+   ]
+  }
+ }
+}

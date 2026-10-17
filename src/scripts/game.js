@@ -237,7 +237,7 @@ function setupConn(c) {
         const ids = [hostPick, validId(data.c1) || '001_guilmon'];
         hostPick = null;
         $('up').style.display = 'none';
-        start(2, ids);
+        start(2, ids, [Trees.loadout(ids[0]), Trees.clean(data.lo) || { m: {}, bond: 0 }]);
       }
     } else if (data.type === 'sync') {
       applyOnlineSync(data);
@@ -296,8 +296,8 @@ function applyCardOp(targetP, data) {
 // Invitado: responde con su Digimon y arranca
 function joinOnline(c0) {
   const id = selected || '001_guilmon';
-  if (conn) sendTo(conn, { type: 'ready', c1: id });
-  start(2, [validId(c0) || '001_guilmon', id]).catch(e => console.error(e));
+  if (conn) sendTo(conn, { type: 'ready', c1: id, lo: Trees.loadout(id) });
+  start(2, [validId(c0) || '001_guilmon', id], [null, Trees.loadout(id)]).catch(e => console.error(e));
 }
 
 function applyOnlineSync(data) {
@@ -527,11 +527,6 @@ function renderLegend() {
   $('leg').innerHTML = s;
 }
 
-const TREE=[
-{c:'Ataque',n:[{k:'a1',n:'Poder',d:'+20% de daño',m:5,b:30},{k:'a2',n:'Cadencia',d:'Ataca un 6% más rápido',m:5,b:40,r:'a1'},{k:'a3',n:'Disparo extra',d:'+1 proyectil desde el inicio',m:1,b:150,r:'a2'}]},
-{c:'Defensa',n:[{k:'d1',n:'Vitalidad',d:'+15 de vida máxima',m:5,b:25},{k:'d2',n:'Agilidad',d:'+5% de velocidad',m:5,b:35,r:'d1'},{k:'d3',n:'Coraza',d:'-8% de daño recibido',m:3,b:60,r:'d2'}]},
-{c:'Datos',n:[{k:'x1',n:'Imán',d:'+20% de alcance para juntar XP',m:3,b:25},{k:'x2',n:'Sintonía',d:'+15% de XP recibida',m:5,b:50,r:'x1'},{k:'x3',n:'Botín',d:'+20% de monedas por partida',m:3,b:60,r:'x2'}]},
-{c:'Entrenamiento',n:[{k:'tf',n:'Fuerza',d:'+1 punto permanente y +4% de daño',m:5,b:40},{k:'tv',n:'Velocidad',d:'+1 punto permanente y +3% de velocidad',m:5,b:40},{k:'ti',n:'Inteligencia',d:'+1 punto permanente y +6% de XP',m:5,b:40},{k:'th',n:'Vitalidad',d:'+1 punto permanente y +8 de vida',m:5,b:40}]}];
 // ---------- Versión y reinicio del progreso ----------
 // GAME_VERSION se muestra en el menú. Para reiniciar el progreso de TODOS (ej. al lanzar la versión final),
 // poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
@@ -541,27 +536,17 @@ const GAME_VERSION = '0.5';
 const RESET_BEFORE = null;
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
- s.coins=0;s.lv={};try{localStorage.removeItem('digisurvivor_daily');localStorage.removeItem('digisurvivor_prog')}catch(e){}if(typeof Progress!=='undefined')Progress.st=null;return true}
-let save={coins:0,lv:{}};
+ s.coins=0;s.lv={};s.ac=[0,0,0];s.rc=0;s.tr={};s.bond={};try{localStorage.removeItem('digisurvivor_daily');localStorage.removeItem('digisurvivor_prog')}catch(e){}if(typeof Progress!=='undefined')Progress.st=null;return true}
+let save={coins:0,lv:{},ac:[0,0,0],rc:0,tr:{},bond:{}};
 try{const s=JSON.parse(localStorage.getItem('digisurvivor'));if(s&&s.lv)save=s}catch(e){}
 if(wipeIfOld(save)){save.updated=Date.now();try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}
 function persist(){save.updated=Date.now();try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}if(window.onSave)window.onSave(save)}
 window.getSave=()=>save;
-window.loadSave=s=>{save=s;if(wipeIfOld(save)){persist()}else{try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}wal()};   // si la cuenta tenía progreso viejo, se reinicia y se guarda en la nube
-function L(k){return save.lv[k]|0}
-function applyTree(q){q.dmg*=(1+.2*L('a1'))*(1+.04*L('tf'));q.rate*=Math.pow(.94,L('a2'));q.multi+=L('a3');q.max+=15*L('d1')+8*L('th');q.hp=q.max;q.sp*=(1+.05*L('d2'))*(1+.03*L('tv'));q.arm=.08*L('d3');q.mag*=1+.2*L('x1');q.xpm=(1+.15*L('x2'))*(1+.06*L('ti'));q.coin=1+.2*L('x3')}
-function wal(){$('wal').textContent='Monedas: '+save.coins;$('tw').textContent='Monedas: '+save.coins}
-function renderTree(){const c=$('cols');c.innerHTML='';
- TREE.forEach((br,ci)=>{const col=document.createElement('div');col.className='col'+(ci%2?'':' alt');col.innerHTML='<h3>'+br.c+'</h3>';
-  // las de Entrenamiento no dependen entre sí (sin línea que las una)
-  if(!br.n.some(n=>n.r))col.classList.add('free');
-  br.n.forEach(n=>{const lv=L(n.k),maxed=lv>=n.m,locked=n.r&&!L(n.r),cost=n.b*(lv+1),poor=!maxed&&!locked&&save.coins<cost;
-   const b=document.createElement('button');b.className='node'+(maxed?' max':locked?' lock':poor?' poor':' buy');b.disabled=maxed||!!locked||poor;
-   const pips='<span class="pips">'+Array.from({length:n.m},(_,i)=>'<u'+(i<lv?' class="on"':'')+'></u>').join('')+'<small>'+lv+'/'+n.m+'</small></span>';
-   b.innerHTML='<b>'+n.n+'</b>'+pips+n.d+'<i>'+(maxed?'Máximo':locked?'Requiere la mejora anterior':'● '+cost+' monedas')+'</i>';
-   b.onclick=()=>{save.coins-=cost;save.lv[n.k]=lv+1;persist();wal();renderTree()};col.appendChild(b)});c.appendChild(col)})}
-$('tb').onclick=()=>{treeOpen=true;renderTree();wal();$('tree').style.display='flex'};
-$('tx').onclick=()=>{treeOpen=false;$('tree').style.display='none'};
+window.loadSave=s=>{save=s;if(typeof Trees!=='undefined')Trees.ensure(save);if(wipeIfOld(save)){persist()}else{try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}wal()};   // si la cuenta tenía progreso viejo, se reinicia y se guarda en la nube
+function wal(){$('wal').textContent='Monedas: '+save.coins;if(treeOpen&&typeof Trees!=='undefined')$('tw').textContent='Chips de Reformateo: '+(save.rc|0)}
+// Árbol de mejoras (trees.js)
+$('tb').onclick=()=>Trees.open();
+$('tx').onclick=()=>Trees.close();
 // Pausa con Escape. En online no se frena la simulación (el otro jugador sigue): solo se abre el menú.
 let menuPause=false;
 function togglePause(){if(menuPause){menuPause=false;$('pause').style.display='none';if(!isOnline){paused=false;last=performance.now()}return}
@@ -577,9 +562,10 @@ function endRun(title){if(!running)return;
  running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
- const bc=Bosses.coins(),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
+ const bc=Math.round(Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
  $('t').textContent=title;
- $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.';
+ const trTxt=Trees.onRunEnd(mine(),t);
+ $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.'+trTxt;
  // misiones diarias (missions.js): cuenta la partida con los datos de TU jugador (en online el invitado es P[1])
  if(typeof Missions!=='undefined'){const me=(isOnline&&!isHost&&P[1])?P[1]:P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode===2,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
@@ -815,6 +801,9 @@ function showCards(keep){
    b.className='card lv '+(nw?'new':sk?'skup':'stat');if(sd)b.style.setProperty('--ac',SkillSys.col(sd));
    b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(nw?'Skill nueva':sk?'Mejora de skill':'Mejora')+'</span><b>'+u.n+'</b><span class="kd">'+u.d+'</span>'+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag&&!nw?'<em>'+u.tag+'</em>':nw&&u.full?'<em>Tenés las 4 ocupadas: elegís cuál reemplazar</em>':'');
    b.onclick=()=>choose(u);c.appendChild(b)});
+  // Re-sortear (árbol de Tamer): cambia las cartas que salieron, unas pocas veces por partida
+  if(p.rr>0){const r=document.createElement('button');r.className='card lv stat reroll';r.innerHTML='<span class="kt">Re-sortear</span><b>Otras cartas</b><span class="kd">Te quedan '+p.rr+'</span>';
+   r.onclick=()=>{if(performance.now()-cardsAt<400||!(p.rr>0))return;p.rr--;showCards()};c.appendChild(r)}
   showUp();
 }
 // Con las 4 skills ocupadas: elegir cuál olvidar para aprender la nueva (u). "Volver" regresa a las cartas.
