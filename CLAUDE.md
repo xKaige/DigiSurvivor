@@ -4,7 +4,7 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 
 ## Estado actual (última sesión, oct 2026)
 - Versión publicada: **0.5**. Después de la 0.5 se subieron a `main` (sin versión nueva): evoluciones cada 5 niveles, menos lag, skills de bebé, reemplazo de skills + nivel 10 en formas finales, loop a prueba de errores, XP calibrada, eclosión desde el Analyzer, tamaño parejo de sprites y el **mapa procedural** (un bosque nuevo por partida, ver "Mapa").
-- **0.6 en curso en la rama `v0.6`** (NO en `main`: se mergea y publica recién cuando esté todo). Ya hecho ahí: motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo + Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores. Al publicar: `GAME_VERSION` 0.6, `changelog.json`, y `RESET_BEFORE` = fecha y hora del lanzamiento (la 0.6 reinicia TODO el progreso; lo pidió el usuario).
+- **0.6 publicada** (17/10/2026 22:42, `RESET_BEFORE`: todo el progreso anterior volvió a cero): motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo + Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores. Balance medido solo con bot: falta ajustarlo jugando.
 - Sin probar con dos personas: todo lo online de 0.4–0.5 (enemigos nuevos, avisos, ítems, jefes, mapa, reemplazo de skills) y el guardado de `prog` en la cuenta.
 - Reglas de Firestore pendientes de revisar/agregar: `challenges/{día}/scores/{uid}` (ranking del desafío) y el campo `prog` en `users/{uid}`.
 - Después de la 0.6: **mapas** (más zonas, selector, lava que daña en Magma Mountain), 3–4 jugadores en el menú y en el online (las bases ya están).
@@ -244,7 +244,7 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 ## Pendientes / ideas
 - Al subir de versión: actualizar `GAME_VERSION` y sumar la entrada en `src/data/changelog.json`.
 - Mostrar el Rango de Tamer en el perfil de amigos (necesita un campo nuevo en `profiles` y revisar reglas).
-- **Versión actual: 0.5** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.
+- **Versión actual: 0.6** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.
 - Corregir el comentario de `?test` en game.js.
 - Mapas: más zonas (hay 17 en Digital Tamers: Boot Jungle, Dina Plains, Modular Forest, Snow Land, SB Valley, Wave Coast, Clear Oasis, Net Ocean, Jagged Rocks, Slippery Swamp, Drive Savanna, Chrome Mines, Link Ruins, Sewer Road, Mecha Plant, Sizzling Desert, Magma Mountain), selector en el menú (las `bg_Btl_*` de 426×240 sirven de vista previa), `obj_Lava` que daña, enemigos por hábitat.
 - Ideas de la lista que quedaron sin hacer: Jogress en 2J (V-mon + Wormmon → Paildramon, sprite ya en el pack), Armor Digievolución (Digimental → Flamedramon), vínculo por compañero, zonas que cambian durante la partida.

@@ -550,8 +550,8 @@ function renderLegend() {
 // poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
 // a esa fecha vuelve a 0 una sola vez (monedas, árbol y misiones del día). Nick, amigos y Digimon elegido no se tocan.
 // Ej.: const RESET_BEFORE = Date.parse('2027-03-01T00:00:00-03:00');
-const GAME_VERSION = '0.5';
-const RESET_BEFORE = null;
+const GAME_VERSION = '0.6';
+const RESET_BEFORE = Date.parse('2026-10-17T22:42:00-03:00');   // 0.6: todo el progreso anterior vuelve a cero
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
  s.coins=0;s.lv={};s.ac=[0,0,0];s.rc=0;s.tr={};s.bond={};try{localStorage.removeItem('digisurvivor_daily');localStorage.removeItem('digisurvivor_prog')}catch(e){}if(typeof Progress!=='undefined')Progress.st=null;return true}
