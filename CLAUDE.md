@@ -112,7 +112,7 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 
 ### Digimon bloqueados, Digitamas y Analyzer (`progress.js` + `unlocks.json`)
 - Al empezar solo se usan `STARTERS` (Guilmon, Renamon, Terriermon). El resto aparece como huevo en la grilla; al tocarlo muestra su misión (`Progress.lockedDetail`). `unlocked(id)` en game.js.
-- Misión cumplida (se revisa en `endRun` → `Progress.onRunEnd`) → ganás su Digitama → eclosiona al terminar `hatch` partidas más → animación `#hatch` en el menú (`showHatch`, cola `hatchQ`) con botón para elegirlo (`window.setPick`).
+- Misión cumplida (se revisa en `endRun` → `Progress.onRunEnd`) → ganás su Digitama, que queda **listo para eclosionar**: en el Analyzer (solapa Digitamas, que se abre sola si hay huevos listos) la fila brilla y con un clic (`Progress.hatchNow`) se desbloquea y sale la animación `#hatch` (`showHatch`, cola `hatchQ`) con botón para elegirlo (`window.setPick`). El botón del Analyzer en el menú muestra cuántos hay listos (`Progress.badge`). El campo `hatch` de unlocks.json ya no se usa.
 - Tipos de misión: `reach_stage, survive, kills_total, runs_total, kills_with, stage_with, boss, analyzer` (ver `types` en el JSON). Usan estadísticas acumuladas de toda la vida.
 - Analyzer (`#anb` → `#analyzer`): registra cada forma alcanzada (`seeForm` en `start` y `stepEvo`, solo jugadores de este navegador: `mine()`) y cada jefe derrotado. Lo no visto sale como silueta.
 - Guardado en `localStorage['digisurvivor_prog']` (**no en Firestore**, como las misiones). `RESET_BEFORE` también lo borra.

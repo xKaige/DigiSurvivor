@@ -592,7 +592,7 @@ function endRun(title){if(!running)return;
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
  // progresión permanente (progress.js): Digitamas y desbloqueos
  if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:q.stage|0})),bosses:Bosses.down.slice()});
-  if(r.eggs.length)$('m').textContent+=' ¡Conseguiste '+(r.eggs.length>1?r.eggs.length+' Digitamas':'un Digitama')+' ('+r.eggs.map(u=>u.name).join(', ')+')! '+(r.eggs.length>1?'Eclosionan':'Eclosiona')+' al terminar tu próxima partida.';
+  if(r.eggs.length)$('m').textContent+=' ¡Conseguiste '+(r.eggs.length>1?r.eggs.length+' Digitamas':'un Digitama')+' ('+r.eggs.map(u=>u.name).join(', ')+')! '+(r.eggs.length>1?'Hacelos':'Hacelo')+' eclosionar en el Digimon Analyzer.';
   $('m').textContent+=' +'+r.txp+' XP de Tamer'+(r.rankUp?'. ¡Subiste a '+r.rankUp+'! (+'+r.reward+' monedas)':'')+'.';
   if(r.hatched.length)setTimeout(()=>Progress.showHatch(),700)}
  if(typeof Challenge!=='undefined')$('m').textContent+=Challenge.onRunEnd({kills,secs:t,bosses:Bosses.down.length,cid:(mine()[0]||P[0]).cid});

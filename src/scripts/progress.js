@@ -4,7 +4,7 @@
 //
 // - Al empezar solo se pueden usar STARTERS (Guilmon, Renamon, Terriermon), como en Digimon Tamers.
 // - Cada Digimon bloqueado tiene una misión permanente en src/data/unlocks.json. Al cumplirla ganás su Digitama;
-//   el huevo eclosiona después de `hatch` partidas terminadas y ahí queda desbloqueado (con animación en el menú).
+//   el huevo queda listo y lo hacés eclosionar tocándolo en el Digimon Analyzer (solapa Digitamas): animación y desbloqueo.
 // - El Analyzer registra cada forma que usaste (etapas y formas finales) y cada jefe que derrotaste.
 // - Se guarda en el navegador (localStorage 'digisurvivor_prog') y, con sesión iniciada, en la cuenta
 //   (Firestore users/{uid}.prog, vía window.onProgSave de firebase.js). Al iniciar sesión manda lo de la cuenta (loadProg).
@@ -38,7 +38,20 @@ const Progress = {
     for (const cid in this.st.unl) this.st.seen[cid + ':stage_0'] = 1;   // al eclosionar ya conocés su forma bebé
     return this.st;
   },
-  write() { try { localStorage.setItem(this.KEY, JSON.stringify(this.st)); } catch (e) {} if (window.onProgSave) window.onProgSave(this.st); },
+  write() { try { localStorage.setItem(this.KEY, JSON.stringify(this.st)); } catch (e) {} if (window.onProgSave) window.onProgSave(this.st); this.badge(); },
+  // aviso en el botón del Analyzer: cuántos Digitamas están listos para eclosionar
+  badge() {
+    const b = document.getElementById('anb'); if (!b) return;
+    const n = Object.keys(this.read().eggs).length;
+    let bd = b.querySelector('.bd'); if (bd) bd.remove();
+    if (n) { bd = document.createElement('span'); bd.className = 'bd'; bd.textContent = n; b.appendChild(bd); }
+  },
+  // eclosión a pedido (clic en el Analyzer): desbloquea y muestra la animación
+  hatchNow(cid) {
+    const s = this.read(); if (!s.eggs[cid] || this.hatching || running) return;
+    delete s.eggs[cid]; s.unl[cid] = 1; s.seen[cid + ':stage_0'] = 1; s.hatchQ.push(cid);
+    this.write(); this.showHatch();
+  },
   reset() { this.st = this.blank(); this.write(); },   // lo usa el reinicio de progreso (RESET_BEFORE en game.js)
 
   has(cid) { return STARTERS.includes(cid) || !!this.read().unl[cid]; },
@@ -103,7 +116,7 @@ const Progress = {
   stateText(cid) {
     const s = this.read(), e = s.eggs[cid];
     if (this.has(cid)) return 'Desbloqueado';
-    if (e) return e.left > 1 ? 'Digitama incubándose: eclosiona en ' + e.left + ' partidas' : 'Digitama incubándose: eclosiona al terminar tu próxima partida';
+    if (e) return '¡Listo para eclosionar! Tocalo en el Digimon Analyzer (solapa Digitamas)';
     return 'Cumplí la misión para conseguir su Digitama';
   },
 
@@ -124,10 +137,7 @@ const Progress = {
       s.cidKills[q.cid] = (s.cidKills[q.cid] | 0) + (r.kills | 0);
     }
     for (const id of r.bosses) s.bosses[id] = (s.bosses[id] | 0) + 1;
-    // primero incuban los huevos que ya tenías (uno conseguido en esta partida empieza a contar desde la próxima)
-    for (const cid in s.eggs) {
-      if (--s.eggs[cid].left <= 0) { delete s.eggs[cid]; s.unl[cid] = 1; s.seen[cid + ':stage_0'] = 1; hatched.push(cid); s.hatchQ.push(cid); }
-    }
+    // los Digitamas ya no esperan partidas: se eclosionan a pedido desde el Analyzer (hatchNow)
     for (const u of this.data.unlocks) {
       if (this.has(u.cid) || s.eggs[u.cid] || this.value(u) < u.goal) continue;
       s.eggs[u.cid] = { left: u.hatch || 1 }; eggs.push(u);
@@ -193,6 +203,7 @@ const Progress = {
         clearInterval(this.ha); w.style.display = 'none'; this.hatching = false;
         s.hatchQ.shift(); this.write();
         if (pick && window.setPick) window.setPick(cid);
+        if (this.isOpen()) this.render();   // el Analyzer se actualiza (el huevo pasa a Compañeros)
         this.showHatch();   // si hay más huevos, sigue el próximo
       };
       bt.querySelector('.hok').onclick = () => done(true);
@@ -209,13 +220,17 @@ const Progress = {
     w.innerHTML = '<div class="box"><div class="head"><div class="ttl"><h2>Digimon Analyzer</h2><small>Registro de datos digitales</small></div>' +
       '<div class="reset">Datos<b id="an-n">0 / 0</b></div><button id="an-x" aria-label="Cerrar">X</button></div>' +
       '<div class="an-tabs"><button data-t="mon">Compañeros</button><button data-t="egg">Digitamas</button><button data-t="boss">Jefes</button></div>' +
-      '<div id="an-list"></div><div class="foot">Cada forma que alcanzás y cada jefe que derrotás quedan registrados. Los Digimon bloqueados se consiguen cumpliendo su misión: ganás su Digitama y eclosiona al terminar la partida siguiente.</div></div>';
+      '<div id="an-list"></div><div class="foot">Cada forma que alcanzás y cada jefe que derrotás quedan registrados. Los Digimon bloqueados se consiguen cumpliendo su misión: ganás su Digitama y lo hacés eclosionar acá, en la solapa Digitamas.</div></div>';
     document.body.appendChild(w);
     document.getElementById('an-x').onclick = () => this.close();
     w.onclick = e => { if (e.target === w) this.close(); };
     w.querySelectorAll('.an-tabs button').forEach(b => b.onclick = () => { this.tab = b.dataset.t; this.render(); });
   },
-  open() { this.build(); this.render(); document.getElementById('analyzer').style.display = 'flex'; },
+  open() {
+    this.build();
+    if (Object.keys(this.read().eggs).length) this.tab = 'egg';   // si hay huevos listos, abre directo en Digitamas
+    this.render(); document.getElementById('analyzer').style.display = 'flex';
+  },
   close() { const w = document.getElementById('analyzer'); if (w) w.style.display = 'none'; },
   isOpen() { const w = document.getElementById('analyzer'); return !!w && w.style.display === 'flex'; },
   render() {
@@ -232,9 +247,10 @@ const Progress = {
         if ((st === 'open') !== (this.tab === 'mon')) continue;
         if (st !== 'open') {
           const u = this.unlockOf(c.id), v = u ? this.value(u) : 0;
-          h += '<div class="an-row lockd"><div class="an-egg">' + this.eggHtml(c.id, 2) + '</div><div class="an-info"><b>' + (st === 'egg' ? 'Digitama' : '???') + '</b>' +
+          const ok = st === 'egg';   // misión cumplida: se puede eclosionar con un clic
+          h += '<div class="an-row lockd' + (ok ? ' ready" data-cid="' + c.id : '') + '"><div class="an-egg">' + this.eggHtml(c.id, 2, ok ? 'fast' : '') + '</div><div class="an-info"><b>' + (ok ? 'Digitama' : '???') + '</b>' +
             (u ? '<span class="desc">' + u.name + ': ' + u.desc + '</span><div class="ul-bar"><i style="width:' + Math.min(100, v / u.goal * 100) + '%"></i><em>' + this.progText(u) + '</em></div>' : '') +
-            '<span class="an-st">' + this.stateText(c.id) + '</span></div></div>';
+            '<span class="an-st">' + this.stateText(c.id) + '</span></div>' + (ok ? '<button class="an-hatch">Eclosionar</button>' : '') + '</div>';
           continue;
         }
         const forms = this.forms(C);
@@ -256,6 +272,7 @@ const Progress = {
       });
     }
     list.innerHTML = h;
+    list.querySelectorAll('.an-row.ready').forEach(r => r.onclick = () => this.hatchNow(r.dataset.cid));   // clic = eclosionar
   }
 };
 
@@ -273,7 +290,7 @@ window.loadProg = st => {
   try { await Progress.load(); } catch (e) { console.error(e); return; }
   const b = document.getElementById('anb');
   if (b) b.onclick = () => Progress.open();
-  Progress.renderRank();
+  Progress.renderRank(); Progress.badge();
   if (window.onProgressReady) window.onProgressReady();   // game.js revisa el Digimon elegido y muestra eclosiones pendientes
 })();
 addEventListener('keydown', e => { if (e.key === 'Escape' && Progress.isOpen()) Progress.close(); });
