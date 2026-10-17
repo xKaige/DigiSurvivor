@@ -703,6 +703,11 @@ function spawn(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  en.push({x:cam.x+Math.cos(a)*d,y:cam.y+Math.sin(a)*d,k,ti,sk,hp:T.hp*HM,sp:(55+Math.random()*25+t*.4)*T.sp*(1+.05*ti),r:T.r*(1+.12*ti),v:T.v*(1+.5*ti),dm:[1,1.2,1.4,1.7,2,2.4][ti],fl:0,ang:0,el:Math.floor(Math.random()*3),gun:k!==1&&t>15&&Math.random()<Math.min(.4,(t-15)/150)+.08*ti,cd:1+Math.random()*2})}
 function burst(x,y,c){for(let i=0;i<8;i++){const a=Math.random()*6.283,s=60+Math.random()*120;pt.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.4,c})}}
 
+// HUD: vida (con rastro del daño recibido), experiencia con el nivel y virus eliminados. Lo usan el host y el cliente online.
+function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill2':'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3)};
+ hb(0,P[0]);$('hp2box').style.display=mode===2?'':'none';if(mode===2)hb(1,P[1]);
+ $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills+' virus'}
+
 function update(dt){
  t+=dt;SkillSys.renderBar(P);
  if (isOnline) {
@@ -759,9 +764,7 @@ function update(dt){
  }
 
  if (isOnline && !isHost) {
-   $('fill').style.width=Math.max(0,P[0].hp/P[0].max*100)+'%';
-   if(mode===2)$('fill2').style.width=Math.max(0,P[1].hp/P[1].max*100)+'%';$('xpf').style.width=Math.min(100,xp/need*100)+'%';
-   $('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');$('info').textContent='Nv '+lvl+' · '+kills+' virus';
+   hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
    return;
  }
 
@@ -797,11 +800,9 @@ function update(dt){
  for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
  if(P.every(q=>q.dead))endRun('Fuiste borrado');
- $('fill').style.width=Math.max(0,P[0].hp/P[0].max*100)+'%';
- if(mode===2)$('fill2').style.width=Math.max(0,P[1].hp/P[1].max*100)+'%';
- $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+ hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
  if($('tr')&&CR(P[0])){const EC=CreatureLoader.cache[ENEMY_LINE],M=(EC||CR(P[0])).meta;$('tr').textContent='Enemigos: '+(M.stages[Math.max(0,Math.max(...P.map(q=>q.stage|0))-1)]||M.stages[4]).name}
- $('info').textContent='Nv '+lvl+' · '+kills+' virus';$('pst').textContent=P.map(q=>(mode===2?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
+ $('pst').textContent=P.map(q=>(mode===2?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
 }
 
 function draw(){

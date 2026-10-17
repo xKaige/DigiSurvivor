@@ -1,11 +1,6 @@
 :root{--bg:#050b1a;--ink:#dff8ff;--teal:#2ee6c8;--pink:#ff3d81;--gold:#ffd23f;box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:'Chakra Petch',system-ui,sans-serif;overflow:hidden}
 canvas{display:block;width:100%;height:100%}
-#hud{position:fixed;top:12px;left:16px;right:16px;display:flex;gap:16px;align-items:center;pointer-events:none;font-weight:700;font-size:18px}
-#bar,#bar2{flex:0 0 200px;height:14px;border:2px solid var(--teal);background:#0a1a33}
-#fill{height:100%;width:100%;background:var(--teal);transition:width .1s}
-#hud span{margin-left:auto}
-#xp{position:fixed;left:0;right:0;bottom:0;height:10px;background:#0a1a33}#xpf{height:100%;width:0;background:var(--gold)}
 #up{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(5,11,26,.88);text-align:center}
 #up h2{margin:0;font-size:38px;color:var(--gold)}#up p{margin:0}
 #cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
@@ -17,15 +12,14 @@ canvas{display:block;width:100%;height:100%}
 #timer{position:fixed;top:8px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 0 10px #000}
 #tm{display:block;font-size:34px;font-weight:700;line-height:1}#tr{display:block;font-size:13px;color:var(--gold);font-weight:700;margin-top:2px}
 #evt{z-index:5}
-#leg{position:fixed;left:16px;bottom:22px;font-size:14px;font-weight:700;pointer-events:none;display:flex;gap:8px}
-#bar2{border-color:#ff7ad9}#fill2{height:100%;width:100%;background:#ff7ad9;transition:width .1s}#bar2,#l2{display:none}.pl{font-size:14px}
-#pst{position:fixed;top:44px;left:16px;font-size:13px;font-weight:700;color:var(--gold);white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
+#leg{position:fixed;left:16px;bottom:52px;font-size:14px;font-weight:700;pointer-events:none;display:flex;gap:8px}
+#pst{position:fixed;top:62px;left:16px;font-size:13px;font-weight:700;color:var(--gold);white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
 .card em{display:block;margin-top:6px;color:var(--gold);font-style:normal;font-size:13px}
 .card:disabled{opacity:.45;cursor:not-allowed}.card:disabled:hover{background:#0a1a33;border-color:var(--teal)}
 .card img{display:block;height:72px;image-rendering:pixelated;margin-bottom:8px}
 
 /* barra fija de skills */
-#skbar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:28px;pointer-events:none}
+#skbar{position:fixed;left:50%;bottom:52px;transform:translateX(-50%);display:flex;gap:28px;pointer-events:none}
 .skgrp{display:flex;gap:10px;align-items:flex-start}
 .skwho{align-self:center;font-weight:700;font-size:14px}
 .sk{display:flex;flex-direction:column;align-items:center;width:84px}
@@ -163,3 +157,32 @@ canvas{display:block;width:100%;height:100%}
 .node.lock{opacity:.45;filter:saturate(.4)}.node.lock i{color:#9fb3c4}
 .node:disabled{cursor:not-allowed}
 @media (max-width:820px){#tree{padding:64px 16px 44px}#tx{position:fixed;top:12px;right:12px;transform:none;z-index:2}#thead{justify-content:flex-start}}
+
+/* ---------- HUD de la partida: vida y experiencia (estilo Digivice) ---------- */
+#hud,#xp{--cy:#3fd0ff;--cy2:#1b6fa8;--or:#ff9a2e}
+#hud{position:fixed;top:12px;left:16px;right:16px;display:flex;gap:14px;align-items:flex-start;pointer-events:none;font:700 16px 'Chakra Petch',sans-serif;z-index:3}
+.hpbox{--hc:#2ee6c8;--hc2:#14806f;display:flex;align-items:center;gap:8px;padding:6px 10px 6px 8px;background:linear-gradient(180deg,rgba(14,52,90,.85),rgba(4,16,34,.92));border:2px solid var(--hc);
+  box-shadow:0 0 10px color-mix(in srgb,var(--hc) 45%,transparent),inset 0 0 10px rgba(63,208,255,.12);border-radius:10px 2px 10px 2px}
+.hpbox.p2{--hc:#ff7ad9;--hc2:#8a2f74}
+.hpbox .pl{font-size:15px;color:var(--hc);text-shadow:0 0 6px var(--hc)}.hpbox .pl:empty{display:none!important}
+.hpl{font-size:12px;letter-spacing:.14em;color:var(--hc)}
+#bar,#bar2{position:relative;width:clamp(120px,14vw,210px);height:18px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.18);overflow:hidden}
+#fill,#fill2{position:absolute;inset:0 auto 0 0;width:100%;transition:width .1s;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--hc) 70%,#fff),var(--hc) 45%,var(--hc2));box-shadow:0 0 10px var(--hc)}
+/* segmentos tipo pantalla */
+#fill::after,#fill2::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 11px,rgba(2,8,18,.55) 11px 13px)}
+.lag{position:absolute;inset:0 auto 0 0;width:100%;background:#ff4a4a;opacity:.75;transition:width .55s ease-out .25s}
+.hpt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;letter-spacing:.04em;color:#fff;text-shadow:0 0 3px #000,0 1px 2px #000}
+.hpbox.low{animation:hplow .7s steps(2) infinite}
+.hpbox.low #fill,.hpbox.low #fill2{--hc:#ff4a4a;--hc2:#8a1d1d}
+@keyframes hplow{50%{border-color:#ff4a4a;box-shadow:0 0 16px #ff4a4a}}
+#info{margin-left:auto;padding:6px 14px;font-size:16px;letter-spacing:.04em;color:#f2fbff;background:rgba(4,16,34,.85);border:2px solid var(--cy2);border-radius:2px 10px 2px 10px}
+#xp{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;width:min(820px,calc(100% - 24px));padding:5px 10px;pointer-events:none;z-index:3;
+  background:linear-gradient(180deg,rgba(14,52,90,.85),rgba(4,16,34,.92));border:2px solid var(--gold);box-shadow:0 0 10px rgba(255,210,63,.4);border-radius:10px 2px 10px 2px;font:700 14px 'Chakra Petch',sans-serif}
+#xpl{flex:0 0 auto;padding:1px 8px;color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);letter-spacing:.06em;border-radius:3px}
+#xpbar{position:relative;flex:1;height:12px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.15);overflow:hidden}
+#xpf{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,#ffb800,#ffe066);box-shadow:0 0 10px #ffd23f;transition:width .15s}
+#xpf::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(2,8,18,.5) 9px 11px)}
+#xpt{flex:0 0 auto;min-width:92px;text-align:right;color:var(--gold);font-size:13px}
+@media (max-width:700px){#hud{flex-wrap:wrap;gap:8px}#bar,#bar2{width:120px}.hpl{display:none}}
+@media (max-width:1000px){#timer{top:58px!important}#pst{top:62px}}

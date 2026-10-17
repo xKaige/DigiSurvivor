@@ -11,19 +11,11 @@
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <style id="hud-css">
     /* respaldo del HUD: si tu style.css ya lo define, esto no molesta */
-    #hud{position:fixed;top:12px;left:16px;right:16px;display:flex;gap:16px;align-items:center;pointer-events:none;font-weight:700;font-size:18px;color:#dff8ff}
-    #bar,#bar2{flex:0 0 200px;height:14px;border:2px solid #2ee6c8;background:#0a1a33}
-    #bar2{border-color:#ff7ad9}#bar2,#l2{display:none}
-    #fill{height:100%;width:100%;background:#2ee6c8;transition:width .1s}
-    #fill2{height:100%;width:100%;background:#ff7ad9;transition:width .1s}
-    #hud span{margin-left:auto}.pl{font-size:14px}
-    #xp{position:fixed;left:0;right:0;bottom:0;height:10px;background:#0a1a33}
-    #xpf{height:100%;width:0;background:#ffd23f}
     #timer{position:fixed;top:8px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 0 10px #000;color:#dff8ff}
     #tm{display:block;font-size:34px;font-weight:700;line-height:1}
     #tr{display:block;font-size:13px;color:#ffd23f;font-weight:700;margin-top:2px}
-    #leg{position:fixed;left:16px;bottom:22px;font-size:14px;font-weight:700;pointer-events:none;display:flex;gap:8px;color:#dff8ff}
-    #pst{position:fixed;top:44px;left:16px;font-size:13px;font-weight:700;color:#ffd23f;white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
+    #leg{position:fixed;left:16px;bottom:52px;font-size:14px;font-weight:700;pointer-events:none;display:flex;gap:8px;color:#dff8ff}
+    #pst{position:fixed;top:62px;left:16px;font-size:13px;font-weight:700;color:#ffd23f;white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
   </style>
 </head>
 <body>
@@ -31,12 +23,18 @@
 
   <!-- HUD: los ids y la estructura tienen que coincidir con lo que usa game.js -->
   <div id="hud">
-    <b id="l1" class="pl"></b><div id="bar"><div id="fill"></div></div>
-    <b id="l2" class="pl"></b><div id="bar2"><div id="fill2"></div></div>
-    <span id="info">Nv 1 · 0 virus</span>
+    <div class="hpbox" id="hp1box">
+      <b id="l1" class="pl"></b><span class="hpl">VIDA</span>
+      <div id="bar"><i class="lag" id="lag1"></i><div id="fill"></div><span class="hpt" id="hpt1"></span></div>
+    </div>
+    <div class="hpbox p2" id="hp2box" style="display:none">
+      <b id="l2" class="pl"></b><span class="hpl">VIDA</span>
+      <div id="bar2"><i class="lag" id="lag2"></i><div id="fill2"></div><span class="hpt" id="hpt2"></span></div>
+    </div>
+    <span id="info">0 virus</span>
   </div>
   <div id="pst"></div>
-  <div id="xp"><div id="xpf"></div></div>
+  <div id="xp"><b id="xpl">NV 1</b><div id="xpbar"><div id="xpf"></div></div><span id="xpt">0 / 5 XP</span></div>
   <div id="timer"><span id="tm">0:00</span><small id="tr">Enemigos: Jyarimon</small></div>
   <div id="leg">
     <span style="color:#4db8ff">● Vacuna (vos)</span>›<span style="color:#c05bff">● Virus</span>›<span style="color:#ffb02e">● Dato</span>›<span style="color:#4db8ff">Vacuna</span>
