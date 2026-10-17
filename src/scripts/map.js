@@ -41,10 +41,14 @@ const World = {
     tuft: [99, 54, 11, 8], tuft2: [117, 68, 8, 7], tuft3: [103, 70, 6, 8], tuft4: [112, 80, 7, 8], dtuft: [121, 88, 15, 8], dtuft2: [136, 80, 8, 7],
     wRock: [240, 98, 16, 13], lily: [226, 132, 13, 12], lily2: [240, 132, 16, 12], reed: [258, 132, 13, 12], ripple: [227, 119, 12, 3]
   },
-  tiles: null, quarters: null,
+  TALL: { treeBig: 1, tree: 1, pine: 1 },   // adornos altos: no van en el piso, se dibujan encima de los personajes (drawTall)
+  tiles: null, tilesV: null, quarters: null, tall: [],
   async loadTiles() {
     if (this.tiles) return;
     await new Promise((res, rej) => { const i = new Image(); i.onload = () => { this.tiles = i; res(); }; i.onerror = () => rej(new Error('No se pudo cargar woods_tiles.png')); i.src = 'assets/maps/woods_tiles.png'; });
+    // copia con el mismo velo oscuro que el piso, para los árboles que se dibujan encima (drawTall)
+    const v = this.tilesV = document.createElement('canvas'); v.width = this.tiles.width; v.height = this.tiles.height;
+    const vg = v.getContext('2d'); vg.drawImage(this.tiles, 0, 0); vg.globalCompositeOperation = 'source-atop'; vg.fillStyle = 'rgba(5,11,26,.22)'; vg.fillRect(0, 0, v.width, v.height);
     // tabla de cuartos: para cada mancha, clave (esquina, propio, vecinos) -> origen [x, y] en el atlas
     const m = (c, r) => c >= 0 && r >= 0 && c < 4 && r < 4 ? this.CROSS[r * 4 + c] : 0;
     this.quarters = this.BLOBS.map((_, b) => {
@@ -191,8 +195,10 @@ const World = {
       else if (v < (path[i] ? 0.03 : 0.11)) { put(pick(dark[i] ? ['dtuft', 'dtuft2', 'bush'] : path[i] ? ['pebble', 'leaf', 'branch', 'tuft3'] : ['tuft', 'tuft2', 'tuft4', 'flowersY', 'flowersR', 'flowerP', 'mushR', 'mushB', 'bush', 'leaf', 'pebble']), c, r); used[i] = 1; }
     }
     items.sort((a, b) => (a[2] + D[a[0]][3]) - (b[2] + D[b[0]][3]));
+    this.tall = [];
     for (const [name, x, y] of items) {   // lo que se pasa del borde se dibuja también del otro lado (el mapa se repite)
       const d = D[name];
+      if (this.TALL[name]) { this.tall.push([d, x, y, y + d[3] - 4]); continue; }   // [adorno, x, y, base (pies del tronco)]
       for (const ox of [-S, 0, S]) for (const oy of [-S, 0, S]) {
         const X = x + ox, Y = y + oy; if (X + d[2] <= 0 || Y + d[3] <= 0 || X >= S || Y >= S) continue;
         g.drawImage(this.tiles, d[0], d[1] + 96, d[2], d[3], X, Y, d[2], d[3]);
@@ -201,6 +207,7 @@ const World = {
     // ---- datos para el resto de World (paredes en píxeles del mapa, igual que los JSON) ----
     for (let i = 0; i < N * N; i++) if (wall[i]) blocks.push([(i % N) * T, ((i / N) | 0) * T, T, T]);
     const d = { id: 'woods_' + seed, name: 'Bosque', w: S, h: S, scale: 3, wrap: true, start: [cen * T, cen * T + 20], block: blocks, trunk: trunks };
+    this.tall.sort((a, b) => a[3] - b[3]);
     this.data = null; this.img = cv; this.flow = null;
     this.setData(d);
   },
@@ -352,5 +359,30 @@ const World = {
     // velo oscuro para que los personajes y los efectos resalten sobre el fondo
     cx.fillStyle = 'rgba(5,11,26,.22)'; cx.fillRect(cam.x - W / 2 - 2, cam.y - H / 2 - 2, W + 4, H + 4);
     return true;
+  },
+  // Árboles por encima de los personajes, ordenados por profundidad: el que pasa por detrás (pies más arriba que la base del
+  // tronco) queda tapado; al que está delante se lo vuelve a dibujar encima con redraw(e). ents = [{e, fy (pies), x0, x1, y0}].
+  // Si un jugador vivo queda detrás, el árbol se pone medio transparente para no perderlo de vista.
+  drawTall(ents, redraw) {
+    if (!this.tall.length || !this.data || !this.data.wrap || !this.tilesV) return;
+    const S = this.size, s = this.data.scale, m = 120 * s;
+    const x0 = Math.floor((cam.x - W / 2 - m) / S), x1 = Math.floor((cam.x + W / 2 + m) / S);
+    const y0 = Math.floor((cam.y - H / 2 - m) / S), y1 = Math.floor((cam.y + H / 2 + m) / S);
+    const vl = cam.x - W / 2, vr = cam.x + W / 2, vt = cam.y - H / 2, vb = cam.y + H / 2;
+    const list = [];
+    for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) for (const t of this.tall) {
+      const d = t[0], X = tx * S + t[1] * s, Y = ty * S + t[2] * s, w = d[2] * s, h = d[3] * s;
+      if (X > vr || X + w < vl || Y > vb || Y + h < vt) continue;
+      list.push([d, X, Y, w, h, ty * S + t[3] * s]);
+    }
+    list.sort((a, b) => a[5] - b[5]);
+    cx.imageSmoothingEnabled = false;
+    for (const [d, X, Y, w, h, base] of list) {
+      const over = ents.filter(o => o.x1 > X && o.x0 < X + w && o.y0 < base && o.fy > Y);   // se tocan con el árbol
+      cx.globalAlpha = over.some(o => o.pl && o.fy <= base) ? 0.55 : 1;
+      cx.drawImage(this.tilesV, d[0], d[1] + 96, d[2], d[3], X, Y, w, h);
+      cx.globalAlpha = 1;
+      for (const o of over) if (o.fy > base) redraw(o.e);
+    }
   }
 };

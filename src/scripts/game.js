@@ -1036,23 +1036,15 @@ function draw(){
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
  Items.draw();
  const vx0=cam.x-W/2-160,vx1=cam.x+W/2+160,vy0=cam.y-H/2-200,vy1=cam.y+H/2+200;
+ const ents=[];   // lo que puede quedar detrás de un árbol (World.drawTall)
  for(const e of en){if(e.bo==null&&(e.x<vx0||e.x>vx1||e.y<vy0||e.y>vy1))continue;   // fuera de pantalla: no se dibuja
-  const C=e.fl>0?'#fff':ELC[e.el],D='#050b1a';cx.fillStyle=C;
-  if(drawEnemy(e)){}
-  else if(e.k===1){cx.save();cx.translate(e.x,e.y);cx.rotate(e.ang);cx.beginPath();cx.moveTo(e.r*1.4,0);cx.lineTo(-e.r,-e.r);cx.lineTo(-e.r*.5,0);cx.lineTo(-e.r,e.r);cx.fill();cx.restore()}
-  else if(e.k===2){cx.fillRect(e.x-e.r,e.y-e.r,e.r*2,e.r*2);cx.fillStyle=D;cx.fillRect(e.x-e.r+4,e.y-e.r+4,e.r*2-8,e.r*2-8);cx.fillStyle=C;cx.fillRect(e.x-8,e.y-7,5,6);cx.fillRect(e.x+3,e.y-7,5,6);cx.fillRect(e.x-8,e.y+4,16,3)}
-  else{cx.fillRect(e.x-e.r,e.y-e.r,e.r*2,e.r*2);cx.fillStyle=D;cx.fillRect(e.x-7,e.y-4,5,5);cx.fillRect(e.x+2,e.y-4,5,5);cx.fillRect(e.x-6,e.y+4,12,3)}
-  for(let i=0;i<e.ti;i++){cx.fillStyle='#ffd23f';cx.fillRect(e.x-(e.ti*5-1)+i*10,e.y-enTop(e)-10,7,5)}
-  if(e.gun){cx.strokeStyle='rgba(255,255,255,.75)';cx.lineWidth=2;cx.beginPath();cx.arc(e.x,e.y,e.r+5,0,6.283);cx.stroke()}}
+  dEn(e);const hw=Math.max(30,e.r*1.6);ents.push({e,x0:e.x-hw,x1:e.x+hw,y0:e.y-enTop(e),fy:e.y+World.foot(e)})}
  for(const s of sh){if(SkillSys.drawShot(s))continue;cx.fillStyle=s.c||'#ffd23f';cx.beginPath();cx.arc(s.x,s.y,s.r||5,0,6.283);cx.fill()}
  for(const b of eb){cx.fillStyle=ELC[b.el];cx.strokeStyle=b.r?'#ff9a2e':'#fff';cx.lineWidth=b.r?4:2;cx.beginPath();cx.arc(b.x,b.y,b.r||6,0,6.283);cx.fill();cx.stroke()}
  for(const o of ef)SkillSys.drawFx(o);
  for(const q of P)if(!q.dead)SkillSys.drawOrbits(q);
- for(const q of P){const s=q.stage|0,hh=96;
-  if(q.dead)drawBuddy(q,s,q.x,q.y,q.face,.25);
-  else if(!evo&&(q.inv<=0||Math.floor(t*20)%2))drawBuddy(q,s,q.x,q.y,q.face,1);
-  if(mode===2){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (pararse encima para revivir)':'J'+(q.id+1),q.x,q.y+48-(q.dh||hh)-8)}
-  if(q.dead&&mode===2){const pr=Math.min(1,(q.revP||0)/REVIVE_TIME);cx.lineWidth=3;cx.strokeStyle='rgba(255,210,63,.35)';cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,0,6.283);cx.stroke();if(pr>0){cx.strokeStyle='#ffd23f';cx.lineWidth=6;cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,-Math.PI/2,-Math.PI/2+6.283*pr);cx.stroke()}}}
+ for(const q of P){dPl(q);if(!evo)ents.push({e:q,pl:!q.dead,x0:q.x-40,x1:q.x+40,y0:q.y+48-(q.dh||96),fy:q.y+48})}
+ World.drawTall(ents,e=>e.cid?dPl(e):dEn(e));   // árboles por encima (map.js)
  if(evo){const e0=evo.t,sw=e0>=1.3,pul=Math.sin(e0*Math.PI/2.8);
   for(const q of P){
    drawBuddy(q,sw?evo.s:evo.s-1,q.x,q.y,q.face,sw?Math.min(1,(e0-1.3)*2):Math.max(0,1-e0*.9));
@@ -1061,6 +1053,21 @@ function draw(){
  cx.textAlign='center';cx.lineJoin='round';for(const f of fx){cx.globalAlpha=Math.min(1,f.l*2);cx.font='bold '+f.sz+'px Chakra Petch,system-ui,sans-serif';cx.lineWidth=4;cx.strokeStyle='#000';cx.strokeText(f.txt,f.x,f.y);cx.fillStyle=f.col;cx.fillText(f.txt,f.x,f.y)}cx.globalAlpha=1;
  cx.restore();
 }
+// dibuja un enemigo (sprite o figura de respaldo)
+function dEn(e){
+  const C=e.fl>0?'#fff':ELC[e.el],D='#050b1a';cx.fillStyle=C;
+  if(drawEnemy(e)){}
+  else if(e.k===1){cx.save();cx.translate(e.x,e.y);cx.rotate(e.ang);cx.beginPath();cx.moveTo(e.r*1.4,0);cx.lineTo(-e.r,-e.r);cx.lineTo(-e.r*.5,0);cx.lineTo(-e.r,e.r);cx.fill();cx.restore()}
+  else if(e.k===2){cx.fillRect(e.x-e.r,e.y-e.r,e.r*2,e.r*2);cx.fillStyle=D;cx.fillRect(e.x-e.r+4,e.y-e.r+4,e.r*2-8,e.r*2-8);cx.fillStyle=C;cx.fillRect(e.x-8,e.y-7,5,6);cx.fillRect(e.x+3,e.y-7,5,6);cx.fillRect(e.x-8,e.y+4,16,3)}
+  else{cx.fillRect(e.x-e.r,e.y-e.r,e.r*2,e.r*2);cx.fillStyle=D;cx.fillRect(e.x-7,e.y-4,5,5);cx.fillRect(e.x+2,e.y-4,5,5);cx.fillRect(e.x-6,e.y+4,12,3)}
+  for(let i=0;i<e.ti;i++){cx.fillStyle='#ffd23f';cx.fillRect(e.x-(e.ti*5-1)+i*10,e.y-enTop(e)-10,7,5)}
+  if(e.gun){cx.strokeStyle='rgba(255,255,255,.75)';cx.lineWidth=2;cx.beginPath();cx.arc(e.x,e.y,e.r+5,0,6.283);cx.stroke()}}
+// dibuja un jugador (con su etiqueta y el anillo de revivir en 2J)
+function dPl(q){const s=q.stage|0,hh=96;
+  if(q.dead)drawBuddy(q,s,q.x,q.y,q.face,.25);
+  else if(!evo&&(q.inv<=0||Math.floor(t*20)%2))drawBuddy(q,s,q.x,q.y,q.face,1);
+  if(mode===2){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (pararse encima para revivir)':'J'+(q.id+1),q.x,q.y+48-(q.dh||hh)-8)}
+  if(q.dead&&mode===2){const pr=Math.min(1,(q.revP||0)/REVIVE_TIME);cx.lineWidth=3;cx.strokeStyle='rgba(255,210,63,.35)';cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,0,6.283);cx.stroke();if(pr>0){cx.strokeStyle='#ffd23f';cx.lineWidth=6;cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,-Math.PI/2,-Math.PI/2+6.283*pr);cx.stroke()}}}
 
 // Loop principal. Si algo tira un error, se registra en la consola y el juego SIGUE (antes se congelaba para siempre).
 let loopErrs=0;
