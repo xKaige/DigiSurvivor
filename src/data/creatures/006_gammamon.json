@@ -16,7 +16,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "VB"
     },
     {
       "stage": 1,
@@ -29,7 +30,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "VB"
     },
     {
       "stage": 2,
@@ -43,7 +45,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "VB"
     },
     {
       "stage": 3,
@@ -57,7 +60,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "VB"
     },
     {
       "stage": 4,
@@ -71,7 +75,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "VB"
     }
   ],
   "branches": [
@@ -93,7 +98,16 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     }
   ],
   "dark": {
@@ -102,6 +116,18 @@
     "cols": 2,
     "rows": 6,
     "desc": "Un dragón máquina sin control",
-    "source": "Workshop 2924252315"
+    "source": "Workshop 2924252315",
+    "family": "ME"
+  },
+  "stats": {
+    "FUE": 3,
+    "INT": 3,
+    "VEL": 2,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "curioso",
+    "name": "Curiosidad",
+    "desc": "+12% de experiencia"
   }
 }

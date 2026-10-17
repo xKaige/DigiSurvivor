@@ -15,7 +15,8 @@
       ],
       "wiki": null,
       "verified": true,
-      "note": "No está en la wiki: usa solo el disparo básico"
+      "note": "No está en la wiki: usa solo el disparo básico",
+      "family": "NSp"
     },
     {
       "stage": 1,
@@ -28,7 +29,8 @@
       ],
       "wiki": "gummymon",
       "verified": true,
-      "note": "En la wiki solo tiene ataque básico"
+      "note": "En la wiki solo tiene ataque básico",
+      "family": "NSp"
     },
     {
       "stage": 2,
@@ -41,7 +43,8 @@
         "petit_twister"
       ],
       "wiki": "terriermon",
-      "verified": true
+      "verified": true,
+      "family": "NSp"
     },
     {
       "stage": 3,
@@ -55,7 +58,8 @@
         "gatling_arm"
       ],
       "wiki": "gargomon",
-      "verified": true
+      "verified": true,
+      "family": "NSp"
     },
     {
       "stage": 4,
@@ -69,7 +73,8 @@
         "golden_triangle"
       ],
       "wiki": "rapidmon",
-      "verified": true
+      "verified": true,
+      "family": "ME"
     }
   ],
   "branches": [
@@ -90,7 +95,16 @@
         "giant_missile"
       ],
       "wiki": "megagargomon",
-      "verified": true
+      "verified": true,
+      "family": "ME",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     }
   ],
   "dark": {
@@ -99,6 +113,18 @@
     "cols": 2,
     "rows": 6,
     "desc": "Corrompido por la oscuridad, como Lopmon en Digimon Frontier",
-    "source": "Workshop 2916279274"
+    "source": "Workshop 2916279274",
+    "family": "DA"
+  },
+  "stats": {
+    "FUE": 2,
+    "INT": 2,
+    "VEL": 3,
+    "VIT": 3
+  },
+  "trait": {
+    "id": "momentai",
+    "name": "Momentai",
+    "desc": "Sus disparos básicos rebotan a otro enemigo"
   }
 }

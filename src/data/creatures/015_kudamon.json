@@ -16,7 +16,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "VB"
     },
     {
       "stage": 1,
@@ -29,7 +30,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "VB"
     },
     {
       "stage": 2,
@@ -43,7 +45,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "VB"
     },
     {
       "stage": 3,
@@ -57,7 +60,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "VB"
     },
     {
       "stage": 4,
@@ -72,7 +76,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "NSo"
     }
   ],
   "branches": [
@@ -94,7 +99,16 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     },
     {
       "id": "6_2",
@@ -112,7 +126,16 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "DS",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
     },
     {
       "id": "6_3",
@@ -131,7 +154,25 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 5
+      },
+      "vp": {
+        "care": 1
+      }
     }
-  ]
+  ],
+  "stats": {
+    "FUE": 1,
+    "INT": 4,
+    "VEL": 3,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "bendicion",
+    "name": "Bendición",
+    "desc": "Si no lo golpean en 4 s, se cura un 1% de la vida por segundo"
+  }
 }

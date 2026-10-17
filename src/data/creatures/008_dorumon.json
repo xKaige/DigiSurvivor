@@ -16,7 +16,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "NSp"
     },
     {
       "stage": 1,
@@ -29,7 +30,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "NSp"
     },
     {
       "stage": 2,
@@ -43,7 +45,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "NSp"
     },
     {
       "stage": 3,
@@ -57,7 +60,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "DR"
     },
     {
       "stage": 4,
@@ -71,7 +75,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "DR"
     }
   ],
   "branches": [
@@ -92,7 +97,16 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "DR",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     },
     {
       "id": "6_2",
@@ -111,7 +125,16 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
     },
     {
       "id": "6_3",
@@ -130,7 +153,14 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 5
+      },
+      "vp": {
+        "care": 1
+      }
     }
   ],
   "x": {
@@ -147,5 +177,16 @@
       "file": "dexdorugoramon_x6.png"
     }
   },
-  "xSource": "Workshop 3215570196"
+  "xSource": "Workshop 3215570196",
+  "stats": {
+    "FUE": 4,
+    "INT": 2,
+    "VEL": 2,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "prototipo",
+    "name": "Prototipo X",
+    "desc": "El X-Antibody le da el doble de poder y los jefes siempre lo sueltan"
+  }
 }

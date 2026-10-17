@@ -15,7 +15,8 @@
       ],
       "wiki": null,
       "verified": true,
-      "note": "No está en la wiki: usa solo el disparo básico"
+      "note": "No está en la wiki: usa solo el disparo básico",
+      "family": "DR"
     },
     {
       "stage": 1,
@@ -28,7 +29,8 @@
       ],
       "wiki": "gigimon",
       "verified": false,
-      "note": "En la wiki solo tiene ataque básico; Hot Bite es canon"
+      "note": "En la wiki solo tiene ataque básico; Hot Bite es canon",
+      "family": "DR"
     },
     {
       "stage": 2,
@@ -41,7 +43,8 @@
         "fireball"
       ],
       "wiki": "guilmon",
-      "verified": true
+      "verified": true,
+      "family": "DR"
     },
     {
       "stage": 3,
@@ -55,7 +58,8 @@
         "exhaust_flame"
       ],
       "wiki": "growlmon",
-      "verified": true
+      "verified": true,
+      "family": "DR"
     },
     {
       "stage": 4,
@@ -69,7 +73,8 @@
         "atomic_blaster"
       ],
       "wiki": "wargrowlmon",
-      "verified": true
+      "verified": true,
+      "family": "DR"
     }
   ],
   "branches": [
@@ -90,7 +95,16 @@
         "final_elysion"
       ],
       "wiki": "gallantmon",
-      "verified": true
+      "verified": true,
+      "family": "VB",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     },
     {
       "id": "6_2",
@@ -109,7 +123,16 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR). Skills del canon (Wikimon: Medieval_Dukemon)"
+      "note": "No está en la wiki (DSR). Skills del canon (Wikimon: Medieval_Dukemon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
     },
     {
       "id": "6_3",
@@ -128,7 +151,25 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR). Skills del canon (Wikimon: ChaosGallantmon)"
+      "note": "No está en la wiki (DSR). Skills del canon (Wikimon: ChaosGallantmon)",
+      "family": "DA",
+      "bonus": {
+        "dmg": 5
+      },
+      "vp": {
+        "care": 1
+      }
     }
-  ]
+  ],
+  "stats": {
+    "FUE": 4,
+    "INT": 1,
+    "VEL": 2,
+    "VIT": 3
+  },
+  "trait": {
+    "id": "hazard",
+    "name": "Hazard",
+    "desc": "Cuanta menos vida tiene, más daño hace (hasta +40%)"
+  }
 }

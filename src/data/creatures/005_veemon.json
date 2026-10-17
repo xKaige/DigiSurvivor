@@ -17,7 +17,8 @@
       ],
       "wiki": null,
       "verified": true,
-      "note": "No está en la wiki: usa solo el disparo básico"
+      "note": "No está en la wiki: usa solo el disparo básico",
+      "family": "DR"
     },
     {
       "stage": 1,
@@ -31,7 +32,8 @@
       ],
       "wiki": "demiveemon",
       "verified": true,
-      "note": "En la wiki (DemiVeemon) solo tiene ataque básico"
+      "note": "En la wiki (DemiVeemon) solo tiene ataque básico",
+      "family": "DR"
     },
     {
       "stage": 2,
@@ -45,7 +47,8 @@
         "veemon_head"
       ],
       "wiki": "veemon",
-      "verified": true
+      "verified": true,
+      "family": "DR"
     },
     {
       "stage": 3,
@@ -60,7 +63,8 @@
         "v_breath_arrow"
       ],
       "wiki": "veedramon",
-      "verified": true
+      "verified": true,
+      "family": "DR"
     },
     {
       "stage": 4,
@@ -75,7 +79,8 @@
         "v_wing_blade"
       ],
       "wiki": "aeroveedramon",
-      "verified": true
+      "verified": true,
+      "family": "DR"
     }
   ],
   "branches": [
@@ -98,7 +103,16 @@
       ],
       "wiki": "imperialdramon-dragonmode",
       "verified": true,
-      "note": "En la wiki viene de Paildramon, no de AeroV-dramon"
+      "note": "En la wiki viene de Paildramon, no de AeroV-dramon",
+      "family": "DR",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     },
     {
       "id": "6_2",
@@ -117,7 +131,16 @@
         "dragon_impulse_x"
       ],
       "wiki": "ulforceveedramon",
-      "verified": true
+      "verified": true,
+      "family": "DR",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
     },
     {
       "id": "6_3",
@@ -137,7 +160,25 @@
       ],
       "wiki": "imperialdramon-fightermode",
       "verified": true,
-      "note": "En la wiki viene de Imperialdramon Dragon Mode"
+      "note": "En la wiki viene de Imperialdramon Dragon Mode",
+      "family": "DR",
+      "bonus": {
+        "dmg": 5
+      },
+      "vp": {
+        "care": 1
+      }
     }
-  ]
+  ],
+  "stats": {
+    "FUE": 4,
+    "INT": 1,
+    "VEL": 3,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "valor",
+    "name": "Valor",
+    "desc": "Al recibir un golpe, +25% de daño durante 3 s"
+  }
 }

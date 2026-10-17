@@ -16,7 +16,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "ME"
     },
     {
       "stage": 1,
@@ -29,7 +30,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "ME"
     },
     {
       "stage": 2,
@@ -43,7 +45,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "ME"
     },
     {
       "stage": 3,
@@ -57,7 +60,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "ME"
     },
     {
       "stage": 4,
@@ -71,7 +75,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "ME"
     }
   ],
   "branches": [
@@ -92,7 +97,16 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     },
     {
       "id": "6_2",
@@ -111,7 +125,27 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
     }
-  ]
+  ],
+  "stats": {
+    "FUE": 3,
+    "INT": 3,
+    "VEL": 2,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "arsenal",
+    "name": "Arsenal",
+    "desc": "+1 disparo básico y ataca un 10% más rápido"
+  }
 }

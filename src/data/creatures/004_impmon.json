@@ -16,7 +16,8 @@
       ],
       "wiki": null,
       "verified": true,
-      "note": "No está en la wiki: usa solo el disparo básico"
+      "note": "No está en la wiki: usa solo el disparo básico",
+      "family": "NSo"
     },
     {
       "stage": 1,
@@ -29,7 +30,8 @@
       ],
       "wiki": "yaamon",
       "verified": true,
-      "note": "En la wiki solo tiene ataque básico"
+      "note": "En la wiki solo tiene ataque básico",
+      "family": "NSo"
     },
     {
       "stage": 2,
@@ -42,7 +44,8 @@
         "night_of_fire"
       ],
       "wiki": "impmon",
-      "verified": true
+      "verified": true,
+      "family": "NSo"
     },
     {
       "stage": 3,
@@ -57,7 +60,8 @@
       ],
       "wiki": "wizardmon",
       "verified": true,
-      "note": "En la wiki Impmon evoluciona a Madleomon; se usa Wizarmon porque es el sprite que trae el pack"
+      "note": "En la wiki Impmon evoluciona a Madleomon; se usa Wizarmon porque es el sprite que trae el pack",
+      "family": "NSo"
     },
     {
       "stage": 4,
@@ -71,7 +75,8 @@
         "kamiuchi"
       ],
       "wiki": "baalmon",
-      "verified": true
+      "verified": true,
+      "family": "NSo"
     }
   ],
   "branches": [
@@ -93,7 +98,16 @@
       ],
       "wiki": "beelzemon-blastmode",
       "verified": true,
-      "note": "En la wiki evoluciona desde Beelzemon, no desde Baalmon"
+      "note": "En la wiki evoluciona desde Beelzemon, no desde Baalmon",
+      "family": "DA",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     },
     {
       "id": "6_2",
@@ -111,7 +125,16 @@
         "heartbreak_shot"
       ],
       "wiki": "beelzemon",
-      "verified": true
+      "verified": true,
+      "family": "DA",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
     },
     {
       "id": "6_3",
@@ -130,7 +153,25 @@
       ],
       "wiki": "beelzemon-xwars",
       "verified": true,
-      "note": "En la wiki figura como Beelzemon-Xwars"
+      "note": "En la wiki figura como Beelzemon-Xwars",
+      "family": "DA",
+      "bonus": {
+        "dmg": 5
+      },
+      "vp": {
+        "care": 1
+      }
     }
-  ]
+  ],
+  "stats": {
+    "FUE": 3,
+    "INT": 3,
+    "VEL": 2,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "travieso",
+    "name": "Travieso",
+    "desc": ""
+  }
 }

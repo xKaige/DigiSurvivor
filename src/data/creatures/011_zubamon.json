@@ -16,7 +16,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "ME"
     },
     {
       "stage": 1,
@@ -29,7 +30,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Bebé: usa solo el disparo básico"
+      "note": "Bebé: usa solo el disparo básico",
+      "family": "ME"
     },
     {
       "stage": 2,
@@ -43,7 +45,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "ME"
     },
     {
       "stage": 3,
@@ -57,7 +60,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "ME"
     },
     {
       "stage": 4,
@@ -71,7 +75,8 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR"
+      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "family": "ME"
     }
   ],
   "branches": [
@@ -92,7 +97,27 @@
       ],
       "wiki": null,
       "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)"
+      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
     }
-  ]
+  ],
+  "stats": {
+    "FUE": 4,
+    "INT": 2,
+    "VEL": 3,
+    "VIT": 1
+  },
+  "trait": {
+    "id": "filo",
+    "name": "Filo",
+    "desc": "+10% de crítico y +25% de daño crítico"
+  }
 }
