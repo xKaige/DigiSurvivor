@@ -39,7 +39,7 @@ async function initGame(ids) {
   await CreatureLoader.load(ENEMY_LINE).catch(e => console.error(e));
   await Bosses.load().catch(e => console.error(e));
   await Enemies.load().catch(e => console.error(e));
-  await World.load().catch(e => console.error(e));
+  // el mapa se genera en start() (uno nuevo por partida)
 }
 // Digimon desbloqueados (progress.js). Si progress.js no cargó, se puede usar cualquiera.
 const unlocked = id => typeof Progress === 'undefined' || Progress.has(id);
@@ -199,7 +199,8 @@ window.Lobby = {
   startOnline() {
     if (!conn || !isHost || !selected || !party || !party.c || running) return;
     hostPick = selected; isOnline = true;
-    sendTo(conn, { type: 'start', c0: selected });
+    World.nextSeed = (Math.random() * 2 ** 31) | 0;   // el mapa: los dos lo generan con la misma semilla
+    sendTo(conn, { type: 'start', c0: selected, seed: World.nextSeed });
     lobbyMsg('Iniciando partida...');
   }
 };
@@ -228,6 +229,7 @@ function setupConn(c) {
     } else if (data.type === 'start') {
       if (isHost) return;
       isOnline = true;
+      World.nextSeed = data.seed | 0;
       joinOnline(data.c0);
     } else if (data.type === 'ready') {
       // el invitado ya eligió: arranca la partida con las dos criaturas
@@ -339,8 +341,9 @@ function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'
 async function start(m,ids){
   ids=ids&&ids.length?ids:['001_guilmon'];
   await initGame(ids);
+  { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),sp=World.freeSpot(s0[0]+(m===1?0:(i?40:-40)),s0[1]);q.x=sp[0];q.y=sp[1]}if(!chal('notree'))applyTree(q);if(chal('glass')){q.max=Math.round(q.max/2);q.hp=q.max;q.dmg*=1.5}P.push(q)}
-  p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
+  p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
