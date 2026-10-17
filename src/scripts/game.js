@@ -847,9 +847,9 @@ function update(dt){
        en: en.map(e => e.bo != null ? { x: e.x, y: e.y, r: e.r, k: e.k, ti: 0, el: e.el, fl: e.fl, ang: e.ang, bo: e.bo, cyc: e.cyc, hp: e.hp, mh: e.mh, at: e.at }
          : { x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun }),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
-       sh: sh.map(s => ({ x: s.x, y: s.y, c: s.c, r: s.r })),
+       sh: sh.map(s => s.fx ? { x: s.x, y: s.y, c: s.c, r: s.r, fx: s.fx, a: Math.atan2(s.vy, s.vx) } : { x: s.x, y: s.y, c: s.c, r: s.r }),
        eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el, r: b.r })),
-       ef: ef.map(o => ({ k: o.k, x: o.x, y: o.y, R: o.R, l: o.l, m: o.m, a: o.a, Lg: o.Lg, s: o.s, w: o.w, col: o.col })),
+       ef: ef.map(o => ({ k: o.k, x: o.x, y: o.y, R: o.R, l: o.l, m: o.m, a: o.a, Lg: o.Lg, s: o.s, w: o.w, col: o.col, fx: o.fx })),
        t, kills, lvl, need, xp, bd: Bosses.down
      });
    }
@@ -957,7 +957,7 @@ function draw(){
   else{cx.fillRect(e.x-e.r,e.y-e.r,e.r*2,e.r*2);cx.fillStyle=D;cx.fillRect(e.x-7,e.y-4,5,5);cx.fillRect(e.x+2,e.y-4,5,5);cx.fillRect(e.x-6,e.y+4,12,3)}
   for(let i=0;i<e.ti;i++){cx.fillStyle='#ffd23f';cx.fillRect(e.x-(e.ti*5-1)+i*10,e.y-enTop(e)-10,7,5)}
   if(e.gun){cx.strokeStyle='rgba(255,255,255,.75)';cx.lineWidth=2;cx.beginPath();cx.arc(e.x,e.y,e.r+5,0,6.283);cx.stroke()}}
- for(const s of sh){cx.fillStyle=s.c||'#ffd23f';cx.beginPath();cx.arc(s.x,s.y,s.r||5,0,6.283);cx.fill()}
+ for(const s of sh){if(SkillSys.drawShot(s))continue;cx.fillStyle=s.c||'#ffd23f';cx.beginPath();cx.arc(s.x,s.y,s.r||5,0,6.283);cx.fill()}
  for(const b of eb){cx.fillStyle=ELC[b.el];cx.strokeStyle=b.r?'#ff9a2e':'#fff';cx.lineWidth=b.r?4:2;cx.beginPath();cx.arc(b.x,b.y,b.r||6,0,6.283);cx.fill();cx.stroke()}
  for(const o of ef)SkillSys.drawFx(o);
  for(const q of P)if(!q.dead)SkillSys.drawOrbits(q);

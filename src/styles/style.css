@@ -23,7 +23,11 @@ canvas{display:block;width:100%;height:100%}
 .skgrp{display:flex;gap:10px;align-items:flex-start}
 .skwho{align-self:center;font-weight:700;font-size:14px}
 .sk{display:flex;flex-direction:column;align-items:center;width:84px}
-.skbox{width:56px;height:56px;background:#fff;border:3px solid var(--gold)}
+.skbox{position:relative;width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(30,60,100,.9),rgba(4,12,26,.95));border:3px solid var(--gold);box-shadow:0 0 8px rgba(255,210,63,.45)}
+.sk .skbox{border-color:var(--ac,var(--gold));box-shadow:0 0 10px color-mix(in srgb,var(--ac,var(--gold)) 55%,transparent)}
+.skbox img{width:100%;height:100%;object-fit:contain}
+.skbox.el img{width:70%;height:70%}
+.skbox b{position:absolute;right:-6px;bottom:-6px;min-width:18px;padding:0 4px;font-size:12px;line-height:18px;text-align:center;color:#05101e;background:var(--gold);border-radius:9px}
 .skname{margin-top:4px;font-size:12px;font-weight:700;text-align:center;line-height:1.15;text-shadow:0 0 6px #000}
 .sk.empty .skbox{opacity:.2}
 
