@@ -29,6 +29,7 @@ const Progress = {
     let s = null;
     try { s = JSON.parse(localStorage.getItem(this.KEY)); } catch (e) {}
     this.st = Object.assign(this.blank(), s || {});
+    for (const cid in this.st.unl) this.st.seen[cid + ':stage_0'] = 1;   // al eclosionar ya conocés su forma bebé
     return this.st;
   },
   write() { try { localStorage.setItem(this.KEY, JSON.stringify(this.st)); } catch (e) {} },
@@ -92,7 +93,7 @@ const Progress = {
     for (const id of r.bosses) s.bosses[id] = (s.bosses[id] | 0) + 1;
     // primero incuban los huevos que ya tenías (uno conseguido en esta partida empieza a contar desde la próxima)
     for (const cid in s.eggs) {
-      if (--s.eggs[cid].left <= 0) { delete s.eggs[cid]; s.unl[cid] = 1; hatched.push(cid); s.hatchQ.push(cid); }
+      if (--s.eggs[cid].left <= 0) { delete s.eggs[cid]; s.unl[cid] = 1; s.seen[cid + ':stage_0'] = 1; hatched.push(cid); s.hatchQ.push(cid); }
     }
     for (const u of this.data.unlocks) {
       if (this.has(u.cid) || s.eggs[u.cid] || this.value(u) < u.goal) continue;
@@ -174,7 +175,7 @@ const Progress = {
     const w = document.createElement('div'); w.id = 'analyzer';
     w.innerHTML = '<div class="box"><div class="head"><div class="ttl"><h2>Digimon Analyzer</h2><small>Registro de datos digitales</small></div>' +
       '<div class="reset">Datos<b id="an-n">0 / 0</b></div><button id="an-x" aria-label="Cerrar">X</button></div>' +
-      '<div class="an-tabs"><button data-t="mon">Compañeros</button><button data-t="boss">Jefes</button></div>' +
+      '<div class="an-tabs"><button data-t="mon">Compañeros</button><button data-t="egg">Digitamas</button><button data-t="boss">Jefes</button></div>' +
       '<div id="an-list"></div><div class="foot">Cada forma que alcanzás y cada jefe que derrotás quedan registrados. Los Digimon bloqueados se consiguen cumpliendo su misión: ganás su Digitama y eclosiona al terminar la partida siguiente.</div></div>';
     document.body.appendChild(w);
     document.getElementById('an-x').onclick = () => this.close();
@@ -190,10 +191,12 @@ const Progress = {
     document.getElementById('an-n').textContent = this.seenCount() + ' / ' + this.totalData();
     document.querySelectorAll('#analyzer .an-tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === this.tab));
     let h = '';
-    if (this.tab === 'mon') {
+    if (this.tab === 'mon' || this.tab === 'egg') {
+      // Compañeros: solo los desbloqueados. Digitamas: los que faltan, con su misión.
       for (const c of CREATURES) {
         const C = CreatureLoader.cache[c.id]; if (!C) continue;
         const M = C.meta, st = this.state(c.id), el = elOf(c.id);
+        if ((st === 'open') !== (this.tab === 'mon')) continue;
         if (st !== 'open') {
           const u = this.unlockOf(c.id), v = u ? this.value(u) : 0;
           h += '<div class="an-row lockd"><div class="an-egg">' + this.eggHtml(c.id, 2) + '</div><div class="an-info"><b>' + (st === 'egg' ? 'Digitama' : '???') + '</b>' +
@@ -207,6 +210,7 @@ const Progress = {
           forms.map(f => { const ok = s.seen[c.id + ':' + f.k]; return '<span class="an-f' + (ok ? '' : ' no') + (f.fin ? ' fin' : '') + '" title="' + (ok ? f.n : '???') + '">' + this.thumb(C, f.k, 44) + '<small>' + (ok ? f.n : '???') + '</small></span>'; }).join('') +
           '</div></div></div>';
       }
+      if (!h && this.tab === 'egg') h ='<div class="an-row"><div class="an-info"><span class="desc">¡Ya eclosionaron todos los Digitamas!</span></div></div>';
     } else if (Bosses.data) {
       Bosses.data.list.forEach((B, i) => {
         const n = s.bosses[B.id] | 0, el = Bosses.elOf(B), S = Bosses.spr[B.id];

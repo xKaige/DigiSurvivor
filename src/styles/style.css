@@ -329,7 +329,7 @@ body:not(.ingame) #hud,body:not(.ingame) #xp,body:not(.ingame) #timer,body:not(.
 #hatch h2{margin:0;font:900 clamp(22px,4vw,32px) 'Orbitron','Chakra Petch',sans-serif;text-transform:uppercase;color:#f2fbff;text-shadow:0 0 6px var(--cy),0 0 18px rgba(63,208,255,.6)}
 #hatch .hstage{position:relative;height:210px;display:flex;align-items:center;justify-content:center}
 #hatch .hstage canvas{image-rendering:pixelated;animation:hpop .5s ease-out}
-#hatch .hstage.flash::after{content:'';position:absolute;inset:-40px;background:radial-gradient(circle,#fff 0,rgba(255,255,255,.85) 35%,transparent 70%);animation:hflash .9s ease-out forwards}
+#hatch .hstage.flash::after{content:'';position:absolute;inset:-40px;pointer-events:none;background:radial-gradient(circle,#fff 0,rgba(255,255,255,.85) 35%,transparent 70%);animation:hflash .9s ease-out forwards}
 @keyframes hflash{0%{opacity:0;transform:scale(.3)}45%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(1.4)}}
 @keyframes hpop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
 #hatch .hmsg{margin:0;font-size:16px}
