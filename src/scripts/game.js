@@ -415,6 +415,7 @@ function pickShow(i, key) {
     '<div class="pk-lbl">Evoluciones <small>(tocá una para verla)</small></div>' +
     '<div class="pk-evo">' + forms.map(chip).join('<i>→</i>') + '</div>' +
     '<div class="pk-lbl">Formas finales</div><div class="pk-evo fin">' + finals.map(chip).join('') + '</div>' +
+    pickStats(cr.id, shown.key) +
     '<span class="pc-type">Tipo ' + ATTR[el] + '</span>' +
     '<button class="pk-ok">Elegir a ' + nm.replace(/-/g, '‑') + '</button>';
   d.querySelectorAll('.pk-f').forEach(b => b.onclick = () => pickShow(i, b.dataset.k));
@@ -428,6 +429,16 @@ function pickShow(i, key) {
   let f = 0;
   const paint = () => { g.clearRect(0, 0, cv.width, cv.height); g.drawImage(S.canvas, f * fw, 0, fw, fh, 0, 0, fw * sc, fh * sc); f = 1 - f; };
   paint(); pickAnim = setInterval(paint, 380);
+}
+// Stats base de la especie, su rasgo, la familia de la forma que se está viendo y el vínculo (0.6: stats.js / trees.js)
+function pickStats(id, key) {
+  const M = CreatureLoader.cache[id].meta, st = M.stats || {}, tr = M.trait, bi = Trees.bondInfo(id);
+  const form = key.startsWith('branch_') ? M.branches.find(b => 'branch_' + b.id === key) : M.stages[+key.split('_')[1]];
+  const F = form && Stats.FAM[form.family];
+  return '<div class="pk-lbl">Stats base</div><div class="pk-st">' + Stats.KEYS.map(k => '<span title="' + Stats.NAME[k] + ': ' + Stats.PT[k] + ' por punto"><b>' + k + '</b><i><u style="width:' + Math.min(100, (st[k] | 0) * 20) + '%"></u></i><small>' + (st[k] | 0) + '</small></span>').join('') + '</div>' +
+    (tr && tr.desc ? '<div class="pk-tr"><b>' + tr.name + ':</b> ' + tr.desc + '</div>' : '') +
+    (F ? '<div class="pk-fam" title="' + F.d + '"><b>' + F.n + '</b> · ' + F.d + '</div>' : '') +
+    '<div class="pk-bond">Vínculo nivel ' + bi.lv + (bi.next ? ' <small>(' + bi.xp + ' / ' + bi.next + ')</small>' : ' <small>(máximo)</small>') + '</div>';
 }
 // Teclado en la selección: flechas mueven, Enter elige, 1-9 elige directo. Devuelve true si usó la tecla.
 function pickKey(k) {
@@ -896,7 +907,8 @@ function evoLevels(){return P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LE
 function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)continue;const b=$('hp2box').cloneNode(true);b.id='hp'+i+'box';b.className='hpbox p'+i;
   b.querySelectorAll('[id]').forEach(e=>{e.id=e.id.replace(/2$/,String(i))});$('hp'+(i-1)+'box').after(b)}
  for(let i=1;i<=MAX_PLAYERS;i++){const b=$('hp'+i+'box');if(!b)continue;b.style.display=i<=m?'':'none';const l=$('l'+i);if(l)l.textContent=m>1?'J'+i:''}}
-function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill'+n:'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3)};
+function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill'+n:'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3);
+ const sp=$('sp'+n),dp=$('dp'+n);if(sp){sp.style.width=(q.spv||0)+'%';sp.classList.toggle('full',!!q.emp)}if(dp){const nd=Stats.DP_NEED[q.stage|0];dp.style.width=nd&&q.vp?Math.min(100,q.vp.dp/nd*100)+'%':'0'}};
  P.forEach((q,i)=>hb(i,q));
  $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills+' virus';Bosses.hud()}
 

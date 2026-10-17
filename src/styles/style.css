@@ -173,6 +173,9 @@ canvas{display:block;width:100%;height:100%}
 .hpbox.p2{--hc:#ff7ad9;--hc2:#8a2f74}.hpbox.p3{--hc:#ffd23f;--hc2:#8a6a12}.hpbox.p4{--hc:#7aa8ff;--hc2:#2c4a8a}
 .hpbox .pl{font-size:15px;color:var(--hc);text-shadow:0 0 6px var(--hc)}.hpbox .pl:empty{display:none!important}
 .hpl{font-size:12px;letter-spacing:.14em;color:var(--hc)}
+/* 0.6: SP (celeste; brilla cuando está llena) y DP (dorado: virus para la evolución perfecta) */
+.spx{display:flex;flex-direction:column;gap:2px;width:46px}.spx i{display:block;height:5px;width:0;background:#5cf2ff;box-shadow:0 0 6px #5cf2ff;transition:width .2s}
+.spx i.dp{background:#ffd23f;box-shadow:0 0 6px #ffd23f}.spx i.sp.full{animation:spfull .6s steps(2) infinite}@keyframes spfull{50%{background:#fff}}
 #bar,#bar2,#bar3,#bar4{position:relative;width:clamp(120px,14vw,210px);height:18px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.18);overflow:hidden}
 #fill,#fill2,#fill3,#fill4{position:absolute;inset:0 auto 0 0;width:100%;transition:width .1s;
   background:linear-gradient(180deg,color-mix(in srgb,var(--hc) 70%,#fff),var(--hc) 45%,var(--hc2));box-shadow:0 0 10px var(--hc)}
@@ -301,6 +304,12 @@ body:not(.ingame) #hud,body:not(.ingame) #xp,body:not(.ingame) #timer,body:not(.
 #up.pick .pk-lbl small{letter-spacing:.04em;text-transform:none;font-weight:600;opacity:.8}
 #up.pick .pk-evo{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:5px 4px}
 #up.pick .pk-evo i{font-style:normal;color:var(--or);font-weight:700}
+/* 0.6: stats base, rasgo, familia y vínculo en la selección */
+#up.pick .pk-st{align-self:stretch;display:grid;grid-template-columns:1fr 1fr;gap:3px 12px}
+#up.pick .pk-st span{display:flex;align-items:center;gap:6px;font:700 12px 'Chakra Petch',sans-serif;color:#cfe8ff}
+#up.pick .pk-st b{width:28px;color:var(--ac)}#up.pick .pk-st i{flex:1;height:6px;background:rgba(255,255,255,.1)}#up.pick .pk-st i u{display:block;height:100%;background:var(--ac);box-shadow:0 0 6px var(--ac)}
+#up.pick .pk-tr,#up.pick .pk-fam,#up.pick .pk-bond{align-self:stretch;text-align:left;font:500 12.5px/1.35 'Chakra Petch',sans-serif;color:#cfe8ff}
+#up.pick .pk-tr b,#up.pick .pk-fam b{color:var(--ac)}#up.pick .pk-bond{color:#4dffb8;font-weight:700}#up.pick .pk-bond small{color:#9fc0d6;font-weight:500}
 #up.pick .pk-f{padding:4px 9px;font:700 13px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#eafaff;background:rgba(4,16,34,.85);border:1px solid rgba(63,208,255,.5);border-radius:4px;cursor:pointer}
 #up.pick .pk-f:hover,#up.pick .pk-f:focus-visible{outline:none;border-color:#fff}
 #up.pick .pk-f.on{color:#05101e;background:var(--ac);border-color:var(--ac);box-shadow:0 0 10px var(--ac)}
