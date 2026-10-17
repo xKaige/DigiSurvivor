@@ -32,12 +32,14 @@ const Items = {
     return ks[0];
   },
   drop(x, y) {
-    const ch = this.DROP * (typeof Challenge !== 'undefined' && Challenge.has('items') ? 3 : 1);
+    const luck = Math.max(0, ...P.map(q => q.luck || 0));   // suerte (stats.js): más ítems
+    const ch = this.DROP * (1 + luck) * (typeof Challenge !== 'undefined' && Challenge.has('items') ? 3 : 1);
     if (Math.random() < ch) this.on.push({ x, y, k: this.roll(), l: this.LIFE });
   },
   bossDrop(x, y) {
     this.on.push({ x: x - 24, y, k: 'floppy', l: this.LIFE });
-    if (Math.random() < 0.5) this.on.push({ x: x + 24, y, k: 'xantibody', l: this.LIFE });
+    // Prototipo X (rasgo de Dorumon): si alguno lo tiene y todavía no lo despertó, el X-Antibody cae siempre
+    if (Math.random() < 0.5 || P.some(q => q.tr === 'prototipo' && !q.xa && !q.dead)) this.on.push({ x: x + 24, y, k: 'xantibody', l: this.LIFE });
   },
 
   update(dt) {
@@ -54,11 +56,12 @@ const Items = {
   },
   apply(q, k) {
     const D = this.defs[k];
-    if (k === 'meat') q.hp = Math.min(q.max, q.hp + q.max * 0.25);
+    const heal = 1 + ((q.m && q.m.healP) || 0);   // curación de ítems (árbol de Vacuna)
+    if (k === 'meat') q.hp = Math.min(q.max, q.hp + q.max * 0.25 * heal);
     else if (k === 'floppy') { q.hp = q.max; q.inv = Math.max(q.inv, 2); }
     else if (k === 'digicore') xp += need * 0.4;
     else if (k === 'magnet') this.magT = 1.5;
-    else if (k === 'xantibody') { q.xa = 1; q.dmg *= 1.25; q.sp *= 1.1; if (window.onXAntibody) window.onXAntibody(q); }
+    else if (k === 'xantibody') { q.xa = 1; Stats.calc(q); if (window.onXAntibody) window.onXAntibody(q); }   // +25% de daño y +10% de velocidad (Stats.calc)
     fx.push({ x: q.x, y: q.y - (q.dh || 96) + 30, txt: D.n, col: D.col, sz: 20, l: 1.2 });
     for (let i = 0; i < 12; i++) burst(q.x, q.y, D.col);
   },

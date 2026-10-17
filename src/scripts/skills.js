@@ -47,9 +47,10 @@ const SkillSys = {
   // nivel máximo de una skill: las de forma final llegan a 10
   maxOf(k) { const d = typeof k === 'string' ? this.def(k) : k; return d && d.final ? (this.cat.maxLevelFinal || 10) : this.maxLv(); },
   // Máximo de skills activas a la vez (maxActive en skills.json). Con el cupo lleno solo salen mejoras de las que ya tenés.
-  maxActive() { return (this.cat && this.cat.maxActive) || 4; },
+  // q: con Compresión (árbol de Dato) se puede tener una más
+  maxActive(q) { return ((this.cat && this.cat.maxActive) || 4) + ((q && q.m && q.m.slots) | 0); },
   activeCount(q) { return Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) > 0).length; },
-  canTake(q, k) { return !!this.def(k) && ((q.wp[k] | 0) > 0 || this.activeCount(q) < this.maxActive()); },
+  canTake(q, k) { return !!this.def(k) && ((q.wp[k] | 0) > 0 || this.activeCount(q) < this.maxActive(q)); },
 
   // ---------- Mejoras por nivel ----------
   // PERKS[tipo][i] = mejora que da el nivel i+2 (nivel 2 … 10). Cada una cambia algo que se VE al usar la skill.
@@ -97,7 +98,7 @@ const SkillSys = {
   // Cartas de skills: NUEVAS (de tu etapa) y MEJORAS (de las que ya tenés), mezcladas
   cards(q) {
     if (!this.cat) return [];
-    const full = this.activeCount(q) >= this.maxActive();
+    const full = this.activeCount(q) >= this.maxActive(q);
     // nuevas: aunque tengas las 4 ocupadas (full); en ese caso game.js pregunta cuál reemplazar (u.rep)
     const fresh = this.pool(q).filter(k => this.def(k) && !(q.wp[k] | 0)).map(k => {
       const d = this.def(k), u = { n: d.name, d: d.desc, op: 'wp', wpKey: k, tag: 'Skill NUEVA', fresh: 1, full,
@@ -130,15 +131,21 @@ const SkillSys = {
       const lv = q.wp[k] | 0; if (!lv) continue;
       const d = this.def(k); if (!d) continue;
       const S = this.perks(d, lv);
+      // stats del jugador (stats.js): área, recarga y duración
+      if (q.area) { S.area *= q.area; S.size *= Math.sqrt(q.area); }
       if (d.type === 'orbit') { this.orbit(q, k, d, S, dt); continue; }
-      q.wt[k] = (q.wt[k] === undefined ? 0 : q.wt[k]) - dt;
+      q.wt[k] = (q.wt[k] === undefined ? 0 : q.wt[k]) - dt * (q.moving && q.m && q.m.moveCdr ? 1 + q.m.moveCdr : 1);
       if (q.wt[k] > 0) continue;
-      const fn = this[d.type];
-      if (fn) fn.call(this, q, k, d, S, Math.max(.35, d.cd * S.cd));
+      const fn = this[d.type]; if (!fn) continue;
+      if (q.emp && this.near(q, 520)) Stats.useEmp(q, S);   // SP lleno: esta sale potenciada
+      const cd = Math.max(.35, d.cd * S.cd * (q.cdr || 1)), c0 = q.casts | 0;
+      fn.call(this, q, k, d, S, cd);
+      // Sobrecarga (árbol de Dato): cada 5 skills, la quinta sale dos veces
+      if (q.m && q.m.overload && (q.casts | 0) > c0 && q.casts % 5 === 0) fn.call(this, q, k, d, S, cd);
     }
   },
 
-  fired(q, k, cd) { q.wt[k] = cd; (q.wc || (q.wc = {}))[k] = cd; q.skT = .25; },
+  fired(q, k, cd) { q.wt[k] = cd; (q.wc || (q.wc = {}))[k] = cd; q.skT = .25; q.casts = (q.casts | 0) + 1; },
   idle(q, k) { q.wt[k] = .25; (q.wc || (q.wc = {}))[k] = 0; },   // sin enemigos cerca: reintenta pronto, sin "apagar" el ícono
   // tamaño visual de los efectos según lo grande que se dibuja el Digimon (q.dh lo guarda drawBuddy)
   vis(q) { return Math.min(2.2, Math.max(1.2, ((q && q.dh) || 96) / 80)); },
@@ -149,7 +156,7 @@ const SkillSys = {
       const dx = e.x - q.x, dy = e.y - q.y, dist = Math.hypot(dx, dy);
       if (dist > R + e.r) continue;
       let da = Math.abs(Math.atan2(dy, dx) - a); if (da > Math.PI) da = 2 * Math.PI - da;
-      if (da <= arc / 2 || dist < e.r + 12) hit(e, dm, q.el);
+      if (da <= arc / 2 || dist < e.r + 12) hit(e, dm, q.el, q);
     }
   },
 
@@ -180,7 +187,7 @@ const SkillSys = {
     for (let i = 0; i < n; i++) {
       const a = a0 + (n > 1 ? -sp / 2 + sp * i / (n - 1) : 0);
       sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed,
-        l: d.life || 1.2, pi: (d.pierce || 0) + S.pierce, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el,
+        l: (d.life || 1.2) * (q.dur || 1), pi: (d.pierce || 0) + S.pierce, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el, q: q.id,
         ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 * S.size, fx: d.element, sz: 34 * this.vis(q) * S.size });
     }
     this.fired(q, k, cd);
@@ -195,9 +202,9 @@ const SkillSys = {
       const Ri = R * (1 + 0.35 * i);
       ef.push({ k: 'ring', x: q.x, y: q.y, R: Ri, col: this.col(d), l: .35 + .08 * i, m: .35 + .08 * i });
       if (!i && this.fxOf(d.element, 'nv')) ef.push({ k: 'nova', fx: d.element, x: q.x, y: q.y, R, l: .45, m: .45 });
-      for (const e of en) if (Math.hypot(e.x - q.x, e.y - q.y) < Ri + e.r) hit(e, dm * (i ? 0.6 : 1), q.el);
+      for (const e of en) if (Math.hypot(e.x - q.x, e.y - q.y) < Ri + e.r) hit(e, dm * (i ? 0.6 : 1), q.el, q);
     }
-    if (d.guard) q.inv = Math.max(q.inv || 0, d.guard);
+    if (d.guard) q.inv = Math.max(q.inv || 0, d.guard * (q.dur || 1));
     this.fired(q, k, cd);
   },
 
@@ -207,7 +214,7 @@ const SkillSys = {
     this.impact(s.x, s.y, s.fx, Math.max((s.sz || 34) * 1.5, s.ex * 1.6));
     for (const e of en) {
       if (e === first) continue;
-      if (Math.hypot(e.x - s.x, e.y - s.y) < s.ex + e.r) hit(e, s.d * .6, s.el);
+      if (Math.hypot(e.x - s.x, e.y - s.y) < s.ex + e.r) hit(e, s.d * .6, s.el, P[s.q]);
     }
   },
 
@@ -220,7 +227,7 @@ const SkillSys = {
       ef.push({ k: 'ray', x: q.x, y: q.y, a: ai, Lg, w: W, col: this.col(d), l: .25, m: .25 });
       for (const e of en) {
         const px = e.x - q.x, py = e.y - q.y, al = px * ca + py * sa;
-        if (al > 0 && al < Lg && Math.abs(-px * sa + py * ca) < e.r + W / 2) hit(e, dm, q.el);
+        if (al > 0 && al < Lg && Math.abs(-px * sa + py * ca) < e.r + W / 2) hit(e, dm, q.el, q);
       }
     }
     this.impact(b.x, b.y, d.element, 50 * this.vis(q) * S.size);
@@ -244,7 +251,7 @@ const SkillSys = {
       const a = q.oa + i * 6.283 / n, ox = q.x + Math.cos(a) * R, oy = q.y + Math.sin(a) * R;
       for (const e of en) {
         if (t - (e[key] || -9) > .45 && Math.hypot(e.x - ox, e.y - oy) < e.r + 9) {
-          e[key] = t; hit(e, d.dmg * q.dmg * S.dmg, q.el);
+          e[key] = t; hit(e, d.dmg * q.dmg * S.dmg, q.el, q);
         }
       }
     }
@@ -254,7 +261,7 @@ const SkillSys = {
     if (!this.cat) return;
     for (const k in q.wp) {
       const d = this.def(k); if (!d || d.type !== 'orbit' || !(q.wp[k] | 0)) continue;
-      const S = this.perks(d, q.wp[k]), n = (d.count || 3) + S.cnt, R = (d.radius || 64) * S.area;
+      const S = this.perks(d, q.wp[k]), n = (d.count || 3) + S.cnt, R = (d.radius || 64) * S.area * (q.area || 1);
       const P = this.fxOf(d.element, 'pr');
       cx.fillStyle = this.col(d); cx.strokeStyle = '#fff'; cx.lineWidth = 2;
       for (let i = 0; i < n; i++) {

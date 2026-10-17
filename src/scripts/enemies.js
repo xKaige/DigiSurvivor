@@ -100,7 +100,7 @@ const Enemies = {
   warnCirc(x, y, R, dur) { ef.push({ k: 'wcirc', x, y, R, l: dur, m: dur, col: this.RED }); },
   // golpe de área diferido: se resuelve en tick()
   bomb(x, y, R, dur, e, mult) { this.warnCirc(x, y, R, dur); this.bombs.push({ x, y, R, t: dur, dm: 9 * (mult || 1) * e.dm, el: e.el }); },
-  move(e, a, sp, dt) { World.move(e, Math.cos(a) * sp * dt, Math.sin(a) * sp * dt); },   // con choque contra las paredes
+  move(e, a, sp, dt) { sp *= Stats.slowOf(e); World.move(e, Math.cos(a) * sp * dt, Math.sin(a) * sp * dt); },   // con choque contra las paredes (y ralentizado: stats.js)
 
   act(e, dt, tg, dd, a) {
     const K = this.K(e);

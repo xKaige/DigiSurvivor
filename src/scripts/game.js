@@ -288,13 +288,7 @@ function setupConn(c) {
 
 function applyCardOp(targetP, data) {
   if (data.c) targetP.st[data.c]++;
-  if (data.op === 'dmg') targetP.dmg++;
-  else if (data.op === 'rate') targetP.rate *= .8;
-  else if (data.op === 'multi') targetP.multi++;
-  else if (data.op === 'pierce') targetP.pierce++;
-  else if (data.op === 'sp') targetP.sp *= 1.15;
-  else if (data.op === 'hp') { targetP.max += 25; targetP.hp = Math.min(targetP.max, targetP.hp + 25); }
-  else if (data.op === 'mag') targetP.mag *= 1.6;
+  if (Stats.cardOf(data.op)) Stats.card(targetP, data.op);   // carta de stat (stats.js)
   else if (data.op === 'wp' && data.wpKey) { SkillSys.forget(targetP, data.rep); if (SkillSys.canTake(targetP, data.wpKey)) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; }
   else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; targetP.dark = !!data.dark; }
 }
@@ -330,21 +324,25 @@ addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
 const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=110,MAX_EN2=140;   // MAX_EN: enemigos a la vez (1J / 2J)
-function dmgNum(x,y,v,col,sz){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
-function hit(e,d,el){const m=mult(el|0,e.el),v=d*m;e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,v,m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',m>1?30:m<1?14:18)}
-function hurt(q,d,el){if(q.dead)return;const m=mult(el,q.el|0),v=d*m*(1-q.arm);q.hp-=v;q.inv=.45;burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.dead=true;q.hp=0;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
-function permS(k){return {FUE:L('tf'),VEL:L('tv'),INT:L('ti'),VIT:L('th')}[k]|0}
-function tot(q,k){return permS(k)+q.st[k]}
+function dmgNum(x,y,v,col,sz,txt){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:txt||String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
+// q: quién golpea (para el crítico, las pasivas y a quién se le cuenta la muerte; ver stats.js)
+function hit(e,d,el,q){const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.hp0=e.hp;
+ if(q&&q.m){v=Stats.onHit(q,e,v);if(Math.random()<q.crit){v*=q.critD;cr=1}e.lh=q.id}
+ e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,v,cr?'#ffd23f':m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',cr?32:m>1?30:m<1?14:18,cr?String(Math.max(1,Math.round(v*10)))+'!':0);
+ if(q&&q.m)Stats.afterHit(q,e,v)}
+function hurt(q,d,el,src){if(q.dead)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
+function tot(q,k){return Stats.pts(q,k)}   // puntos de stat: especie + partida + árbol (stats.js)
 function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
 
 // ids: criatura de cada jugador, ej. ['002_renamon'] o ['001_guilmon','003_terriermon']
-async function start(m,ids){
-  ids=ids&&ids.length?ids:['001_guilmon'];
+// los: "loadout" de cada jugador (árbol y vínculo de SU guardado, ver trees.js). Si falta, se arma con el de este navegador.
+async function start(m,ids,los){
+  ids=ids&&ids.length?ids:['001_guilmon'];los=los||[];
   await initGame(ids);
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
-  mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),sp=World.freeSpot(s0[0]+(m===1?0:(i?40:-40)),s0[1]);q.x=sp[0];q.y=sp[1]}if(!chal('notree'))applyTree(q);if(chal('glass')){q.max=Math.round(q.max/2);q.hp=q.max;q.dmg*=1.5}P.push(q)}
+  mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),sp=World.freeSpot(s0[0]+(m===1?0:(i?40:-40)),s0[1]);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   $('bar2').style.display=$('l2').style.display=m===2?'block':'none';$('l1').textContent=m===2?'J1':'';$('l2').textContent=m===2?'J2':'';
   renderLegend();if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -529,14 +527,6 @@ function renderLegend() {
   $('leg').innerHTML = s;
 }
 
-const UP=[
-{c:'FUE',n:'Más daño',d:'+1 de daño por disparo',op:'dmg',f:()=>p.dmg++},
-{c:'VEL',n:'Disparo rápido',d:'Ataca un 20% más seguido',op:'rate',f:()=>p.rate*=.8},
-{c:'VEL',n:'Disparo doble',d:'+1 proyectil por ataque',op:'multi',f:()=>p.multi++},
-{c:'FUE',n:'Perforante',d:'Los disparos atraviesan 1 enemigo más',op:'pierce',f:()=>p.pierce++},
-{c:'VEL',n:'Patas veloces',d:'+15% de velocidad',op:'sp',f:()=>p.sp*=1.15},
-{c:'VIT',n:'Reparación',d:'+25 de vida máxima y cura 25',op:'hp',f:()=>{p.max+=25;p.hp=Math.min(p.max,p.hp+25)}},
-{c:'INT',n:'Imán de datos',d:'Atrae el XP desde más lejos',op:'mag',f:()=>p.mag*=1.6}];
 const TREE=[
 {c:'Ataque',n:[{k:'a1',n:'Poder',d:'+20% de daño',m:5,b:30},{k:'a2',n:'Cadencia',d:'Ataca un 6% más rápido',m:5,b:40,r:'a1'},{k:'a3',n:'Disparo extra',d:'+1 proyectil desde el inicio',m:1,b:150,r:'a2'}]},
 {c:'Defensa',n:[{k:'d1',n:'Vitalidad',d:'+15 de vida máxima',m:5,b:25},{k:'d2',n:'Agilidad',d:'+5% de velocidad',m:5,b:35,r:'d1'},{k:'d3',n:'Coraza',d:'-8% de daño recibido',m:3,b:60,r:'d2'}]},
@@ -695,19 +685,13 @@ function stepEvo(dt){evo.t+=dt;
  if(!evo.done&&evo.t>=1.3){evo.done=1;
   for(const q of P){
    const s=q.stage=evo.s;q.r=[14,16,19,22,25,28][s] || 20;
-   const wk=q.weak?.5:1;
-   if(s<5){q.dmg+=1.5;q.max+=30}
-   else if(q.dark){q.dmg+=7;q.multi+=1;q.sp*=1.08;q.max+=40}                    // evolución oscura
-   else if(q.line===0){q.dmg+=3*wk;q.max+=60*wk;if(!q.weak)q.pierce++}            // línea 0: pesado
-   else if(q.line===1){q.dmg+=1*wk;q.multi+=q.weak?1:2;q.sp*=q.weak?1.07:1.15}   // línea 1: veloz
-   else{q.dmg+=5*wk}                                                              // línea 2: poderoso
-   q.hp=q.max;
+   Stats.evolve(q,s);   // perfil de la especie, bono de etapa / rama ("bonus" en el JSON), familia nueva y evolución perfecta
    for(let i=0;i<30;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');
   }
   mine().forEach(seeForm);   // Digimon Analyzer
   // nombre(s) de la nueva forma de cada jugador (sin repetir)
   const names=P.map(q=>formName(q,evo.s)).filter((n,i,a)=>n&&a.indexOf(n)===i);
-  $('evt').textContent='¡'+names.join(' y ')+'!';
+  $('evt').textContent='¡'+names.join(' y ')+'!'+(evo.s<5&&P.some(q=>q.perfect)?' · Evolución perfecta':'');
  }
  if(evo.t>=2.8){
   const s=evo.s;evo=null;const v=$('evt');
@@ -744,7 +728,8 @@ function chooseLine(){
   cardMode='line'; setHead('¡Elegí tu evolución final!');
 
   const C = CR(p), branches = C.meta.branches;
-  const meets = b => TEST || Object.entries(b.req).every(([stat, val]) => tot(p, stat) >= Math.ceil(val * REQ_FACTOR));
+  const need = v => Math.ceil(v * REQ_FACTOR);
+  const meets = b => TEST || (Object.entries(b.req).every(([k, v]) => (p.st[k] | 0) >= need(v)) && Object.entries(b.vp || {}).every(([k, v]) => Stats.vpVal(p, k) >= need(v)));
   const anyOk = branches.some(meets);
   cur = branches.map((b, idx) => {
     const ok = meets(b);
@@ -756,7 +741,8 @@ function chooseLine(){
       lineIdx: idx,
       branchId: b.id,
       d: b.desc,
-      req: Object.entries(b.req).map(([k, v]) => `${SN[k]} ${Math.min(tot(p, k), Math.ceil(v * REQ_FACTOR))}/${Math.ceil(v * REQ_FACTOR)}`).join(' · '),
+      req: [...Object.entries(b.req).map(([k, v]) => `${SN[k]} ${Math.min(p.st[k] | 0, need(v))}/${need(v)}`),
+        ...Object.entries(b.vp || {}).map(([k, v]) => `${Stats.VPN[k]} ${Math.min(Stats.vpVal(p, k), need(v))}/${need(v)}`)].join(' · '),
       f: () => { p.line = idx; p.branchId = b.id; p.weak = !anyOk; p.dark = false; }
     };
   });
@@ -782,8 +768,9 @@ function chooseLine(){
 function levelUp(){
   xp-=need;lvl++;need=Math.round(need*XP_GROW+XP_ADD);paused=true;
 
-  if(EVO_LEVELS.includes(lvl)){
-    const nextStage = EVO_LEVELS.indexOf(lvl) + 1;
+  const EL=evoLevels();
+  if(EL.includes(lvl)){
+    const nextStage = EL.indexOf(lvl) + 1;
     startEvo(nextStage);
     if (isOnline && isHost && conn) conn.send({ type: 'trigger_evo', stage: nextStage });
     return;
@@ -820,8 +807,8 @@ function startCards(){
 // keep: volver a mostrar las mismas cartas (al cancelar un reemplazo de skill)
 function showCards(keep){
   paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');
-  $('up').querySelector('p').textContent='Elegí con el mouse o con las teclas 1, 2 o 3';
-  if(keep)cur=keep;else{const sk=SkillSys.cards(p).slice(0,2),st=UP.filter(u=>['dmg','sp','hp','mag'].includes(u.op)).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,3)}
+  $('up').querySelector('p').textContent='Elegí con el mouse o con las teclas 1 a '+nCards(p);
+  if(keep)cur=keep;else{const sk=SkillSys.cards(p).slice(0,2),st=Stats.CARDS.map(c=>({c:c.c,n:c.n,d:c.d,op:c.op,f:()=>{}})).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,nCards(p))}
   const c=$('cards');c.innerHTML='';
   // tipo de carta: skill nueva / mejora de skill / mejora de stat (cada una con su etiqueta y color)
   cur.forEach((u,i)=>{const b=document.createElement('button'),sk=u.op==='wp',nw=sk&&u.tag==='Skill NUEVA',sd=sk&&SkillSys.def(u.wpKey);
@@ -851,7 +838,7 @@ function choose(u){
   if(u.back){showCards(u.back);return}             // cancelar el reemplazo
   if(u.pickRep){const o=u.pickRep;o.rep=u.k;choose(o);return}   // eligió qué skill olvidar
   if(u.op==='wp'&&u.fresh&&u.full&&!u.rep&&!SkillSys.canTake(pending[0],u.wpKey)){showReplace(u);return}   // 4 ocupadas: preguntar cuál reemplazar
-  const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c)q.st[u.c]++;p=P[0];pending.shift();
+  const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c){q.st[u.c]++;Stats.card(q,u.op)}p=P[0];pending.shift();
 
   if (isOnline) {
     const payload = { type: isHost ? 'host_choice' : 'client_choice', op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark, rep: u.rep };
@@ -908,6 +895,15 @@ function burst(x,y,c){if(pt.length>=MAX_PT)return;for(let i=0;i<8;i++){const a=M
 
 // Gema de XP. Con demasiadas en el piso, la experiencia se suma a una que ya existe (se ve dorada si vale más de 5)
 function dropGem(x,y,v){if(gems.length<MAX_GEMS){gems.push({x,y,v});return}const g=gems[Math.floor(Math.random()*gems.length)];g.v+=v}
+// cuántas cartas se muestran al subir de nivel (3 + pasivas del árbol, hasta 5)
+function nCards(q){return Math.min(5,3+((q&&q.m&&q.m.cards)|0))}
+// Momentai (Terriermon): el disparo básico rebota al enemigo más cercano que todavía no golpeó
+function bounce(s,e){let b=null,bd=320;for(const o of en){if(o===e||s.h.has(o)||o.hp<=0)continue;const d=Math.hypot(o.x-e.x,o.y-e.y);if(d<bd){bd=d;b=o}}
+ if(!b){s.l=0;return}s.rb--;const a=Math.atan2(b.y-e.y,b.x-e.x),v=Math.hypot(s.vx,s.vy);s.x=e.x;s.y=e.y;s.vx=Math.cos(a)*v;s.vy=Math.sin(a)*v;s.l=.7}
+// jefe derrotado: cuenta para las ramas (V-Pet) y puede soltar un Chip de Reformateo a cada jugador (sirve para reiniciar un árbol)
+function bossReward(e){for(const q of P){if(!q.vp)continue;q.vp.bo++;if(Math.random()<.35*(1+(q.luck||0)+((q.m&&q.m.rcChance)||0))){q.vp.rc++;Stats.flash(q,'Chip de Reformateo','#9dff6b')}}}
+// niveles de evolución de esta partida (Inicio rápido, del árbol de Tamer: la primera llega un nivel antes)
+function evoLevels(){return P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LEVELS.slice(1)]:EVO_LEVELS}
 // HUD: vida (con rastro del daño recibido), experiencia con el nivel y virus eliminados. Lo usan el host y el cliente online.
 function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill2':'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3)};
  hb(0,P[0]);$('hp2box').style.display=mode===2?'':'none';if(mode===2)hb(1,P[1]);
@@ -921,7 +917,7 @@ function update(dt){
    } else if (isHost && conn) {
      conn.send({
        type: 'sync',
-       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP, dark: q.dark, xa: q.xa })),
+       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP, dark: q.dark, xa: q.xa, vp: q.vp, spv: q.spv, emp: q.emp, fam: q.fam, perfect: q.perfect })),
        en: en.map(e => e.bo != null ? { x: e.x, y: e.y, r: e.r, k: e.k, ti: 0, el: e.el, fl: e.fl, ang: e.ang, bo: e.bo, cyc: e.cyc, hp: e.hp, mh: e.mh, at: e.at }
          : { x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, et: e.et, st: e.st, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun }),
        gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
@@ -958,9 +954,8 @@ function update(dt){
     }
   }
   q.moving = !!(dx || dy);
-  if(dx||dy){const l=Math.hypot(dx,dy);World.move(q,dx/l*q.sp*dt,dy/l*q.sp*dt);if(dx)q.face=dx}   // choca con las paredes (map.js)
+  if(dx||dy){const l=Math.hypot(dx,dy),v=Stats.speedOf(q);World.move(q,dx/l*v*dt,dy/l*v*dt);if(dx)q.face=dx}   // choca con las paredes (map.js)
   q.inv-=dt;
-  if(q.dark&&(q.stage|0)>=5&&q.hp>q.max*.35)q.hp=Math.max(q.max*.35,q.hp-q.max*.004*dt);   // la oscuridad lo va consumiendo, hasta el 35% de la vida
  }
 
  const al=P.filter(q=>!q.dead);
@@ -978,18 +973,18 @@ function update(dt){
 
  // revivir: si un compañero vivo está parado sobre un jugador caído, se va llenando el progreso
  for(const d of P){if(!d.dead)continue;
-  let rv=0;for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R)rv=Math.max(rv,a.revSpd||1);
+  let rv=0,rh=0;for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R){rv=Math.max(rv,a.revSpd||1);rh=Math.max(rh,(a.m&&a.m.revHP)||0)}
   d.revP=rv?(d.revP||0)+dt*rv:Math.max(0,(d.revP||0)-dt);
-  if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*.5;d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
+  if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
  spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(mode===2?1.4:1)/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);i<n&&en.length<(mode===2?MAX_EN2:MAX_EN);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
- Bosses.tick();Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);
+ Bosses.tick();Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
-   if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el})}q.atkT=q.rate}}}
+   if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0})}q.atkT=q.rate}}}
  for(const s of sh){s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=dt;
-  for(const e of en)if(s.l>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+6){hit(e,s.d,s.el);s.h.add(e);if(s.pi>0)s.pi--;else s.l=0;if(s.ex)SkillSys.explode(s,e);burst(s.x,s.y,'#ffd23f')}}
+  for(const e of en)if(s.l>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+6){hit(e,s.d,s.el,P[s.q]);s.h.add(e);if(s.pi>0)s.pi--;else if(s.rb>0)bounce(s,e);else s.l=0;if(s.ex)SkillSys.explode(s,e);burst(s.x,s.y,'#ffd23f')}}
  sh=sh.filter(s=>s.l>0);
  for(const q of al)SkillSys.update(q,dt);
  for(const e of en){let tg=null,dd=1e9;for(const q of al){if(q.dead)continue;const d=Math.hypot(q.x-e.x,q.y-e.y);if(d<dd){dd=d;tg=q}}
@@ -998,11 +993,11 @@ function update(dt){
   else if(e.kd!=null||!e.gun)Enemies.act(e,dt,tg,dd,a);   // enemigos comunes: movimiento y ataques con aviso (enemies.js)
   else{if(dd>=230){e.x+=Math.cos(a)*e.sp*dt;e.y+=Math.sin(a)*e.sp*dt}e.cd-=dt;if(e.cd<=0&&dd<520){e.cd=2.2+Math.random();const n=e.ti>=3?5:e.ti>=2?3:1,vb=230+25*e.ti;for(let j=0;j<n;j++){const aa=a+(j-(n-1)/2)*.28;eb.push({x:e.x,y:e.y,vx:Math.cos(aa)*vb,vy:Math.sin(aa)*vb,l:3,el:e.el,dm:e.dm})}}}   // aparición vieja (spawnOld)
   e.fl-=dt;
-  for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4)hurt(q,e.bo!=null?12*e.dm:Enemies.touch(e),e.el)}
- for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el);b.l=0}}eb=eb.filter(b=>b.l>0);
+  for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4){Stats.lastTouch=e;hurt(q,e.bo!=null?12*e.dm:Enemies.touch(e),e.el);Stats.lastTouch=null}}
+ for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el,'b');b.l=0}}eb=eb.filter(b=>b.l>0);
  for(let i=0;i<en.length;i++)for(let j=i+1;j<en.length;j++){const a=en[i],b=en[j],d=Math.hypot(a.x-b.x,a.y-b.y);
   if(d>0&&d<a.r*1.6&&a.st!==2&&b.st!==2){const k=(a.r*1.6-d)/2/d,px=(a.x-b.x)*k,py=(a.y-b.y)*k;World.move(a,px,py);World.move(b,-px,-py)}}
- for(const e of en)if(e.hp<=0){kills++;if(e.bo!=null)Bosses.onDeath(e);else{dropGem(e.x,e.y,e.v);Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
+ for(const e of en)if(e.hp<=0){kills++;if(e.lh!=null)Stats.onKill(P[e.lh],e);if(e.bo!=null){Bosses.onDeath(e);bossReward(e)}else{dropGem(e.x,e.y,e.v);Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
