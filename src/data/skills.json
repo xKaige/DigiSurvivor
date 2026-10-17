@@ -2484,6 +2484,30 @@
       "spread": 0.4,
       "explode": 110,
       "source": "canon:wikimon"
+    },
+    "bubble_blow": {
+      "name": "Bubble Blow",
+      "desc": "Escupe burbujas que estallan al tocar a los virus",
+      "type": "projectile",
+      "element": "water",
+      "dmg": 0.9,
+      "cd": 1.2,
+      "speed": 360,
+      "life": 1.0,
+      "count": 2,
+      "spread": 0.35,
+      "source": "canon: ataque típico de los Digimon bebé (Bubble Blow / Acid Bubble)"
+    },
+    "tackle": {
+      "name": "Tackle",
+      "desc": "Embiste con todo el cuerpo a los virus de enfrente",
+      "type": "melee_arc",
+      "element": "neutral",
+      "dmg": 1.4,
+      "cd": 1.1,
+      "range": 70,
+      "arc": 1.9,
+      "source": "canon: ataque básico de los Digimon bebé II"
     }
   }
 }

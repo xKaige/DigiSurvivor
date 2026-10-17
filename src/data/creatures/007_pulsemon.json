@@ -11,7 +11,9 @@
       "file": "dokimon_1.png",
       "cols": 2,
       "rows": 6,
-      "skills": [],
+      "skills": [
+        "bubble_blow"
+      ],
       "wiki": null,
       "verified": false,
       "note": "Bebé: usa solo el disparo básico"
@@ -22,7 +24,9 @@
       "file": "bibimon_2.png",
       "cols": 2,
       "rows": 6,
-      "skills": [],
+      "skills": [
+        "tackle"
+      ],
       "wiki": null,
       "verified": false,
       "note": "Bebé: usa solo el disparo básico"

@@ -5,16 +5,78 @@
   "anySkill": false,
   "source": "Sprites: Digital Tamers: Reborn v2.2.2 (data.win, sprites d<ID>), x2 sin suavizar; cuadros de 64 a 192 según el tamaño",
   "stages": [
-    { "stage": 0, "name": "Chicomon", "file": "chicomon_1.png", "cols": 2, "rows": 6, "sprite": "dtr:d236",
-      "skills": [], "wiki": null, "verified": true, "note": "No está en la wiki: usa solo el disparo básico" },
-    { "stage": 1, "name": "Chibimon", "file": "chibimon_2.png", "cols": 2, "rows": 6, "sprite": "dtr:d237",
-      "skills": [], "wiki": "demiveemon", "verified": true, "note": "En la wiki (DemiVeemon) solo tiene ataque básico" },
-    { "stage": 2, "name": "V-mon", "file": "vmon_3.png", "cols": 2, "rows": 6, "sprite": "dtr:d7",
-      "skills": ["bunbun_punch", "veemon_head"], "wiki": "veemon", "verified": true },
-    { "stage": 3, "name": "V-dramon", "file": "vdramon_4.png", "cols": 2, "rows": 6, "sprite": "dtr:d41",
-      "skills": ["rapid_attack", "hammer_punch", "v_breath_arrow"], "wiki": "veedramon", "verified": true },
-    { "stage": 4, "name": "AeroV-dramon", "file": "aerovdramon_5.png", "cols": 2, "rows": 6, "sprite": "dtr:d119",
-      "skills": ["magnum_crash", "dragon_impulse", "v_wing_blade"], "wiki": "aeroveedramon", "verified": true }
+    {
+      "stage": 0,
+      "name": "Chicomon",
+      "file": "chicomon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "sprite": "dtr:d236",
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": true,
+      "note": "No está en la wiki: usa solo el disparo básico"
+    },
+    {
+      "stage": 1,
+      "name": "Chibimon",
+      "file": "chibimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "sprite": "dtr:d237",
+      "skills": [
+        "tackle"
+      ],
+      "wiki": "demiveemon",
+      "verified": true,
+      "note": "En la wiki (DemiVeemon) solo tiene ataque básico"
+    },
+    {
+      "stage": 2,
+      "name": "V-mon",
+      "file": "vmon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "sprite": "dtr:d7",
+      "skills": [
+        "bunbun_punch",
+        "veemon_head"
+      ],
+      "wiki": "veemon",
+      "verified": true
+    },
+    {
+      "stage": 3,
+      "name": "V-dramon",
+      "file": "vdramon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "sprite": "dtr:d41",
+      "skills": [
+        "rapid_attack",
+        "hammer_punch",
+        "v_breath_arrow"
+      ],
+      "wiki": "veedramon",
+      "verified": true
+    },
+    {
+      "stage": 4,
+      "name": "AeroV-dramon",
+      "file": "aerovdramon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "sprite": "dtr:d119",
+      "skills": [
+        "magnum_crash",
+        "dragon_impulse",
+        "v_wing_blade"
+      ],
+      "wiki": "aeroveedramon",
+      "verified": true
+    }
   ],
   "branches": [
     {
@@ -24,9 +86,16 @@
       "cols": 2,
       "rows": 6,
       "sprite": "dtr:d124",
-      "req": { "FUE": 3, "VIT": 1 },
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
-      "skills": ["splendor_blade", "positron_laser", "mega_death"],
+      "skills": [
+        "splendor_blade",
+        "positron_laser",
+        "mega_death"
+      ],
       "wiki": "imperialdramon-dragonmode",
       "verified": true,
       "note": "En la wiki viene de Paildramon, no de AeroV-dramon"
@@ -38,9 +107,15 @@
       "cols": 2,
       "rows": 6,
       "sprite": "dtr:d127",
-      "req": { "VEL": 4 },
+      "req": {
+        "VEL": 4
+      },
       "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
-      "skills": ["ulforce_saber", "shining_v_force", "dragon_impulse_x"],
+      "skills": [
+        "ulforce_saber",
+        "shining_v_force",
+        "dragon_impulse_x"
+      ],
       "wiki": "ulforceveedramon",
       "verified": true
     },
@@ -51,9 +126,15 @@
       "cols": 2,
       "rows": 6,
       "sprite": "dtr:d355",
-      "req": { "INT": 4 },
+      "req": {
+        "INT": 4
+      },
       "desc": "Poderoso: +5 de daño",
-      "skills": ["splendor_blade", "giga_death", "positron_laser"],
+      "skills": [
+        "splendor_blade",
+        "giga_death",
+        "positron_laser"
+      ],
       "wiki": "imperialdramon-fightermode",
       "verified": true,
       "note": "En la wiki viene de Imperialdramon Dragon Mode"

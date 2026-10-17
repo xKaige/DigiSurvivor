@@ -10,7 +10,9 @@
       "file": "zerimon_1.png",
       "cols": 2,
       "rows": 6,
-      "skills": [],
+      "skills": [
+        "bubble_blow"
+      ],
       "wiki": null,
       "verified": true,
       "note": "No está en la wiki: usa solo el disparo básico"
@@ -21,7 +23,9 @@
       "file": "Gummymon_2.png",
       "cols": 2,
       "rows": 6,
-      "skills": [],
+      "skills": [
+        "tackle"
+      ],
       "wiki": "gummymon",
       "verified": true,
       "note": "En la wiki solo tiene ataque básico"

@@ -31,7 +31,7 @@ const EVO_LEVELS = FAST ? [2,3,4,5] : [5,10,15,20];  // etapas 1,2,3,4 (cada 5 n
 const LINE_LEVEL = FAST ? 6 : 25;                    // elección de la evolución final (rama)
 const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisitos de stats de las ramas se achican
 // Experiencia para el próximo nivel: need = need × XP_GROW + XP_ADD (más bajo = se sigue subiendo en el late game)
-let XP_GROW = 1.12, XP_ADD = 5, XP_START = 6;
+let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7;
 
 async function initGame(ids) {
   await SkillSys.load();
