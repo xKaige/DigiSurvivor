@@ -560,7 +560,7 @@ try{const s=JSON.parse(localStorage.getItem('digisurvivor'));if(s&&s.lv)save=s}c
 if(wipeIfOld(save)){save.updated=Date.now();try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}
 function persist(){save.updated=Date.now();try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}if(window.onSave)window.onSave(save)}
 window.getSave=()=>save;
-window.loadSave=s=>{save=s;if(typeof Trees!=='undefined')Trees.ensure(save);if(wipeIfOld(save)){persist()}else{try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}wal()};   // si la cuenta tenía progreso viejo, se reinicia y se guarda en la nube
+window.loadSave=s=>{save=s;if(typeof Trees!=='undefined')Trees.ensure(save);const w=wipeIfOld(save);if(w){persist()}else{try{localStorage.setItem('digisurvivor',JSON.stringify(save))}catch(e){}}wal();return w};   // devuelve true si lo reinició (firebase.js reinicia también el progreso de la cuenta)   // si la cuenta tenía progreso viejo, se reinicia y se guarda en la nube
 function wal(){$('wal').textContent='Monedas: '+save.coins;if(treeOpen&&typeof Trees!=='undefined')$('tw').textContent='Chips de Reformateo: '+(save.rc|0)}
 // Árbol de mejoras (trees.js)
 $('tb').onclick=()=>Trees.open();

@@ -82,9 +82,11 @@ onAuthStateChanged(auth, async u => {
     if (snap.exists()) {
       const d = snap.data();
       const loadedSave = { coins: d.coins | 0, lv: d.lv || {}, ac: d.ac, rc: d.rc | 0, tr: d.tr, bond: d.bond, v: d.v, updated: Number(d.updated) || 0 };   // updated: lo usa el reinicio de progreso (RESET_BEFORE en game.js)
-      if (window.loadSave) window.loadSave(loadedSave);
-      // progreso de la cuenta; si la cuenta todavía no tiene, se sube el del navegador
-      if (d.prog && window.loadProg) window.loadProg(d.prog);
+      const wiped = window.loadSave ? window.loadSave(loadedSave) : false;
+      // progreso de la cuenta; si la cuenta todavía no tiene, se sube el del navegador.
+      // Si el guardado era de antes del reinicio (RESET_BEFORE en game.js), el progreso también vuelve a cero.
+      if (wiped) { if (window.loadProg) window.loadProg(null); if (window.getProg) saveProgToCloud(window.getProg()); }
+      else if (d.prog && window.loadProg) window.loadProg(d.prog);
       else if (window.getProg) saveProgToCloud(window.getProg());
     } else if (window.getSave) {
       await saveToCloud(window.getSave());

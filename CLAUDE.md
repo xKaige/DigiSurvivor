@@ -3,10 +3,11 @@
 Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero que ataca solo, juntás XP de los virus que matás, subís de nivel, elegís mejoras y skills, y tu compañero digievoluciona. Hay 1 jugador, 2 jugadores local (mismo teclado) y 2 jugadores online (PeerJS, invitando amigos).
 
 ## Estado actual (última sesión, oct 2026)
-- Versión publicada: **0.5**. Después de la 0.5 se subieron (sin versión nueva): evoluciones cada 5 niveles, menos lag, skills de bebé, **mapa Boot Jungle con paredes**, reemplazo de skills + nivel 10 en formas finales + mejoras visibles por nivel, loop a prueba de errores, XP calibrada para el mapa (`XP_GAIN` 0,55), eclosión de Digitamas desde el Analyzer y **tamaño parejo de sprites**.
+- Versión publicada: **0.5**. Después de la 0.5 se subieron a `main` (sin versión nueva): evoluciones cada 5 niveles, menos lag, skills de bebé, reemplazo de skills + nivel 10 en formas finales, loop a prueba de errores, XP calibrada, eclosión desde el Analyzer, tamaño parejo de sprites y el **mapa procedural** (un bosque nuevo por partida, ver "Mapa").
+- **0.6 en curso en la rama `v0.6`** (NO en `main`: se mergea y publica recién cuando esté todo). Ya hecho ahí: motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo + Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores. Al publicar: `GAME_VERSION` 0.6, `changelog.json`, y `RESET_BEFORE` = fecha y hora del lanzamiento (la 0.6 reinicia TODO el progreso; lo pidió el usuario).
 - Sin probar con dos personas: todo lo online de 0.4–0.5 (enemigos nuevos, avisos, ítems, jefes, mapa, reemplazo de skills) y el guardado de `prog` en la cuenta.
 - Reglas de Firestore pendientes de revisar/agregar: `challenges/{día}/scores/{uid}` (ranking del desafío) y el campo `prog` en `users/{uid}`.
-- Próximo parche grande pensado: **mapas** (más zonas de Digital Tamers, selector, lava que daña en Magma Mountain, copas de árbol por encima). Después: analizar **más atributos** para los personajes (lo pidió el usuario, "después lo analizamos").
+- Después de la 0.6: **mapas** (más zonas, selector, lava que daña en Magma Mountain), 3–4 jugadores en el menú y en el online (las bases ya están).
 
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
@@ -28,7 +29,9 @@ index.html                      # página + HUD + overlays (ids usados por game.
 src/styles/style.css            # estilos
 src/scripts/loader.js           # CreatureLoader: carga JSON + sprites de una criatura (cache por id)
 src/scripts/skills.js           # SkillSys: motor de skills (cartas, niveles, barra de skills)
+src/scripts/stats.js            # Stats: stats de los Digimon (0.6): puntos, modificadores, familias, rasgos, SP, V-Pet, cartas de stat
 src/scripts/game.js             # el juego + conexión online/lobby (script clásico, globals)
+src/scripts/trees.js            # Trees: árboles de mejoras por atributo y de Tamer, monedas, respec, vínculo (después de game.js)
 src/scripts/firebase.js         # login Google + guardado en Firestore (type="module")
 src/scripts/firebase-config.js  # config pública de Firebase (la importa firebase.js)
 src/scripts/social.js           # nick único, amigos, party e invitaciones (lo importa firebase.js)
@@ -46,12 +49,15 @@ src/data/missions.json          # catálogo de misiones diarias (tipos, metas, r
 src/data/unlocks.json           # huevo de cada Digimon + misiones permanentes de desbloqueo
 src/data/bosses.json            # jefes: vida, atributo, técnicas (ring/fan/charge/summon), monedas
 src/data/enemies.json           # 84 enemigos: nivel, atributo, comportamiento (kind) y números de cada kind
-src/data/maps/<id>.json         # mapa: paredes (block), troncos, inicio, escala
+src/data/maps/<id>.json         # mapa fijo: paredes (block), troncos, inicio, escala (hoy no se usa: el bosque es procedural)
+src/data/trees.json             # árboles de mejoras (lo genera tools/gentrees.py: editar ahí y volver a correrlo)
+tools/gentrees.py               # generador de trees.json (py -P tools/gentrees.py src/data/trees.json)
 src/data/changelog.json         # novedades de cada versión (lo muestra news.js): ACTUALIZARLO en cada versión nueva
 assets/sprites/creatures/<id>/  # spritesheets PNG de cada etapa/rama
 assets/sprites/eggs/egg_NN.png  # Digitamas: tira de 20 cuadros de 24×29 (Digital Tamers, spr_egg01..17)
 assets/sprites/bosses/          # jefes en hojas 2×6 (Workshop; las de 7 filas sin la fila de baile)
-assets/maps/<id>.webp           # imagen del mapa (Digital Tamers, 1024×1024)
+assets/maps/<id>.webp           # imagen de un mapa fijo (Digital Tamers, 1024×1024)
+assets/maps/woods_tiles.png     # tiles del bosque procedural (fila 0: 4 manchas en cruz limpias de 96×96; abajo, el tileset original)
 assets/sprites/enemies/         # sprites de enemigos (Workshop, hojas 2×6)
 assets/sprites/skills/          # íconos de skills (dsrworldwiki) y de elementos (el_<elemento>.webp)
 assets/sprites/fx/              # efectos animados (Digital Tamers, tiras horizontales)
@@ -59,12 +65,12 @@ assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de 
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `game.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 
 ### Estado global
-- `P` = array de jugadores (1 o 2), `p` = jugador "actual" (lo usan las cartas de mejora vía closures `f:()=>p.dmg++`).
+- `P` = array de jugadores (1 a `MAX_PLAYERS` = 4; el menú hoy ofrece 1 y 2), `p` = jugador "actual" (lo usan las cartas). `PC` = color de cada jugador.
 - `en` enemigos, `sh` disparos del jugador, `eb` balas enemigas, `gems` XP, `pt` partículas, `fx` números de daño, `ef` efectos (anillo/rayo/skills).
 - `t` tiempo de partida, `lvl`, `xp`, `need`, `kills`, `running`, `paused`, `evo` (animación de digievolución en curso), `mode` (1 o 2).
 - `CREATURES` = lista de criaturas disponibles (15: `001_guilmon` … `016_commandramon`; `004_impmon` no es jugable, es la línea de enemigos). Cada jugador tiene la suya en `q.cid`; `CR(q)` devuelve su entrada de `CreatureLoader.cache`: `{ meta: <json>, canvases: { stage_0..stage_4, branch_6_1.. } }`.
@@ -77,15 +83,15 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → 
 `loop()` → si `evo` corre `stepEvo`, si no y no está en pausa corre `update(dt)` → siempre `draw()`. `dt` está topeado a 0.05. Las dos partes van en `try/catch`: un error se ve en la consola y el juego sigue.
 
 ### Jugador (`np(i, cid)`)
-Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), multi, pierce, mag, arm, xpm, coin, stage (0–5), line (índice de rama), branchId, dark (evolución oscura), xa (X-Antibody), weak (viejo, sin uso), st {FUE,VEL,VIT,INT}, wp {skillKey: nivel} (skills activas), wt/wc (recarga restante / total de cada skill, para la barra), dh (alto dibujado), revP/revSpd (revivir)`.
+Campos clave: `cid, el (atributo), hp/max, dmg, rate, sp, multi, pierce, mag, arm, xpm, coin, crit, critD, cdr, area, dur, luck, regen, leech, dodge, spg, revSpd` (todos **los calcula `Stats.calc(q)`**, no se tocan a mano), `m` (bolsa de modificadores), `bs` (puntos base de la especie), `prof` (perfil), `st {FUE,VEL,VIT,INT}` (puntos de la partida), `fam` (familia de la forma), `tr` (rasgo), `vp` (contadores V-Pet: `k` virus, `bo` jefes, `care` veces al borde, `nh/nhb` seg. sin daño, `dp` virus desde la última evolución, `rc` chips), `spv/emp` (SP y SP lleno), `bond`, `rr` (re-sorteos), `stage, line, branchId, dark, xa, wp, wt/wc, dh, revP`.
 
 ### Progresión
 - `FAST = false` en `game.js` → evoluciones **cada 5 niveles** (5, 10, 15, 20; `EVO_LEVELS`) y rama final en el 25 (`LINE_LEVEL`), con requisitos completos (`REQ_FACTOR` 1). Con `FAST = true` (para probar) vuelven a ser 2,3,4,5 y 6 con requisitos al 40%.
 - Curva de XP: `need = need × XP_GROW + XP_ADD` empezando en `XP_START` (hoy 1,13 / 6 / 7), y toda la XP que juntás se multiplica por `XP_GAIN` (0,55: con el mapa los enemigos llegan todos y la XP se había disparado). Medido con un bot que recorre el mapa: Bebé II ~1:15, Novato ~2:20, Campeón ~4:00, Perfecto ~6:20, forma final ~7:45.
 - Al subir de nivel (`levelUp`): si es nivel de evolución → `startEvo(etapa)`; si es `LINE_LEVEL` → `chooseLine()` (elegir rama final) → `startEvo(5)`; si no → cartas (`startCards`/`showCards`).
-- Cartas: hasta 2 de skills (`SkillSys.cards(q)`: nuevas de tu etapa/rama y mejoras de las que tenés) + mejoras de stat de `UP` (cada una suma 1 punto a FUE/VEL/VIT/INT); se muestran 3. Las evoluciones también dan cartas al terminar la animación.
-- Ramas finales: requisitos en `branches[].req` del JSON, comparados contra `tot(q, stat)` = puntos permanentes del árbol + puntos de la partida. Si no cumplís ninguna, la única opción es la **evolución oscura** (ver más abajo).
-- **Los bonos de cada rama están hardcodeados por índice en `stepEvo`** (`line 0/1/2`), no en el JSON. Con 15 criaturas conviene pasarlo a datos (ej. un campo `bonus` en cada branch).
+- Cartas: hasta 2 de skills (`SkillSys.cards(q)`) + cartas de stat de `Stats.CARDS` (cada una suma 1 punto a su stat y su efecto); se muestran `nCards(q)` (3 + Aprendizaje/Visión de Tamer, hasta 5). Re-sortear (árbol de Tamer) agrega un botón. Las evoluciones también dan cartas.
+- Ramas finales: requisitos en `branches[].req` (puntos de la PARTIDA, `q.st`) **y** condiciones V-Pet en `branches[].vp` (`kills`, `nohit` = segundos seguidos sin daño, `care` = veces bajo 30% de vida, `bosses`): ver `Stats.vpVal`. Hoy: rama 1 pide virus, rama 2 tiempo sin daño, rama 3 haber estado al borde (las "oscuras"). Si no cumplís ninguna: evolución oscura.
+- Bonos de cada rama: `branches[].bonus` en el JSON (`dmg, hp, pierce, multi, spP`), los aplica `Stats.evolve`. Evolución oscura: `dark.bonus` o `Stats.DARK`. Cada evolución 1–4 suma `Stats.STAGE` y la mitad del perfil de la especie; si juntaste `Stats.DP_NEED[etapa]` virus desde la anterior es **evolución perfecta** (+2 en su mejor stat).
 - `cardsAt` + 800 ms: protección contra clicks/teclas accidentales cuando aparecen cartas encadenadas.
 
 ### Skills (`skills.js` + `skills.json`)
@@ -99,6 +105,15 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - **Íconos**: `icon` en cada skill = archivo en `assets/sprites/skills/` (bajados de dsrworldwiki, 67 skills). Sin `icon` → ícono del elemento (`el_<elemento>.webp`, también de la wiki). `SkillSys.iconOf(d)`.
 - **Efectos**: sprites animados de Digital Tamers en `assets/sprites/fx/` (tiras horizontales; `fxSprites` en skills.json con `w, h, n`). `fx` en skills.json dice qué usa cada elemento: `pr` proyectil (también órbitas), `hit` impacto (tajos, conos, rayos y explosiones, en el enemigo apuntado), `nv` pulso de área (nova). Disparos con sprite llevan `fx` (y `a` en el sync); efectos `hit`/`nova` llevan `fx`. Para cambiar un efecto, alcanza con cambiar el nombre en `fx` (y exportar la tira si es nueva).
 
+### Stats (`stats.js`, 0.6)
+- Cada especie tiene `stats` (FUE/INT/VEL/VIT, suman 10) y `trait` (rasgo único) en su JSON; cada forma tiene `family` (Fields de Wikimon: NSp, DS, NSo, WG, ME, VB, DR, JT, DA, UK). La familia de la forma actual da su pasiva (`Stats.FAM`).
+- Cada punto: FUE +3% daño; INT -1,5% recarga, +2% XP, +4% SP; VEL +2% velocidad y ataque; VIT +4% vida. Puntos = especie (`bs`) + partida (`st`) + árbol (`m.FUE`…): `Stats.pts`.
+- Todo lo que cambia stats pasa por `q.m` + `Stats.calc(q)`: cartas (`Stats.card`), evolución (`Stats.evolve`), árbol/vínculo (`Stats.init` con el loadout), X-Antibody (`q.xa` → calc). Lo que depende del momento va en hooks: `onHit` (vida baja, manada, Berserker…), `afterHit` (robo de vida, SP, ralentizar, infectar, chispa), `onKill`, `onHurt` (esquiva, escudo, balas), `onDeath` (Último Bastión, Respaldo), `tick` (regeneración, auras, Pulso, oscuridad), `enemyTick`.
+- `hit(e, d, el, q)`: el 4º parámetro es quién golpea (crítico, pasivas y a quién se le cuenta la muerte con `e.lh`). Skills y disparos lo pasan; el daño de infección no.
+- SP: se llena golpeando y matando; llena, la próxima skill sale x2 daño y +30% área (`Stats.useEmp` desde `SkillSys.update`).
+- Rasgos (trait.id): hazard, kitsune (esquiva), momentai (rebote: `bounce`), valor, curioso, pulso, prototipo (X-Antibody x1,5 y siempre cae), kabuto (escudo), hilo (ralentiza), filo, chispa, manada, puas (devuelve daño), bendicion, arsenal.
+- Datos sacados de Wikimon con un script (familias `f1..fN` + tipos `t1..`; la familia principal se elige por tipo, ver `addstats.py` de la sesión 0.6). Los bebés heredan la de su novato.
+
 ### Combate
 - Triángulo elemental `mult(atacante, defensor)`: 0 Vacuna › 1 Virus › 2 Dato › 0 Vacuna. ×1.5 ventaja, ×0.5 desventaja. El atributo del jugador sale de `attribute` en el JSON de su criatura (`elOf(cid)`; si falta, Vacuna).
 - **Enemigos (`enemies.js` + `enemies.json`)**: 84 especies (Workshop + la línea de Impmon) con nivel 0–5, atributo y comportamiento `kind`. Cada partida `Enemies.newRun()` sortea hasta `perRun` (5) especies por nivel de aparición (nivel ti y ti+1, con al menos un swarm/chaser), así cada run tiene enemigos distintos. 12% de "élite" (un nivel más).
@@ -106,7 +121,7 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Enemigo: `et` (índice en la lista), `kd` (kind), `st` (0 normal, 1 preparando, 2 embistiendo/saltando), `ac` (recarga). Sync: `et, st`. Daño por contacto `Enemies.touch(e)` (×1,6 embistiendo). La embestida de los jefes también marca su recorrido.
 - Si `enemies.json` no carga, queda la aparición vieja (`spawnOld`, línea `ENEMY_LINE` 004_impmon con `sk`).
 - **Balance** (medido con un bot que esquiva y junta XP; ver `HPT`, `HM`, `DM` en enemies.js y `XP_GROW/XP_ADD/XP_START` en game.js): vida = (2 + t/60) × HM[nivel] × kind.hp; velocidad con tope (+45 máx. por tiempo); aparición cada máx(0,3 s, 0,75 − t·0,003), tandas +1 cada 2 min. El bot muere cerca de los 8 min.
-- **Rendimiento** (topes en game.js): `MAX_EN` 110 enemigos (1J) / `MAX_EN2` 140 (2J), `MAX_FX` 70 números de daño, `MAX_PT` 450 partículas, `MAX_GEMS` 220 gemas (de ahí en más la XP se suma a una gema existente con `dropGem`). Los enemigos fuera de pantalla no se dibujan, y el destello al recibir un golpe usa una silueta blanca precalculada (`whiteOf`) en vez de `cx.filter`, que era muy lento. Con esto, ~2 ms por cuadro (simulación y dibujo). `MAX_EF` 160 efectos (nunca se descartan los avisos de ataque). Las siluetas blancas se generan al cargar los sprites. `loop()` atrapa errores de `update`/`draw`: se ven en la consola y el juego sigue (antes un error congelaba la partida para siempre). `World.relocate` muda como mucho 6 enemigos por vez.
+- **Rendimiento** (topes en game.js): `MAX_EN` 110 enemigos con 1 jugador (+30 por jugador), `MAX_FX` 70 números de daño, `MAX_PT` 450 partículas, `MAX_GEMS` 220 gemas. Enemigos fuera de pantalla no se dibujan; el destello de golpe usa `whiteOf`. `MAX_EF` 160 efectos (los avisos nunca se descartan). `loop()` atrapa errores. `World.relocate` muda como mucho 6 enemigos por vez.
 - Plantel por nivel: un común (swarm/chaser) + un tirador si hay, y como mucho una especie por comportamiento especial; así no salen todos embistiendo.
 - HUD: `hudBars()` actualiza vida (con rastro de daño), experiencia (NV y XP actual / necesaria) y virus eliminados, en host y cliente online. La leyenda de atributos (`renderLegend`) es un triángulo SVG. Ya no se muestra "Enemigos: X" bajo el reloj.
 - Revivir: un compañero vivo parado sobre el sprite de un jugador caído lo revive en `REVIVE_TIME` (5 s) dentro de `REVIVE_R`. `q.revSpd` queda para futuras pasivas.
@@ -151,14 +166,16 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Ranking de amigos en Firestore: `challenges/{día}/scores/{uid}` = `{nick, score, cid, at}` vía `window.challengeCloud` (social.js). **Requiere reglas**: leer con sesión iniciada y escribir solo el documento propio. Si las reglas no lo permiten, la ventana avisa y el resto funciona.
 
 ### Mapa con relieve (`map.js`, objeto `World`)
-- Hoy un solo mapa: **Boot Jungle** de Digital Tamers (`src/data/maps/boot_jungle.json` + `assets/maps/boot_jungle.webp`). Las paredes son los `obj_Block` del room original (`room_Boot_Jungle` en data.win): barrancos, mesetas y matorrales. Los árboles chocan solo en la base (`trunk`).
-- Mundo infinito: el mapa se repite en espejo (`World.local`) a escala ×2; las paredes se espejan igual. Se dibuja con `World.draw()` + un velo oscuro.
+- **Bosque procedural** (`World.gen(seed)`): cada partida arma un mapa de 64×64 celdas de 16 px (escala ×3) con `assets/maps/woods_tiles.png`: lagos, mesetas, caminos de tierra en red (circuito + vueltas horizontal y vertical, sin puntas muertas), pasto oscuro, árboles, rocas y adornos. Autotile por cuartos de 8×8 sacados de las cruces del tileset (`qkey`). El mapa es periódico y se repite TAL CUAL (`data.wrap`, sin espejo). Todo lo inalcanzable desde el inicio se vuelve pared. Online: la semilla viaja en el mensaje `start` (`World.nextSeed`).
+- Los árboles (`TALL`) no van en el piso: `World.drawTall` los dibuja después de los personajes, ordenados por profundidad (el que pasa por detrás queda tapado; si es un jugador, el árbol se pone medio transparente).
+- El mapa fijo **Boot Jungle** (`World.load`) quedó como respaldo si falla el generador.
+- Mundo infinito: un mapa fijo se repite en espejo (`World.local`); el bosque procedural se repite tal cual (`wrap`). Se dibuja con `World.draw()` + un velo oscuro.
 - Colisión por grilla de 8 px del mapa (16 en pantalla) con los PIES de cada entidad (`World.foot`/`footR`). `World.move(e, dx, dy)` desliza por las paredes; la usan jugadores, enemigos, jefes y el empuje entre enemigos. Los proyectiles NO chocan (pasan por arriba del relieve).
 - **El mapa tiene niveles separados** (abajo y arriba de los barrancos, como en el original). Por eso: `World.updateFlow` arma cada 0,25 s un mapa de distancias (BFS, radio `FLOW_R` 120 celdas ≈ 1900 px) desde los pies de los jugadores; los enemigos siguen `World.steer`, aparecen solo en lugares con camino (`World.spawnPos`) y `World.relocate` muda cada 1,5 s a los que quedaron encerrados o demasiado lejos.
 - Para sumar otro mapa: exportar fondo + `obj_Block` (+ `obj_Lava`) del room de Digital Tamers (scripts `roomrects.py`/`mapexport.py` de la sesión, misma receta) y cargarlo con `World.load(id)`. Pendiente: elegir mapa en el menú, lava que daña (Magma Mountain), copas de árbol por encima del jugador.
 
 ### Árbol de mejoras permanentes
-`TREE` (4 columnas). Se compra con monedas que se ganan al terminar la partida (`endRun`). Se aplica al inicio con `applyTree(q)`. Guardado en `save = {coins, lv:{clave:nivel}}`.
+`trees.js` + `src/data/trees.json` (0.6). Tres árboles de atributo (Vacuna, Virus, Dato) con forma de cruz: ramas Fuerza/Inteligencia/Velocidad/Vitalidad (la del atributo es más larga: Vacuna VIT, Virus FUE, Dato INT), conectores con pasivas del atributo y nodos `minor` (5 niveles), `attr` (3) y `major` (1). Cada árbol tiene identidad propia (Vacuna aguante/curación, Virus agresión/riesgo, Dato skills/control). Se compra con los **datos de su atributo** (`save.ac[0..2]`, se ganan jugando con un Digimon de ese atributo). El **árbol de Tamer** usa las monedas de siempre. Un nodo se compra si está unido a uno que ya tenés. Reiniciar un árbol cuesta un **Chip de Reformateo** (`save.rc`, lo sueltan a veces los jefes: `bossReward`). **Vínculo**: XP por Digimon (`save.bond[cid]`), cada nivel +1,5% daño y +2% vida. `Trees.loadout(cid)` arma lo que lleva cada jugador (online, el invitado manda el suyo en `ready`). Pantalla: pestañas, árbol arrastrable con zoom y panel de detalle.
 
 ## Interfaz (estilo "pantalla de Digivice")
 Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con esquinas cortadas, títulos en Orbitron con brillo, etiquetas `.ovfx` (esquinas `.cn`, `.tag`, `.side`, `.data`, `.reticle`). Variables `--cy`, `--cy2`, `--or`.
@@ -190,7 +207,7 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 
 ## Guardado y Firebase
 - Sin sesión: `localStorage['digisurvivor']`.
-- Con sesión Google: Firestore `users/<uid>` con `{coins, lv, updated, prog}` (`prog` = rango, desbloqueos, Digitamas y Analyzer; se escribe aparte con `merge`).
+- Con sesión Google: Firestore `users/<uid>` con `{coins, lv, ac, rc, tr, bond, v, updated, prog}` (0.6: `ac` datos de atributo, `rc` chips, `tr` árboles, `bond` vínculo; `prog` = rango, desbloqueos, Digitamas y Analyzer, se escribe aparte con `merge`). Si el guardado es anterior a `RESET_BEFORE`, se reinicia y también el `prog` de la cuenta.
 - Desafío diario: `challenges/{día}/scores/{uid}` `{nick, score, cid, at}`.
 - `social.js` además usa: `nicks/{nick en minúsculas}` `{uid, nick}` (nick único), `profiles/{uid}` `{nick, nickLower, peerId, seen}` (perfil público; `seen` = en línea) y `users/{uid}/friends/{amigoUid}` `{at}` (amistad mutua, se escribe en las dos listas). Las reglas de Firestore tienen que contemplar todo esto.
 - Puente entre módulos (globals en `window`):
@@ -207,7 +224,7 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - Invitaciones: conexión de control (`metadata.kind: 'ctl'`) con `invite` → `accept`/`decline`; solo se aceptan de amigos (se consulta `isFriendUid` en el momento). La partida usa otra conexión (`kind: 'game'`); quien invita es el host.
 - **Host autoritativo**: el host simula todo y manda `sync` **cada frame** con jugadores, enemigos, gemas, disparos, balas enemigas y efectos. El cliente solo manda `input` (teclas) y en `update` corta temprano después de actualizar el HUD.
 - Mensajes de partida: `hello, pick, ready, start, input, sync, trigger_levelup, trigger_line, trigger_evo, host_choice, client_choice, resume_game, end`.
-- Cartas online: cada uno elige para su jugador; se espera a que ambos elijan (`hostDone/clientDone`) y el host reanuda.
+- Índice propio `myIdx` (anfitrión 0, invitado 1); `rk[i]` teclas de cada remoto; `picked` = quién ya eligió carta/rama (se espera a todos: `allPicked`); `sendAll` manda a todas las conexiones (`conns()`, hoy una). Las elecciones llevan `i` y el anfitrión las reenvía a los demás. Controles locales: `inputOf(q)` (J1 WASD, J2 flechas, J3/J4 joysticks).
 - Limitaciones conocidas: el cliente no ve partículas ni números de daño (no se sincronizan `pt`/`fx`), no hay interpolación, y mandar el estado completo cada frame es pesado.
 
 ## Cosas a tener en cuenta al cambiar código
@@ -232,7 +249,7 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - Mapas: más zonas (hay 17 en Digital Tamers: Boot Jungle, Dina Plains, Modular Forest, Snow Land, SB Valley, Wave Coast, Clear Oasis, Net Ocean, Jagged Rocks, Slippery Swamp, Drive Savanna, Chrome Mines, Link Ruins, Sewer Road, Mecha Plant, Sizzling Desert, Magma Mountain), selector en el menú (las `bg_Btl_*` de 426×240 sirven de vista previa), `obj_Lava` que daña, enemigos por hábitat.
 - Ideas de la lista que quedaron sin hacer: Jogress en 2J (V-mon + Wormmon → Paildramon, sprite ya en el pack), Armor Digievolución (Digimental → Flamedramon), vínculo por compañero, zonas que cambian durante la partida.
 - Más líneas evolutivas en `src/data/creatures/`.
-- Mover los bonos de rama de `stepEvo` al JSON.
+- 0.6: probar online con dos personas (loadouts, V-Pet, SP, cartas con `picked`). Exponer 3–4 jugadores en el menú y conectar varios invitados (el código ya usa índices). Revisar reglas de Firestore para los campos nuevos de `users`.
 - Sacar los `.bak` del repo (o sumarlos al `.gitignore`) para que no se publiquen.
 - Optimizar el `sync` online (menos frecuencia, deltas, interpolación en el cliente).
 - Validación del guardado en servidor si se agrega ranking.
