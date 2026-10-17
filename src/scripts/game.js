@@ -425,10 +425,13 @@ function L(k){return save.lv[k]|0}
 function applyTree(q){q.dmg*=(1+.2*L('a1'))*(1+.04*L('tf'));q.rate*=Math.pow(.94,L('a2'));q.multi+=L('a3');q.max+=15*L('d1')+8*L('th');q.hp=q.max;q.sp*=(1+.05*L('d2'))*(1+.03*L('tv'));q.arm=.08*L('d3');q.mag*=1+.2*L('x1');q.xpm=(1+.15*L('x2'))*(1+.06*L('ti'));q.coin=1+.2*L('x3')}
 function wal(){$('wal').textContent='Monedas: '+save.coins;$('tw').textContent='Monedas: '+save.coins}
 function renderTree(){const c=$('cols');c.innerHTML='';
- TREE.forEach(br=>{const col=document.createElement('div');col.className='col';col.innerHTML='<h3>'+br.c+'</h3>';
-  br.n.forEach(n=>{const lv=L(n.k),maxed=lv>=n.m,locked=n.r&&!L(n.r),cost=n.b*(lv+1);
-   const b=document.createElement('button');b.className='node';b.disabled=maxed||!!locked||save.coins<cost;
-   b.innerHTML='<b>'+n.n+' '+lv+'/'+n.m+'</b>'+n.d+'<i>'+(maxed?'Máximo':locked?'Requiere mejorar la anterior':cost+' monedas')+'</i>';
+ TREE.forEach((br,ci)=>{const col=document.createElement('div');col.className='col'+(ci%2?'':' alt');col.innerHTML='<h3>'+br.c+'</h3>';
+  // las de Entrenamiento no dependen entre sí (sin línea que las una)
+  if(!br.n.some(n=>n.r))col.classList.add('free');
+  br.n.forEach(n=>{const lv=L(n.k),maxed=lv>=n.m,locked=n.r&&!L(n.r),cost=n.b*(lv+1),poor=!maxed&&!locked&&save.coins<cost;
+   const b=document.createElement('button');b.className='node'+(maxed?' max':locked?' lock':poor?' poor':' buy');b.disabled=maxed||!!locked||poor;
+   const pips='<span class="pips">'+Array.from({length:n.m},(_,i)=>'<u'+(i<lv?' class="on"':'')+'></u>').join('')+'<small>'+lv+'/'+n.m+'</small></span>';
+   b.innerHTML='<b>'+n.n+'</b>'+pips+n.d+'<i>'+(maxed?'Máximo':locked?'Requiere la mejora anterior':'● '+cost+' monedas')+'</i>';
    b.onclick=()=>{save.coins-=cost;save.lv[n.k]=lv+1;persist();wal();renderTree()};col.appendChild(b)});c.appendChild(col)})}
 $('tb').onclick=()=>{treeOpen=true;renderTree();wal();$('tree').style.display='flex'};
 $('tx').onclick=()=>{treeOpen=false;$('tree').style.display='none'};
