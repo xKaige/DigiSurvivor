@@ -398,9 +398,26 @@ async function openMenuPick() {
   finally { picking = false; }
 }
 // Leyenda de atributos (cada uno es fuerte contra el siguiente), empezando por el tuyo
+// Triángulo de atributos: arriba el tuyo; cada flecha va del que gana al que pierde (x1,5 de daño)
 function renderLegend() {
   const e0 = P[0].el | 0, o = [e0, (e0 + 1) % 3, (e0 + 2) % 3];
-  $('leg').innerHTML = o.map((e, i) => '<span style="color:' + ELC[e] + '">● ' + ATTR[e] + (i === 0 ? (mode === 2 ? ' (J1)' : ' (vos)') : '') + '</span>').join('›') + '›<span style="color:' + ELC[e0] + '">' + ATTR[e0] + '</span>';
+  const pt = [[80, 26], [138, 112], [22, 112]];   // vértices: arriba, abajo-der, abajo-izq
+  const arrow = (a, b, col) => {   // flecha de a hacia b, recortada para no pisar los círculos
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, r = 17;
+    return '<line x1="' + (a[0] + ux * r) + '" y1="' + (a[1] + uy * r) + '" x2="' + (b[0] - ux * (r + 4)) + '" y2="' + (b[1] - uy * (r + 4)) + '" stroke="' + col + '" stroke-width="2.5" marker-end="url(#lgar' + col.slice(1) + ')"/>';
+  };
+  let s = '<svg viewBox="0 -12 160 164" width="150" height="154" aria-label="Triángulo de atributos"><defs>';
+  ELC.forEach(c => { s += '<marker id="lgar' + c.slice(1) + '" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="' + c + '"/></marker>'; });
+  s += '</defs>';
+  for (let i = 0; i < 3; i++) s += arrow(pt[i], pt[(i + 1) % 3], ELC[o[i]]);
+  o.forEach((e, i) => {
+    const [x, y] = pt[i];
+    s += '<circle cx="' + x + '" cy="' + y + '" r="14" fill="rgba(4,16,34,.9)" stroke="' + ELC[e] + '" stroke-width="' + (i ? 2 : 3.5) + '"/>' +
+      '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + ELC[e] + '"/>' +
+      '<text x="' + x + '" y="' + (i ? y + 30 : y - 19) + '" text-anchor="middle" fill="' + ELC[e] + '">' + ATTR[e] + (i === 0 ? (mode === 2 ? ' (J1)' : ' (vos)') : '') + '</text>';
+  });
+  s += '<text x="80" y="88" text-anchor="middle" class="lgx">x1,5</text></svg>';
+  $('leg').innerHTML = s;
 }
 
 const UP=[
@@ -591,9 +608,9 @@ function chooseLine(){
   const c=$('cards');c.innerHTML='';
   cur.forEach((u,i)=>{
     const b=document.createElement('button');
-    b.className='card';
+    b.className='card lv line';
     b.disabled=u.lock;
-    b.innerHTML=thumbOf(C,'branch_'+u.branchId)+'<b>'+(i+1)+'. '+u.n+'</b>'+u.d+'<em>Requiere: '+u.req+'</em>';
+    b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(u.lock?'Bloqueada':'Evolución final')+'</span>'+thumbOf(C,'branch_'+u.branchId)+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span><em>Requiere: '+u.req+'</em>';
     b.onclick=()=>choose(u);
     c.appendChild(b);
   });
@@ -644,7 +661,11 @@ function showCards(){
   $('up').querySelector('p').textContent='Elegí con el mouse o con las teclas 1, 2 o 3';
   {const sk=SkillSys.cards(p).slice(0,2),st=UP.filter(u=>['dmg','sp','hp','mag'].includes(u.op)).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,3)}
   const c=$('cards');c.innerHTML='';
-  cur.forEach((u,i)=>{const b=document.createElement('button');b.className='card';b.innerHTML='<b>'+(i+1)+'. '+u.n+'</b>'+u.d+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag?'<em>'+u.tag+'</em>':'');b.onclick=()=>choose(u);c.appendChild(b)});
+  // tipo de carta: skill nueva / mejora de skill / mejora de stat (cada una con su etiqueta y color)
+  cur.forEach((u,i)=>{const b=document.createElement('button'),sk=u.op==='wp',nw=sk&&u.tag==='Skill NUEVA',sd=sk&&SkillSys.def(u.wpKey);
+   b.className='card lv '+(nw?'new':sk?'skup':'stat');if(sd)b.style.setProperty('--ac',SkillSys.col(sd));
+   b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(nw?'Skill nueva':sk?'Mejora de skill':'Mejora')+'</span><b>'+u.n+'</b><span class="kd">'+u.d+'</span>'+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag&&!nw?'<em>'+u.tag+'</em>':'');
+   b.onclick=()=>choose(u);c.appendChild(b)});
   showUp();
 }
 
@@ -801,7 +822,6 @@ function update(dt){
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
  if(P.every(q=>q.dead))endRun('Fuiste borrado');
  hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
- if($('tr')&&CR(P[0])){const EC=CreatureLoader.cache[ENEMY_LINE],M=(EC||CR(P[0])).meta;$('tr').textContent='Enemigos: '+(M.stages[Math.max(0,Math.max(...P.map(q=>q.stage|0))-1)]||M.stages[4]).name}
  $('pst').textContent=P.map(q=>(mode===2?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
 }
 

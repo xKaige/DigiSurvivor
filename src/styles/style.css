@@ -12,7 +12,7 @@ canvas{display:block;width:100%;height:100%}
 #timer{position:fixed;top:8px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 0 10px #000}
 #tm{display:block;font-size:34px;font-weight:700;line-height:1}#tr{display:block;font-size:13px;color:var(--gold);font-weight:700;margin-top:2px}
 #evt{z-index:5}
-#leg{position:fixed;left:16px;bottom:52px;font-size:14px;font-weight:700;pointer-events:none;display:flex;gap:8px}
+#leg{position:fixed;left:14px;bottom:52px;padding:4px 6px 2px;pointer-events:none;font:700 12px "Chakra Petch",sans-serif;background:rgba(4,16,34,.72);border:2px solid #1b6fa8;border-radius:10px 2px 10px 2px;box-shadow:0 0 10px rgba(63,208,255,.25)}#leg svg{display:block}#leg text{font:700 12px "Chakra Petch",sans-serif}#leg .lgx{fill:#9fc0d6;font-size:11px}
 #pst{position:fixed;top:62px;left:16px;font-size:13px;font-weight:700;color:var(--gold);white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
 .card em{display:block;margin-top:6px;color:var(--gold);font-style:normal;font-size:13px}
 .card:disabled{opacity:.45;cursor:not-allowed}.card:disabled:hover{background:#0a1a33;border-color:var(--teal)}
@@ -186,3 +186,26 @@ canvas{display:block;width:100%;height:100%}
 #xpt{flex:0 0 auto;min-width:92px;text-align:right;color:var(--gold);font-size:13px}
 @media (max-width:700px){#hud{flex-wrap:wrap;gap:8px}#bar,#bar2{width:120px}.hpl{display:none}}
 @media (max-width:1000px){#timer{top:58px!important}#pst{top:62px}}
+
+/* ---------- Subir de nivel / evolución final: cartas estilo Digivice (#up sin .pick) ---------- */
+#up:not(.pick){gap:10px;padding:24px 16px;background:radial-gradient(ellipse at 50% 45%,rgba(20,70,120,.55),transparent 60%),linear-gradient(rgba(63,208,255,.05) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(63,208,255,.05) 1px,transparent 1px) 0 0/40px 40px,rgba(3,10,24,.86)}
+#up:not(.pick) h2{position:relative;margin:0;padding:0 26px;font:900 clamp(24px,3.4vw,42px)/1.1 'Orbitron','Chakra Petch',sans-serif;text-transform:uppercase;letter-spacing:.03em;color:#ffe066;text-shadow:0 0 6px #ffb800,0 0 20px rgba(255,184,0,.55),0 3px 0 #8a5a00}
+#up:not(.pick) h2::before,#up:not(.pick) h2::after{content:'';position:absolute;top:-6px;bottom:-6px;width:13px;border:3px solid var(--cy);filter:drop-shadow(0 0 5px var(--cy))}
+#up:not(.pick) h2::before{left:0;border-right:0}#up:not(.pick) h2::after{right:0;border-left:0}
+#up:not(.pick) p{font:600 15px 'Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+#up:not(.pick) #cards{gap:clamp(12px,2vw,24px);margin-top:10px}
+#up .card.lv{--ac:#ffd23f;position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:5px;width:clamp(200px,22vw,260px);min-height:190px;padding:14px 16px 16px;text-align:left;
+  font:500 14px/1.4 'Chakra Petch',sans-serif;color:var(--ink);background:linear-gradient(180deg,rgba(18,60,100,.6),rgba(4,16,34,.95));border:2px solid var(--ac);border-radius:14px 3px 14px 3px;
+  box-shadow:0 0 12px color-mix(in srgb,var(--ac) 45%,transparent),inset 0 0 18px color-mix(in srgb,var(--ac) 14%,transparent);transition:transform .12s,box-shadow .12s,border-color .12s}
+#up .card.lv:hover:not(:disabled),#up .card.lv:focus-visible{outline:none;transform:translateY(-6px);border-color:#fff;box-shadow:0 0 22px var(--ac),inset 0 0 22px color-mix(in srgb,var(--ac) 22%,transparent);background:linear-gradient(180deg,rgba(28,84,136,.75),rgba(6,22,44,.97))}
+#up .card.lv .kn{position:absolute;top:10px;right:12px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font:700 14px 'Chakra Petch',sans-serif;color:var(--ac);border:2px solid var(--ac);border-radius:4px;opacity:.85}
+#up .card.lv .kt{padding:2px 8px;font:700 11px 'Chakra Petch',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#05101e;background:var(--ac);border-radius:3px}
+#up .card.lv b{margin:4px 0 0;font:700 21px/1.15 'Chakra Petch',sans-serif;letter-spacing:.02em;text-transform:uppercase;color:#f2fbff;text-shadow:0 0 8px color-mix(in srgb,var(--ac) 55%,transparent)}
+#up .card.lv .kd{color:#cfe6f5}
+#up .card.lv em{margin-top:auto;padding-top:8px;width:100%;font-style:normal;font-weight:700;font-size:13px;color:var(--ac);border-top:1px dashed color-mix(in srgb,var(--ac) 55%,transparent)}
+#up .card.lv.new{animation:cardglow 1.4s ease-in-out infinite}
+@keyframes cardglow{50%{box-shadow:0 0 22px var(--ac),inset 0 0 22px color-mix(in srgb,var(--ac) 22%,transparent)}}
+#up .card.lv.stat{--ac:#ffd23f}
+#up .card.lv.line{--ac:#4dffb8}#up .card.lv.line img{height:84px!important;margin:4px 0 0!important;image-rendering:pixelated}
+#up .card.lv:disabled{opacity:.4;cursor:not-allowed;filter:saturate(.4)}
+@media (prefers-reduced-motion:reduce){#up .card.lv.new{animation:none}}
