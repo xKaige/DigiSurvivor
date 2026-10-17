@@ -33,23 +33,25 @@ src/scripts/missions.js         # Misiones diarias (se carga después de game.js
 src/scripts/progress.js         # Progress: Digimon bloqueados, Digitamas, eclosión, Digimon Analyzer y Rango de Tamer
 src/scripts/challenge.js        # Challenge: desafío diario (reglas del día, récord y ranking de amigos)
 src/scripts/news.js             # News: botón "v0.x · Novedades" en la esquina del menú (lee changelog.json)
-src/scripts/map.js              # mapa de tiles (MAP_COLS/ROWS, mapData) — HOY NO SE CARGA en index.html
+src/scripts/map.js              # World: mapa del Digimundo con relieve (fondo en espejo, paredes, mapa de distancias)
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
 src/data/skills.json            # catálogo de skills, elementos, maxLevel, maxActive, levelBonus
 src/data/missions.json          # catálogo de misiones diarias (tipos, metas, recompensas)
 src/data/unlocks.json           # huevo de cada Digimon + misiones permanentes de desbloqueo
 src/data/bosses.json            # jefes: vida, atributo, técnicas (ring/fan/charge/summon), monedas
 src/data/enemies.json           # 84 enemigos: nivel, atributo, comportamiento (kind) y números de cada kind
+src/data/maps/<id>.json         # mapa: paredes (block), troncos, inicio, escala
 src/data/changelog.json         # novedades de cada versión (lo muestra news.js): ACTUALIZARLO en cada versión nueva
 assets/sprites/creatures/<id>/  # spritesheets PNG de cada etapa/rama
 assets/sprites/eggs/egg_NN.png  # Digitamas: tira de 20 cuadros de 24×29 (Digital Tamers, spr_egg01..17)
 assets/sprites/bosses/          # jefes en hojas 2×6 (Workshop; las de 7 filas sin la fila de baile)
+assets/maps/<id>.webp           # imagen del mapa (Digital Tamers, 1024×1024)
 assets/sprites/enemies/         # sprites de enemigos (Workshop, hojas 2×6)
 assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de spr_items)
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → `items.js` → `enemies.js` → `game.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `game.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 
@@ -139,6 +141,13 @@ Campos clave: `cid, el (atributo), hp/max, sp, dmg, rate (seg entre disparos), m
 - Puntaje = virus + 2 × segundos + 150 × jefes. Récord del día en `localStorage['digisurvivor_chal']`.
 - Ranking de amigos en Firestore: `challenges/{día}/scores/{uid}` = `{nick, score, cid, at}` vía `window.challengeCloud` (social.js). **Requiere reglas**: leer con sesión iniciada y escribir solo el documento propio. Si las reglas no lo permiten, la ventana avisa y el resto funciona.
 
+### Mapa con relieve (`map.js`, objeto `World`)
+- Hoy un solo mapa: **Boot Jungle** de Digital Tamers (`src/data/maps/boot_jungle.json` + `assets/maps/boot_jungle.webp`). Las paredes son los `obj_Block` del room original (`room_Boot_Jungle` en data.win): barrancos, mesetas y matorrales. Los árboles chocan solo en la base (`trunk`).
+- Mundo infinito: el mapa se repite en espejo (`World.local`) a escala ×2; las paredes se espejan igual. Se dibuja con `World.draw()` + un velo oscuro.
+- Colisión por grilla de 8 px del mapa (16 en pantalla) con los PIES de cada entidad (`World.foot`/`footR`). `World.move(e, dx, dy)` desliza por las paredes; la usan jugadores, enemigos, jefes y el empuje entre enemigos. Los proyectiles NO chocan (pasan por arriba del relieve).
+- **El mapa tiene niveles separados** (abajo y arriba de los barrancos, como en el original). Por eso: `World.updateFlow` arma cada 0,25 s un mapa de distancias (BFS, radio `FLOW_R` 120 celdas ≈ 1900 px) desde los pies de los jugadores; los enemigos siguen `World.steer`, aparecen solo en lugares con camino (`World.spawnPos`) y `World.relocate` muda cada 1,5 s a los que quedaron encerrados o demasiado lejos.
+- Para sumar otro mapa: exportar fondo + `obj_Block` (+ `obj_Lava`) del room de Digital Tamers (scripts `roomrects.py`/`mapexport.py` de la sesión, misma receta) y cargarlo con `World.load(id)`. Pendiente: elegir mapa en el menú, lava que daña (Magma Mountain), copas de árbol por encima del jugador.
+
 ### Árbol de mejoras permanentes
 `TREE` (4 columnas). Se compra con monedas que se ganan al terminar la partida (`endRun`). Se aplica al inicio con `applyTree(q)`. Guardado en `save = {coins, lv:{clave:nivel}}`.
 
@@ -207,7 +216,6 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - Corregir el comentario de `?test` en `game.js:20`.
 - Más líneas evolutivas en `src/data/creatures/`.
 - Mover los bonos de rama de `stepEvo` al JSON.
-- Decidir qué hacer con `map.js` (integrarlo o borrarlo).
 - Sacar los `.bak` del repo (o sumarlos al `.gitignore`) para que no se publiquen.
 - Optimizar el `sync` online (menos frecuencia, deltas, interpolación en el cliente).
 - Validación del guardado en servidor si se agrega ranking.

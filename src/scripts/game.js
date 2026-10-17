@@ -39,6 +39,7 @@ async function initGame(ids) {
   await CreatureLoader.load(ENEMY_LINE).catch(e => console.error(e));
   await Bosses.load().catch(e => console.error(e));
   await Enemies.load().catch(e => console.error(e));
+  await World.load().catch(e => console.error(e));
 }
 // Digimon desbloqueados (progress.js). Si progress.js no cargó, se puede usar cualquiera.
 const unlocked = id => typeof Progress === 'undefined' || Progress.has(id);
@@ -338,7 +339,7 @@ function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'
 async function start(m,ids){
   ids=ids&&ids.length?ids:['001_guilmon'];
   await initGame(ids);
-  mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);q.x=m===1?0:(i?40:-40);if(!chal('notree'))applyTree(q);if(chal('glass')){q.max=Math.round(q.max/2);q.hp=q.max;q.dmg*=1.5}P.push(q)}
+  mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),sp=World.freeSpot(s0[0]+(m===1?0:(i?40:-40)),s0[1]);q.x=sp[0];q.y=sp[1]}if(!chal('notree'))applyTree(q);if(chal('glass')){q.max=Math.round(q.max/2);q.hp=q.max;q.dmg*=1.5}P.push(q)}
   p=P[0];cam={x:P[0].x,y:0};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
@@ -922,7 +923,7 @@ function update(dt){
     }
   }
   q.moving = !!(dx || dy);
-  if(dx||dy){const l=Math.hypot(dx,dy);q.x+=dx/l*q.sp*dt;q.y+=dy/l*q.sp*dt;if(dx)q.face=dx}
+  if(dx||dy){const l=Math.hypot(dx,dy);World.move(q,dx/l*q.sp*dt,dy/l*q.sp*dt);if(dx)q.face=dx}   // choca con las paredes (map.js)
   q.inv-=dt;
   if(q.dark&&(q.stage|0)>=5&&q.hp>q.max*.35)q.hp=Math.max(q.max*.35,q.hp-q.max*.004*dt);   // la oscuridad lo va consumiendo, hasta el 35% de la vida
  }
@@ -948,7 +949,7 @@ function update(dt){
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
  spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(mode===2?1.4:1)/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);i<n&&en.length<(mode===2?MAX_EN2:MAX_EN);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
- Bosses.tick();Enemies.tick(dt);
+ Bosses.tick();Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
    if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el})}q.atkT=q.rate}}}
@@ -965,7 +966,7 @@ function update(dt){
   for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4)hurt(q,e.bo!=null?12*e.dm:Enemies.touch(e),e.el)}
  for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el);b.l=0}}eb=eb.filter(b=>b.l>0);
  for(let i=0;i<en.length;i++)for(let j=i+1;j<en.length;j++){const a=en[i],b=en[j],d=Math.hypot(a.x-b.x,a.y-b.y);
-  if(d>0&&d<a.r*1.6&&a.st!==2&&b.st!==2){const k=(a.r*1.6-d)/2/d;a.x+=(a.x-b.x)*k;a.y+=(a.y-b.y)*k;b.x-=(a.x-b.x)*k;b.y-=(a.y-b.y)*k}}
+  if(d>0&&d<a.r*1.6&&a.st!==2&&b.st!==2){const k=(a.r*1.6-d)/2/d,px=(a.x-b.x)*k,py=(a.y-b.y)*k;World.move(a,px,py);World.move(b,-px,-py)}}
  for(const e of en)if(e.hp<=0){kills++;if(e.bo!=null)Bosses.onDeath(e);else{dropGem(e.x,e.y,e.v);Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
@@ -990,11 +991,12 @@ function draw(){
 
  cx.fillStyle='#050b1a';cx.fillRect(0,0,W,H);
  const ox=W/2-cam.x,oy=H/2-cam.y;
- cx.strokeStyle='#0e2a4a';cx.lineWidth=1;cx.beginPath();
- for(let x=-((cam.x%64)+64)%64;x<W;x+=64){cx.moveTo(x,0);cx.lineTo(x,H)}
- for(let y=-((cam.y%64)+64)%64;y<H;y+=64){cx.moveTo(0,y);cx.lineTo(W,y)}
- cx.stroke();
+ if(!World.ready()){cx.strokeStyle='#0e2a4a';cx.lineWidth=1;cx.beginPath();
+  for(let x=-((cam.x%64)+64)%64;x<W;x+=64){cx.moveTo(x,0);cx.lineTo(x,H)}
+  for(let y=-((cam.y%64)+64)%64;y<H;y+=64){cx.moveTo(0,y);cx.lineTo(W,y)}
+  cx.stroke()}
  cx.save();cx.translate(ox,oy);
+ World.draw();   // mapa del Digimundo (map.js)
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
  Items.draw();

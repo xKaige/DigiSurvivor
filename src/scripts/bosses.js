@@ -57,6 +57,7 @@ const Bosses = {
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
       hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
       pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0 });
+    const b = en[en.length - 1], sp = World.spawnPos(b) || World.freeSpot(b.x, b.y, b); b.x = sp[0]; b.y = sp[1];
   },
   // comportamiento de un jefe en el loop de enemigos (tg = jugador más cercano, dd = distancia, a = ángulo hacia él)
   act(e, dt, tg, dd, a) {
@@ -69,10 +70,10 @@ const Bosses = {
     }
     if (e.ch > 0) {                     // embestida en línea recta
       e.ch -= dt; e.at = 0.2;
-      e.x += Math.cos(e.ca) * e.sp * 3.6 * dt; e.y += Math.sin(e.ca) * e.sp * 3.6 * dt;
+      World.move(e, Math.cos(e.ca) * e.sp * 3.6 * dt, Math.sin(e.ca) * e.sp * 3.6 * dt);
       return;
     }
-    e.x += Math.cos(a) * e.sp * dt; e.y += Math.sin(a) * e.sp * dt;
+    const ma = World.steer(e, a); World.move(e, Math.cos(ma) * e.sp * dt, Math.sin(ma) * e.sp * dt);   // rodea las paredes
     e.pt -= dt;
     if (e.pt > 0 || dd > 720) return;
     const k = B.atk[e.ai++ % B.atk.length];
@@ -92,7 +93,7 @@ const Bosses = {
       const ti = Math.max(0, Math.max(...P.map(q => q.stage | 0)) - 1);
       for (let j = 0; j < k.c; j++) {
         spawn(ti); const m = en[en.length - 1], g = j / k.c * 6.283;
-        m.x = e.x + Math.cos(g) * (e.r + 30); m.y = e.y + Math.sin(g) * (e.r + 30);
+        const sp = World.freeSpot(e.x + Math.cos(g) * (e.r + 30), e.y + Math.sin(g) * (e.r + 30), m); m.x = sp[0]; m.y = sp[1];
       }
     }
   },

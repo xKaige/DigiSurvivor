@@ -77,15 +77,17 @@ const Enemies = {
     const elite = Math.random() < 0.12, lv = Math.min(5, ti + (elite ? 1 : 0));
     const i = this.choose(elite ? ti + 1 : ti); if (i == null) return;
     const d = this.data.list[i], K = this.data.kinds[d.kind];
-    const a = Math.random() * 6.283, dist = Math.hypot(W, H) / 2 + 40;
+    // lugar fuera de pantalla, libre y con camino hasta el jugador (map.js)
+    const base = World.spawnPos({ k: 0, r: K.r * (1 + 0.1 * lv) }) || [cam.x + Math.hypot(W, H) / 2, cam.y];
     const n = group && d.kind === 'swarm' ? 3 : 1;
     for (let j = 0; j < n; j++) {
       const hp = (2 + t / this.HPT) * this.HM[lv] * K.hp;
-      en.push({ x: cam.x + Math.cos(a) * dist + j * 22, y: cam.y + Math.sin(a) * dist + j * 18, et: i, kd: d.kind,
+      en.push({ x: base[0] + j * 22, y: base[1] + j * 18, et: i, kd: d.kind,
         k: d.kind === 'swarm' ? 1 : d.kind === 'tank' ? 2 : 0, ti: lv, hp, mh: hp,
         sp: (55 + Math.random() * 25 + Math.min(45, t * 0.12)) * K.sp * (1 + 0.04 * lv) * (typeof Challenge !== 'undefined' && Challenge.has('fast') ? 1.3 : 1),
         r: K.r * (1 + 0.1 * lv), v: K.xp * (1 + 0.5 * lv), dm: this.DM[lv], touch: K.touch, el: this.elOf(d),
         fl: 0, ang: 0, ac: (K.cd || 3) * (0.5 + Math.random() * 0.6), st: 0, stT: 0 });
+      const e = en[en.length - 1], sp = World.freeSpot(e.x, e.y, e); e.x = sp[0]; e.y = sp[1];   // nunca dentro de una pared
     }
   },
   // daño al tocar (embistiendo o cayendo de un salto pega más)
@@ -96,11 +98,11 @@ const Enemies = {
   warnCirc(x, y, R, dur) { ef.push({ k: 'wcirc', x, y, R, l: dur, m: dur, col: this.RED }); },
   // golpe de área diferido: se resuelve en tick()
   bomb(x, y, R, dur, e, mult) { this.warnCirc(x, y, R, dur); this.bombs.push({ x, y, R, t: dur, dm: 9 * (mult || 1) * e.dm, el: e.el }); },
-  move(e, a, sp, dt) { e.x += Math.cos(a) * sp * dt; e.y += Math.sin(a) * sp * dt; },
+  move(e, a, sp, dt) { World.move(e, Math.cos(a) * sp * dt, Math.sin(a) * sp * dt); },   // con choque contra las paredes
 
   act(e, dt, tg, dd, a) {
     const K = this.K(e);
-    if (e.kd == null) { this.move(e, a, e.sp, dt); return; }   // enemigo viejo (sin tipo): solo persigue
+    if (e.kd == null) { this.move(e, World.steer(e, a), e.sp, dt); return; }   // enemigo viejo (sin tipo): solo persigue
     if (e.st === 1) {                                           // preparando el ataque: quieto, parpadea
       e.stT -= dt; e.fl = Math.max(e.fl, Math.floor(e.stT * 12) % 2 ? 0.04 : 0);
       if (e.stT <= 0) this.release(e);
@@ -116,13 +118,14 @@ const Enemies = {
       }
       return;
     }
-    // movimiento normal
+    // movimiento normal: sigue el mapa de distancias para rodear paredes (World.steer)
+    const ma = World.steer(e, a);
     if (e.kd === 'shooter') {                                   // se mantiene a media distancia, de costado
       const s = dd < 210 ? -1 : dd > 330 ? 1 : 0;
-      if (s) this.move(e, a, e.sp * s, dt); else this.move(e, a + Math.PI / 2 * (e.et % 2 ? 1 : -1), e.sp * 0.6, dt);
+      if (s) this.move(e, s > 0 ? ma : a, e.sp * s, dt); else this.move(e, a + Math.PI / 2 * (e.et % 2 ? 1 : -1), e.sp * 0.6, dt);
     } else if (e.kd === 'bomber' && dd < 300) {
       this.move(e, a + Math.PI / 2, e.sp * 0.5, dt);            // da vueltas alrededor
-    } else this.move(e, a, e.sp, dt);
+    } else this.move(e, ma, e.sp, dt);
     if (!K.cd) return;
     e.ac -= dt;
     if (e.ac > 0 || t < 8) return;
