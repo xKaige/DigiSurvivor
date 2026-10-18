@@ -2,12 +2,19 @@
 
 Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero que ataca solo, juntás XP de los virus que matás, subís de nivel, elegís mejoras y skills, y tu compañero digievoluciona. Hay 1 jugador, 2 jugadores local (mismo teclado) y 2 jugadores online (PeerJS, invitando amigos).
 
-## Estado actual (última sesión, oct 2026)
-- Versión publicada: **0.5**. Después de la 0.5 se subieron a `main` (sin versión nueva): evoluciones cada 5 niveles, menos lag, skills de bebé, reemplazo de skills + nivel 10 en formas finales, loop a prueba de errores, XP calibrada, eclosión desde el Analyzer, tamaño parejo de sprites y el **mapa procedural** (un bosque nuevo por partida, ver "Mapa").
-- **0.6 publicada** (17/10/2026 22:42, `RESET_BEFORE`: todo el progreso anterior volvió a cero): motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo + Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores. Balance medido solo con bot: falta ajustarlo jugando.
-- Sin probar con dos personas: todo lo online de 0.4–0.5 (enemigos nuevos, avisos, ítems, jefes, mapa, reemplazo de skills) y el guardado de `prog` en la cuenta.
-- Reglas de Firestore pendientes de revisar/agregar: `challenges/{día}/scores/{uid}` (ranking del desafío) y el campo `prog` en `users/{uid}`.
-- Después de la 0.6: **mapas** (más zonas, selector, lava que daña en Magma Mountain), 3–4 jugadores en el menú y en el online (las bases ya están).
+## Estado actual (última sesión: 18/10/2026)
+- **Versión publicada: 0.6** (17/10/2026 22:42; `RESET_BEFORE` reinició todo el progreso anterior): motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo de 99 nodos + árbol de Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores.
+- **Subido después de la 0.6** (sin versión nueva):
+  - Online: el host sigue simulando con la ventana minimizada (Worker), sync compacto a 15/s con interpolación y mensajes partidos (PeerJS JSON no manda más de 16 KB: era lo que cortaba las partidas), números de daño para el invitado, reconexión de 20 s si se corta, carta automática si estás caído, cámara propia y flechas hacia los compañeros (nick y metros).
+  - **Digital Gate** (`gate.js`): los jefes se pelean en una arena estilo MT Infinity a la que se entra por una fisura; al ganar, recompensas, nivel obligatorio, cuenta 5→0 y vuelta.
+  - **Final con Yggdrasill** (`finale.js`) a los 30 min (con `?finale`, al minuto): solo luz y mensaje, sin sprite (a pedido).
+  - Gemas de XP arregladas en partidas largas y curva de dificultad más alta desde los 5 min.
+  - **22 líneas nuevas del Workshop** (`017_agumon` … `038_blucomon`, se desbloquean con su Digitama) y **290 enemigos** (sprites a demanda).
+- **Próxima sesión: balancear las skills generadas** de las 22 líneas nuevas (248 skills creadas automáticamente desde Wikimon en `tools/workshop/gen_lines.py`: tipo/elemento por el nombre, daño y recarga por etapa). No se probaron jugando. Ludomon (Novato) no tiene técnica propia (usa `tackle`).
+- Sin probar con dos personas en PeerJS real: la reconexión, el Digital Gate y lo nuevo del online (se probó con dos pestañas conectadas por `BroadcastChannel`).
+- Reglas de Firestore pendientes de revisar: `challenges/{día}/scores/{uid}`, el campo `prog` y los campos de la 0.6 en `users/{uid}` (`ac`, `rc`, `tr`, `bond`, `v`).
+- Después: **mapas** (más zonas, selector, lava que daña en Magma Mountain), 3–4 jugadores en el menú y en el online (las bases ya están).
+- En la raíz hay dos archivos del usuario sin subir: `ost.mp3` y `free_pixel_16_woods.png` (el tileset original; el juego usa `assets/maps/woods_tiles.png`).
 
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
