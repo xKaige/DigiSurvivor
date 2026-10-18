@@ -79,7 +79,7 @@ let peer = null, myPeerId = null, conn = null, isHost = false, isOnline = false;
 // picked: jugadores que ya eligieron carta / rama en esta ronda (online se espera a todos).
 let myIdx = 0, rk = {}, picked = new Set();
 // sync: el anfitrión manda el estado SYNC_HZ veces por segundo (antes, en cada cuadro); enId numera a los enemigos
-const SYNC_HZ = 20;
+const SYNC_HZ = 15;
 let syncT = 0, enId = 0, inSig = '', inT = 0;
 // conexiones de juego abiertas (hoy una sola; con más invitados, el anfitrión tendría una por jugador)
 const conns = () => [conn].filter(Boolean);
@@ -100,7 +100,26 @@ const inbox = [];                     // invitaciones recibidas { id, uid, nick,
 const lobbyChanged = () => { if (window.onLobby) window.onLobby(); };
 const lobbyMsg = m => { lobbyNote = m || ''; lobbyChanged(); };
 const whenOpen = (c, fn) => { if (c.open) fn(); else c.on('open', fn); };
-const sendTo = (c, m) => { try { c.send(m); } catch (e) {} };
+const sendTo = (c, m) => { if (c.open === false) return; try { c.send(m); } catch (e) {} };
+// PeerJS con serialización JSON no manda mensajes de más de ~16 KB ("message-too-big"): los grandes se parten en pedazos
+// ('part') y el otro lado los vuelve a armar (joinPart). Se corta en BIG caracteres porque al reenviar se escapan las comillas.
+const BIG = 9000;
+let bigId = 0;
+const bigIn = {};
+function sendBig(m) {
+  const str = JSON.stringify(m);
+  if (str.length <= BIG) { sendAll(m); return; }
+  const id = ++bigId, n = Math.ceil(str.length / BIG);
+  for (let i = 0; i < n; i++) sendAll({ type: 'part', id, i, n, d: str.slice(i * BIG, (i + 1) * BIG) });
+}
+function joinPart(d) {
+  const b = bigIn[d.id] || (bigIn[d.id] = { n: d.n, got: 0, p: [] });
+  if (b.p[d.i] == null) { b.p[d.i] = d.d; b.got++; }
+  if (b.got < b.n) return null;
+  delete bigIn[d.id];
+  for (const k in bigIn) if (+k < d.id - 20) delete bigIn[k];   // pedazos viejos que nunca se completaron
+  try { return JSON.parse(b.p.join('')); } catch (e) { return null; }
+}
 const validId = id => CREATURES.some(x => x.id === id) ? id : null;
 const dropInvite = id => { const k = inbox.findIndex(x => x.id === id); if (k >= 0) { inbox.splice(k, 1); lobbyChanged(); } };
 
@@ -259,8 +278,13 @@ function rejoin() {
 function setupConn(c) {
   whenOpen(c, () => sendTo(c, { type: 'hello', uid: me.uid, nick: me.nick, c: selected }));
   c.on('close', () => connClosed(c, 'close'));
-  c.on('error', e => connClosed(c, 'error ' + ((e && (e.type || e.message)) || '')));
+  c.on('error', e => {
+    const why = 'error ' + ((e && (e.type || e.message)) || '');
+    if (c.open && /not-open-yet|message-too-big/.test(why)) { console.warn('DigiSurvivor: ' + why + ' (la conexión sigue)'); return; }
+    connClosed(c, why);
+  });
   c.on('data', data => {
+    if (data && data.type === 'part') { data = joinPart(data); if (!data) return; }   // mensaje grande que llegó en pedazos
     if (data.type === 'hello') {
       if (party) { party.c = validId(data.c); if (data.nick) party.nick = String(data.nick).slice(0, 20); }
       lobbyChanged();
@@ -338,6 +362,12 @@ function applyCardOp(targetP, data) {
 }
 
 // Invitado: responde con su Digimon y arranca
+// enemigo que llegó como lista de números (ver el sync del anfitrión)
+function unpackEn(a) {
+  const e = { id: a[0], x: a[1], y: a[2], r: a[3], k: a[4], ti: a[5], sk: a[6], et: a[7], st: a[8], el: a[9], fl: a[10], ang: a[11], gun: !!a[12] };
+  if (a.length > 13) { e.bo = a[13]; e.cyc = a[14]; e.hp = a[15]; e.mh = a[16]; e.at = a[17]; }
+  return e;
+}
 function onlineSmooth(dt) {
   const k = Math.min(1, dt * 12);
   for (const q of P) { if (q.tx == null || q.dead) continue;
@@ -366,11 +396,11 @@ function applyOnlineSync(data) {
       if (!q.synced || Math.hypot(x - q.x, y - q.y) > 250) { q.x = x; q.y = y; q.synced = 1; } });
   }
   if (data.en) { const old = new Map(en.map(e => [e.id, e]));
-    en = data.en.map(se => { const o = old.get(se.id); se.tx = se.x; se.ty = se.y;
+    en = data.en.map(a => { const se = unpackEn(a), o = old.get(se.id); se.tx = se.x; se.ty = se.y;
       if (o && Math.hypot(o.x - se.x, o.y - se.y) < 200) { se.x = o.x; se.y = o.y; } return se; }); }
-  if (data.gems) gems = data.gems;
-  if (data.sh) sh = data.sh;
-  if (data.eb) eb = data.eb;
+  if (data.gems) { const g = data.gems; gems = []; for (let i = 0; i < g.length; i += 3) gems.push({ x: g[i], y: g[i + 1], v: g[i + 2] }); }
+  if (data.sh) sh = data.sh.map(a => ({ x: a[0], y: a[1], vx: a[2], vy: a[3], c: a[4] || undefined, r: a[5], fx: a[6] || undefined, sz: a[7] || undefined, a: Math.atan2(a[3], a[2]) }));
+  if (data.eb) eb = data.eb.map(a => ({ x: a[0], y: a[1], vx: a[2], vy: a[3], el: a[4], r: a[5] || undefined }));
   if (data.ef) ef = data.ef;
   if (data.bd) Bosses.down = data.bd;
   if (data.it) Items.on = data.it;
@@ -981,15 +1011,18 @@ function update(dt){
    } else if (isHost && conns().length && (syncT -= dt) <= 0) {
      syncT = 1 / SYNC_HZ;
      const r = v => Math.round(v), r2 = v => Math.round(v * 100) / 100;
-     sendAll({
+     const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
+     sendBig({
        type: 'sync',
-       P: P.map(q => ({ x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP, dark: q.dark, xa: q.xa, vp: q.vp, spv: q.spv, emp: q.emp, fam: q.fam, perfect: q.perfect })),
+       P: P.map(q => ({ x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, dark: q.dark, xa: q.xa, vp: q.vp, spv: q.spv, emp: q.emp, fam: q.fam, perfect: q.perfect })),
+       // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync
        en: en.map(e => { if (!e.id) e.id = ++enId;   // id para que el cliente pueda deslizar a cada uno
-         return e.bo != null ? { id: e.id, x: r(e.x), y: r(e.y), r: r2(e.r), k: e.k, ti: 0, el: e.el, fl: r2(e.fl), ang: r2(e.ang), bo: e.bo, cyc: e.cyc, hp: r(e.hp), mh: r(e.mh), at: r2(e.at) }
-         : { id: e.id, x: r(e.x), y: r(e.y), r: r2(e.r), k: e.k, ti: e.ti, sk: e.sk, et: e.et, st: e.st, el: e.el, fl: r2(e.fl), ang: r2(e.ang), gun: e.gun }; }),
-       gems: gems.map(g => ({ x: r(g.x), y: r(g.y), v: r2(g.v) })),
-       sh: sh.map(s => s.fx ? { x: r(s.x), y: r(s.y), vx: r(s.vx), vy: r(s.vy), c: s.c, r: r2(s.r), fx: s.fx, sz: r(s.sz), a: r2(Math.atan2(s.vy, s.vx)) } : { x: r(s.x), y: r(s.y), vx: r(s.vx), vy: r(s.vy), c: s.c, r: r2(s.r) }),
-       eb: eb.map(b => ({ x: r(b.x), y: r(b.y), vx: r(b.vx), vy: r(b.vy), el: b.el, r: b.r })),
+         const a = [e.id, r(e.x), r(e.y), r2(e.r), e.k, e.bo != null ? 0 : e.ti, e.bo != null ? null : e.sk, e.bo != null ? null : e.et, e.st | 0, e.el, r2(e.fl), r2(e.ang), e.gun ? 1 : 0];
+         if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at));
+         return a; }),
+       gems: gems.flatMap(g => [r(g.x), r(g.y), r2(g.v)]),
+       sh: sh.map(s => [r(s.x), r(s.y), r(s.vx), r(s.vy), s.c || 0, r2(s.r || 5), s.fx || 0, r(s.sz || 0)]),
+       eb: eb.map(b => [r(b.x), r(b.y), r(b.vx), r(b.vy), b.el, b.r || 0]),
        ef: ef.map(o => ({ k: o.k, x: r(o.x), y: r(o.y), R: o.R && r(o.R), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx })),
        it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })),
        gt: Gate.sync(),
