@@ -766,13 +766,15 @@ const enTop=e=>enSpr(e)?enH(e)/2:e.r;
 // silueta blanca de una hoja (se genera una vez): reemplaza a cx.filter='brightness(3)', que es muy lento
 function whiteOf(S){if(S.white)return S.white;const c=document.createElement('canvas');c.width=S.canvas.width;c.height=S.canvas.height;const g=c.getContext('2d');g.drawImage(S.canvas,0,0);g.globalCompositeOperation='source-atop';g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);return S.white=c}
 // Alto en pantalla del dibujo de un enemigo según el nivel de su especie (un poco más chicos que los compañeros)
-const ENEMY_H=[30,36,54,70,84,98];
+const ENEMY_H=[38,44,58,72,86,100];
+// piso: ningún enemigo común se ve más chico que la mitad de tu Digimon (al evolucionar, los chiquitos crecen con vos)
+const enMin=()=>{let s=0;for(const q of P)if(q.stage>s)s=q.stage;return BUDDY_H[Math.min(5,s)]*.5};
 function drawEnemy(e){
  const S=enSpr(e);if(!S||!S.canvas)return false;
  // alto del dibujo real: enemigos según el nivel de su especie (ENEMY_H, tanques más grandes y enjambres más chicos),
  // jefes según su tamaño; los pies quedan donde siempre (abajo, en h/2), que es donde chocan con las paredes
  const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),B=cbox(S),dd=e.et!=null&&Enemies.def(e.et);
- const th=e.bo!=null?h*.68:dd?ENEMY_H[Math.min(5,dd.tier)]*(e.kd==='tank'?1.25:e.kd==='swarm'?.85:1):h*.62;
+ const th=e.bo!=null?h*.68:dd?Math.max(enMin()*(e.kd==='swarm'?.9:1),ENEMY_H[Math.min(5,dd.tier)]*(e.kd==='tank'?1.25:e.kd==='swarm'?.9:1)):h*.62;
  const kk=th/Math.max(B.y1-B.y0,(B.x1-B.x0)*.75),w=(B.x1-B.x0)*kk*1.35;
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;

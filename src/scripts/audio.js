@@ -45,7 +45,7 @@ const Sound = {
   },
 
   // ---------- Efectos (sintetizados: no hay archivos) ----------
-  GAP: { gem: 0.06, hurt: 0.22, item: 0.1, level: 0.3, evo: 1, gate: 1, win: 1 },   // mínimo entre dos iguales (s)
+  GAP: { hover: 0.04, click: 0.05, back: 0.05, gem: 0.06, hurt: 0.22, item: 0.1, level: 0.3, evo: 1, gate: 1, win: 1 },   // mínimo entre dos iguales (s)
   tone(f, d, type, vol, f2, at) {
     const x = this.ctx, t0 = x.currentTime + (at || 0), o = x.createOscillator(), g = x.createGain();
     o.type = type || 'square'; o.frequency.setValueAtTime(f, t0);
@@ -57,6 +57,9 @@ const Sound = {
     if (!this.ctx || this.cfg.off || this.cfg.sf <= 0 || this.ctx.state !== 'running') return;
     const now = this.ctx.currentTime; if (now - (this.last[k] || -9) < (this.GAP[k] || 0)) return; this.last[k] = now;
     switch (k) {
+      case 'hover': this.tone(1800, 0.03, 'square', 0.025); break;   // menú: pasar por una opción
+      case 'click': this.tone(880, 0.05, 'square', 0.05); this.tone(1320, 0.08, 'square', 0.05, 0, 0.045); break;   // menú: elegir
+      case 'back': this.tone(660, 0.05, 'square', 0.045); this.tone(440, 0.08, 'square', 0.045, 0, 0.045); break;   // menú: cerrar / volver
       case 'gem': this.tone(1100 + Math.random() * 300, 0.06, 'sine', 0.05); break;
       case 'hurt': this.tone(190, 0.16, 'sawtooth', 0.1, 70); break;
       case 'item': this.tone(660, 0.09, 'square', 0.06); this.tone(990, 0.14, 'square', 0.06, 0, 0.08); break;
@@ -87,6 +90,19 @@ const Sound = {
     document.addEventListener('pointerdown', e => { if (!box.contains(e.target)) box.classList.remove('open'); });
     const first = () => { this.init(); removeEventListener('pointerdown', first, true); removeEventListener('keydown', first, true); };
     addEventListener('pointerdown', first, true); addEventListener('keydown', first, true);
+    // menús: un tic al pasar por cada opción y un "bip" al tocarla (cerrar/volver suena hacia abajo)
+    const PICK = 'button,.card,.pk-slot,.tr-n,.tr-tab,.pk-chip,[role="button"]';
+    let over = null;
+    document.addEventListener('pointerover', e => {
+      const el = e.target.closest && e.target.closest(PICK);
+      if (el === over) return; over = el;
+      if (el && !el.disabled && e.pointerType !== 'touch') this.play('hover');
+    });
+    document.addEventListener('click', e => {
+      const el = e.target.closest && e.target.closest(PICK); if (!el || el.disabled || el.id === 'sndb') return;
+      const txt = (el.textContent || '').trim().toLowerCase();
+      this.play(/^(x|volver|cerrar|continuar)$/.test(txt) || el.getAttribute('aria-label') === 'Cerrar' ? 'back' : 'click');
+    }, true);
     this.ui();
   },
 };

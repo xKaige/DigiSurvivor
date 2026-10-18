@@ -94,6 +94,7 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `
 ### Sonido (`audio.js`, objeto `Sound`, se carga primero)
 - Música de partida: `assets/audio/main_theme.mp3` (el `main_theme.mp3` de la raíz recomprimido a 128 kbps; es el mismo tema que `ost.mp3`) en **loop** (`<audio loop>`, dura lo que dure la partida). Va por WebAudio (`createMediaElementSource` + ganancias) porque en iOS no se puede cambiar el volumen del `<audio>`. `MUSIC_BASE` 0,4 = más baja que los efectos. Empieza en `start()` y para en `endRun()`.
 - Efectos sintetizados (no hay archivos): `Sound.play('gem'|'hurt'|'item'|'level'|'evo'|'gate'|'win')`, con tope de repetición (`GAP`). El invitado online no escucha gemas ni golpes (los calcula el anfitrión).
+- Menús: tic al pasar el mouse por un botón/carta/casilla (`hover`) y bip al tocarlo (`click`; cerrar/volver/continuar suenan `back`), con delegación en `document` (`Sound.bind`).
 - Parlante `#snd` arriba a la derecha (en celular, al lado de la pausa): panel con Música, Sonidos y "Silenciar todo". Se guarda en `localStorage['digisurvivor_audio']`. El audio se arma en el primer toque/tecla (`Sound.init`), por las reglas de autoplay.
 
 ### Pausa y HUD
@@ -217,7 +218,7 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - JSON en `src/data/creatures/<id>.json`: `attribute`, `stages[]` (etapas 0–4, con `skills`) y `branches[]` (formas finales con `id`, `req`, `desc`, `skills`).
 - Spritesheets de **2 columnas × 6 filas**. Filas que usa `drawBuddy`: **0 idle, 1 caminar, 2 muerto, 5 ataque** (3 y 4 sin usar por ahora). Pixel art sin suavizado.
 - **Tamaño parejo**: `cbox(S)` mide (una vez por hoja) la caja del dibujo real del cuadro quieto, sin el relleno transparente. `drawBuddy` escala cada forma para que su dibujo mida `BUDDY_H[etapa]` (34, 42, 62, 82, 98, 114 px; si es muy ancho se limita por ancho × 0,75), con los pies (borde de abajo del dibujo) a `q.y + 48`. Así no importa de qué pack venga la hoja ni cuánto relleno tenga (antes la línea de Veemon de Digital Tamers se veía gigante). Guarda la altura dibujada en `q.dh` (etiqueta J1/J2 y tamaño de efectos).
-- Enemigos: el dibujo mide `ENEMY_H[nivel de la especie]` (30…98; tanques ×1,25, enjambres ×0,85) y los jefes 0,68 × `Bosses.h`; los pies siguen en `h/2` (donde chocan con las paredes).
+- Enemigos: el dibujo mide `ENEMY_H[nivel de la especie]` (38…100; tanques ×1,25, enjambres ×0,9), con piso `enMin()` = la mitad del alto de tu Digimon (crecen cuando evolucionás) y los jefes 0,68 × `Bosses.h`; los pies siguen en `h/2` (donde chocan con las paredes).
 - `loader.js` vuelve transparente todo píxel con R,G,B > 240 (quita fondo blanco) **solo si la imagen no trae transparencia propia**. Hoy todos los PNG ya son transparentes, así que no se borra nada (antes se comía caras, panzas y brillos blancos). **Los nombres de archivo distinguen mayúsculas en Vercel** (hay PNGs con mayúscula inicial en renamon/terriermon: el JSON tiene que coincidir exacto).
 - Para sumar una criatura: JSON + carpeta de sprites + agregarla a `CREATURES` en `game.js`. `001_guilmon` es el fallback cuando falta un id.
 - `004_impmon` está cargada en datos y sprites pero **todavía no es jugable** (no está en `CREATURES`). Hoy es la línea de los enemigos (`ENEMY_LINE`).
