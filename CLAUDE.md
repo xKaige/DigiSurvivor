@@ -186,6 +186,13 @@ Campos clave: `cid, el (atributo), hp/max, dmg, rate, sp, multi, pierce, mag, ar
 - Los ítems del jefe (`Items.bossDrop`) caen a ±150 px (dentro de la plataforma de la arena) para no agarrar los dos sin querer; al salir del Gate, los que quedaron vuelven igual de separados.
 - Los virus sueltan uno con prob. `DROP` (1,8%; ×3 con el desafío "Lluvia de ítems"), sorteado por peso `w`. Los jefes: Recovery Floppy + 50% X-Antibody. Duran 30 s. Sync: `it`.
 
+### Logros (`achievements.js`, después de progress.js)
+- 39 logros en 8 categorías (`Achievements.LIST`, cada uno con `v(S)` y `goal`; los ids no se cambian). Pestaña "Logros" del menú (`#lgb` → `#logros`) y aviso dorado arriba (`#lg-toast`, sonido `win`).
+- Se guardan en el progreso de la cuenta: `Progress.st.ach = {id: fecha}` y `Progress.st.ax` = contadores propios (mejor partida de Digimon eliminados, evoluciones perfectas `pfc`, segundos sin daño, revividas `revs`, monedas ganadas, partidas online/de 4, desafíos, racha de días, banderas de los secretos).
+- Hooks: `Achievements.onStart` (start), `tick` (cada cuadro, con TU jugador: al borde, pacifista, X-Antibody, oscura, los 4 vivos a los 15 min, una sola skill 5 min), `onRunEnd` (endRun, antes de `Challenge.onRunEnd`), y envuelve `Progress.hatchNow`, `Trees.buy`, `Missions.claim` y `window.loadProg`. Jefe en menos de 30 s: `Bosses.fast` (sync `bf`). El online manda `pfc` y `revs` en los datos lentos.
+- **La fisura del Digital Gate se cierra a los `Gate.LIFE` (120) s si nadie entra** ("La fisura se cerró", el jefe espera al próximo turno); es el logro secreto "¿Dónde está el jefe?".
+- **A los enemigos se les dice "Digimon", nunca "virus"** (Virus es solo el atributo). Se cambiaron todos los textos (skills, misiones, desafío, HUD, pantalla final) y `tools/workshop/gen_lines.py`.
+
 ### Rango de Tamer (`progress.js`)
 - XP de cuenta por partida = virus + segundos/3 + 40 por jefe + 15 × etapa máxima. `RANKS` (8 rangos, de Tamer Novato a Leyenda Digital). Al subir: 100 × rango monedas. Se ve bajo las monedas (`#rank`).
 - **`digisurvivor_prog` es de la cuenta**: con sesión iniciada se guarda en `users/{uid}.prog` (rango, desbloqueos, Digitamas, Analyzer) vía `window.onProgSave` (firebase.js, con 1,5 s de espera). Al iniciar sesión manda lo de la cuenta (`window.loadProg`); si la cuenta no tiene, se sube lo del navegador. Al cerrar sesión se borra lo local. `saveToCloud` usa `merge` para no pisar `prog`.
@@ -281,7 +288,6 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 
 ## Pendientes / ideas
 - Al subir de versión: actualizar `GAME_VERSION` y sumar la entrada en `src/data/changelog.json`.
-- **Logros por cuenta** (pedido, sin implementar): lista propuesta el 18/10/2026 en la conversación (virus, jefes, Digimon, evoluciones, supervivencia, online, colección, desafíos y secretos). Guardarlos en `users/{uid}.prog` como el resto del progreso.
 - Mostrar el Rango de Tamer en el perfil de amigos (necesita un campo nuevo en `profiles` y revisar reglas).
 - **Versión actual: 0.6** (`GAME_VERSION` en game.js, se ve en el menú). Para la versión final: subir `GAME_VERSION` y poner en `RESET_BEFORE` la fecha del lanzamiento → todo progreso guardado antes (navegador y cuenta, usando el `updated` que ya guarda Firestore) vuelve a 0 una sola vez. No toca nick, amigos ni Digimon elegido.
 - Corregir el comentario de `?test` en game.js.

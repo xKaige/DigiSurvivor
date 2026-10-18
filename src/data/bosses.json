@@ -6,7 +6,7 @@
   "ring": "c balas en círculo",
   "fan": "c balas en abanico hacia el jugador más cercano",
   "charge": "embiste hacia el jugador durante 'dur' segundos",
-  "summon": "invoca c virus alrededor"
+  "summon": "invoca c Digimon alrededor"
  },
  "list": [
   {
@@ -20,7 +20,7 @@
    "sp": 55,
    "dm": 1.4,
    "coins": 15,
-   "desc": "Un Tyrannomon corrompido por un virus. Escupe fuego sin control.",
+   "desc": "Un Tyrannomon corrompido por datos oscuros. Escupe fuego sin control.",
    "atk": [
     {
      "n": "Fire Blast",

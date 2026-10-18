@@ -2553,7 +2553,7 @@
     },
     "bubble_blow": {
       "name": "Bubble Blow",
-      "desc": "Escupe burbujas que estallan al tocar a los virus",
+      "desc": "Escupe burbujas que estallan al tocar a los Digimon",
       "type": "projectile",
       "element": "water",
       "dmg": 0.9,
@@ -2566,7 +2566,7 @@
     },
     "tackle": {
       "name": "Tackle",
-      "desc": "Embiste con todo el cuerpo a los virus de enfrente",
+      "desc": "Embiste con todo el cuerpo a los Digimon de enfrente",
       "type": "melee_arc",
       "element": "neutral",
       "dmg": 1.4,
@@ -2598,7 +2598,7 @@
       "count": 1,
       "spread": 0.0,
       "explode": 50,
-      "desc": "Lanza fuego contra el virus más cercano y explota al impactar"
+      "desc": "Lanza fuego contra el Digimon más cercano y explota al impactar"
     },
     "mega_flame": {
       "name": "Mega Flame",
@@ -2611,7 +2611,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "great_horns_attack": {
       "name": "Great Horns Attack",
@@ -2622,7 +2622,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus cuernos a los virus de enfrente"
+      "desc": "Golpea con sus cuernos a los Digimon de enfrente"
     },
     "grey_tooth": {
       "name": "Grey Tooth",
@@ -2633,7 +2633,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus colmillos a los virus de enfrente"
+      "desc": "Golpea con sus colmillos a los Digimon de enfrente"
     },
     "trident_arm": {
       "name": "Trident Arm",
@@ -2646,7 +2646,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "giga_destroyer": {
       "name": "Giga Destroyer",
@@ -2660,7 +2660,7 @@
       "count": 2,
       "spread": 0.35,
       "explode": 70,
-      "desc": "Lanza metralla contra el virus más cercano y explota al impactar"
+      "desc": "Lanza metralla contra el Digimon más cercano y explota al impactar"
     },
     "giga_storm": {
       "name": "Giga Storm",
@@ -2706,7 +2706,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano",
+      "desc": "Lanza agua contra el Digimon más cercano",
       "final": true
     },
     "plasma_stake": {
@@ -2720,7 +2720,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza electricidad contra el virus más cercano",
+      "desc": "Lanza electricidad contra el Digimon más cercano",
       "final": true
     },
     "thunder_vernier": {
@@ -2746,7 +2746,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza electricidad contra el virus más cercano",
+      "desc": "Lanza electricidad contra el Digimon más cercano",
       "final": true
     },
     "dark_terra_force": {
@@ -2772,7 +2772,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza tierra contra el virus más cercano",
+      "desc": "Lanza tierra contra el Digimon más cercano",
       "final": true
     },
     "great_tornado": {
@@ -2806,7 +2806,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus cuernos a los virus de enfrente"
+      "desc": "Golpea con sus cuernos a los Digimon de enfrente"
     },
     "fox_fire": {
       "name": "Fox Fire",
@@ -2819,7 +2819,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "tai_atari": {
       "name": "Tai Atari",
@@ -2832,7 +2832,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "garuru_thrust": {
       "name": "Garuru Thrust",
@@ -2845,7 +2845,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "wolf_claw": {
       "name": "Wolf Claw",
@@ -2856,7 +2856,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "baldy_blow": {
       "name": "Baldy Blow",
@@ -2869,7 +2869,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "garuru_kick": {
       "name": "Garuru Kick",
@@ -2880,7 +2880,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con una patada a los virus de enfrente"
+      "desc": "Golpea con una patada a los Digimon de enfrente"
     },
     "freezing_breath": {
       "name": "Freezing Breath",
@@ -2905,7 +2905,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano",
+      "desc": "Lanza agua contra el Digimon más cercano",
       "final": true
     },
     "ice_wolf_claw": {
@@ -2917,7 +2917,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente",
+      "desc": "Golpea con sus garras a los Digimon de enfrente",
       "final": true
     },
     "yellow_beast_crescent_blade": {
@@ -2929,7 +2929,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente",
+      "desc": "Golpea con su arma a los Digimon de enfrente",
       "final": true
     },
     "beast_cyclone": {
@@ -2943,7 +2943,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano",
+      "desc": "Lanza viento contra el Digimon más cercano",
       "final": true
     },
     "fury_ice_moon_fang": {
@@ -2955,7 +2955,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con sus colmillos a los virus de enfrente",
+      "desc": "Golpea con sus colmillos a los Digimon de enfrente",
       "final": true
     },
     "super_shocker": {
@@ -2969,7 +2969,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza electricidad contra el virus más cercano"
+      "desc": "Lanza electricidad contra el Digimon más cercano"
     },
     "double_punch": {
       "name": "Double Punch",
@@ -2980,7 +2980,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente"
+      "desc": "Golpea con sus puños a los Digimon de enfrente"
     },
     "electro_shocker": {
       "name": "Electro Shocker",
@@ -2994,7 +2994,7 @@
       "count": 2,
       "spread": 0.35,
       "explode": 60,
-      "desc": "Lanza electricidad contra el virus más cercano y explota al impactar"
+      "desc": "Lanza electricidad contra el Digimon más cercano y explota al impactar"
     },
     "beetle_horn_attack": {
       "name": "Beetle Horn Attack",
@@ -3005,7 +3005,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus cuernos a los virus de enfrente"
+      "desc": "Golpea con sus cuernos a los Digimon de enfrente"
     },
     "quick_thrust": {
       "name": "Quick Thrust",
@@ -3018,7 +3018,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano"
+      "desc": "Lanza viento contra el Digimon más cercano"
     },
     "horn_buster": {
       "name": "Horn Buster",
@@ -3029,7 +3029,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con sus cuernos a los virus de enfrente"
+      "desc": "Golpea con sus cuernos a los Digimon de enfrente"
     },
     "mega_blaster": {
       "name": "Mega Blaster",
@@ -3051,7 +3051,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "giga_blaster": {
       "name": "Giga Blaster",
@@ -3076,7 +3076,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza electricidad contra el virus más cercano",
+      "desc": "Lanza electricidad contra el Digimon más cercano",
       "final": true
     },
     "horn_buster_ii": {
@@ -3088,7 +3088,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con sus cuernos a los virus de enfrente",
+      "desc": "Golpea con sus cuernos a los Digimon de enfrente",
       "final": true
     },
     "shine_of_bee": {
@@ -3103,7 +3103,7 @@
       "count": 3,
       "spread": 0.35,
       "explode": 80,
-      "desc": "Lanza luz contra el virus más cercano y explota al impactar",
+      "desc": "Lanza luz contra el Digimon más cercano y explota al impactar",
       "final": true
     },
     "bee_cyclone": {
@@ -3117,7 +3117,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano",
+      "desc": "Lanza viento contra el Digimon más cercano",
       "final": true
     },
     "insect_cannon": {
@@ -3143,7 +3143,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "violin_attack": {
       "name": "Violin Attack",
@@ -3156,7 +3156,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza agua contra el virus más cercano"
+      "desc": "Lanza agua contra el Digimon más cercano"
     },
     "meteor_wing": {
       "name": "Meteor Wing",
@@ -3179,7 +3179,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "mach_grinder": {
       "name": "Mach Grinder",
@@ -3192,7 +3192,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano"
+      "desc": "Lanza viento contra el Digimon más cercano"
     },
     "shadow_wing": {
       "name": "Shadow Wing",
@@ -3205,7 +3205,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "eagle_claw": {
       "name": "Eagle Claw",
@@ -3216,7 +3216,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "phoenix_claw": {
       "name": "Phoenix Claw",
@@ -3227,7 +3227,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "starlight_explosion": {
       "name": "Starlight Explosion",
@@ -3252,7 +3252,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano",
+      "desc": "Lanza fuego contra el Digimon más cercano",
       "final": true
     },
     "flaming_wing": {
@@ -3266,7 +3266,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano",
+      "desc": "Lanza viento contra el Digimon más cercano",
       "final": true
     },
     "spiral_raven_claw": {
@@ -3278,7 +3278,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente",
+      "desc": "Golpea con sus garras a los Digimon de enfrente",
       "final": true
     },
     "blast_wing": {
@@ -3292,7 +3292,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano",
+      "desc": "Lanza viento contra el Digimon más cercano",
       "final": true
     },
     "raven_king_sword": {
@@ -3304,7 +3304,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente",
+      "desc": "Golpea con su arma a los Digimon de enfrente",
       "final": true
     },
     "final_excalibur": {
@@ -3318,7 +3318,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "zero_heavens": {
@@ -3332,7 +3332,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "scratch_beat": {
@@ -3344,7 +3344,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "diamond_shell": {
       "name": "Diamond Shell",
@@ -3357,7 +3357,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "megaton_press": {
       "name": "Megaton Press",
@@ -3370,7 +3370,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano"
+      "desc": "Lanza viento contra el Digimon más cercano"
     },
     "tail_hammer": {
       "name": "Tail Hammer",
@@ -3381,7 +3381,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con la cola a los virus de enfrente"
+      "desc": "Golpea con la cola a los Digimon de enfrente"
     },
     "armored_stampede": {
       "name": "Armored Stampede",
@@ -3394,7 +3394,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "bombs": {
       "name": "Bombs",
@@ -3408,7 +3408,7 @@
       "count": 2,
       "spread": 0.35,
       "explode": 70,
-      "desc": "Lanza luz contra el virus más cercano y explota al impactar"
+      "desc": "Lanza luz contra el Digimon más cercano y explota al impactar"
     },
     "disaster_blaster": {
       "name": "Disaster Blaster",
@@ -3442,7 +3442,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente",
+      "desc": "Golpea con su arma a los Digimon de enfrente",
       "final": true
     },
     "viking_flare": {
@@ -3456,7 +3456,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano",
+      "desc": "Lanza fuego contra el Digimon más cercano",
       "final": true
     },
     "briona_strike": {
@@ -3468,7 +3468,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con todo su cuerpo a los virus de enfrente",
+      "desc": "Golpea con todo su cuerpo a los Digimon de enfrente",
       "final": true
     },
     "air_shot": {
@@ -3482,7 +3482,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza viento contra el virus más cercano"
+      "desc": "Lanza viento contra el Digimon más cercano"
     },
     "wing_slap": {
       "name": "Wing Slap",
@@ -3495,7 +3495,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza viento contra el virus más cercano"
+      "desc": "Lanza viento contra el Digimon más cercano"
     },
     "heaven_s_knuckle": {
       "name": "Heaven's Knuckle",
@@ -3506,7 +3506,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente"
+      "desc": "Golpea con sus puños a los Digimon de enfrente"
     },
     "holy_rod": {
       "name": "Holy Rod",
@@ -3519,7 +3519,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "angel_typhoon": {
       "name": "Angel Typhoon",
@@ -3542,7 +3542,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "excalibur": {
       "name": "Excalibur",
@@ -3555,7 +3555,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "hp_recovery": {
       "name": "HP Recovery",
@@ -3568,7 +3568,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "testament": {
       "name": "Testament",
@@ -3581,7 +3581,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano",
+      "desc": "Lanza energía contra el Digimon más cercano",
       "final": true
     },
     "hallowed_ascension": {
@@ -3595,7 +3595,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza electricidad contra el virus más cercano",
+      "desc": "Lanza electricidad contra el Digimon más cercano",
       "final": true
     },
     "hallowed_knuckle": {
@@ -3607,7 +3607,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente",
+      "desc": "Golpea con sus puños a los Digimon de enfrente",
       "final": true
     },
     "spiral_masquerade": {
@@ -3621,7 +3621,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano",
+      "desc": "Lanza energía contra el Digimon más cercano",
       "final": true
     },
     "baby_breath": {
@@ -3644,7 +3644,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con la cola a los virus de enfrente"
+      "desc": "Golpea con la cola a los Digimon de enfrente"
     },
     "blue_flare_breath": {
       "name": "Blue Flare Breath",
@@ -3668,7 +3668,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "blaze_sonic_breath": {
       "name": "Blaze Sonic Breath",
@@ -3701,7 +3701,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con todo su cuerpo a los virus de enfrente",
+      "desc": "Golpea con todo su cuerpo a los Digimon de enfrente",
       "final": true
     },
     "shoryu_slash": {
@@ -3713,7 +3713,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con todo su cuerpo a los virus de enfrente",
+      "desc": "Golpea con todo su cuerpo a los Digimon de enfrente",
       "final": true
     },
     "avalon_s_gate": {
@@ -3727,7 +3727,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "pendragon_s_glory": {
@@ -3741,7 +3741,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "dragonic_impact": {
@@ -3764,7 +3764,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con todo su cuerpo a los virus de enfrente",
+      "desc": "Golpea con todo su cuerpo a los Digimon de enfrente",
       "final": true
     },
     "infinity_bowling": {
@@ -3778,7 +3778,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano",
+      "desc": "Lanza fuego contra el Digimon más cercano",
       "final": true
     },
     "baby_burner": {
@@ -3792,7 +3792,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "mega_burst": {
       "name": "Mega Burst",
@@ -3813,7 +3813,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus cuernos a los virus de enfrente"
+      "desc": "Golpea con sus cuernos a los Digimon de enfrente"
     },
     "trident_revolver": {
       "name": "Trident Revolver",
@@ -3826,7 +3826,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "rising_destroyer": {
       "name": "Rising Destroyer",
@@ -3839,7 +3839,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "solid_strike": {
       "name": "Solid Strike",
@@ -3850,7 +3850,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con todo su cuerpo a los virus de enfrente"
+      "desc": "Golpea con todo su cuerpo a los Digimon de enfrente"
     },
     "glorious_burst": {
       "name": "Glorious Burst",
@@ -3874,7 +3874,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "geogrey_sword": {
@@ -3886,7 +3886,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente",
+      "desc": "Golpea con su arma a los Digimon de enfrente",
       "final": true
     },
     "corona_blaze_sword": {
@@ -3898,7 +3898,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente",
+      "desc": "Golpea con su arma a los Digimon de enfrente",
       "final": true
     },
     "final_shining_burst": {
@@ -3923,7 +3923,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano",
+      "desc": "Lanza fuego contra el Digimon más cercano",
       "final": true
     },
     "rolling_upper": {
@@ -3935,7 +3935,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente"
+      "desc": "Golpea con sus puños a los Digimon de enfrente"
     },
     "double_backhand": {
       "name": "Double Backhand",
@@ -3948,7 +3948,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza viento contra el virus más cercano"
+      "desc": "Lanza viento contra el Digimon más cercano"
     },
     "dash_double_claw": {
       "name": "Dash Double Claw",
@@ -3959,7 +3959,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "gaoga_hound": {
       "name": "Gaoga Hound",
@@ -3972,7 +3972,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "spiral_blow": {
       "name": "Spiral Blow",
@@ -3985,7 +3985,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano"
+      "desc": "Lanza viento contra el Digimon más cercano"
     },
     "gaoga_tornado": {
       "name": "Gaoga Tornado",
@@ -4006,7 +4006,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente"
+      "desc": "Golpea con sus puños a los Digimon de enfrente"
     },
     "howling_cannon": {
       "name": "Howling Cannon",
@@ -4030,7 +4030,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza electricidad contra el virus más cercano",
+      "desc": "Lanza electricidad contra el Digimon más cercano",
       "final": true
     },
     "full_moon_blaster": {
@@ -4054,7 +4054,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente",
+      "desc": "Golpea con sus garras a los Digimon de enfrente",
       "final": true
     },
     "full_moon_meteor_impact": {
@@ -4090,7 +4090,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "lala_screw": {
       "name": "Lala Screw",
@@ -4103,7 +4103,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "sunshine_beam": {
       "name": "Sunshine Beam",
@@ -4127,7 +4127,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "cactus_tail": {
       "name": "Cactus Tail",
@@ -4138,7 +4138,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con la cola a los virus de enfrente"
+      "desc": "Golpea con la cola a los Digimon de enfrente"
     },
     "lila_shower": {
       "name": "Lila Shower",
@@ -4161,7 +4161,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano"
+      "desc": "Lanza agua contra el Digimon más cercano"
     },
     "pollen_spray": {
       "name": "Pollen Spray",
@@ -4183,7 +4183,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con sus cuernos a los virus de enfrente",
+      "desc": "Golpea con sus cuernos a los Digimon de enfrente",
       "final": true
     },
     "roses_rapier": {
@@ -4197,7 +4197,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza electricidad contra el virus más cercano",
+      "desc": "Lanza electricidad contra el Digimon más cercano",
       "final": true
     },
     "forbidden_temptation": {
@@ -4211,7 +4211,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "absolute_territory": {
@@ -4225,7 +4225,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano",
+      "desc": "Lanza energía contra el Digimon más cercano",
       "final": true
     },
     "nightmare_assemble": {
@@ -4239,7 +4239,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "scratch_smash": {
@@ -4251,7 +4251,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "ninja_blade": {
       "name": "Ninja Blade",
@@ -4262,7 +4262,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente"
+      "desc": "Golpea con su arma a los Digimon de enfrente"
     },
     "spiral_claw": {
       "name": "Spiral Claw",
@@ -4273,7 +4273,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "kunai_wing": {
       "name": "Kunai Wing",
@@ -4286,7 +4286,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza viento contra el virus más cercano"
+      "desc": "Lanza viento contra el Digimon más cercano"
     },
     "thousand_beaks": {
       "name": "Thousand Beaks",
@@ -4299,7 +4299,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza tierra contra el virus más cercano"
+      "desc": "Lanza tierra contra el Digimon más cercano"
     },
     "savage_emperor": {
       "name": "Savage Emperor",
@@ -4312,7 +4312,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "haguro": {
       "name": "Haguro",
@@ -4325,7 +4325,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "fire_jewels": {
       "name": "Fire Jewels",
@@ -4339,7 +4339,7 @@
       "count": 2,
       "spread": 0.35,
       "explode": 70,
-      "desc": "Lanza fuego contra el virus más cercano y explota al impactar"
+      "desc": "Lanza fuego contra el Digimon más cercano y explota al impactar"
     },
     "crimson_formation": {
       "name": "Crimson Formation",
@@ -4352,7 +4352,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "mourning_dance": {
@@ -4366,7 +4366,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "corona_flame": {
@@ -4380,7 +4380,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "corona_knuckle": {
       "name": "Corona-knuckle",
@@ -4391,7 +4391,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente"
+      "desc": "Golpea con sus puños a los Digimon de enfrente"
     },
     "flame_dive": {
       "name": "Flame Dive",
@@ -4404,7 +4404,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "fira_claw": {
       "name": "Fira Claw",
@@ -4415,7 +4415,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "crimson_lion_dance": {
       "name": "Crimson Lion Dance",
@@ -4428,7 +4428,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "sol_blaster": {
       "name": "Sol Blaster",
@@ -4453,7 +4453,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "barrage_sweeper": {
@@ -4467,7 +4467,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "resting_burner": {
@@ -4481,7 +4481,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano",
+      "desc": "Lanza fuego contra el Digimon más cercano",
       "final": true
     },
     "luna_claw": {
@@ -4493,7 +4493,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "tearing_shot": {
       "name": "Tearing Shot",
@@ -4506,7 +4506,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "moon_night_kick": {
       "name": "Moon Night Kick",
@@ -4517,7 +4517,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con una patada a los virus de enfrente"
+      "desc": "Golpea con una patada a los Digimon de enfrente"
     },
     "tear_arrow": {
       "name": "Tear Arrow",
@@ -4530,7 +4530,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "lunatic_dance": {
       "name": "Lunatic Dance",
@@ -4543,7 +4543,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "ice_archery": {
       "name": "Ice Archery",
@@ -4556,7 +4556,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano"
+      "desc": "Lanza agua contra el Digimon más cercano"
     },
     "crescent_harken": {
       "name": "Crescent Harken",
@@ -4569,7 +4569,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano",
+      "desc": "Lanza luz contra el Digimon más cercano",
       "final": true
     },
     "arrow_of_artemis": {
@@ -4583,7 +4583,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano",
+      "desc": "Lanza fuego contra el Digimon más cercano",
       "final": true
     },
     "eye_of_nightmares": {
@@ -4597,7 +4597,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "undead_fang": {
       "name": "Undead Fang",
@@ -4608,7 +4608,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus colmillos a los virus de enfrente"
+      "desc": "Golpea con sus colmillos a los Digimon de enfrente"
     },
     "sticker_blade": {
       "name": "Sticker Blade",
@@ -4619,7 +4619,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente"
+      "desc": "Golpea con su arma a los Digimon de enfrente"
     },
     "black_mind": {
       "name": "Black Mind",
@@ -4632,7 +4632,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "drain_slash": {
       "name": "Drain Slash",
@@ -4643,7 +4643,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con todo su cuerpo a los virus de enfrente"
+      "desc": "Golpea con todo su cuerpo a los Digimon de enfrente"
     },
     "thousand_arrows": {
       "name": "Thousand Arrows",
@@ -4656,7 +4656,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza tierra contra el virus más cercano"
+      "desc": "Lanza tierra contra el Digimon más cercano"
     },
     "bulldog": {
       "name": "Bulldog",
@@ -4669,7 +4669,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "crystal_revolution": {
       "name": "Crystal Revolution",
@@ -4682,7 +4682,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano",
+      "desc": "Lanza agua contra el Digimon más cercano",
       "final": true
     },
     "eye_of_the_gorgon": {
@@ -4696,7 +4696,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "death_scream": {
@@ -4722,7 +4722,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "chaos_lights": {
@@ -4746,7 +4746,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente",
+      "desc": "Golpea con su arma a los Digimon de enfrente",
       "final": true
     },
     "clown_s_trick": {
@@ -4761,7 +4761,7 @@
       "count": 3,
       "spread": 0.35,
       "explode": 80,
-      "desc": "Lanza oscuridad contra el virus más cercano y explota al impactar",
+      "desc": "Lanza oscuridad contra el Digimon más cercano y explota al impactar",
       "final": true
     },
     "masks_square": {
@@ -4775,7 +4775,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "bear_fist": {
@@ -4787,7 +4787,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente"
+      "desc": "Golpea con sus puños a los Digimon de enfrente"
     },
     "bear_roll": {
       "name": "Bear Roll",
@@ -4800,7 +4800,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "maul_attack": {
       "name": "Maul Attack",
@@ -4813,7 +4813,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "crescent_dawn": {
       "name": "Crescent Dawn",
@@ -4826,7 +4826,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "the_king_of_fists": {
       "name": "The King of Fists",
@@ -4837,7 +4837,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente"
+      "desc": "Golpea con sus puños a los Digimon de enfrente"
     },
     "cyclonic_kick": {
       "name": "Cyclonic Kick",
@@ -4848,7 +4848,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con una patada a los virus de enfrente"
+      "desc": "Golpea con una patada a los Digimon de enfrente"
     },
     "corona_sanctions": {
       "name": "Corona Sanctions",
@@ -4861,7 +4861,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano",
+      "desc": "Lanza fuego contra el Digimon más cercano",
       "final": true
     },
     "mugenhadou": {
@@ -4875,7 +4875,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano",
+      "desc": "Lanza agua contra el Digimon más cercano",
       "final": true
     },
     "gear_stinger": {
@@ -4889,7 +4889,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "buzz_buzz_call": {
       "name": "Buzz-Buzz Call",
@@ -4902,7 +4902,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "turbo_stinger": {
       "name": "Turbo Stinger",
@@ -4915,7 +4915,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza metralla contra el virus más cercano"
+      "desc": "Lanza metralla contra el Digimon más cercano"
     },
     "bear_buster": {
       "name": "Bear Buster",
@@ -4939,7 +4939,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano"
+      "desc": "Lanza fuego contra el Digimon más cercano"
     },
     "mach_stinger_v": {
       "name": "Mach Stinger V",
@@ -4952,7 +4952,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "royal_meister": {
@@ -4966,7 +4966,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "mini_scissor_claw": {
@@ -4978,7 +4978,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "assemble_work": {
       "name": "Assemble Work",
@@ -4991,7 +4991,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza agua contra el virus más cercano"
+      "desc": "Lanza agua contra el Digimon más cercano"
     },
     "thunder_ball": {
       "name": "Thunder Ball",
@@ -5027,7 +5027,7 @@
       "count": 2,
       "spread": 0.35,
       "explode": 60,
-      "desc": "Lanza energía contra el virus más cercano y explota al impactar"
+      "desc": "Lanza energía contra el Digimon más cercano y explota al impactar"
     },
     "homing_laser": {
       "name": "Homing Laser",
@@ -5051,7 +5051,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano",
+      "desc": "Lanza energía contra el Digimon más cercano",
       "final": true
     },
     "grandis_scissor": {
@@ -5065,7 +5065,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano",
+      "desc": "Lanza agua contra el Digimon más cercano",
       "final": true
     },
     "calamity_thunder": {
@@ -5091,7 +5091,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "crimson_curse": {
       "name": "Crimson Curse",
@@ -5104,7 +5104,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "golem_punch": {
       "name": "Golem Punch",
@@ -5115,7 +5115,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus puños a los virus de enfrente"
+      "desc": "Golpea con sus puños a los Digimon de enfrente"
     },
     "guardian_bomb": {
       "name": "Guardian Bomb",
@@ -5129,7 +5129,7 @@
       "count": 2,
       "spread": 0.35,
       "explode": 60,
-      "desc": "Lanza oscuridad contra el virus más cercano y explota al impactar"
+      "desc": "Lanza oscuridad contra el Digimon más cercano y explota al impactar"
     },
     "giant_grater": {
       "name": "Giant Grater",
@@ -5142,7 +5142,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano"
+      "desc": "Lanza agua contra el Digimon más cercano"
     },
     "curse_reflection": {
       "name": "Curse Reflection",
@@ -5155,7 +5155,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "dark_blast": {
       "name": "Dark Blast",
@@ -5168,7 +5168,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "necromist": {
@@ -5195,7 +5195,7 @@
       "count": 3,
       "spread": 0.35,
       "explode": 80,
-      "desc": "Lanza viento contra el virus más cercano y explota al impactar",
+      "desc": "Lanza viento contra el Digimon más cercano y explota al impactar",
       "final": true
     },
     "cursed_staff": {
@@ -5209,7 +5209,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano",
+      "desc": "Lanza oscuridad contra el Digimon más cercano",
       "final": true
     },
     "diamond_machine_gun": {
@@ -5223,7 +5223,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza metralla contra el virus más cercano",
+      "desc": "Lanza metralla contra el Digimon más cercano",
       "final": true
     },
     "diamond_hedgehog": {
@@ -5235,7 +5235,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente",
+      "desc": "Golpea con su arma a los Digimon de enfrente",
       "final": true
     },
     "crystal_breath": {
@@ -5283,7 +5283,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "spin_shatter": {
       "name": "Spin Shatter",
@@ -5296,7 +5296,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza oscuridad contra el virus más cercano"
+      "desc": "Lanza oscuridad contra el Digimon más cercano"
     },
     "forbidden_trident": {
       "name": "Forbidden Trident",
@@ -5309,7 +5309,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "tentacle_flapping": {
       "name": "Tentacle Flapping",
@@ -5322,7 +5322,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "thousand_whips": {
       "name": "Thousand Whips",
@@ -5333,7 +5333,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con la cola a los virus de enfrente"
+      "desc": "Golpea con la cola a los Digimon de enfrente"
     },
     "vortex_penetration": {
       "name": "Vortex Penetration",
@@ -5346,7 +5346,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano",
+      "desc": "Lanza energía contra el Digimon más cercano",
       "final": true
     },
     "wave_of_depth": {
@@ -5371,7 +5371,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano",
+      "desc": "Lanza agua contra el Digimon más cercano",
       "final": true
     },
     "sorrow_blue": {
@@ -5385,7 +5385,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano",
+      "desc": "Lanza agua contra el Digimon más cercano",
       "final": true
     },
     "shaking_pulse": {
@@ -5399,7 +5399,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza fuego contra el virus más cercano",
+      "desc": "Lanza fuego contra el Digimon más cercano",
       "final": true
     },
     "fin_attack": {
@@ -5413,7 +5413,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano",
+      "desc": "Lanza energía contra el Digimon más cercano",
       "final": true
     },
     "frisbicker": {
@@ -5427,7 +5427,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano"
+      "desc": "Lanza energía contra el Digimon más cercano"
     },
     "assault_claw": {
       "name": "Assault Claw",
@@ -5438,7 +5438,7 @@
       "source": "canon:wikimon",
       "range": 82,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "lightning_buster": {
       "name": "Lightning Buster",
@@ -5462,7 +5462,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza tierra contra el virus más cercano"
+      "desc": "Lanza tierra contra el Digimon más cercano"
     },
     "crimson_storm": {
       "name": "Crimson Storm",
@@ -5484,7 +5484,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con todo su cuerpo a los virus de enfrente",
+      "desc": "Golpea con todo su cuerpo a los Digimon de enfrente",
       "final": true
     },
     "lio_claw": {
@@ -5496,7 +5496,7 @@
       "source": "canon:wikimon",
       "range": 70,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "thunder_of_king": {
       "name": "Thunder of King",
@@ -5530,7 +5530,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza luz contra el virus más cercano"
+      "desc": "Lanza luz contra el Digimon más cercano"
     },
     "ground_fang": {
       "name": "Ground Fang",
@@ -5541,7 +5541,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con sus colmillos a los virus de enfrente",
+      "desc": "Golpea con sus colmillos a los Digimon de enfrente",
       "final": true
     },
     "baby_hail": {
@@ -5555,7 +5555,7 @@
       "life": 1.2,
       "count": 1,
       "spread": 0.0,
-      "desc": "Lanza agua contra el virus más cercano"
+      "desc": "Lanza agua contra el Digimon más cercano"
     },
     "meteor_hail": {
       "name": "Meteor Hail",
@@ -5576,7 +5576,7 @@
       "source": "canon:wikimon",
       "range": 94,
       "arc": 1.9,
-      "desc": "Golpea con sus garras a los virus de enfrente"
+      "desc": "Golpea con sus garras a los Digimon de enfrente"
     },
     "callous_dimension": {
       "name": "Callous Dimension",
@@ -5589,7 +5589,7 @@
       "life": 1.2,
       "count": 2,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano"
+      "desc": "Lanza agua contra el Digimon más cercano"
     },
     "summon_frost": {
       "name": "Summon Frost",
@@ -5602,7 +5602,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza agua contra el virus más cercano",
+      "desc": "Lanza agua contra el Digimon más cercano",
       "final": true
     },
     "absolute_blast": {
@@ -5616,7 +5616,7 @@
       "life": 1.2,
       "count": 3,
       "spread": 0.35,
-      "desc": "Lanza energía contra el virus más cercano",
+      "desc": "Lanza energía contra el Digimon más cercano",
       "final": true
     },
     "hecto_edge_blizzard": {
@@ -5628,7 +5628,7 @@
       "source": "canon:wikimon",
       "range": 106,
       "arc": 1.9,
-      "desc": "Golpea con su arma a los virus de enfrente",
+      "desc": "Golpea con su arma a los Digimon de enfrente",
       "final": true
     },
     "innocence_blizzard": {

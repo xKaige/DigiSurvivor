@@ -11,6 +11,8 @@ const Gate = {
   back: null,       // a dónde vuelve cada jugador
   stash: null,      // el mundo guardado mientras están en la arena
   R: 46,            // radio para entrar (pies del jugador)
+  LIFE: 120,        // segundos que queda abierta la fisura; si nadie entra se cierra y el jefe espera al próximo turno
+  gt: 0,            // cuándo se abrió
   seen: 0,          // estado que ya mostró el HUD (para los avisos, también en el cliente)
 
   reset() { this.g = null; this.cd = null; this.back = null; this.stash = null; this.seen = 0; World.arena = false; },
@@ -21,6 +23,7 @@ const Gate = {
     if (!World.arena) {
       // se abre cuando antes salía el jefe (Bosses.every); si ya hay una abierta, espera a que alguien entre
       if (!this.g && t >= Bosses.next) this.open();
+      if (this.g && t - this.gt > this.LIFE) { this.g = null; Bosses.next = t + Bosses.every(); return; }   // nadie entró: se cierra
       if (this.g && P.some(q => !q.dead && Math.hypot(q.x - this.g[0], q.y + 40 - this.g[1]) < this.R)) this.enter();
       return;
     }
@@ -42,7 +45,7 @@ const Gate = {
       const v = World.reach(sp[0], sp[1] + 40);
       if (v !== 65535) best = [sp[0], sp[1] + 40];
     }
-    this.g = best || [x0 + 600, y0];
+    this.g = best || [x0 + 600, y0]; this.gt = t;
     for (let i = 0; i < 30; i++) burst(this.g[0], this.g[1], i % 2 ? '#3dff7a' : '#fff');
   },
   enter() {
@@ -77,6 +80,7 @@ const Gate = {
     const st = World.arena ? (this.cd != null ? 3 : 2) : this.g ? 1 : 0;
     if (st === this.seen) return;
     if (st === 1) { Bosses.banner('¡DIGITAL GATE OPEN!'); Sound.play('gate'); }
+    if (st === 0 && this.seen === 1 && running) { Bosses.banner('La fisura se cerró'); if (typeof Achievements !== 'undefined') Achievements.flag('gate'); }   // nadie entró
     this.seen = st;
   },
 

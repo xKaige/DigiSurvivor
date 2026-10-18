@@ -86,12 +86,12 @@ def make_skill(a, stage, line_el):
     if ty == 'projectile':
         d.update(speed=380 + 20 * s, life=1.2, count=[1, 2, 2, 3][s], spread=0.35 if s else 0.0)
         if re.search(r'bomb|ball|missile|meteor|explo|grenade', text): d['explode'] = 50 + 10 * s
-        d['desc'] = 'Lanza ' + w + ' contra el virus más cercano' + (' y explota al impactar' if 'explode' in d else '')
+        d['desc'] = 'Lanza ' + w + ' contra el Digimon más cercano' + (' y explota al impactar' if 'explode' in d else '')
     elif ty == 'beam':
         d.update(range=360 + 30 * s, width=18 + 6 * s); d['desc'] = 'Dispara un rayo de ' + w + ' que atraviesa todo en línea recta'
     elif ty == 'melee_arc':
         d.update(range=70 + 12 * s, arc=1.9); arm = next((t for rx, t in MEL if re.search(rx, nm.lower())), 'todo su cuerpo')
-        d['desc'] = 'Golpea con ' + arm + ' a los virus de enfrente'
+        d['desc'] = 'Golpea con ' + arm + ' a los Digimon de enfrente'
     elif ty == 'cone':
         d.update(range=150 + 20 * s, arc=0.9); d['desc'] = 'Suelta ' + w + ' en abanico hacia adelante'
     else:
@@ -118,21 +118,21 @@ TRAITS = {'valor': ('Valor', 'Al recibir un golpe, +25% de daño durante 3 s'), 
           'puas': ('Púas', 'Los enemigos que lo tocan reciben daño'), 'momentai': ('Rebote', 'Sus disparos básicos rebotan a otro enemigo')}
 META = {  # perfil FUE/INT/VEL/VIT (suma 10), rasgo, huevo, misión
  '017_agumon':        ((4, 1, 2, 3), 'valor',    {'type': 'reach_stage', 'goal': 4, 'name': 'Emblema del Valor', 'desc': 'Llegá a etapa Perfecto en una partida'}),
- '018_gabumon':       ((3, 2, 3, 2), 'manada',   {'type': 'kills_with', 'with': '017_agumon', 'goal': 500, 'name': 'Emblema de la Amistad', 'desc': 'Eliminá 500 virus en total jugando con Agumon'}),
+ '018_gabumon':       ((3, 2, 3, 2), 'manada',   {'type': 'kills_with', 'with': '017_agumon', 'goal': 500, 'name': 'Emblema de la Amistad', 'desc': 'Eliminá 500 Digimon en total jugando con Agumon'}),
  '019_tentomon':      ((2, 4, 1, 3), 'chispa',   {'type': 'analyzer', 'goal': 30, 'name': 'Emblema del Conocimiento', 'desc': 'Registrá 30 datos en el Digimon Analyzer'}),
  '020_biyomon':       ((2, 3, 4, 1), 'kitsune',  {'type': 'survive', 'goal': 420, 'name': 'Emblema del Amor', 'desc': 'Sobreviví 7 minutos en una partida'}),
- '021_armadillomon':  ((3, 1, 1, 5), 'kabuto',   {'type': 'kills_total', 'goal': 4000, 'name': 'Digimental de la Sinceridad', 'desc': 'Eliminá 4000 virus en total'}),
+ '021_armadillomon':  ((3, 1, 1, 5), 'kabuto',   {'type': 'kills_total', 'goal': 4000, 'name': 'Digimental de la Sinceridad', 'desc': 'Eliminá 4000 Digimon en total'}),
  '022_patamon':       ((2, 4, 2, 2), 'bendicion',{'type': 'boss', 'boss': 'megadramon', 'goal': 1, 'name': 'Emblema de la Esperanza', 'desc': 'Derrotá a Megadramon'}),
  '023_dracomon':      ((4, 2, 2, 2), 'hazard',   {'type': 'stage_with', 'with': '001_guilmon', 'goal': 5, 'name': 'Escama de dragón', 'desc': 'Llegá a una forma final con Guilmon'}),
- '024_agumon_savers': ((4, 1, 3, 2), 'arsenal',  {'type': 'kills_with', 'with': '017_agumon', 'goal': 1500, 'name': 'Puño de DATS', 'desc': 'Eliminá 1500 virus en total jugando con Agumon'}),
+ '024_agumon_savers': ((4, 1, 3, 2), 'arsenal',  {'type': 'kills_with', 'with': '017_agumon', 'goal': 1500, 'name': 'Puño de DATS', 'desc': 'Eliminá 1500 Digimon en total jugando con Agumon'}),
  '025_gaomon':        ((3, 1, 4, 2), 'filo',     {'type': 'runs_total', 'goal': 25, 'name': 'Guante de campeón', 'desc': 'Terminá 25 partidas'}),
  '026_lalamon':       ((1, 4, 2, 3), 'hilo',     {'type': 'survive', 'goal': 600, 'name': 'Semilla de luz', 'desc': 'Sobreviví 10 minutos en una partida'}),
  '027_falcomon':      ((3, 2, 4, 1), 'kitsune',  {'type': 'boss', 'boss': 'etemon', 'goal': 2, 'name': 'Pluma ninja', 'desc': 'Derrotá a Etemon 2 veces'}),
  '028_coronamon':     ((4, 2, 3, 1), 'pulso',    {'type': 'reach_stage', 'goal': 5, 'name': 'Corona solar', 'desc': 'Llegá a una forma final en una partida'}),
  '029_lunamon':       ((1, 4, 3, 2), 'curioso',  {'type': 'stage_with', 'with': '028_coronamon', 'goal': 4, 'name': 'Fragmento lunar', 'desc': 'Llegá a Perfecto con Coronamon'}),
  '030_dracmon':       ((3, 3, 3, 1), 'hazard',   {'type': 'boss', 'boss': 'warumonzaemon', 'goal': 1, 'name': 'Colmillo nocturno', 'desc': 'Derrotá a WaruMonzaemon'}),
- '031_bearmon':       ((4, 1, 2, 3), 'valor',    {'type': 'kills_total', 'goal': 8000, 'name': 'Garra de oso', 'desc': 'Eliminá 8000 virus en total'}),
- '032_fanbeemon':     ((3, 2, 4, 1), 'filo',     {'type': 'kills_with', 'with': '019_tentomon', 'goal': 800, 'name': 'Panal digital', 'desc': 'Eliminá 800 virus en total jugando con Tentomon'}),
+ '031_bearmon':       ((4, 1, 2, 3), 'valor',    {'type': 'kills_total', 'goal': 8000, 'name': 'Garra de oso', 'desc': 'Eliminá 8000 Digimon en total'}),
+ '032_fanbeemon':     ((3, 2, 4, 1), 'filo',     {'type': 'kills_with', 'with': '019_tentomon', 'goal': 800, 'name': 'Panal digital', 'desc': 'Eliminá 800 Digimon en total jugando con Tentomon'}),
  '033_kokuwamon':     ((2, 4, 2, 2), 'pulso',    {'type': 'analyzer', 'goal': 60, 'name': 'Chip de escarabajo', 'desc': 'Registrá 60 datos en el Digimon Analyzer'}),
  '034_sunarizamon':   ((3, 2, 1, 4), 'puas',     {'type': 'survive', 'goal': 720, 'name': 'Arena del desierto', 'desc': 'Sobreviví 12 minutos en una partida'}),
  '035_sangomon':      ((2, 3, 2, 3), 'momentai', {'type': 'stage_with', 'with': '018_gabumon', 'goal': 5, 'name': 'Coral del abismo', 'desc': 'Llegá a una forma final con Gabumon'}),

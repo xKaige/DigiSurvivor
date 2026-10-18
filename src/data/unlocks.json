@@ -2,9 +2,9 @@
  "types": {
   "reach_stage": "Mejor etapa alcanzada en una partida (3 Campeón, 4 Perfecto, 5 evolución final)",
   "survive": "Mejor tiempo sobrevivido en una partida (segundos)",
-  "kills_total": "Virus eliminados sumando todas las partidas",
+  "kills_total": "Digimon eliminados sumando todas las partidas",
   "runs_total": "Partidas terminadas en total",
-  "kills_with": "Virus eliminados en total jugando con el Digimon 'with'",
+  "kills_with": "Digimon eliminados en total jugando con el Digimon 'with'",
   "stage_with": "Mejor etapa alcanzada con el Digimon 'with'",
   "boss": "Veces que derrotaste al jefe 'boss'",
   "analyzer": "Datos registrados en el Digimon Analyzer (formas + jefes)",
@@ -71,14 +71,14 @@
    "goal": 600,
    "with": "005_veemon",
    "name": "Compañero de Veemon",
-   "desc": "Eliminá 600 virus jugando con Veemon"
+   "desc": "Eliminá 600 Digimon jugando con Veemon"
   },
   {
    "cid": "007_pulsemon",
    "type": "kills_total",
    "goal": 2500,
    "name": "Pulso de datos",
-   "desc": "Eliminá 2500 virus"
+   "desc": "Eliminá 2500 Digimon"
   },
   {
    "cid": "008_dorumon",
@@ -145,7 +145,7 @@
    "goal": 1200,
    "with": "017_agumon",
    "name": "Emblema de la Amistad",
-   "desc": "Eliminá 1200 virus jugando con Agumon"
+   "desc": "Eliminá 1200 Digimon jugando con Agumon"
   },
   {
    "cid": "020_biyomon",
@@ -175,7 +175,7 @@
    "goal": 1500,
    "with": "010_wormmon",
    "name": "Digimental de la Sinceridad",
-   "desc": "Eliminá 1500 virus jugando con Wormmon"
+   "desc": "Eliminá 1500 Digimon jugando con Wormmon"
   },
   {
    "cid": "019_tentomon",
@@ -248,7 +248,7 @@
    "type": "kills_total",
    "goal": 25000,
    "name": "Garra de oso",
-   "desc": "Eliminá 25000 virus"
+   "desc": "Eliminá 25000 Digimon"
   },
   {
    "cid": "032_fanbeemon",
@@ -256,7 +256,7 @@
    "goal": 2500,
    "with": "019_tentomon",
    "name": "Panal digital",
-   "desc": "Eliminá 2500 virus jugando con Tentomon"
+   "desc": "Eliminá 2500 Digimon jugando con Tentomon"
   },
   {
    "cid": "033_kokuwamon",

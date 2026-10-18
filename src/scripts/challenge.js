@@ -4,7 +4,7 @@
 //
 // - Reglas (MODS): siempre una de atributo (solo Vacuna/Virus/Dato) + 2 más al azar. game.js/bosses.js/items.js
 //   preguntan con Challenge.has(id) mientras la partida del desafío está activa.
-// - Puntaje = virus + 2 × segundos + 150 × jefes. Se guarda el mejor del día en el navegador ('digisurvivor_chal')
+// - Puntaje = Digimon eliminados + 2 × segundos + 150 × jefes. Se guarda el mejor del día en el navegador ('digisurvivor_chal')
 //   y, con sesión iniciada, en Firestore (puente window.challengeCloud de social.js) para el ranking de amigos.
 const Challenge = {
   KEY: 'digisurvivor_chal',
@@ -14,8 +14,8 @@ const Challenge = {
     { id: 'a1', n: 'Solo Virus', d: 'Solo podés usar Digimon de atributo Virus', attr: 1 },
     { id: 'a2', n: 'Solo Dato', d: 'Solo podés usar Digimon de atributo Dato', attr: 2 },
     { id: 'boss60', n: 'Jefes cada minuto', d: 'Los jefes aparecen cada 60 segundos' },
-    { id: 'swarm', n: 'Enjambre', d: 'Aparecen 50% más virus' },
-    { id: 'fast', n: 'Virus veloces', d: 'Los virus son 30% más rápidos' },
+    { id: 'swarm', n: 'Enjambre', d: 'Aparecen 50% más Digimon' },
+    { id: 'fast', n: 'Digimon veloces', d: 'Los Digimon enemigos son 30% más rápidos' },
     { id: 'notree', n: 'Sin árbol', d: 'Tus mejoras permanentes no cuentan' },
     { id: 'glass', n: 'Cristal', d: 'Tenés la mitad de vida, pero hacés +50% de daño' },
     { id: 'items', n: 'Lluvia de ítems', d: 'Caen el triple de ítems' }
@@ -85,7 +85,7 @@ const Challenge = {
       '<div><b>' + x.n + '</b><span>' + x.d + '</span></div></div>';
     body.innerHTML =
       '<section class="ch-left"><div class="ch-lbl">Reglas de hoy</div>' + mods.map(rule).join('') +
-      '<div class="ch-score"><div class="ch-lbl">Puntaje</div><ul><li><b>1</b> por virus eliminado</li><li><b>2</b> por segundo sobrevivido</li><li><b>150</b> por jefe derrotado</li></ul>' +
+      '<div class="ch-score"><div class="ch-lbl">Puntaje</div><ul><li><b>1</b> por Digimon eliminado</li><li><b>2</b> por segundo sobrevivido</li><li><b>150</b> por jefe derrotado</li></ul>' +
       '<small>Solo cuenta tu mejor partida del día. Se juega de a 1 jugador.</small></div></section>' +
       '<section class="ch-right">' +
       '<div class="ch-best"><div><small>Tu récord de hoy</small><b>' + b.best + '</b></div><span>' + b.runs + (b.runs === 1 ? ' intento' : ' intentos') + '</span></div>' +

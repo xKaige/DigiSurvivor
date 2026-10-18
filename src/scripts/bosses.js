@@ -39,7 +39,7 @@ const Bosses = {
   every() { return this.data ? (TEST ? this.data.testEvery : typeof Challenge !== 'undefined' && Challenge.has('boss60') ? 60 : this.data.every) : 1e9; },
 
   // al empezar cada partida
-  reset() { this.n = 0; this.recent = []; this.down = []; this.shown = this.shownName = null; this.next = this.every(); this.hideBar(); },
+  reset() { this.n = 0; this.recent = []; this.fast = false; this.down = []; this.shown = this.shownName = null; this.next = this.every(); this.hideBar(); },
 
   // monedas extra por los jefes derrotados en la partida
   coins() { return this.down.reduce((a, id) => { const b = this.data && this.data.list.find(x => x.id === id); return a + (b ? b.coins : 0); }, 0); },
@@ -65,7 +65,7 @@ const Bosses = {
     const st = Math.max(...P.map(q => q.stage | 0)), hp = B.hp * (0.5 + 0.25 * st) * (1 + cyc * 1.5) * (1 + 0.6 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores y, desde los 4 min, con el tiempo
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
       hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5) * (1 + Math.max(0, t - 240) / 600), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
-      pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0 });
+      pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0, t0: t });
     const b = en[en.length - 1], sp = World.spawnPos(b) || World.freeSpot(b.x, b.y, b); b.x = sp[0]; b.y = sp[1];
   },
   // comportamiento de un jefe en el loop de enemigos (tg = jugador más cercano, dd = distancia, a = ángulo hacia él)
@@ -108,6 +108,7 @@ const Bosses = {
   },
   // al morir: lluvia de XP y queda anotado para las monedas, el Analyzer y las misiones de desbloqueo
   onDeath(e) {
+    if (e.t0 != null && t - e.t0 <= 30) this.fast = true;   // logro Rápido y furioso (lo cuenta achievements.js al final)
     const B = this.def(e.bo); if (!B) return;
     this.down.push(B.id);
     for (let j = 0; j < 16; j++) { const g = Math.random() * 6.283, r = 10 + Math.random() * 60; gems.push({ x: e.x + Math.cos(g) * r, y: e.y + Math.sin(g) * r, v: 8 + 4 * e.cyc }); }

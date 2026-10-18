@@ -133,7 +133,7 @@ const Stats = {
       const st = M && M.stages[s]; if (st && st.family) q.fam = st.family;
       // evolución perfecta (V-Pet): juntaste suficientes virus desde la anterior → +2 en su mejor stat
       const need = this.DP_NEED[s - 1] || 999;
-      q.perfect = q.vp.dp >= need ? 1 : 0;
+      q.perfect = q.vp.dp >= need ? 1 : 0; if (q.perfect) q.pfc = (q.pfc | 0) + 1;   // pfc: evoluciones perfectas en la partida (logro Perfección)
       if (q.perfect) { const top = this.KEYS.slice().sort((a, b) => q.prof[b] - q.prof[a])[0]; q.bs[top] += 2; }
       q.vp.dp = 0;
     } else if (q.dark) {
@@ -151,7 +151,7 @@ const Stats = {
   },
 
   // ---------- Requisitos de las ramas finales (puntos de la partida + condiciones V-Pet) ----------
-  VPN: { kills: 'Virus eliminados', nohit: 'Segundos seguidos sin daño', care: 'Veces al borde (bajo 30% de vida)', bosses: 'Jefes derrotados' },
+  VPN: { kills: 'Digimon eliminados', nohit: 'Segundos seguidos sin daño', care: 'Veces al borde (bajo 30% de vida)', bosses: 'Jefes derrotados' },
   vpVal(q, k) { const v = q.vp || {}; return k === 'kills' ? v.k | 0 : k === 'nohit' ? Math.floor(Math.max(v.nhb || 0, v.nh || 0)) : k === 'care' ? v.care | 0 : k === 'bosses' ? v.bo | 0 : 0; },
 
   // ---------- Combate: hooks ----------

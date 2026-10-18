@@ -442,7 +442,7 @@ function hostSync(dt) {
   const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
   const pl = P.map(q => {
     const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp };
-    if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect });
+    if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs });
     return o;
   });
   // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
@@ -457,7 +457,7 @@ function hostSync(dt) {
   // números de daño y textos nuevos desde el sync anterior (se marcan una sola vez y se reparten por cercanía)
   const X = fx.filter(f => !f.s).slice(-40).map(f => { f.s = 1; return { x: r(f.x), y: r(f.y), txt: f.txt, col: f.col, sz: f.sz, l: r2(f.l) }; });
   const common = { type: 'sync', P: pl, it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })), gt: Gate.sync(), fn: Finale.sync(),
-    t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down };
+    t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down, bf: Bosses.fast ? 1 : 0 };
   const al = P.filter(q => !q.dead);
   for (const g of cs) {
     const q = P[g.i], c0 = q && !q.dead ? q : al[0] || q; if (!c0) continue;   // caído: lo que ve la cámara (un compañero vivo)
@@ -517,6 +517,7 @@ function applyOnlineSync(data) {
   if (data.eb) eb = data.eb.map(a => ({ x: a[0], y: a[1], vx: a[2], vy: a[3], el: a[4], r: a[5] || undefined }));
   if (data.ef) ef = data.ef;
   if (data.bd) Bosses.down = data.bd;
+  if (data.bf) Bosses.fast = true;
   if (data.it) Items.on = data.it;
   if (data.gt) Gate.apply(data.gt);
   if ('fn' in data) Finale.apply(data.fn);
@@ -553,7 +554,7 @@ async function start(m,ids,los){
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();await Enemies.prepare();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
-  renderLegend();Sound.music(true);if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
+  renderLegend();Sound.music(true);if(typeof Achievements!=='undefined')Achievements.onStart();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
 }
 
 // ---------- Selección de criatura ----------
@@ -787,7 +788,7 @@ function endRun(title){if(!running)return;
  const bc=Math.round(Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
  $('t').textContent=title;
  const trTxt=Trees.onRunEnd(mine(),t);
- $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' virus. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.'+trTxt;
+ $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' Digimon. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.'+trTxt;
  // misiones diarias (missions.js): cuenta la partida con los datos de TU jugador (en online el invitado es P[1])
  if(typeof Missions!=='undefined'){const me=(isOnline&&P[myIdx])||P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode>1,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
@@ -796,6 +797,8 @@ function endRun(title){if(!running)return;
   if(r.eggs.length)$('m').textContent+=' ¡Conseguiste '+(r.eggs.length>1?r.eggs.length+' Digitamas':'un Digitama')+' ('+r.eggs.map(u=>u.name).join(', ')+')! '+(r.eggs.length>1?'Hacelos':'Hacelo')+' eclosionar en el Digimon Analyzer.';
   $('m').textContent+=' +'+r.txp+' XP de Tamer'+(r.rankUp?'. ¡Subiste a '+r.rankUp+'! (+'+r.reward+' monedas)':'')+'.';
   if(r.hatched.length)setTimeout(()=>Progress.showHatch(),700)}
+ // logros (achievements.js): antes que Challenge.onRunEnd, que borra las reglas del desafío
+ if(typeof Achievements!=='undefined')Achievements.onRunEnd({kills,coins:c,online:isOnline,n:P.length,chal:typeof Challenge!=='undefined'&&!!Challenge.active,fin:title==='Yggdrasill reinició el Digimundo',fast:Bosses.fast,me:mine()[0]});
  if(typeof Challenge!=='undefined')$('m').textContent+=Challenge.onRunEnd({kills,secs:t,bosses:Bosses.down.length,cid:(mine()[0]||P[0]).cid});
  wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
 
@@ -1138,7 +1141,7 @@ function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),
  $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills;Bosses.hud()}
 
 function update(dt){
- t+=dt;SkillSys.renderBar(P);
+ t+=dt;SkillSys.renderBar(P);if(typeof Achievements!=='undefined')Achievements.tick();
  if (isOnline) {
    if (!isHost && conn) {
      // teclas: solo cuando cambian (y cada 0,25 s por las dudas)
@@ -1177,7 +1180,8 @@ function update(dt){
 
   let rv=0,rh=0;for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R){rv=Math.max(rv,a.revSpd||1);rh=Math.max(rh,(a.m&&a.m.revHP)||0)}
   d.revP=rv?(d.revP||0)+dt*rv:Math.max(0,(d.revP||0)-dt);
-  if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
+  if(d.revP>=REVIVE_TIME){for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R)a.revs=(a.revs|0)+1;   // logro Salvavidas
+   d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
  spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);!World.arena&&i<n&&en.length<MAX_EN+30*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
