@@ -206,7 +206,7 @@ const World = {
     }
     // ---- datos para el resto de World (paredes en píxeles del mapa, igual que los JSON) ----
     for (let i = 0; i < N * N; i++) if (wall[i]) blocks.push([(i % N) * T, ((i / N) | 0) * T, T, T]);
-    const d = { id: 'woods_' + seed, name: 'Bosque', w: S, h: S, scale: 3, wrap: true, start: [cen * T, cen * T + 20], block: blocks, trunk: trunks };
+    const d = { id: 'woods_' + seed, name: 'Bosque', w: S, h: S, scale: 3.5, wrap: true, start: [cen * T, cen * T + 20], block: blocks, trunk: trunks };
     this.tall.sort((a, b) => a[3] - b[3]);
     this.data = null; this.img = cv; this.flow = null;
     this.setData(d);

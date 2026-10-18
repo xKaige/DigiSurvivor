@@ -63,7 +63,7 @@ const Gate = {
     World.arena = false;
     en = S.en; gems = S.gems; eb = S.eb; sh = S.sh; Items.on = S.it; World.flow = null; World.flowT = 0;
     P.forEach((q, i) => { const b = this.back[i] || this.back[0]; const sp = World.freeSpot(b[0], b[1], q); q.x = sp[0]; q.y = sp[1]; q.inv = Math.max(q.inv, 2); });
-    left.forEach((it, i) => { const q = P[i % P.length]; Items.on.push({ x: q.x + 40 * (i + 1), y: q.y + 30, k: it.k, l: Items.LIFE }); });
+    left.forEach((it, i) => { const q = P[i % P.length], sp = World.freeSpot(q.x + (i % 2 ? 1 : -1) * 150 * (1 + (i >> 1)), q.y + 40); Items.on.push({ x: sp[0], y: sp[1], k: it.k, l: Items.LIFE }); });   // separados: que no se agarren dos sin querer
     ef.length = 0; this.stash = null; this.back = null; this.cd = null;
     Bosses.next = t + Bosses.every();
   },

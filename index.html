@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#030a18">
   <title>DigiSurvivor</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦖</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,11 +13,11 @@
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <style id="hud-css">
     /* respaldo del HUD: si tu style.css ya lo define, esto no molesta */
-    #timer{position:fixed;top:8px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 0 10px #000;color:#dff8ff}
-    #tm{display:block;font-size:34px;font-weight:700;line-height:1}
+    #timer{position:fixed;top:46px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 0 10px #000;color:#dff8ff}
+    #tm{display:block;font-size:26px;font-weight:700;line-height:1}
     #tr{display:block;font-size:13px;color:#ffd23f;font-weight:700;margin-top:2px}
-    #leg{position:fixed;left:14px;bottom:52px;padding:4px 6px 2px;pointer-events:none;font:700 12px "Chakra Petch",sans-serif;background:rgba(4,16,34,.72);border:2px solid #1b6fa8;border-radius:10px 2px 10px 2px;box-shadow:0 0 10px rgba(63,208,255,.25)}#leg svg{display:block}#leg text{font:700 12px "Chakra Petch",sans-serif}#leg .lgx{fill:#9fc0d6;font-size:11px}
-    #pst{position:fixed;top:62px;left:16px;font-size:13px;font-weight:700;color:#ffd23f;white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
+    #leg{position:fixed;left:10px;bottom:42px;padding:3px 4px 1px;pointer-events:none;font:700 12px "Chakra Petch",sans-serif;background:rgba(4,16,34,.72);border:2px solid #1b6fa8;border-radius:10px 2px 10px 2px;box-shadow:0 0 10px rgba(63,208,255,.25)}#leg svg{display:block;width:84px;height:auto}#leg text{font:700 12px "Chakra Petch",sans-serif}#leg .lgx{fill:#9fc0d6;font-size:11px}
+    #pst{position:fixed;top:46px;left:12px;font-size:11px;font-weight:700;color:#ffd23f;white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
   </style>
 </head>
 <body>
@@ -24,16 +26,16 @@
   <!-- HUD: los ids y la estructura tienen que coincidir con lo que usa game.js -->
   <div id="hud">
     <div class="hpbox" id="hp1box">
-      <b id="l1" class="pl"></b><span class="hpl">VIDA</span>
+      <b id="l1" class="pl"></b>
       <div id="bar"><i class="lag" id="lag1"></i><div id="fill"></div><span class="hpt" id="hpt1"></span></div>
       <div class="spx" title="SP: llena, tu próxima skill sale potenciada · DP: virus para una evolución perfecta"><i class="sp" id="sp1"></i><i class="dp" id="dp1"></i></div>
     </div>
     <div class="hpbox p2" id="hp2box" style="display:none">
-      <b id="l2" class="pl"></b><span class="hpl">VIDA</span>
+      <b id="l2" class="pl"></b>
       <div id="bar2"><i class="lag" id="lag2"></i><div id="fill2"></div><span class="hpt" id="hpt2"></span></div>
       <div class="spx"><i class="sp" id="sp2"></i><i class="dp" id="dp2"></i></div>
     </div>
-    <span id="info">0 virus</span>
+    <span id="info" title="Virus eliminados">0</span>
   </div>
   <div id="pst"></div>
   <div id="xp"><b id="xpl">NV 1</b><div id="xpbar"><div id="xpf"></div></div><span id="xpt">0 / 5 XP</span></div>
@@ -41,6 +43,10 @@
   <div id="leg"></div>
 
   <div id="skbar"></div>
+  <!-- celular: joystick que aparece donde apoyás el dedo, botón de pausa y aviso para jugar en vertical -->
+  <div id="joy"><i></i></div>
+  <button id="pbtn" aria-label="Pausa">II</button>
+  <div id="rot"><b>Girá el celular</b><span>DigiSurvivor se juega en vertical</span></div>
 
   <div id="ov">
     <!-- Decoración del menú (marco de pantalla de Digivice y lluvia binaria) -->

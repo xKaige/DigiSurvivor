@@ -1,5 +1,7 @@
 const cv=document.getElementById('c'),cx=cv.getContext('2d');
-let W,H;function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}addEventListener('resize',rs);rs();
+// W,H = tamaño LÓGICO de la vista (en píxeles del mundo). En pantallas angostas (celular vertical) la cámara se aleja (CZ < 1)
+// para ver unos 560 px de ancho; el canvas real usa devicePixelRatio (CK = escala del contexto, la aplica draw()).
+let W,H,CZ=1,CK=1;function rs(){CZ=innerWidth<700?Math.max(.55,Math.min(1,innerWidth/560)):1;W=Math.round(innerWidth/CZ);H=Math.round(innerHeight/CZ);const d=Math.min(2,devicePixelRatio||1);cv.width=Math.round(innerWidth*d);cv.height=Math.round(innerHeight*d);CK=cv.width/W}addEventListener('resize',rs);rs();
 const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
 // Hasta MAX_PLAYERS jugadores (hoy el menú ofrece 1 y 2; el código ya acepta 3 y 4: ver inputOf y el HUD)
@@ -459,7 +461,7 @@ async function askCreature(title, color) {
     $('up').classList.add('pick');   // estilo "pantalla de Digivice" (ver style.css)
     const h = $('up').querySelector('h2'); h.textContent = title; h.style.color = color || '';
     const nums = list.map((_, i) => i + 1);
-    $('up').querySelector('p').textContent = 'Hacé clic en un Digimon (o usá las flechas) y confirmá con Enter. Atajo: teclas ' + nums.slice(0, 9).join(', ');
+    $('up').querySelector('p').textContent = TOUCH ? 'Tocá un Digimon para ver su detalle y después «Elegir».' : 'Hacé clic en un Digimon (o usá las flechas) y confirmá con Enter. Atajo: teclas ' + nums.slice(0, 9).join(', ');
     const c = $('cards'); c.innerHTML = '';
     // Grilla: los Digimon que hay + casillas vacías ("en negro") para los que se vayan sumando
     const grid = document.createElement('div'); grid.className = 'pk-grid';
@@ -472,11 +474,11 @@ async function askCreature(title, color) {
       if (!unlocked(cr.id)) {   // bloqueado: se ve su Digitama; al tocarlo muestra la misión para conseguirlo
         b.classList.add('egg-slot'); b.style.setProperty('--ac', '#5a6f84');
         b.innerHTML = '<span class="pk-n">' + String(i + 1).padStart(2, '0') + '</span>' + Progress.eggHtml(cr.id, 2) + '<small>' + (Progress.state(cr.id) === 'egg' ? 'Digitama' : '???') + '</small>';
-        b.onclick = () => pickShow(i); grid.appendChild(b); continue;
+        b.onclick = () => { pickShow(i); pickTop(); }; grid.appendChild(b); continue;
       }
       b.style.setProperty('--ac', ELC[el]);
       b.innerHTML = '<span class="pk-n">' + String(i + 1).padStart(2, '0') + '</span>' + thumbOf(C, 'stage_2') + '<small>' + nm.replace(/-/g, '‑') + '</small>';
-      b.onclick = () => { if (pickSel === i) pickDone(cr.id); else pickShow(i); };   // segundo clic = elegir
+      b.onclick = () => { if (pickSel === i) pickDone(cr.id); else { pickShow(i); pickTop(); } };   // segundo clic = elegir
       b.ondblclick = () => pickDone(cr.id);
       grid.appendChild(b);
     }
@@ -490,6 +492,8 @@ async function askCreature(title, color) {
 // ---------- Panel de detalle de la selección ----------
 const PICK_COLS = 8, PICK_SLOTS = 40;
 let pickSel = 0, pickAnim = null;
+// celular (detalle arriba de la grilla): al tocar un Digimon se sube a ver su detalle y el botón de elegir
+const pickTop = () => { if (innerWidth <= 900) $('up').scrollTo({ top: 0, behavior: 'smooth' }); };
 // Muestra el Digimon i de la lista. key = qué forma se ve en grande ('stage_0'..'stage_4' o 'branch_<id>')
 function pickShow(i, key) {
   const cr = pickList[i]; if (!cr) return;
@@ -617,24 +621,24 @@ async function openMenuPick() {
 }
 // Leyenda de atributos (cada uno es fuerte contra el siguiente), empezando por el tuyo
 // Triángulo de atributos: arriba el tuyo; cada flecha va del que gana al que pierde (x1,5 de daño)
+// íconos oficiales de los atributos (Wikimon: Vaccine_Icon, Virus_Icon, Data_Icon)
+const ATTR_ICON = ['vaccine', 'virus', 'data'].map(n => 'assets/sprites/attr/' + n + '.png');
 function renderLegend() {
   const e0 = P[0].el | 0, o = [e0, (e0 + 1) % 3, (e0 + 2) % 3];
-  const pt = [[80, 26], [138, 112], [22, 112]];   // vértices: arriba, abajo-der, abajo-izq
-  const arrow = (a, b, col) => {   // flecha de a hacia b, recortada para no pisar los círculos
+  const pt = [[60, 22], [104, 98], [16, 98]];   // vértices: arriba, abajo-der, abajo-izq
+  const arrow = (a, b, col) => {   // flecha de a hacia b, recortada para no pisar los íconos
     const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, r = 17;
     return '<line x1="' + (a[0] + ux * r) + '" y1="' + (a[1] + uy * r) + '" x2="' + (b[0] - ux * (r + 4)) + '" y2="' + (b[1] - uy * (r + 4)) + '" stroke="' + col + '" stroke-width="2.5" marker-end="url(#lgar' + col.slice(1) + ')"/>';
   };
-  let s = '<svg viewBox="0 -12 160 164" width="150" height="154" aria-label="Triángulo de atributos"><defs>';
+  let s = '<svg viewBox="-4 0 128 122" aria-label="Triángulo de atributos"><defs>';
   ELC.forEach(c => { s += '<marker id="lgar' + c.slice(1) + '" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="' + c + '"/></marker>'; });
   s += '</defs>';
   for (let i = 0; i < 3; i++) s += arrow(pt[i], pt[(i + 1) % 3], ELC[o[i]]);
   o.forEach((e, i) => {
-    const [x, y] = pt[i];
-    s += '<circle cx="' + x + '" cy="' + y + '" r="14" fill="rgba(4,16,34,.9)" stroke="' + ELC[e] + '" stroke-width="' + (i ? 2 : 3.5) + '"/>' +
-      '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + ELC[e] + '"/>' +
-      '<text x="' + x + '" y="' + (i ? y + 30 : y - 19) + '" text-anchor="middle" fill="' + ELC[e] + '">' + ATTR[e] + (i === 0 ? (mode > 1 ? ' (J1)' : ' (vos)') : '') + '</text>';
+    const [x, y] = pt[i], r = i ? 15 : 19;
+    s += '<image href="' + ATTR_ICON[e] + '" x="' + (x - r) + '" y="' + (y - r) + '" width="' + r * 2 + '" height="' + r * 2 + '"><title>' + ATTR[e] + '</title></image>';
   });
-  s += '<text x="80" y="88" text-anchor="middle" class="lgx">x1,5</text></svg>';
+  s += '<text x="60" y="76" text-anchor="middle" class="lgx">x1,5</text></svg>';
   $('leg').innerHTML = s;
 }
 
@@ -666,6 +670,7 @@ function togglePause(){if(menuPause){menuPause=false;$('pause').style.display='n
  $('pnote').textContent=isOnline?'Partida online: el juego sigue corriendo mientras estás acá':'El juego está en pausa';
  $('pause').style.display='flex';$('pcont').focus()}
 $('pcont').onclick=()=>{if(menuPause)togglePause()};
+$('pbtn').onclick=()=>{if(running)togglePause()};   // botón de pausa (celular: no hay Escape)
 $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
@@ -904,7 +909,7 @@ function startCards(){
 // keep: volver a mostrar las mismas cartas (al cancelar un reemplazo de skill)
 function showCards(keep){
   paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');
-  $('up').querySelector('p').textContent='Elegí con el mouse o con las teclas 1 a '+nCards(p);
+  $('up').querySelector('p').textContent=TOUCH?'Tocá la carta que quieras':'Elegí con el mouse o con las teclas 1 a '+nCards(p);
   if(keep)cur=keep;else{const sk=SkillSys.cards(p).slice(0,2),st=Stats.CARDS.map(c=>({c:c.c,n:c.n,d:c.d,op:c.op,f:()=>{}})).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,nCards(p))}
   const c=$('cards');c.innerHTML='';
   // tipo de carta: skill nueva / mejora de skill / mejora de stat (cada una con su etiqueta y color)
@@ -923,7 +928,7 @@ function showCards(keep){
 // Con las 4 skills ocupadas: elegir cuál olvidar para aprender la nueva (u). "Volver" regresa a las cartas.
 function showReplace(u){
   const q=pending[0],prev=cur;setHead('Reemplazá una skill');
-  $('up').querySelector('p').textContent='Para aprender '+u.n+' tenés que olvidar una de estas (teclas 1 a 5)';
+  $('up').querySelector('p').textContent='Para aprender '+u.n+' tenés que olvidar una de estas'+(TOUCH?'':' (teclas 1 a 5)');
   cur=Object.keys(q.wp).filter(k=>SkillSys.def(k)&&q.wp[k]>0).map(k=>({n:SkillSys.def(k).name,k,pickRep:u}));
   cur.push({n:'Volver',back:prev});
   const c=$('cards');c.innerHTML='';
@@ -984,12 +989,24 @@ function dropGem(x,y,v){if(gems.length<MAX_GEMS){gems.push({x,y,v});return}
  const old=gems[far];gems[far]={x,y,v:v+old.v}}
 // Dirección que elige cada jugador. Local: J1 WASD (con 1 jugador también flechas o joystick), J2 flechas, J3 y J4 joysticks
 // (el primero y el segundo que estén conectados). Online: el anfitrión mueve a los remotos con las teclas que mandan (rk).
+// ---------- Control táctil (celular): apoyás el dedo donde quieras y arrastrás para moverte ----------
+const TOUCH=matchMedia('(pointer:coarse)').matches;   // celular/tablet (una notebook con pantalla táctil sigue siendo escritorio; el dedo igual mueve)if(TOUCH)document.body.classList.add('touch');
+let TJ=null,tjId=null,tjO=null;   // TJ = dirección [dx,dy] mientras hay un dedo apoyado; tjO = dónde se apoyó
+const JOY_R=46;
+function joyShow(){const j=$('joy');if(!j)return;if(!tjO){j.style.display='none';return}j.style.display='block';j.style.left=tjO[0]+'px';j.style.top=tjO[1]+'px';const k=j.firstElementChild;k.style.transform='translate('+(TJ?TJ[0]*TJ[2]:0)+'px,'+(TJ?TJ[1]*TJ[2]:0)+'px)'}
+cv.addEventListener('touchstart',e=>{if(!running)return;e.preventDefault();if(tjId!=null)return;const t0=e.changedTouches[0];tjId=t0.identifier;tjO=[t0.clientX,t0.clientY];TJ=null;joyShow()},{passive:false});
+cv.addEventListener('touchmove',e=>{e.preventDefault();for(const t1 of e.changedTouches){if(t1.identifier!==tjId)continue;let dx=t1.clientX-tjO[0],dy=t1.clientY-tjO[1];const L=Math.hypot(dx,dy);
+ if(L>JOY_R){tjO[0]+=dx/L*(L-JOY_R);tjO[1]+=dy/L*(L-JOY_R)}   // el centro sigue al dedo si se aleja mucho
+ TJ=L>8?[dx/L,dy/L,Math.min(L,JOY_R)]:null;joyShow()}},{passive:false});
+const tjEnd=e=>{for(const t1 of e.changedTouches)if(t1.identifier===tjId){tjId=null;tjO=null;TJ=null;joyShow()}};
+cv.addEventListener('touchend',tjEnd);cv.addEventListener('touchcancel',tjEnd);
+const TJV=()=>TJ&&[TJ[0],TJ[1]];
 const KB=k=>[(k.d||k.arrowright?1:0)-(k.a||k.arrowleft?1:0),(k.s||k.arrowdown?1:0)-(k.w||k.arrowup?1:0)];
 function pad(n){const g=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean)[n]:null;if(!g)return[0,0];let x=g.axes[0]||0,y=g.axes[1]||0;if(Math.hypot(x,y)<.25){x=0;y=0}
  const b=g.buttons;if(b[15]&&b[15].pressed)x=1;if(b[14]&&b[14].pressed)x=-1;if(b[13]&&b[13].pressed)y=1;if(b[12]&&b[12].pressed)y=-1;return[x,y]}
 function inputOf(q){
- if(isOnline){if(q.id===myIdx)return KB(keys);return isHost?KB(rk[q.id]||{}):[0,0]}
- if(mode===1){const k=KB(keys);return k[0]||k[1]?k:pad(0)}
+ if(isOnline){if(q.id===myIdx)return TJV()||KB(keys);const r=rk[q.id]||{};return isHost?(r.tj||KB(r)):[0,0]}
+ if(mode===1){if(TJ)return TJV();const k=KB(keys);return k[0]||k[1]?k:pad(0)}
  if(q.id===0)return[(keys.d?1:0)-(keys.a?1:0),(keys.s?1:0)-(keys.w?1:0)];
  if(q.id===1)return[(keys.arrowright?1:0)-(keys.arrowleft?1:0),(keys.arrowdown?1:0)-(keys.arrowup?1:0)];
  return pad(q.id-2)}
@@ -1006,18 +1023,18 @@ function evoLevels(){return P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LE
 // Cajas de vida: la 1 y la 2 están en index.html; la 3 y la 4 se crean copiando la 2 (mismos ids con otro número)
 function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)continue;const b=$('hp2box').cloneNode(true);b.id='hp'+i+'box';b.className='hpbox p'+i;
   b.querySelectorAll('[id]').forEach(e=>{e.id=e.id.replace(/2$/,String(i))});$('hp'+(i-1)+'box').after(b)}
- for(let i=1;i<=MAX_PLAYERS;i++){const b=$('hp'+i+'box');if(!b)continue;b.style.display=i<=m?'':'none';const l=$('l'+i);if(l)l.textContent=m>1?'J'+i:''}}
+ for(let i=1;i<=MAX_PLAYERS;i++){const b=$('hp'+i+'box');if(!b)continue;b.style.display=i<=m?'':'none';const l=$('l'+i);if(l)l.textContent=m>1?'J'+i:''};document.body.classList.toggle('p1',m===1);document.body.classList.toggle('p3',m===3);document.body.classList.toggle('p4',m===4)}
 function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill'+n:'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3);
  const sp=$('sp'+n),dp=$('dp'+n);if(sp){sp.style.width=(q.spv||0)+'%';sp.classList.toggle('full',!!q.emp)}if(dp){const nd=Stats.DP_NEED[q.stage|0];dp.style.width=nd&&q.vp?Math.min(100,q.vp.dp/nd*100)+'%':'0'}};
  P.forEach((q,i)=>hb(i,q));Gate.hud();
- $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills+' virus';Bosses.hud()}
+ $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills;Bosses.hud()}
 
 function update(dt){
  t+=dt;SkillSys.renderBar(P);
  if (isOnline) {
    if (!isHost && conn) {
      // teclas: solo cuando cambian (y cada 0,25 s por las dudas)
-     const ks = { w: keys.w, a: keys.a, s: keys.s, d: keys.d, arrowup: keys.arrowup, arrowleft: keys.arrowleft, arrowdown: keys.arrowdown, arrowright: keys.arrowright }, sg = JSON.stringify(ks);
+     const ks = { w: keys.w, a: keys.a, s: keys.s, d: keys.d, arrowup: keys.arrowup, arrowleft: keys.arrowleft, arrowdown: keys.arrowdown, arrowright: keys.arrowright, tj: TJ ? [Math.round(TJ[0] * 10) / 10, Math.round(TJ[1] * 10) / 10] : null }, sg = JSON.stringify(ks);
      if (sg !== inSig || t - inT > 0.25) { conn.send({ type: 'input', keys: ks }); inSig = sg; inT = t; }
    } else if (isHost && conns().length && (syncT -= dt) <= 0) {
      syncT = 1 / SYNC_HZ;
@@ -1116,7 +1133,7 @@ function camFollow(){const al=P.filter(q=>!q.dead);
  if(isOnline){const q=P[myIdx]&&!P[myIdx].dead?P[myIdx]:al[0]||P[myIdx];if(q){cam.x=q.x;cam.y=q.y}return}
  if(al.length){cam.x=al.reduce((a,q)=>a+q.x,0)/al.length;cam.y=al.reduce((a,q)=>a+q.y,0)/al.length}}
 function draw(){
- camFollow();
+ camFollow();cx.setTransform(CK,0,0,CK,0,0);
 
  cx.fillStyle='#050b1a';cx.fillRect(0,0,W,H);
  const ox=W/2-cam.x,oy=H/2-cam.y;

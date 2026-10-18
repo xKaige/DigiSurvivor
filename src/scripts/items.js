@@ -37,9 +37,12 @@ const Items = {
     if (Math.random() < ch) this.on.push({ x, y, k: this.roll(), l: this.LIFE });
   },
   bossDrop(x, y) {
-    this.on.push({ x: x - 24, y, k: 'floppy', l: this.LIFE });
+    // bien separados (±150) para no agarrar los dos sin querer (el X-Antibody puede no convenir); en la arena, adentro de la plataforma
+    const D = 150, A = World.arena && World.AR, lim = A ? A.w / 2 - 70 : Infinity, cl = v => Math.max(-lim, Math.min(lim, v));
+    if (A) { x = cl(x); if (x - D < -lim) x = -lim + D; if (x + D > lim) x = lim - D; }
+    this.on.push({ x: x - D, y, k: 'floppy', l: this.LIFE });
     // Prototipo X (rasgo de Dorumon): si alguno lo tiene y todavía no lo despertó, el X-Antibody cae siempre
-    if (Math.random() < 0.5 || P.some(q => q.tr === 'prototipo' && !q.xa && !q.dead)) this.on.push({ x: x + 24, y, k: 'xantibody', l: this.LIFE });
+    if (Math.random() < 0.5 || P.some(q => q.tr === 'prototipo' && !q.xa && !q.dead)) this.on.push({ x: x + D, y, k: 'xantibody', l: this.LIFE });
   },
 
   update(dt) {

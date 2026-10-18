@@ -9,21 +9,21 @@ canvas{display:block;width:100%;height:100%}
 .card:hover,.card:focus-visible{background:#123259;border-color:var(--gold);outline:none}
 #evt{position:fixed;left:0;right:0;top:16%;display:none;text-align:center;font-size:40px;font-weight:700;color:var(--gold);pointer-events:none;text-shadow:0 0 18px #000}
 *,*::before,*::after{box-sizing:border-box}
-#timer{position:fixed;top:8px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 0 10px #000}
-#tm{display:block;font-size:34px;font-weight:700;line-height:1}#tr{display:block;font-size:13px;color:var(--gold);font-weight:700;margin-top:2px}
+#timer{position:fixed;top:46px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 0 10px #000}
+#tm{display:block;font-size:26px;font-weight:700;line-height:1}#tr{display:block;font-size:13px;color:var(--gold);font-weight:700;margin-top:2px}
 #evt{z-index:5}
-#leg{position:fixed;left:14px;bottom:52px;padding:4px 6px 2px;pointer-events:none;font:700 12px "Chakra Petch",sans-serif;background:rgba(4,16,34,.72);border:2px solid #1b6fa8;border-radius:10px 2px 10px 2px;box-shadow:0 0 10px rgba(63,208,255,.25)}#leg svg{display:block}#leg text{font:700 12px "Chakra Petch",sans-serif}#leg .lgx{fill:#9fc0d6;font-size:11px}
-#pst{position:fixed;top:62px;left:16px;font-size:13px;font-weight:700;color:var(--gold);white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
+#leg{position:fixed;left:10px;bottom:42px;padding:3px 4px 1px;pointer-events:none;font:700 12px "Chakra Petch",sans-serif;background:rgba(4,16,34,.72);border:2px solid #1b6fa8;border-radius:10px 2px 10px 2px;box-shadow:0 0 10px rgba(63,208,255,.25)}#leg svg{display:block;width:84px;height:auto}#leg text{font:700 12px "Chakra Petch",sans-serif}#leg .lgx{fill:#9fc0d6;font-size:11px}
+#pst{position:fixed;top:46px;left:12px;font-size:11px;font-weight:700;color:var(--gold);white-space:pre;pointer-events:none;text-shadow:0 0 6px #000}
 .card em{display:block;margin-top:6px;color:var(--gold);font-style:normal;font-size:13px}
 .card:disabled{opacity:.45;cursor:not-allowed}.card:disabled:hover{background:#0a1a33;border-color:var(--teal)}
 .card img{display:block;height:72px;image-rendering:pixelated;margin-bottom:8px}
 
 /* barra fija de skills */
-#skbar{position:fixed;left:50%;bottom:52px;transform:translateX(-50%);display:flex;gap:28px;pointer-events:none}
-.skgrp{display:flex;gap:10px;align-items:flex-start}
-.skwho{align-self:center;font-weight:700;font-size:14px}
-.sk{display:flex;flex-direction:column;align-items:center;width:84px}
-.skbox{position:relative;width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(30,60,100,.9),rgba(4,12,26,.95));border:3px solid var(--gold);box-shadow:0 0 8px rgba(255,210,63,.45)}
+#skbar{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);display:flex;gap:20px;pointer-events:none}
+.skgrp{display:flex;gap:6px;align-items:flex-start}
+.skwho{align-self:center;font-weight:700;font-size:12px}
+.sk{display:flex;flex-direction:column;align-items:center;width:64px}
+.skbox{position:relative;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(30,60,100,.9),rgba(4,12,26,.95));border:3px solid var(--gold);box-shadow:0 0 8px rgba(255,210,63,.45)}
 .sk .skbox{border-color:var(--ac,var(--gold));box-shadow:0 0 10px color-mix(in srgb,var(--ac,var(--gold)) 55%,transparent)}
 .skbox img{width:100%;height:100%;object-fit:contain}
 .skbox.el img{width:70%;height:70%}
@@ -31,7 +31,7 @@ canvas{display:block;width:100%;height:100%}
 .skbox .cd{position:absolute;left:0;right:0;top:0;height:0;background:rgba(2,6,14,.78);pointer-events:none}
 .skbox.cool{box-shadow:none!important}
 .skbox b{position:absolute;right:-6px;bottom:-6px;min-width:18px;padding:0 4px;font-size:12px;line-height:18px;text-align:center;color:#05101e;background:var(--gold);border-radius:9px}
-.skname{margin-top:4px;font-size:12px;font-weight:700;text-align:center;line-height:1.15;text-shadow:0 0 6px #000}
+.skname{margin-top:3px;font-size:10px;font-weight:700;text-align:center;line-height:1.15;text-shadow:0 0 6px #000}
 .sk.empty .skbox{opacity:.2}
 
 /* ---------- Menú principal: pantalla de Digivice ---------- */
@@ -167,35 +167,33 @@ canvas{display:block;width:100%;height:100%}
 
 /* ---------- HUD de la partida: vida y experiencia (estilo Digivice) ---------- */
 #hud,#xp{--cy:#3fd0ff;--cy2:#1b6fa8;--or:#ff9a2e}
-#hud{position:fixed;top:12px;left:16px;right:16px;display:flex;gap:14px;align-items:flex-start;pointer-events:none;font:700 16px 'Chakra Petch',sans-serif;z-index:3}
-.hpbox{--hc:#2ee6c8;--hc2:#14806f;display:flex;align-items:center;gap:8px;padding:6px 10px 6px 8px;background:linear-gradient(180deg,rgba(14,52,90,.85),rgba(4,16,34,.92));border:2px solid var(--hc);
+#hud{position:fixed;top:8px;left:10px;right:10px;display:flex;gap:6px;align-items:flex-start;pointer-events:none;font:700 13px 'Chakra Petch',sans-serif;z-index:3}
+.hpbox{--hc:#2ee6c8;--hc2:#14806f;display:flex;align-items:center;gap:5px;padding:3px 6px 3px 5px;background:linear-gradient(180deg,rgba(14,52,90,.85),rgba(4,16,34,.92));border:2px solid var(--hc);
   box-shadow:0 0 10px color-mix(in srgb,var(--hc) 45%,transparent),inset 0 0 10px rgba(63,208,255,.12);border-radius:10px 2px 10px 2px}
 .hpbox.p2{--hc:#ff7ad9;--hc2:#8a2f74}.hpbox.p3{--hc:#ffd23f;--hc2:#8a6a12}.hpbox.p4{--hc:#7aa8ff;--hc2:#2c4a8a}
-.hpbox .pl{font-size:15px;color:var(--hc);text-shadow:0 0 6px var(--hc)}.hpbox .pl:empty{display:none!important}
+.hpbox .pl{font-size:12px;color:var(--hc);text-shadow:0 0 6px var(--hc)}.hpbox .pl:empty{display:none!important}
 .hpl{font-size:12px;letter-spacing:.14em;color:var(--hc)}
 /* 0.6: SP (celeste; brilla cuando está llena) y DP (dorado: virus para la evolución perfecta) */
-.spx{display:flex;flex-direction:column;gap:2px;width:46px}.spx i{display:block;height:5px;width:0;background:#5cf2ff;box-shadow:0 0 6px #5cf2ff;transition:width .2s}
+.spx{display:flex;flex-direction:column;gap:2px;width:28px}.spx i{display:block;height:3px;width:0;background:#5cf2ff;box-shadow:0 0 6px #5cf2ff;transition:width .2s}
 .spx i.dp{background:#ffd23f;box-shadow:0 0 6px #ffd23f}.spx i.sp.full{animation:spfull .6s steps(2) infinite}@keyframes spfull{50%{background:#fff}}
-#bar,#bar2,#bar3,#bar4{position:relative;width:clamp(120px,14vw,210px);height:18px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.18);overflow:hidden}
+#bar,#bar2,#bar3,#bar4{position:relative;width:clamp(84px,9vw,128px);height:13px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.18);overflow:hidden}
 #fill,#fill2,#fill3,#fill4{position:absolute;inset:0 auto 0 0;width:100%;transition:width .1s;
   background:linear-gradient(180deg,color-mix(in srgb,var(--hc) 70%,#fff),var(--hc) 45%,var(--hc2));box-shadow:0 0 10px var(--hc)}
 /* segmentos tipo pantalla */
 #fill::after,#fill2::after,#fill3::after,#fill4::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 11px,rgba(2,8,18,.55) 11px 13px)}
 .lag{position:absolute;inset:0 auto 0 0;width:100%;background:#ff4a4a;opacity:.75;transition:width .55s ease-out .25s}
-.hpt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;letter-spacing:.04em;color:#fff;text-shadow:0 0 3px #000,0 1px 2px #000}
+.hpt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:.04em;color:#fff;text-shadow:0 0 3px #000,0 1px 2px #000}
 .hpbox.low{animation:hplow .7s steps(2) infinite}
 .hpbox.low #fill,.hpbox.low #fill2,.hpbox.low #fill3,.hpbox.low #fill4{--hc:#ff4a4a;--hc2:#8a1d1d}
 @keyframes hplow{50%{border-color:#ff4a4a;box-shadow:0 0 16px #ff4a4a}}
-#info{margin-left:auto;padding:6px 14px;font-size:16px;letter-spacing:.04em;color:#f2fbff;background:rgba(4,16,34,.85);border:2px solid var(--cy2);border-radius:2px 10px 2px 10px}
-#xp{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;width:min(820px,calc(100% - 24px));padding:5px 10px;pointer-events:none;z-index:3;
-  background:linear-gradient(180deg,rgba(14,52,90,.85),rgba(4,16,34,.92));border:2px solid var(--gold);box-shadow:0 0 10px rgba(255,210,63,.4);border-radius:10px 2px 10px 2px;font:700 14px 'Chakra Petch',sans-serif}
-#xpl{flex:0 0 auto;padding:1px 8px;color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);letter-spacing:.06em;border-radius:3px}
-#xpbar{position:relative;flex:1;height:12px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.15);overflow:hidden}
+#info{margin-left:auto;padding:3px 10px;font-size:14px;letter-spacing:.04em;color:#f2fbff;background:rgba(4,16,34,.85);border:2px solid var(--cy2);border-radius:2px 10px 2px 10px}
+#xp{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;width:min(600px,calc(100% - 20px));padding:3px 8px;pointer-events:none;z-index:3;
+  background:linear-gradient(180deg,rgba(14,52,90,.85),rgba(4,16,34,.92));border:2px solid var(--gold);box-shadow:0 0 10px rgba(255,210,63,.4);border-radius:10px 2px 10px 2px;font:700 12px 'Chakra Petch',sans-serif}
+#xpl{flex:0 0 auto;padding:0 6px;color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);letter-spacing:.06em;border-radius:3px}
+#xpbar{position:relative;flex:1;height:8px;background:rgba(2,8,18,.9);border:1px solid rgba(255,255,255,.15);overflow:hidden}
 #xpf{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,#ffb800,#ffe066);box-shadow:0 0 10px #ffd23f;transition:width .15s}
 #xpf::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(2,8,18,.5) 9px 11px)}
-#xpt{flex:0 0 auto;min-width:92px;text-align:right;color:var(--gold);font-size:13px}
-@media (max-width:700px){#hud{flex-wrap:wrap;gap:8px}#bar,#bar2,#bar3,#bar4{width:120px}.hpl{display:none}}
-@media (max-width:1000px){#timer{top:58px!important}#pst{top:62px}}
+#xpt{flex:0 0 auto;min-width:70px;text-align:right;color:var(--gold);font-size:11px}
 
 /* ---------- Subir de nivel / evolución final: cartas estilo Digivice (#up sin .pick) ---------- */
 #up:not(.pick){gap:10px;padding:24px 16px;background:radial-gradient(ellipse at 50% 45%,rgba(20,70,120,.55),transparent 60%),linear-gradient(rgba(63,208,255,.05) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(63,208,255,.05) 1px,transparent 1px) 0 0/40px 40px,rgba(3,10,24,.86)}
@@ -396,14 +394,13 @@ body:not(.ingame) #hud,body:not(.ingame) #xp,body:not(.ingame) #timer,body:not(.
 @media (prefers-reduced-motion:reduce){.egg{animation:none}}
 
 /* ---------- Barra del jefe (bosses.js) ---------- */
-#bossbar{--ac:#c05bff;position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:4;display:none;width:min(520px,calc(100% - 32px));pointer-events:none;font-family:'Chakra Petch',sans-serif;text-shadow:0 0 6px #000}
+#bossbar{--ac:#c05bff;position:fixed;top:82px;left:50%;transform:translateX(-50%);z-index:4;display:none;width:min(520px,calc(100% - 32px));pointer-events:none;font-family:'Chakra Petch',sans-serif;text-shadow:0 0 6px #000}
 #bossbar .bb-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 #bossbar b{font:900 18px 'Orbitron','Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#fff}
 #bossbar span{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ac)}
 #bossbar .bb-hp{height:14px;margin-top:3px;background:rgba(4,10,20,.9);border:2px solid var(--ac);box-shadow:0 0 10px var(--ac)}
 #bossbar .bb-hp i{display:block;height:100%;background:linear-gradient(90deg,#ff3d81,#ff9a2e);transition:width .15s}
 body:not(.ingame) #bossbar{display:none!important}
-@media (max-width:1000px){#bossbar{top:104px}}
 
 /* ---------- Rango de Tamer (progress.js, bajo las monedas) ---------- */
 #rank{align-self:flex-end;display:flex;align-items:center;gap:10px;padding:6px 12px;min-width:240px;font-family:'Chakra Petch',sans-serif;border:1px solid rgba(63,208,255,.5);background:rgba(3,10,24,.8)}
@@ -482,3 +479,52 @@ body:not(.ingame) #bossbar{display:none!important}
 
 /* final con Yggdrasill (finale.js): sin el HUD de abajo durante la escena */
 body.finale #skbar,body.finale #leg,body.finale #pst,body.finale #xp,body.finale #evt{display:none!important}
+
+/* ---------- Celular (vertical): joystick táctil, pausa, aviso de girar y HUD compacto ---------- */
+html,body{overscroll-behavior:none}
+body.touch{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+body.touch #c{touch-action:none}
+#joy{position:fixed;z-index:4;display:none;width:96px;height:96px;margin:-48px 0 0 -48px;border:2px solid rgba(63,208,255,.55);border-radius:50%;background:radial-gradient(circle,rgba(63,208,255,.12),rgba(4,16,34,.25));pointer-events:none}
+#joy i{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:rgba(63,208,255,.55);box-shadow:0 0 12px #3fd0ff}
+#pbtn{display:none;position:fixed;z-index:4;top:calc(env(safe-area-inset-top) + 40px);right:10px;width:36px;height:30px;padding:0;font:900 13px 'Orbitron',sans-serif;letter-spacing:.1em;color:#f2fbff;background:rgba(4,16,34,.85);border:2px solid #1b6fa8;border-radius:2px 10px 2px 10px}
+body.touch.ingame #pbtn{display:block}
+#rot{display:none;position:fixed;inset:0;z-index:100;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:#030a18;color:#f2fbff;font:700 15px 'Chakra Petch',sans-serif;text-align:center}
+#rot b{font:900 22px 'Orbitron',sans-serif;color:#3fd0ff;text-shadow:0 0 12px #3fd0ff}
+@media (orientation:landscape) and (pointer:coarse) and (max-height:540px){#rot{display:flex}}
+@media (max-width:700px){
+  #hud{top:calc(env(safe-area-inset-top) + 6px);left:6px;right:6px;display:grid;grid-template-columns:1fr 1fr auto;gap:4px}
+  #hud .hpbox{min-width:0}
+  body.p1 #hp1box{grid-column:1/3}
+  #bar,#bar2,#bar3,#bar4{width:auto;flex:1;min-width:0}
+  .spx{width:20px}
+  #info{grid-column:3;grid-row:1;margin:0;padding:2px 8px;font-size:13px}
+  #hp2box{grid-column:2;grid-row:1}#hp3box{grid-column:1;grid-row:2}#hp4box{grid-column:2;grid-row:2}
+  #timer{top:calc(env(safe-area-inset-top) + 40px)}#tm{font-size:22px}
+  body.p3 #timer,body.p4 #timer{top:calc(env(safe-area-inset-top) + 64px)}
+  #pst{display:none}
+  #bossbar{top:calc(env(safe-area-inset-top) + 92px)}
+  #xp{bottom:calc(env(safe-area-inset-bottom) + 6px);width:calc(100% - 12px);gap:6px;padding:2px 6px}
+  #xpt{min-width:0;font-size:10px}
+  #skbar{bottom:calc(env(safe-area-inset-bottom) + 34px);gap:10px}
+  .sk{width:42px}.skbox{width:36px;height:36px;border-width:2px}.skname{display:none}.skbox b{font-size:10px;line-height:15px;min-width:15px}
+  #leg{left:6px;bottom:calc(env(safe-area-inset-bottom) + 84px)}#leg svg{width:62px}
+  #evt{font-size:24px;top:22%}
+}
+/* menú principal en celular */
+body.touch #go2{display:none}   /* 2 jugadores local necesita teclado: en el celular no */
+@media (max-width:560px){
+  #ov{padding:calc(env(safe-area-inset-top) + 28px) 14px calc(env(safe-area-inset-bottom) + 20px);gap:10px}
+  #ov .ovfx .tag{display:none}
+  #ov h1{font-size:clamp(28px,9.5vw,40px)}
+  #m{font-size:13px;margin:0}
+  #dv{width:min(42vw,170px)}
+  #mnu{gap:8px}
+  #mnu button,#acc #soc-btn{padding-top:12px;padding-bottom:12px;font-size:15px}
+  #news-btn{position:relative;left:auto;bottom:auto;align-self:center;flex:0 0 auto}
+}
+@media (max-width:560px){
+  .ovfx .tag,.ovfx .side{display:none}
+  #tree h2,#up.pick h2,#up:not(.pick) h2{font-size:22px;padding:0 18px}
+  #tsub{font-size:12px;margin:4px 0}#tree{padding-top:calc(env(safe-area-inset-top) + 18px)}
+  #pause h2{font-size:28px}
+}

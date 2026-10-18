@@ -84,9 +84,16 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `
 - `t` tiempo de partida, `lvl`, `xp`, `need`, `kills`, `running`, `paused`, `evo` (animación de digievolución en curso), `mode` (1 o 2).
 - `CREATURES` = lista de criaturas disponibles (37: `001_guilmon` … `016_commandramon` y las 22 líneas del Workshop `017_agumon` … `038_blucomon`; `004_impmon` no es jugable, es la línea de enemigos). Cada jugador tiene la suya en `q.cid`; `CR(q)` devuelve su entrada de `CreatureLoader.cache`: `{ meta: <json>, canvases: { stage_0..stage_4, branch_6_1.. } }`.
 
+### Celular (vertical) y cámara
+- **Se juega en vertical**: en un celular acostado sale `#rot` ("Girá el celular"). `index.html` tiene `<meta viewport>`.
+- `TOUCH` (game.js) = `(pointer:coarse)` → `body.touch`: botón de pausa `#pbtn` (no hay Escape), se oculta "2 Jugadores Local" y cambian los textos de ayuda.
+- **Control táctil**: apoyás el dedo en cualquier lado del canvas y arrastrás (joystick flotante `#joy`; el centro sigue al dedo). `TJ` = dirección; `inputOf` la usa en 1J y online (el invitado la manda como `tj` en `input`).
+- **Cámara**: `W,H` son el tamaño LÓGICO de la vista. En pantallas de menos de 700 px de ancho la cámara se aleja (`CZ`, para ver ~560 px de ancho); el canvas usa `devicePixelRatio` y `draw()` aplica `CK` con `setTransform`. El "zoom" del mapa es `scale: 3.5` del bosque (map.js): los sprites no cambian de tamaño.
+- Estilos de celular al final de `style.css` (HUD en grilla 2×2 para 4 jugadores, sin `#pst`, skills sin nombre). En la selección de Digimon, tocar uno sube al detalle (`pickTop`).
+
 ### Pausa y HUD
 - **Escape pausa** (`togglePause`, flag `menuPause`): menú con Continuar / Abandonar partida. Nunca termina la partida directo. En online no frena la simulación (solo abre el menú). Con cartas o digievolución en pantalla, Escape no hace nada.
-- El HUD (barras, reloj, leyenda, skills) solo se ve con `body.ingame`, que pone `start()` y saca `endRun()`.
+- El HUD (barras, reloj, leyenda, skills) solo se ve con `body.ingame`, que pone `start()` y saca `endRun()`. Es compacto para que entren 4 barras de vida en fila (escritorio); `hudBoxes` pone `body.p1/p3/p4`. `#info` muestra solo el número de virus. El triángulo de atributos usa los íconos oficiales de Wikimon (`assets/sprites/attr/vaccine|virus|data.png`, `ATTR_ICON`).
 
 ### Loop
 `loop()` → si `evo` corre `stepEvo`, si no y no está en pausa corre `update(dt)` → siempre `draw()`. `dt` está topeado a 0.05. Las dos partes van en `try/catch`: un error se ve en la consola y el juego sigue.
@@ -169,6 +176,7 @@ Campos clave: `cid, el (atributo), hp/max, dmg, rate, sp, multi, pierce, mag, ar
 - `dark` y `xa` van en el sync. El Analyzer registra también la forma oscura y las X.
 
 ### Ítems (`items.js`)
+- Los ítems del jefe (`Items.bossDrop`) caen a ±150 px (dentro de la plataforma de la arena) para no agarrar los dos sin querer; al salir del Gate, los que quedaron vuelven igual de separados.
 - Los virus sueltan uno con prob. `DROP` (1,8%; ×3 con el desafío "Lluvia de ítems"), sorteado por peso `w`. Los jefes: Recovery Floppy + 50% X-Antibody. Duran 30 s. Sync: `it`.
 
 ### Rango de Tamer (`progress.js`)
