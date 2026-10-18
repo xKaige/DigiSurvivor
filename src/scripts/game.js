@@ -339,6 +339,7 @@ function applyOnlineSync(data) {
   if (data.ef) ef = data.ef;
   if (data.bd) Bosses.down = data.bd;
   if (data.it) Items.on = data.it;
+  if (data.gt) Gate.apply(data.gt);
 }
 
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
@@ -368,7 +369,7 @@ async function start(m,ids,los){
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Items.reset();Enemies.newRun();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
   renderLegend();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -596,7 +597,7 @@ $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
  if(isOnline&&isHost&&conn){try{conn.send({type:'end',title:title})}catch(e){}}
- running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();
+ running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();Gate.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
  const bc=Math.round(Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
@@ -931,7 +932,7 @@ function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)con
  for(let i=1;i<=MAX_PLAYERS;i++){const b=$('hp'+i+'box');if(!b)continue;b.style.display=i<=m?'':'none';const l=$('l'+i);if(l)l.textContent=m>1?'J'+i:''}}
 function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill'+n:'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3);
  const sp=$('sp'+n),dp=$('dp'+n);if(sp){sp.style.width=(q.spv||0)+'%';sp.classList.toggle('full',!!q.emp)}if(dp){const nd=Stats.DP_NEED[q.stage|0];dp.style.width=nd&&q.vp?Math.min(100,q.vp.dp/nd*100)+'%':'0'}};
- P.forEach((q,i)=>hb(i,q));
+ P.forEach((q,i)=>hb(i,q));Gate.hud();
  $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills+' virus';Bosses.hud()}
 
 function update(dt){
@@ -955,6 +956,7 @@ function update(dt){
        eb: eb.map(b => ({ x: r(b.x), y: r(b.y), vx: r(b.vx), vy: r(b.vy), el: b.el, r: b.r })),
        ef: ef.map(o => ({ k: o.k, x: r(o.x), y: r(o.y), R: o.R && r(o.R), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx })),
        it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })),
+       gt: Gate.sync(),
        t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down
      });
    }
@@ -969,7 +971,7 @@ function update(dt){
  }
 
  const al=P.filter(q=>!q.dead);
- if(al.length && mode>1){
+ if(al.length && mode>1 && !isOnline){
    for(const q of al){
      q.x=Math.max(cam.x-W/2+40,Math.min(cam.x+W/2-40,q.x));
      q.y=Math.max(cam.y-H/2+40,Math.min(cam.y+H/2-40,q.y));
@@ -989,8 +991,8 @@ function update(dt){
   if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
  spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);i<n&&en.length<MAX_EN+30*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
- Bosses.tick();Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);!World.arena&&i<n&&en.length<MAX_EN+30*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
+ Gate.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
    if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0})}q.atkT=q.rate}}}
@@ -1024,7 +1026,9 @@ function update(dt){
 }
 
 // la cámara sigue al promedio de los jugadores vivos
-function camFollow(){const al=P.filter(q=>!q.dead);if(al.length){cam.x=al.reduce((a,q)=>a+q.x,0)/al.length;cam.y=al.reduce((a,q)=>a+q.y,0)/al.length}}
+function camFollow(){const al=P.filter(q=>!q.dead);
+ if(isOnline){const q=P[myIdx]&&!P[myIdx].dead?P[myIdx]:al[0]||P[myIdx];if(q){cam.x=q.x;cam.y=q.y}return}
+ if(al.length){cam.x=al.reduce((a,q)=>a+q.x,0)/al.length;cam.y=al.reduce((a,q)=>a+q.y,0)/al.length}}
 function draw(){
  camFollow();
 
@@ -1036,6 +1040,7 @@ function draw(){
   cx.stroke()}
  cx.save();cx.translate(ox,oy);
  World.draw();   // mapa del Digimundo (map.js)
+ Gate.drawWorld();   // Digital Gate (gate.js)
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
  Items.draw();
@@ -1056,7 +1061,21 @@ function draw(){
    cx.strokeStyle='#ffd23f';cx.lineWidth=3;for(let i=0;i<3;i++){const r=(e0*1.2+i/3)%1;cx.globalAlpha=1-r;cx.beginPath();cx.arc(q.x,q.y,10+r*110,0,6.283);cx.stroke()}cx.globalAlpha=1}}
  cx.textAlign='center';cx.lineJoin='round';for(const f of fx){cx.globalAlpha=Math.min(1,f.l*2);cx.font='bold '+f.sz+'px Chakra Petch,system-ui,sans-serif';cx.lineWidth=4;cx.strokeStyle='#000';cx.strokeText(f.txt,f.x,f.y);cx.fillStyle=f.col;cx.fillText(f.txt,f.x,f.y)}cx.globalAlpha=1;
  cx.restore();
+ if(running){drawPointers();Gate.drawOverlay()}
 }
+// Flechas en el borde de la pantalla hacia lo que no se ve: compañeros (nombre y distancia en metros; ✝ si están caídos)
+// y el Digital Gate. 1 metro = 40 px.
+function pname(i){return isOnline&&i!==myIdx?((party&&party.nick)||'J'+(i+1)):'J'+(i+1)}
+function drawPointers(){
+ const me=isOnline?P[myIdx]:null,ox=me&&!me.dead?me.x:cam.x,oy=me&&!me.dead?me.y:cam.y,list=[];
+ if(mode>1)P.forEach((q,i)=>{if(isOnline&&i===myIdx)return;list.push({x:q.x,y:q.y-30,col:PC[i],txt:(q.dead?'✝ ':'')+pname(i)})});
+ if(Gate.g&&!World.arena)list.push({x:Gate.g[0],y:Gate.g[1]-60,col:'#3dff7a',txt:'Digital Gate'});
+ for(const o of list){const sx=o.x-cam.x+W/2,sy=o.y-cam.y+H/2;if(sx>20&&sx<W-20&&sy>20&&sy<H-20)continue;
+  const a=Math.atan2(sy-H/2,sx-W/2),mg=46,k=Math.min((W/2-mg)/Math.max(1e-6,Math.abs(Math.cos(a))),(H/2-mg)/Math.max(1e-6,Math.abs(Math.sin(a)))),px=W/2+Math.cos(a)*k,py=H/2+Math.sin(a)*k;
+  const txt=o.txt+' · '+Math.round(Math.hypot(o.x-ox,o.y-oy)/40)+' m';
+  cx.save();cx.translate(px,py);cx.rotate(a);cx.fillStyle=o.col;cx.strokeStyle='#000';cx.lineWidth=3;cx.beginPath();cx.moveTo(18,0);cx.lineTo(-10,-13);cx.lineTo(-4,0);cx.lineTo(-10,13);cx.closePath();cx.stroke();cx.fill();cx.restore();
+  cx.save();cx.textAlign='center';cx.font="bold 13px 'Chakra Petch',sans-serif";const tx=Math.max(80,Math.min(W-80,px)),ty=py+(Math.sin(a)>0.5?-26:28);
+  cx.lineWidth=4;cx.lineJoin='round';cx.strokeStyle='#000';cx.strokeText(txt,tx,ty);cx.fillStyle=o.col;cx.fillText(txt,tx,ty);cx.restore()}}
 // dibuja un enemigo (sprite o figura de respaldo)
 function dEn(e){
   const C=e.fl>0?'#fff':ELC[e.el],D='#050b1a';cx.fillStyle=C;

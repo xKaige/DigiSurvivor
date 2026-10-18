@@ -230,6 +230,7 @@ const World = {
   // (los mapas con wrap, como el bosque procedural, se repiten tal cual; los demás, en espejo)
   local(v, size) { const k = Math.floor(v / size), m = v - k * size; return this.data.wrap || !(k & 1) ? m : size - 1e-6 - m; },
   solid(wx, wy) {
+    if (this.arena) return Math.abs(wx) > this.AR.w / 2 || Math.abs(wy) > this.AR.h / 2;   // arena: todo lo que no es la plataforma
     if (!this.grid) return false;
     const s = this.data.scale, mx = this.local(wx, this.size) / s, my = this.local(wy, this.size) / s;
     return this.grid[Math.floor(my / this.CELL) * this.gw + Math.floor(mx / this.CELL)] === 1;
@@ -294,12 +295,15 @@ const World = {
     const n = this.fn, c = Math.floor(x / this.cs) - this.fx0, r = Math.floor(y / this.cs) - this.fy0;
     return c < 0 || r < 0 || c >= n || r >= n ? -1 : this.flow[r * n + c];
   },
+  // centro para hacer aparecer enemigos: un jugador vivo al azar (online cada uno tiene su cámara, así le llegan a todos)
+  spawnCenter() { const al = P.filter(q => !q.dead); const q = al[(Math.random() * al.length) | 0]; return q ? [q.x, q.y] : [cam.x, cam.y]; },
   // lugar de aparición fuera de pantalla, libre y CONECTADO con el jugador (el mapa tiene niveles separados por barrancos)
   spawnPos(e) {
-    const dist = Math.hypot(W, H) / 2 + 40;
+    if (this.arena) { const A = this.AR; return this.freeSpot((Math.random() - 0.5) * A.w * 0.8, (Math.random() - 0.5) * A.h * 0.8, e); }
+    const dist = Math.max(Math.hypot(W, H) / 2, 900) + 40, [ccx, ccy] = this.spawnCenter();   // fuera de la pantalla aunque la del compañero sea más grande
     let best = null;
     for (let k = 0; k < 14; k++) {
-      const a = Math.random() * 6.283, sp = this.freeSpot(cam.x + Math.cos(a) * dist, cam.y + Math.sin(a) * dist, e);
+      const a = Math.random() * 6.283, sp = this.freeSpot(ccx + Math.cos(a) * dist, ccy + Math.sin(a) * dist, e);
       const v = this.reach(sp[0], sp[1] + this.foot(e));
       if (v !== 65535) return sp;   // con camino (o fuera del mapa de distancias: se acerca en línea recta)
       best = best || sp;
@@ -309,13 +313,16 @@ const World = {
   // cada tanto, los enemigos que quedaron encerrados (sin camino al jugador) se mudan a un lugar conectado
   relocT: 0,
   relocate(dt) {
-    if (!this.flow || (this.relocT -= dt) > 0) return;
+    if (this.arena || !this.flow || (this.relocT -= dt) > 0) return;
     this.relocT = 1.5;
     let budget = 6;   // como mucho 6 mudanzas por vez (cada una busca lugar libre: es trabajo)
+    const al = P.filter(q => !q.dead);
     for (const e of en) {
       if (budget <= 0) break;
       const v = this.reach(e.x, e.y + this.foot(e));
-      if (v !== 65535 && v !== -1) continue;   // tiene camino: queda donde está (65535 = encerrado, -1 = demasiado lejos)
+      if (v !== 65535 && v !== -1) continue;   // tiene camino: queda donde está (65535 = encerrado, -1 = fuera del mapa de distancias)
+      // fuera del mapa de distancias pero cerca de algún jugador (online pueden estar lejos entre sí): se queda
+      if (v === -1 && al.some(q => Math.abs(q.x - e.x) < 1500 && Math.abs(q.y - e.y) < 1500)) continue;
       const sp = this.spawnPos(e); budget--; if (sp) { e.x = sp[0]; e.y = sp[1]; e.st = 0; }
     }
   },
@@ -339,8 +346,61 @@ const World = {
     return Math.atan2(by, bx);
   },
 
+  // ---------- Arena del Digital Gate (estilo MT Infinity de Digimon World) ----------
+  // Una plataforma chica con grilla amarilla, centrada en (0, 0), flotando en un vacío negro con columnas de cubos verdes de
+  // alambre. Mientras World.arena está prendido, todo lo que no es la plataforma es pared (solid) y no se dibuja el bosque.
+  arena: false,
+  AR: { w: 15 * 64, h: 11 * 64, T: 64 },
+  arenaBg: null, cubes: null,
+  buildArena() {
+    if (this.arenaBg) return;
+    const A = this.AR, pad = 24, cv = document.createElement('canvas'); cv.width = A.w + pad * 2; cv.height = A.h + pad * 2;
+    const g = cv.getContext('2d');
+    g.fillStyle = 'rgba(8,16,4,.92)'; g.fillRect(pad, pad, A.w, A.h);
+    for (let y = 0; y < A.h / A.T; y++) for (let x = 0; x < A.w / A.T; x++) {   // baldosas: oscuras con un brillo suave
+      g.fillStyle = (x + y) % 2 ? 'rgba(40,52,8,.35)' : 'rgba(20,30,4,.35)'; g.fillRect(pad + x * A.T + 3, pad + y * A.T + 3, A.T - 6, A.T - 6);
+    }
+    const grid = (w, col) => { g.strokeStyle = col; g.lineWidth = w; g.beginPath();
+      for (let x = 0; x <= A.w; x += A.T) { g.moveTo(pad + x, pad); g.lineTo(pad + x, pad + A.h); }
+      for (let y = 0; y <= A.h; y += A.T) { g.moveTo(pad, pad + y); g.lineTo(pad + A.w, pad + y); } g.stroke(); };
+    grid(9, 'rgba(214,240,58,.18)'); grid(4, 'rgba(214,240,58,.45)'); grid(1.5, '#f2ff8a');
+    g.strokeStyle = '#d6f03a'; g.lineWidth = 5; g.strokeRect(pad, pad, A.w, A.h);
+    this.arenaBg = { cv, pad };
+    // columnas de cubos de alambre alrededor (con "profundidad" para el paralaje)
+    const R = this.rng(4242), cubes = [];
+    for (let i = 0; i < 230; i++) {
+      const z = 0.35 + R() * 0.55, s = 30 + R() * 90 * z;
+      let x = (R() - 0.5) * 3400, y = (R() - 0.5) * 2600;
+      if (Math.abs(x) < A.w / 2 + 140 && Math.abs(y) < A.h / 2 + 140) continue;   // que no tapen la plataforma
+      const st = 1 + ((R() * 4) | 0);   // cubos apilados
+      cubes.push({ x, y, s, z, st });
+    }
+    this.cubes = cubes.sort((a, b) => a.z - b.z);
+  },
+  drawArena() {
+    this.buildArena();
+    cx.fillStyle = '#000'; cx.fillRect(cam.x - W / 2 - 2, cam.y - H / 2 - 2, W + 4, H + 4);
+    // cubos: los más lejanos (z chico) se mueven menos con la cámara (paralaje)
+    for (const c of this.cubes) {
+      const px = cam.x + (c.x - cam.x) * c.z, py = cam.y + (c.y - cam.y) * c.z;
+      if (Math.abs(px - cam.x) > W / 2 + 200 || Math.abs(py - cam.y) > H / 2 + 300) continue;
+      const a = 0.18 + c.z * 0.5, o = c.s * 0.28;
+      for (let k = 0; k < c.st; k++) {
+        const y = py - k * c.s * 0.9;
+        cx.fillStyle = 'rgba(10,60,10,' + (a * 0.35) + ')'; cx.fillRect(px, y, c.s, c.s);
+        cx.strokeStyle = 'rgba(60,255,80,' + a + ')'; cx.lineWidth = 1.5;
+        cx.strokeRect(px, y, c.s, c.s); cx.strokeRect(px + o, y - o, c.s, c.s);
+        cx.beginPath(); cx.moveTo(px, y); cx.lineTo(px + o, y - o); cx.moveTo(px + c.s, y); cx.lineTo(px + c.s + o, y - o);
+        cx.moveTo(px, y + c.s); cx.lineTo(px + o, y + c.s - o); cx.moveTo(px + c.s, y + c.s); cx.lineTo(px + c.s + o, y + c.s - o); cx.stroke();
+      }
+    }
+    const B = this.arenaBg, A = this.AR;
+    cx.drawImage(B.cv, -A.w / 2 - B.pad, -A.h / 2 - B.pad);
+  },
+
   // ---------- Dibujo del fondo (mosaico en espejo) ----------
   draw() {
+    if (this.arena) { this.drawArena(); return true; }
     if (!this.img || !this.data) return false;
     const S = this.size, s = this.data.scale;
     const x0 = Math.floor((cam.x - W / 2) / S), x1 = Math.floor((cam.x + W / 2) / S);
@@ -364,7 +424,7 @@ const World = {
   // tronco) queda tapado; al que está delante se lo vuelve a dibujar encima con redraw(e). ents = [{e, fy (pies), x0, x1, y0}].
   // Si un jugador vivo queda detrás, el árbol se pone medio transparente para no perderlo de vista.
   drawTall(ents, redraw) {
-    if (!this.tall.length || !this.data || !this.data.wrap || !this.tilesV) return;
+    if (this.arena || !this.tall.length || !this.data || !this.data.wrap || !this.tilesV) return;
     const S = this.size, s = this.data.scale, m = 120 * s;
     const x0 = Math.floor((cam.x - W / 2 - m) / S), x1 = Math.floor((cam.x + W / 2 + m) / S);
     const y0 = Math.floor((cam.y - H / 2 - m) / S), y1 = Math.floor((cam.y + H / 2 + m) / S);

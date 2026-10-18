@@ -43,6 +43,7 @@ src/scripts/progress.js         # Progress: Digimon bloqueados, Digitamas, eclos
 src/scripts/challenge.js        # Challenge: desafío diario (reglas del día, récord y ranking de amigos)
 src/scripts/news.js             # News: botón "v0.x · Novedades" en la esquina del menú (lee changelog.json)
 src/scripts/map.js              # World: mapa del Digimundo con relieve (fondo en espejo, paredes, mapa de distancias)
+src/scripts/gate.js             # Gate: Digital Gate (fisura en el mapa) y arena del jefe estilo MT Infinity (antes que game.js)
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
 src/data/skills.json            # catálogo de skills, elementos, maxLevel/maxLevelFinal, maxActive, fx y fxSprites
 src/data/missions.json          # catálogo de misiones diarias (tipos, metas, recompensas)
@@ -65,7 +66,7 @@ assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de 
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 
@@ -141,6 +142,7 @@ Campos clave: `cid, el (atributo), hp/max, dmg, rate, sp, multi, pierce, mag, ar
 - Guardado en `localStorage['digisurvivor_prog']` y, con sesión iniciada, en la cuenta (`users/{uid}.prog`, ver Rango de Tamer). `RESET_BEFORE` también lo borra.
 
 ### Jefes (`bosses.js` + `bosses.json`)
+- **Digital Gate (`gate.js`)**: los jefes ya no salen en el mapa. Cada `Bosses.every()` se abre una fisura ("¡DIGITAL GATE OPEN!", flecha en el borde de la pantalla) en un lugar con camino a 900–1600 px. Si un jugador vivo se para encima, `Gate.enter` guarda el mundo (`en, gems, eb, sh, Items.on`) y las posiciones, y lleva a todos a la **arena** (`World.arena`: plataforma de 15×11 baldosas centrada en (0,0), grilla amarilla y cubos verdes de alambre con paralaje, estilo MT Infinity). Ahí solo está el jefe (`Bosses.spawn`, arriba). Al caer: sus recompensas (gemas con imán, ítems, chips), un nivel obligatorio (`xp = need`) y cuenta de 5 a 0 (`Gate.cd`); `Gate.exit` devuelve todo y a cada uno a donde estaba. Online: `gt` en el sync (`Gate.sync/apply`). En la arena no aparecen enemigos comunes (salvo los que invoca el jefe).
 - Cada `every` (150 s; con `?test`, `testEvery` = 25 s) aparece el siguiente. Su vida escala con la etapa del jugador más evolucionado (×0,5 en Bebé … ×1,75 en forma final). Orden: DarkTyrannomon → Etemon → Megadramon → WaruMonzaemon → MetalEtemon → Machinedramon; después repite más fuerte (`cyc`). Si hay uno vivo, espera.
 - Viven en `en` con `bo` (índice), `mh`, timers `pt/at/wd/ch`. `Bosses.act` mueve y ataca (solo host/local); al morir `Bosses.onDeath` (lluvia de XP, `Bosses.down`). Monedas extra en `endRun` (`Bosses.coins()`).
 - Sync: los jefes mandan `bo, cyc, hp, mh, at`; las balas `r`; y `bd` = `Bosses.down`. La barra `#bossbar` y los avisos salen de `Bosses.hud()` (host y cliente).
@@ -227,7 +229,7 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - Online, si tu jugador está caído al subir de nivel, se elige una carta de stat sola (no frena a los demás).
 - **Probar online sin dos personas**: dos pestañas del mismo origen conectadas con un `BroadcastChannel` que imita la conexión de PeerJS (`{open, send, on}`), y `setupConn` en las dos (host con `c.pi = 1`, `myIdx` 0/1, `party.c` con el Digimon del otro) + `Lobby.startOnline()` en el host.
 - Mensajes de partida: `hello, pick, ready, start, input, sync, trigger_levelup, trigger_line, trigger_evo, host_choice, client_choice, resume_game, end`.
-- Índice propio `myIdx` (anfitrión 0, invitado 1); `rk[i]` teclas de cada remoto; `picked` = quién ya eligió carta/rama (se espera a todos: `allPicked`); `sendAll` manda a todas las conexiones (`conns()`, hoy una). Las elecciones llevan `i` y el anfitrión las reenvía a los demás. Controles locales: `inputOf(q)` (J1 WASD, J2 flechas, J3/J4 joysticks).
+- Índice propio `myIdx` (anfitrión 0, invitado 1); `rk[i]` teclas de cada remoto; `picked` = quién ya eligió carta/rama (se espera a todos: `allPicked`); `sendAll` manda a todas las conexiones (`conns()`, hoy una). Las elecciones llevan `i` y el anfitrión las reenvía a los demás. Controles locales: `inputOf(q)` (J1 WASD, J2 flechas, J3/J4 joysticks). **Cámara online**: cada uno sigue a su jugador (`camFollow`; caído: a un compañero vivo); solo en local los jugadores quedan atados a la pantalla compartida. Los enemigos aparecen alrededor de un jugador vivo al azar (`World.spawnCenter`). `drawPointers` dibuja flechas en el borde hacia compañeros fuera de pantalla (color, nick con `pname`, distancia en metros = px/40, ✝ si están caídos) y hacia el Digital Gate.
 - Limitaciones conocidas: el cliente no ve partículas ni números de daño (no se sincronizan `pt`/`fx`), no hay interpolación, y mandar el estado completo cada frame es pesado.
 
 ## Cosas a tener en cuenta al cambiar código
