@@ -479,3 +479,6 @@ body:not(.ingame) #bossbar{display:none!important}
 #news .nv b{font:700 17px 'Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#f2fbff}
 #news .nv b small{margin-left:6px;padding:1px 6px;font-size:10px;color:#05101e;background:var(--or);border-radius:3px}
 #news .nv ul{margin:8px 0 0;padding-left:20px;font-size:14px;line-height:1.45;color:#cfe6f5}
+
+/* final con Yggdrasill (finale.js): sin el HUD de abajo durante la escena */
+body.finale #skbar,body.finale #leg,body.finale #pst,body.finale #xp,body.finale #evt{display:none!important}

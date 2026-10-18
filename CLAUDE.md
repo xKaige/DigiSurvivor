@@ -44,6 +44,7 @@ src/scripts/challenge.js        # Challenge: desafío diario (reglas del día, r
 src/scripts/news.js             # News: botón "v0.x · Novedades" en la esquina del menú (lee changelog.json)
 src/scripts/map.js              # World: mapa del Digimundo con relieve (fondo en espejo, paredes, mapa de distancias)
 src/scripts/gate.js             # Gate: Digital Gate (fisura en el mapa) y arena del jefe estilo MT Infinity (antes que game.js)
+src/scripts/finale.js           # Finale: final de la partida a los 30 min (con ?finale, al minuto): Yggdrasill baja y la termina
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
 src/data/skills.json            # catálogo de skills, elementos, maxLevel/maxLevelFinal, maxActive, fx y fxSprites
 src/data/missions.json          # catálogo de misiones diarias (tipos, metas, recompensas)
@@ -66,7 +67,7 @@ assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de 
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `finale.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 
@@ -148,6 +149,10 @@ Campos clave: `cid, el (atributo), hp/max, dmg, rate, sp, multi, pierce, mag, ar
 - Viven en `en` con `bo` (índice), `mh`, timers `pt/at/wd/ch`. `Bosses.act` mueve y ataca (solo host/local); al morir `Bosses.onDeath` (lluvia de XP, `Bosses.down`). Monedas extra en `endRun` (`Bosses.coins()`).
 - Sync: los jefes mandan `bo, cyc, hp, mh, at`; las balas `r`; y `bd` = `Bosses.down`. La barra `#bossbar` y los avisos salen de `Bosses.hud()` (host y cliente).
 - Balance: con `FAST = false` el bot de prueba todavía no mataba jefes (llega al primero en Novato/Campeón); conviene probar jugando y ajustar `hp` en bosses.json o la escala por etapa en `Bosses.spawn`. Los jefes también chocan con las paredes del mapa y aparecen en lugares conectados.
+
+### Final con Yggdrasill (`finale.js`)
+- A los `FINALE_T` segundos (1800; con `?finale` en la URL, 60 para probar) y fuera de la arena y de las cartas: todos los jugadores van al mismo punto y quedan quietos, desaparecen enemigos/balas/disparos, la pantalla parpadea (0–3 s), Yggdrasill baja al medio (3–7 s), un haz de luz cae sobre los jugadores (7–9 s), todo blanco y `endRun('Yggdrasill reinició el Digimundo')` a los 10 s. Mientras dura, `update` no simula nada más (`Finale.tick`) y se esconde el HUD de abajo (`body.finale`). Online: `fn` en el sync.
+- **No hay sprite de Yggdrasill** en ninguna fuente (repo, packs del Workshop, Digital Tamers): se dibuja un árbol del mundo de luz por código. Si aparece una imagen, ponerla en `assets/sprites/bosses/yggdrasill.png` y se usa sola.
 
 ### Evolución oscura y X-Antibody
 - Si al elegir la forma final no cumplís NINGÚN requisito, la única carta es la **evolución oscura** (`q.dark`): +7 daño, +1 proyectil, +8% velocidad, pero pierde 0,4% de la vida máxima por segundo hasta quedar al 35% (antes bajaba hasta 1 y cualquier golpe te mataba). Reemplaza al viejo modo "inestable" (`weak` quedó en el código pero ya no se usa).

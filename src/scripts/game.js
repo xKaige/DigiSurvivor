@@ -405,6 +405,7 @@ function applyOnlineSync(data) {
   if (data.bd) Bosses.down = data.bd;
   if (data.it) Items.on = data.it;
   if (data.gt) Gate.apply(data.gt);
+  if ('fn' in data) Finale.apply(data.fn);
   if (data.fx) for (const f of data.fx) if (fx.length < MAX_FX) fx.push(f);
 }
 
@@ -435,7 +436,7 @@ async function start(m,ids,los){
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Items.reset();Enemies.newRun();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
   renderLegend();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -663,7 +664,7 @@ $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
  if(isOnline&&isHost&&conn){try{conn.send({type:'end',title:title})}catch(e){}}
- running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();Gate.reset();
+ running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();Gate.reset();Finale.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
  const bc=Math.round(Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
@@ -1030,6 +1031,7 @@ function update(dt){
        ef: ef.map(o => ({ k: o.k, x: r(o.x), y: r(o.y), R: o.R && r(o.R), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx })),
        it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })),
        gt: Gate.sync(),
+       fn: Finale.sync(),
        // números de daño y textos nuevos desde el sync anterior (antes el invitado no los veía)
        fx: fx.filter(f => !f.s).slice(-40).map(f => { f.s = 1; return { x: r(f.x), y: r(f.y), txt: f.txt, col: f.col, sz: f.sz, l: r2(f.l) }; }),
        t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down
@@ -1037,8 +1039,11 @@ function update(dt){
    }
  }
 
+ // final con Yggdrasill (finale.js): mientras dura, los jugadores quedan quietos y no corre el resto de la simulación
+ if(!isOnline||isHost){if(Finale.tick(dt)){for(const o of pt){o.x+=o.vx*dt;o.y+=o.vy*dt;o.l-=dt}pt=pt.filter(o=>o.l>0);for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);hudBars();return}}
+ else Finale.clientTick(dt);
  for(const q of P){
-  if(q.dead)continue;
+  if(q.dead||Finale.on)continue;
   const [dx,dy]=inputOf(q);
   q.moving = !!(dx || dy);
   if(dx||dy){const l=Math.hypot(dx,dy),v=Stats.speedOf(q);World.move(q,dx/l*v*dt,dy/l*v*dt);if(dx)q.face=dx}   // choca con las paredes (map.js)
@@ -1136,7 +1141,7 @@ function draw(){
    cx.strokeStyle='#ffd23f';cx.lineWidth=3;for(let i=0;i<3;i++){const r=(e0*1.2+i/3)%1;cx.globalAlpha=1-r;cx.beginPath();cx.arc(q.x,q.y,10+r*110,0,6.283);cx.stroke()}cx.globalAlpha=1}}
  cx.textAlign='center';cx.lineJoin='round';for(const f of fx){cx.globalAlpha=Math.min(1,f.l*2);cx.font='bold '+f.sz+'px Chakra Petch,system-ui,sans-serif';cx.lineWidth=4;cx.strokeStyle='#000';cx.strokeText(f.txt,f.x,f.y);cx.fillStyle=f.col;cx.fillText(f.txt,f.x,f.y)}cx.globalAlpha=1;
  cx.restore();
- if(running){drawPointers();Gate.drawOverlay()}
+ if(running){if(!Finale.on)drawPointers();Gate.drawOverlay();Finale.draw()}
 }
 // Flechas en el borde de la pantalla hacia lo que no se ve: compañeros (nombre y distancia en metros; ✝ si están caídos)
 // y el Digital Gate. 1 metro = 40 px.
