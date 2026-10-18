@@ -57,7 +57,7 @@ const Finale = {
     // 3–7 s: Yggdrasill baja desde arriba hasta el medio
     if (k >= 2.6) {
       const p = Math.min(1, (k - 2.6) / 4), e = 1 - Math.pow(1 - p, 3);
-      const size = Math.min(W, H) * 0.62, cy = -size * 0.6 + (H * 0.36 + size * 0.6) * e;
+      const size = Math.min(W, H) * 0.62, cy = -size * 0.6 + (H * 0.42 + size * 0.6) * e;
       this.drawYgg(W / 2, cy, size, k);
       // 7–9,5 s: haz de luz hacia los jugadores
       if (k >= 7) {
@@ -80,7 +80,14 @@ const Finale = {
   },
   // Yggdrasill: sprite si hay; si no, un árbol del mundo de luz (tronco, ramas tipo circuito y núcleo)
   drawYgg(x, y, s, k) {
-    if (this.img) { const h = s, w = this.img.naturalWidth / this.img.naturalHeight * h; cx.drawImage(this.img, x - w / 2, y - h / 2, w, h); return; }
+    if (this.img) {   // sprite (modelo de Digimon New Century pasado a pixel art): con un halo de luz detrás que late
+      const h = s * 1.15, w = this.img.naturalWidth / this.img.naturalHeight * h;
+      const g = cx.createRadialGradient(x, y - h * 0.15, 0, x, y - h * 0.15, h * 0.6), a = 0.35 + 0.1 * Math.sin(k * 2);
+      g.addColorStop(0, 'rgba(255,240,190,' + a + ')'); g.addColorStop(1, 'rgba(255,240,190,0)');
+      cx.fillStyle = g; cx.beginPath(); cx.arc(x, y - h * 0.15, h * 0.6, 0, 6.283); cx.fill();
+      cx.imageSmoothingEnabled = false; cx.drawImage(this.img, x - w / 2, y - h / 2, w, h);
+      return;
+    }
     cx.save(); cx.translate(x, y);
     const glow = (r, a, col) => { const g = cx.createRadialGradient(0, 0, 0, 0, 0, r); g.addColorStop(0, col.replace('A', a)); g.addColorStop(1, col.replace('A', 0)); cx.fillStyle = g; cx.beginPath(); cx.arc(0, 0, r, 0, 6.283); cx.fill(); };
     glow(s * 0.75, 0.35, 'rgba(255,240,180,A)');
