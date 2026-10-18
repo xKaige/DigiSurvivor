@@ -78,6 +78,9 @@ let peer = null, myPeerId = null, conn = null, isHost = false, isOnline = false;
 // myIdx: índice de MI jugador en P (online: el anfitrión es 0). rk: teclas de cada jugador remoto (índice -> teclas).
 // picked: jugadores que ya eligieron carta / rama en esta ronda (online se espera a todos).
 let myIdx = 0, rk = {}, picked = new Set();
+// sync: el anfitrión manda el estado SYNC_HZ veces por segundo (antes, en cada cuadro); enId numera a los enemigos
+const SYNC_HZ = 20;
+let syncT = 0, enId = 0, inSig = '', inT = 0;
 // conexiones de juego abiertas (hoy una sola; con más invitados, el anfitrión tendría una por jugador)
 const conns = () => [conn].filter(Boolean);
 const sendAll = (m, except) => conns().forEach(c => { if (c !== except) sendTo(c, m); });
@@ -186,7 +189,7 @@ window.Lobby = {
     sendTo(inv.c, { type: 'accept' });
     setTimeout(() => { try { inv.c.close(); } catch (e) {} }, 500);
     while (inbox.length) sendTo(inbox.pop().c, { type: 'decline', busy: 1 });   // las demás invitaciones se rechazan
-    const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick } });
+    const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick }, serialization: 'json' });
     conn = c; isHost = false; isOnline = false; myIdx = 1;
     party = { uid: inv.uid, nick: inv.nick, c: null };
     setupConn(c);
@@ -301,19 +304,35 @@ function applyCardOp(targetP, data) {
 }
 
 // Invitado: responde con su Digimon y arranca
+function onlineSmooth(dt) {
+  const k = Math.min(1, dt * 12);
+  for (const q of P) { if (q.tx == null || q.dead) continue;
+    // el propio se mueve con el teclado acá mismo: solo se corrige si se fue lejos de donde lo tiene el anfitrión
+    const f = q.id === myIdx ? (Math.hypot(q.tx - q.x, q.ty - q.y) > 70 ? Math.min(1, dt * 6) : Math.min(1, dt * 1.5)) : k;
+    q.x += (q.tx - q.x) * f; q.y += (q.ty - q.y) * f; }
+  for (const e of en) if (e.tx != null) { e.x += (e.tx - e.x) * k; e.y += (e.ty - e.y) * k; }
+  for (const o of sh) if (o.vx != null) { o.x += o.vx * dt; o.y += o.vy * dt; }   // disparos y balas siguen solos entre un sync y otro
+  for (const b of eb) if (b.vx != null) { b.x += b.vx * dt; b.y += b.vy * dt; }
+}
 function joinOnline(c0) {
   const id = selected || '001_guilmon';
   if (conn) sendTo(conn, { type: 'ready', c1: id, lo: Trees.loadout(id) });
   start(2, [validId(c0) || '001_guilmon', id], [null, Trees.loadout(id)]).catch(e => console.error(e));
 }
 
+// Cliente: el anfitrión manda el estado SYNC_HZ veces por segundo. Las posiciones no se pisan de golpe: se guardan como
+// destino (tx, ty) y onlineSmooth las va acercando en cada cuadro (si algo saltó muy lejos, se pone directo).
 function applyOnlineSync(data) {
   if (isHost) return;
   t = data.t; kills = data.kills; lvl = data.lvl; need = data.need; xp = data.xp;
   if (data.P && P.length === data.P.length) {
-    data.P.forEach((sq, i) => { if (P[i]) Object.assign(P[i], sq); });
+    data.P.forEach((sq, i) => { const q = P[i]; if (!q) return;
+      const { x, y, ...rest } = sq; Object.assign(q, rest); q.tx = x; q.ty = y;
+      if (!q.synced || Math.hypot(x - q.x, y - q.y) > 250) { q.x = x; q.y = y; q.synced = 1; } });
   }
-  if (data.en) en = data.en;
+  if (data.en) { const old = new Map(en.map(e => [e.id, e]));
+    en = data.en.map(se => { const o = old.get(se.id); se.tx = se.x; se.ty = se.y;
+      if (o && Math.hypot(o.x - se.x, o.y - se.y) < 200) { se.x = o.x; se.y = o.y; } return se; }); }
   if (data.gems) gems = data.gems;
   if (data.sh) sh = data.sh;
   if (data.eb) eb = data.eb;
@@ -352,7 +371,7 @@ async function start(m,ids,los){
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Items.reset();Enemies.newRun();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
-  renderLegend();if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
+  renderLegend();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
 }
 
 // ---------- Selección de criatura ----------
@@ -822,6 +841,9 @@ function showCards(keep){
   // Re-sortear (árbol de Tamer): cambia las cartas que salieron, unas pocas veces por partida
   if(p.rr>0){const r=document.createElement('button');r.className='card lv stat reroll';r.innerHTML='<span class="kt">Re-sortear</span><b>Otras cartas</b><span class="kd">Te quedan '+p.rr+'</span>';
    r.onclick=()=>{if(performance.now()-cardsAt<400||!(p.rr>0))return;p.rr--;showCards()};c.appendChild(r)}
+  // online: si tu jugador está caído, se elige una carta de stat sola (así no frena a los demás)
+  if(isOnline&&p.dead&&!keep){const me=p;$('up').querySelector('p').textContent='Estás caído: se elige una carta sola';
+   setTimeout(()=>{if(pending[0]===me&&cardMode==='cards'){cardsAt=0;choose(cur.find(u=>u.c)||cur[0])}},900)}
   showUp();
 }
 // Con las 4 skills ocupadas: elegir cuál olvidar para aprender la nueva (u). "Volver" regresa a las cartas.
@@ -916,19 +938,24 @@ function update(dt){
  t+=dt;SkillSys.renderBar(P);
  if (isOnline) {
    if (!isHost && conn) {
-     conn.send({ type: 'input', keys: { w: keys.w, a: keys.a, s: keys.s, d: keys.d, arrowup: keys.arrowup, arrowleft: keys.arrowleft, arrowdown: keys.arrowdown, arrowright: keys.arrowright } });
-   } else if (isHost && conn) {
-     conn.send({
+     // teclas: solo cuando cambian (y cada 0,25 s por las dudas)
+     const ks = { w: keys.w, a: keys.a, s: keys.s, d: keys.d, arrowup: keys.arrowup, arrowleft: keys.arrowleft, arrowdown: keys.arrowdown, arrowright: keys.arrowright }, sg = JSON.stringify(ks);
+     if (sg !== inSig || t - inT > 0.25) { conn.send({ type: 'input', keys: ks }); inSig = sg; inT = t; }
+   } else if (isHost && conns().length && (syncT -= dt) <= 0) {
+     syncT = 1 / SYNC_HZ;
+     const r = v => Math.round(v), r2 = v => Math.round(v * 100) / 100;
+     sendAll({
        type: 'sync',
-       P: P.map(q => ({ x: q.x, y: q.y, hp: q.hp, max: q.max, stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP, dark: q.dark, xa: q.xa, vp: q.vp, spv: q.spv, emp: q.emp, fam: q.fam, perfect: q.perfect })),
-       en: en.map(e => e.bo != null ? { x: e.x, y: e.y, r: e.r, k: e.k, ti: 0, el: e.el, fl: e.fl, ang: e.ang, bo: e.bo, cyc: e.cyc, hp: e.hp, mh: e.mh, at: e.at }
-         : { x: e.x, y: e.y, r: e.r, k: e.k, ti: e.ti, sk: e.sk, et: e.et, st: e.st, el: e.el, fl: e.fl, ang: e.ang, gun: e.gun }),
-       gems: gems.map(g => ({ x: g.x, y: g.y, v: g.v })),
-       sh: sh.map(s => s.fx ? { x: s.x, y: s.y, c: s.c, r: s.r, fx: s.fx, sz: s.sz, a: Math.atan2(s.vy, s.vx) } : { x: s.x, y: s.y, c: s.c, r: s.r }),
-       eb: eb.map(b => ({ x: b.x, y: b.y, el: b.el, r: b.r })),
-       ef: ef.map(o => ({ k: o.k, x: o.x, y: o.y, R: o.R, l: o.l, m: o.m, a: o.a, Lg: o.Lg, s: o.s, w: o.w, col: o.col, fx: o.fx })),
-       it: Items.on.map(i => ({ x: i.x, y: i.y, k: i.k, l: i.l })),
-       t, kills, lvl, need, xp, bd: Bosses.down
+       P: P.map(q => ({ x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: q.wt, wc: q.wc, oa: q.oa, revP: q.revP, dark: q.dark, xa: q.xa, vp: q.vp, spv: q.spv, emp: q.emp, fam: q.fam, perfect: q.perfect })),
+       en: en.map(e => { if (!e.id) e.id = ++enId;   // id para que el cliente pueda deslizar a cada uno
+         return e.bo != null ? { id: e.id, x: r(e.x), y: r(e.y), r: r2(e.r), k: e.k, ti: 0, el: e.el, fl: r2(e.fl), ang: r2(e.ang), bo: e.bo, cyc: e.cyc, hp: r(e.hp), mh: r(e.mh), at: r2(e.at) }
+         : { id: e.id, x: r(e.x), y: r(e.y), r: r2(e.r), k: e.k, ti: e.ti, sk: e.sk, et: e.et, st: e.st, el: e.el, fl: r2(e.fl), ang: r2(e.ang), gun: e.gun }; }),
+       gems: gems.map(g => ({ x: r(g.x), y: r(g.y), v: r2(g.v) })),
+       sh: sh.map(s => s.fx ? { x: r(s.x), y: r(s.y), vx: r(s.vx), vy: r(s.vy), c: s.c, r: r2(s.r), fx: s.fx, sz: r(s.sz), a: r2(Math.atan2(s.vy, s.vx)) } : { x: r(s.x), y: r(s.y), vx: r(s.vx), vy: r(s.vy), c: s.c, r: r2(s.r) }),
+       eb: eb.map(b => ({ x: r(b.x), y: r(b.y), vx: r(b.vx), vy: r(b.vy), el: b.el, r: b.r })),
+       ef: ef.map(o => ({ k: o.k, x: r(o.x), y: r(o.y), R: o.R && r(o.R), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx })),
+       it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })),
+       t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down
      });
    }
  }
@@ -950,6 +977,7 @@ function update(dt){
  }
 
  if (isOnline && !isHost) {
+   onlineSmooth(dt);
    hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
    return;
  }
@@ -995,12 +1023,10 @@ function update(dt){
  $('pst').textContent=P.map(q=>(mode>1?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
 }
 
+// la cámara sigue al promedio de los jugadores vivos
+function camFollow(){const al=P.filter(q=>!q.dead);if(al.length){cam.x=al.reduce((a,q)=>a+q.x,0)/al.length;cam.y=al.reduce((a,q)=>a+q.y,0)/al.length}}
 function draw(){
- const al=P.filter(q=>!q.dead);
- if(al.length){
-   cam.x=al.reduce((a,q)=>a+q.x,0)/al.length;
-   cam.y=al.reduce((a,q)=>a+q.y,0)/al.length;
- }
+ camFollow();
 
  cx.fillStyle='#050b1a';cx.fillRect(0,0,W,H);
  const ox=W/2-cam.x,oy=H/2-cam.y;
@@ -1049,10 +1075,17 @@ function dPl(q){const s=q.stage|0,hh=96;
 
 // Loop principal. Si algo tira un error, se registra en la consola y el juego SIGUE (antes se congelaba para siempre).
 let loopErrs=0;
-function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;
+function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;rafAt=performance.now();
  try{if(evo)stepEvo(dt);else if(!paused)update(dt)}catch(e){if(loopErrs++<20)console.error('Error en la simulación:',e)}
  try{draw()}catch(e){if(loopErrs++<20)console.error('Error al dibujar:',e)}
  if(running)requestAnimationFrame(loop)}
+// Anfitrión online con la ventana oculta o minimizada: el navegador frena requestAnimationFrame (y los setInterval de la página)
+// y la partida se congelaría para los demás. Un Worker, que el navegador no frena, da el ritmo y la simulación sigue sin dibujar.
+// Se activa cuando el loop normal no corrió en los últimos 250 ms (no siempre avisa document.hidden).
+let bgW=null,rafAt=0;
+function bgTick(){if(!running||!isOnline||!isHost||performance.now()-rafAt<250)return;const n=performance.now(),dt=Math.min(.05,(n-last)/1000);last=n;camFollow();
+ try{if(evo)stepEvo(dt);else if(!paused)update(dt)}catch(e){if(loopErrs++<20)console.error('Error en la simulación:',e)}}
+function bgStart(){if(bgW)return;try{bgW=new Worker(URL.createObjectURL(new Blob(['setInterval(()=>postMessage(0),33)'],{type:'text/javascript'})));bgW.onmessage=bgTick}catch(e){console.error('Sin Worker para el segundo plano:',e)}}
 P=[np(0,'001_guilmon')];p=P[0];
 if($('party-panel'))$('party-panel').style.display='none';   // reemplazado por la ventana Amigos / Party (social.js)
 buildMenuSel();
