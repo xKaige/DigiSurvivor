@@ -11,6 +11,7 @@ const Bosses = {
   data: null,
   spr: {},          // id -> { canvas, cols, rows }
   n: 0,             // jefes que aparecieron en esta partida
+  recent: [],       // últimos jefes sorteados (pick no los repite)
   next: 0,          // segundo de partida en que aparece el próximo
   down: [],         // ids de jefes derrotados en esta partida (se manda en el sync como `bd`)
   shown: null,      // jefe que muestra la barra (para avisar cuando aparece o cae, también en el cliente)
@@ -28,7 +29,7 @@ const Bosses = {
         this.spr[b.id] = { canvas: cv, cols: 2, rows: 6 }; res();
       };
       img.onerror = () => { console.error('No se pudo cargar el jefe:', b.file); res(); };
-      img.src = 'assets/sprites/bosses/' + b.file;
+      img.src = 'assets/sprites/' + (b.file.includes('/') ? b.file : 'bosses/' + b.file);   // 'enemies/x.png': hoja de un enemigo del Workshop
     })));
   },
 
@@ -38,7 +39,7 @@ const Bosses = {
   every() { return this.data ? (TEST ? this.data.testEvery : typeof Challenge !== 'undefined' && Challenge.has('boss60') ? 60 : this.data.every) : 1e9; },
 
   // al empezar cada partida
-  reset() { this.n = 0; this.down = []; this.shown = this.shownName = null; this.next = this.every(); this.hideBar(); },
+  reset() { this.n = 0; this.recent = []; this.down = []; this.shown = this.shownName = null; this.next = this.every(); this.hideBar(); },
 
   // monedas extra por los jefes derrotados en la partida
   coins() { return this.down.reduce((a, id) => { const b = this.data && this.data.list.find(x => x.id === id); return a + (b ? b.coins : 0); }, 0); },
@@ -48,8 +49,16 @@ const Bosses = {
     if (!this.data || t < this.next || en.some(e => e.bo != null)) return;
     this.spawn(); this.next = t + this.every();
   },
+  // sorteo del próximo jefe: rango 1 desde el primero, 2 desde el segundo, 3 desde el cuarto (y desde el séptimo ya no salen
+  // los de rango 1); nunca repite uno de los últimos 4
+  pick() {
+    const L = this.data.list, n = this.n, hi = n < 1 ? 1 : n < 3 ? 2 : 3, lo = n >= 6 ? 2 : 1, rk = i => L[i].rank || 1;
+    let c = L.map((_, i) => i).filter(i => rk(i) <= hi && rk(i) >= lo && !this.recent.includes(i));
+    if (!c.length) c = L.map((_, i) => i).filter(i => rk(i) <= hi);
+    const i = c[Math.random() * c.length | 0]; this.recent = [i, ...this.recent].slice(0, 4); return i;
+  },
   spawn() {
-    const L = this.data.list, i = this.n % L.length, cyc = Math.floor(this.n / L.length), B = L[i];
+    const L = this.data.list, i = this.pick(), cyc = Math.floor(this.n / 6), B = L[i];   // cyc: cada 6 jefes, más fuertes
     this.n++;
     const a = Math.random() * 6.283, d = Math.hypot(W, H) / 2 + 60;
     // la vida escala con la etapa del más evolucionado (0,5× en Bebé … 1,75× en forma final), el ciclo y la cantidad de jugadores

@@ -1,31 +1,765 @@
 {
-  "every": 150,
-  "testEvery": 25,
-  "source": "Sprites: Steam Workshop de Stream Avatars, packs 3209711219, 3215570196 y 2925058878",
-  "attackKinds": {
-    "ring": "c balas en círculo",
-    "fan": "c balas en abanico hacia el jugador más cercano",
-    "charge": "embiste hacia el jugador durante 'dur' segundos",
-    "summon": "invoca c virus alrededor"
+ "every": 150,
+ "testEvery": 25,
+ "source": "Sprites: Steam Workshop de Stream Avatars, packs 3209711219, 3215570196 y 2925058878",
+ "attackKinds": {
+  "ring": "c balas en círculo",
+  "fan": "c balas en abanico hacia el jugador más cercano",
+  "charge": "embiste hacia el jugador durante 'dur' segundos",
+  "summon": "invoca c virus alrededor"
+ },
+ "list": [
+  {
+   "id": "darktyrannomon",
+   "name": "DarkTyrannomon",
+   "level": "Campeón",
+   "attribute": "Virus",
+   "file": "darktyrannomon.png",
+   "hp": 260,
+   "r": 30,
+   "sp": 55,
+   "dm": 1.4,
+   "coins": 15,
+   "desc": "Un Tyrannomon corrompido por un virus. Escupe fuego sin control.",
+   "atk": [
+    {
+     "n": "Fire Blast",
+     "k": "fan",
+     "c": 5
+    },
+    {
+     "n": "Rampage",
+     "k": "charge",
+     "dur": 1.1
+    }
+   ],
+   "rank": 1
   },
-  "list": [
-    { "id": "darktyrannomon", "name": "DarkTyrannomon", "level": "Campeón",  "attribute": "Virus", "file": "darktyrannomon.png", "hp": 260,  "r": 30, "sp": 55, "dm": 1.4, "coins": 15,
-      "desc": "Un Tyrannomon corrompido por un virus. Escupe fuego sin control.",
-      "atk": [ { "n": "Fire Blast", "k": "fan", "c": 5 }, { "n": "Rampage", "k": "charge", "dur": 1.1 } ] },
-    { "id": "etemon", "name": "Etemon", "level": "Perfecto", "attribute": "Virus", "file": "etemon.png", "hp": 520,  "r": 30, "sp": 60, "dm": 1.7, "coins": 25,
-      "desc": "El autoproclamado rey del Digimundo. Sus conciertos son un arma.",
-      "atk": [ { "n": "Dark Spirits", "k": "ring", "c": 14 }, { "n": "Love Serenade", "k": "ring", "c": 22, "sp": 150 }, { "n": "Concert Crush", "k": "summon", "c": 6 } ] },
-    { "id": "megadramon", "name": "Megadramon", "level": "Perfecto", "attribute": "Virus", "file": "megadramon.png", "hp": 800,  "r": 32, "sp": 70, "dm": 2, "coins": 30,
-      "desc": "Dragón cibernético al servicio de Machinedramon. Dispara misiles orgánicos.",
-      "atk": [ { "n": "Genocide Attack", "k": "fan", "c": 7, "spread": 0.18 }, { "n": "Ultimate Slicer", "k": "charge", "dur": 1.2 } ] },
-    { "id": "warumonzaemon", "name": "WaruMonzaemon", "level": "Perfecto", "attribute": "Virus", "file": "warumonzaemon.png", "hp": 1100, "r": 32, "sp": 65, "dm": 2.3, "coins": 35,
-      "desc": "Un Monzaemon de corazón negro. Sus abrazos rompen corazones.",
-      "atk": [ { "n": "Heartbreak Attack", "k": "fan", "c": 9, "spread": 0.22 }, { "n": "Bear Claw", "k": "charge", "dur": 1 }, { "n": "Toy Army", "k": "summon", "c": 8 } ] },
-    { "id": "metaletemon", "name": "MetalEtemon", "level": "Mega", "attribute": "Dato", "file": "metaletemon.png", "hp": 1600, "r": 34, "sp": 70, "dm": 2.7, "coins": 45,
-      "desc": "Etemon volvió con un cuerpo de Chrome Digizoid. Más fuerte y más ruidoso.",
-      "atk": [ { "n": "Dark Spirits DX", "k": "ring", "c": 26 }, { "n": "Banana Slip", "k": "charge", "dur": 1.3 }, { "n": "Dark Spirits DX", "k": "fan", "c": 9 } ] },
-    { "id": "machinedramon", "name": "Machinedramon", "level": "Mega", "attribute": "Virus", "file": "machinedramon.png", "hp": 2400, "r": 38, "sp": 50, "dm": 3.2, "coins": 70,
-      "desc": "Uno de los Dark Masters. Su Giga Cannon arrasa con todo.",
-      "atk": [ { "n": "Giga Cannon", "k": "fan", "c": 11, "spread": 0.1, "sp": 380 }, { "n": "Infinity Cannon", "k": "ring", "c": 32 }, { "n": "Dark Masters", "k": "summon", "c": 10 } ] }
-  ]
+  {
+   "id": "etemon",
+   "name": "Etemon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "file": "etemon.png",
+   "hp": 520,
+   "r": 30,
+   "sp": 60,
+   "dm": 1.7,
+   "coins": 25,
+   "desc": "El autoproclamado rey del Digimundo. Sus conciertos son un arma.",
+   "atk": [
+    {
+     "n": "Dark Spirits",
+     "k": "ring",
+     "c": 14
+    },
+    {
+     "n": "Love Serenade",
+     "k": "ring",
+     "c": 22,
+     "sp": 150
+    },
+    {
+     "n": "Concert Crush",
+     "k": "summon",
+     "c": 6
+    }
+   ],
+   "rank": 1
+  },
+  {
+   "id": "megadramon",
+   "name": "Megadramon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "file": "megadramon.png",
+   "hp": 800,
+   "r": 32,
+   "sp": 70,
+   "dm": 2,
+   "coins": 30,
+   "desc": "Dragón cibernético al servicio de Machinedramon. Dispara misiles orgánicos.",
+   "atk": [
+    {
+     "n": "Genocide Attack",
+     "k": "fan",
+     "c": 7,
+     "spread": 0.18
+    },
+    {
+     "n": "Ultimate Slicer",
+     "k": "charge",
+     "dur": 1.2
+    }
+   ],
+   "rank": 2
+  },
+  {
+   "id": "warumonzaemon",
+   "name": "WaruMonzaemon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "file": "warumonzaemon.png",
+   "hp": 1100,
+   "r": 32,
+   "sp": 65,
+   "dm": 2.3,
+   "coins": 35,
+   "desc": "Un Monzaemon de corazón negro. Sus abrazos rompen corazones.",
+   "atk": [
+    {
+     "n": "Heartbreak Attack",
+     "k": "fan",
+     "c": 9,
+     "spread": 0.22
+    },
+    {
+     "n": "Bear Claw",
+     "k": "charge",
+     "dur": 1
+    },
+    {
+     "n": "Toy Army",
+     "k": "summon",
+     "c": 8
+    }
+   ],
+   "rank": 2
+  },
+  {
+   "id": "metaletemon",
+   "name": "MetalEtemon",
+   "level": "Mega",
+   "attribute": "Dato",
+   "file": "metaletemon.png",
+   "hp": 1600,
+   "r": 34,
+   "sp": 70,
+   "dm": 2.7,
+   "coins": 45,
+   "desc": "Etemon volvió con un cuerpo de Chrome Digizoid. Más fuerte y más ruidoso.",
+   "atk": [
+    {
+     "n": "Dark Spirits DX",
+     "k": "ring",
+     "c": 26
+    },
+    {
+     "n": "Banana Slip",
+     "k": "charge",
+     "dur": 1.3
+    },
+    {
+     "n": "Dark Spirits DX",
+     "k": "fan",
+     "c": 9
+    }
+   ],
+   "rank": 3
+  },
+  {
+   "id": "machinedramon",
+   "name": "Machinedramon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "file": "machinedramon.png",
+   "hp": 2400,
+   "r": 38,
+   "sp": 50,
+   "dm": 3.2,
+   "coins": 70,
+   "desc": "Uno de los Dark Masters. Su Giga Cannon arrasa con todo.",
+   "atk": [
+    {
+     "n": "Giga Cannon",
+     "k": "fan",
+     "c": 11,
+     "spread": 0.1,
+     "sp": 380
+    },
+    {
+     "n": "Infinity Cannon",
+     "k": "ring",
+     "c": 32
+    },
+    {
+     "n": "Dark Masters",
+     "k": "summon",
+     "c": 10
+    }
+   ],
+   "rank": 3
+  },
+  {
+   "id": "vamdemon",
+   "name": "Vamdemon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "rank": 1,
+   "file": "enemies/vamdemon.png",
+   "hp": 480,
+   "r": 30,
+   "sp": 62,
+   "dm": 1.6,
+   "coins": 22,
+   "desc": "El señor de la noche. Manda murciélagos a chupar los datos de sus presas.",
+   "atk": [
+    {
+     "n": "Night Raid",
+     "k": "fan",
+     "c": 7,
+     "spread": 0.2
+    },
+    {
+     "n": "Bloody Stream",
+     "k": "charge",
+     "dur": 1.0
+    },
+    {
+     "n": "Night Raid",
+     "k": "summon",
+     "c": 6
+    }
+   ]
+  },
+  {
+   "id": "skullsatamon",
+   "name": "SkullSatamon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "rank": 1,
+   "file": "enemies/skullsatamon.png",
+   "hp": 420,
+   "r": 30,
+   "sp": 60,
+   "dm": 1.6,
+   "coins": 20,
+   "desc": "Un esqueleto ángel caído que reparte golpes con su bastón.",
+   "atk": [
+    {
+     "n": "Nail Bone",
+     "k": "fan",
+     "c": 5
+    },
+    {
+     "n": "Skull Hammer",
+     "k": "charge",
+     "dur": 1.1
+    }
+   ]
+  },
+  {
+   "id": "archnemon",
+   "name": "Archnemon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "rank": 1,
+   "file": "enemies/archnemon.png",
+   "hp": 400,
+   "r": 30,
+   "sp": 66,
+   "dm": 1.5,
+   "coins": 20,
+   "desc": "Mitad mujer, mitad araña: teje redes de datos corruptos.",
+   "atk": [
+    {
+     "n": "Spider Thread",
+     "k": "ring",
+     "c": 12
+    },
+    {
+     "n": "Bad Hunting",
+     "k": "summon",
+     "c": 7
+    }
+   ]
+  },
+  {
+   "id": "mummymon",
+   "name": "Mummymon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "rank": 1,
+   "file": "enemies/mummymon.png",
+   "hp": 450,
+   "r": 30,
+   "sp": 58,
+   "dm": 1.6,
+   "coins": 20,
+   "desc": "Envuelto en vendas, dispara con su arma sin descanso.",
+   "atk": [
+    {
+     "n": "Necrophobia",
+     "k": "fan",
+     "c": 6,
+     "spread": 0.16
+    },
+    {
+     "n": "Snake Bandage",
+     "k": "charge",
+     "dur": 1.0
+    }
+   ]
+  },
+  {
+   "id": "neodevimon",
+   "name": "NeoDevimon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "rank": 1,
+   "file": "enemies/neodevimon.png",
+   "hp": 460,
+   "r": 30,
+   "sp": 68,
+   "dm": 1.6,
+   "coins": 21,
+   "desc": "Un Devimon reforzado con piezas mecánicas. Sus garras no perdonan.",
+   "atk": [
+    {
+     "n": "Guilty Claw",
+     "k": "charge",
+     "dur": 1.2
+    },
+    {
+     "n": "Despair Shot",
+     "k": "ring",
+     "c": 14
+    }
+   ]
+  },
+  {
+   "id": "mephismon",
+   "name": "Mephismon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "rank": 1,
+   "file": "enemies/mephismon.png",
+   "hp": 520,
+   "r": 32,
+   "sp": 56,
+   "dm": 1.7,
+   "coins": 22,
+   "desc": "Un demonio cabrío que lanza maldiciones en todas direcciones.",
+   "atk": [
+    {
+     "n": "Death Cloud",
+     "k": "ring",
+     "c": 18
+    },
+    {
+     "n": "Gnosis Shower",
+     "k": "fan",
+     "c": 7
+    }
+   ]
+  },
+  {
+   "id": "piemon",
+   "name": "Piemon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 2,
+   "file": "enemies/piemon.png",
+   "hp": 900,
+   "r": 32,
+   "sp": 70,
+   "dm": 2.0,
+   "coins": 32,
+   "desc": "El líder de los Dark Masters. Sus espadas aparecen de la nada.",
+   "atk": [
+    {
+     "n": "Trump Sword",
+     "k": "fan",
+     "c": 9,
+     "spread": 0.2
+    },
+    {
+     "n": "Clown Trick",
+     "k": "summon",
+     "c": 8
+    },
+    {
+     "n": "Ending Spiral",
+     "k": "ring",
+     "c": 20
+    }
+   ]
+  },
+  {
+   "id": "gigadramon",
+   "name": "Gigadramon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "rank": 2,
+   "file": "enemies/gigadramon.png",
+   "hp": 850,
+   "r": 32,
+   "sp": 72,
+   "dm": 2.0,
+   "coins": 30,
+   "desc": "Gemelo de Megadramon. Sus misiles buscan el blanco.",
+   "atk": [
+    {
+     "n": "Genocide Gear",
+     "k": "fan",
+     "c": 8,
+     "spread": 0.18
+    },
+    {
+     "n": "Giga Slicer",
+     "k": "charge",
+     "dur": 1.2
+    }
+   ]
+  },
+  {
+   "id": "deltamon",
+   "name": "Deltamon",
+   "level": "Perfecto",
+   "attribute": "Virus",
+   "rank": 2,
+   "file": "enemies/deltamon.png",
+   "hp": 800,
+   "r": 32,
+   "sp": 64,
+   "dm": 2.0,
+   "coins": 30,
+   "desc": "Tres cabezas, tres veces más problemas.",
+   "atk": [
+    {
+     "n": "Triplex Force",
+     "k": "fan",
+     "c": 9,
+     "spread": 0.25
+    },
+    {
+     "n": "Serpent Bite",
+     "k": "charge",
+     "dur": 1.0
+    }
+   ]
+  },
+  {
+   "id": "belphemonragemode",
+   "name": "Belphemon: Rage Mode",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 2,
+   "file": "enemies/belphemonragemode.png",
+   "hp": 1150,
+   "r": 34,
+   "sp": 72,
+   "dm": 2.3,
+   "coins": 36,
+   "desc": "El Demon Lord de la pereza, despierto y furioso.",
+   "atk": [
+    {
+     "n": "Lampranthus",
+     "k": "ring",
+     "c": 22
+    },
+    {
+     "n": "Gift of Darkness",
+     "k": "charge",
+     "dur": 1.3
+    },
+    {
+     "n": "Lampranthus",
+     "k": "fan",
+     "c": 8
+    }
+   ]
+  },
+  {
+   "id": "donedevimon",
+   "name": "DoneDevimon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 2,
+   "file": "enemies/donedevimon.png",
+   "hp": 1000,
+   "r": 32,
+   "sp": 70,
+   "dm": 2.1,
+   "coins": 33,
+   "desc": "Un Devimon que lo dio todo por el poder.",
+   "atk": [
+    {
+     "n": "Blast Death",
+     "k": "ring",
+     "c": 18
+    },
+    {
+     "n": "Death Claw",
+     "k": "charge",
+     "dur": 1.2
+    }
+   ]
+  },
+  {
+   "id": "lucemonfalldownmode",
+   "name": "Lucemon: Falldown Mode",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 2,
+   "file": "enemies/lucemonfalldownmode.png",
+   "hp": 1050,
+   "r": 32,
+   "sp": 66,
+   "dm": 2.2,
+   "coins": 34,
+   "desc": "El ángel caído mostró su verdadera cara.",
+   "atk": [
+    {
+     "n": "Dead or Alive",
+     "k": "ring",
+     "c": 24
+    },
+    {
+     "n": "Paradise Lost",
+     "k": "fan",
+     "c": 9,
+     "spread": 0.2
+    }
+   ]
+  },
+  {
+   "id": "kingetemon",
+   "name": "KingEtemon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 3,
+   "file": "enemies/kingetemon.png",
+   "hp": 1500,
+   "r": 34,
+   "sp": 62,
+   "dm": 2.6,
+   "coins": 42,
+   "desc": "Etemon se coronó rey. Su show nunca termina.",
+   "atk": [
+    {
+     "n": "Dark Spirits Z",
+     "k": "ring",
+     "c": 26
+    },
+    {
+     "n": "King Concert",
+     "k": "summon",
+     "c": 10
+    },
+    {
+     "n": "Royal Slip",
+     "k": "charge",
+     "dur": 1.3
+    }
+   ]
+  },
+  {
+   "id": "belialvamdemon",
+   "name": "BelialVamdemon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 3,
+   "file": "enemies/belialvamdemon.png",
+   "hp": 2000,
+   "r": 36,
+   "sp": 60,
+   "dm": 2.8,
+   "coins": 48,
+   "desc": "La forma más monstruosa de Vamdemon.",
+   "atk": [
+    {
+     "n": "Pandemonium Lost",
+     "k": "ring",
+     "c": 28
+    },
+    {
+     "n": "Pandemonium Fall",
+     "k": "fan",
+     "c": 10,
+     "spread": 0.22
+    },
+    {
+     "n": "Bat Swarm",
+     "k": "summon",
+     "c": 10
+    }
+   ]
+  },
+  {
+   "id": "neovamdemon",
+   "name": "NeoVamdemon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 3,
+   "file": "enemies/neovamdemon.png",
+   "hp": 1700,
+   "r": 34,
+   "sp": 70,
+   "dm": 2.6,
+   "coins": 44,
+   "desc": "Vamdemon renacido, más rápido y más cruel.",
+   "atk": [
+    {
+     "n": "Dead Scream",
+     "k": "fan",
+     "c": 9
+    },
+    {
+     "n": "Dark Rondo",
+     "k": "ring",
+     "c": 24
+    },
+    {
+     "n": "Corpse Spike",
+     "k": "charge",
+     "dur": 1.3
+    }
+   ]
+  },
+  {
+   "id": "metalseadramon",
+   "name": "MetalSeadramon",
+   "level": "Mega",
+   "attribute": "Dato",
+   "rank": 3,
+   "file": "enemies/metalseadramon.png",
+   "hp": 1800,
+   "r": 34,
+   "sp": 74,
+   "dm": 2.7,
+   "coins": 46,
+   "desc": "El Dark Master de los mares. Su cañón no deja nada en pie.",
+   "atk": [
+    {
+     "n": "River of Power",
+     "k": "fan",
+     "c": 11,
+     "spread": 0.12
+    },
+    {
+     "n": "Ultimate Stream",
+     "k": "charge",
+     "dur": 1.4
+    }
+   ]
+  },
+  {
+   "id": "ragnamon",
+   "name": "Ragnamon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 3,
+   "file": "enemies/ragnamon.png",
+   "hp": 1900,
+   "r": 36,
+   "sp": 60,
+   "dm": 2.8,
+   "coins": 46,
+   "desc": "Un guerrero del fin del mundo.",
+   "atk": [
+    {
+     "n": "Ragnarok",
+     "k": "ring",
+     "c": 26
+    },
+    {
+     "n": "Doom Strike",
+     "k": "charge",
+     "dur": 1.4
+    }
+   ]
+  },
+  {
+   "id": "cthyllamon",
+   "name": "Cthyllamon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 3,
+   "file": "enemies/cthyllamon.png",
+   "hp": 2100,
+   "r": 36,
+   "sp": 56,
+   "dm": 2.9,
+   "coins": 48,
+   "desc": "Una criatura de las profundidades digitales.",
+   "atk": [
+    {
+     "n": "Abyss Wave",
+     "k": "ring",
+     "c": 30
+    },
+    {
+     "n": "Tentacle Grab",
+     "k": "summon",
+     "c": 10
+    }
+   ]
+  },
+  {
+   "id": "nidhoggmon",
+   "name": "Nidhoggmon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 3,
+   "file": "enemies/nidhoggmon.png",
+   "hp": 1900,
+   "r": 36,
+   "sp": 66,
+   "dm": 2.8,
+   "coins": 46,
+   "desc": "El dragón que roe las raíces del Digimundo.",
+   "atk": [
+    {
+     "n": "Black Venom",
+     "k": "fan",
+     "c": 10,
+     "spread": 0.2
+    },
+    {
+     "n": "Root Breaker",
+     "k": "charge",
+     "dur": 1.3
+    },
+    {
+     "n": "Venom Rain",
+     "k": "ring",
+     "c": 22
+    }
+   ]
+  },
+  {
+   "id": "orochimon",
+   "name": "Orochimon",
+   "level": "Mega",
+   "attribute": "Virus",
+   "rank": 3,
+   "file": "enemies/orochimon.png",
+   "hp": 2000,
+   "r": 36,
+   "sp": 58,
+   "dm": 2.8,
+   "coins": 47,
+   "desc": "Ocho cabezas y ocho veces la mala suerte.",
+   "atk": [
+    {
+     "n": "Hydra Fire",
+     "k": "ring",
+     "c": 24
+    },
+    {
+     "n": "Eight Heads",
+     "k": "fan",
+     "c": 11,
+     "spread": 0.25
+    },
+    {
+     "n": "Sake Rush",
+     "k": "charge",
+     "dur": 1.2
+    }
+   ]
+  }
+ ],
+ "rankNote": "rank: 1 aparece desde el primer jefe, 2 desde el segundo, 3 desde el cuarto (Bosses.pick sortea sin repetir los últimos 4)"
 }

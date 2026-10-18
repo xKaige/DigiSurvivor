@@ -8,7 +8,8 @@
   "stage_with": "Mejor etapa alcanzada con el Digimon 'with'",
   "boss": "Veces que derrotaste al jefe 'boss'",
   "analyzer": "Datos registrados en el Digimon Analyzer (formas + jefes)",
-  "_rules": "Las misiones van en orden: solo cuentan las 'active' (3) primeras sin cumplir, y por partida se gana como mucho 'perRun' (1) Digitama. Las de récord (reach_stage, survive, stage_with) se cumplen en UNA partida jugada con la misión activa; las que suman (kills_total, runs_total, kills_with, boss) cuentan desde que se activan; analyzer cuenta el total."
+  "_rules": "Las misiones van en orden: solo cuentan las 'active' (3) primeras sin cumplir, y por partida se gana como mucho 'perRun' (1) Digitama. Las de récord (reach_stage, survive, stage_with) se cumplen en UNA partida jugada con la misión activa; las que suman (kills_total, runs_total, kills_with, boss) cuentan desde que se activan; analyzer cuenta el total.",
+  "boss_any": "Jefes del Digital Gate derrotados (cualquiera; el jefe sale al azar)"
  },
  "eggs": {
   "001_guilmon": "egg_02",
@@ -81,11 +82,10 @@
   },
   {
    "cid": "008_dorumon",
-   "type": "boss",
+   "type": "boss_any",
    "goal": 1,
-   "boss": "etemon",
    "name": "El rey cae",
-   "desc": "Derrotá a Etemon"
+   "desc": "Derrotá a un jefe del Digital Gate"
   },
   {
    "cid": "014_herissmon",
@@ -118,11 +118,10 @@
   },
   {
    "cid": "013_loogamon",
-   "type": "boss",
-   "goal": 1,
-   "boss": "warumonzaemon",
+   "type": "boss_any",
+   "goal": 3,
    "name": "Juguetería rota",
-   "desc": "Derrotá a WaruMonzaemon"
+   "desc": "Derrotá 3 jefes del Digital Gate"
   },
   {
    "cid": "017_agumon",
@@ -157,11 +156,10 @@
   },
   {
    "cid": "022_patamon",
-   "type": "boss",
-   "goal": 2,
-   "boss": "megadramon",
+   "type": "boss_any",
+   "goal": 6,
    "name": "Emblema de la Esperanza",
-   "desc": "Derrotá a Megadramon 2 veces"
+   "desc": "Derrotá 6 jefes del Digital Gate"
   },
   {
    "cid": "023_dracomon",
@@ -210,11 +208,10 @@
   },
   {
    "cid": "027_falcomon",
-   "type": "boss",
-   "goal": 5,
-   "boss": "etemon",
+   "type": "boss_any",
+   "goal": 10,
    "name": "Pluma ninja",
-   "desc": "Derrotá a Etemon 5 veces"
+   "desc": "Derrotá 10 jefes del Digital Gate"
   },
   {
    "cid": "028_coronamon",
@@ -234,19 +231,17 @@
   },
   {
    "cid": "016_commandramon",
-   "type": "boss",
-   "goal": 1,
-   "boss": "machinedramon",
+   "type": "boss_any",
+   "goal": 15,
    "name": "Caída del Dark Master",
-   "desc": "Derrotá a Machinedramon"
+   "desc": "Derrotá 15 jefes del Digital Gate"
   },
   {
    "cid": "030_dracmon",
-   "type": "boss",
-   "goal": 4,
-   "boss": "warumonzaemon",
+   "type": "boss_any",
+   "goal": 20,
    "name": "Colmillo nocturno",
-   "desc": "Derrotá a WaruMonzaemon 4 veces"
+   "desc": "Derrotá 20 jefes del Digital Gate"
   },
   {
    "cid": "031_bearmon",
@@ -287,11 +282,10 @@
   },
   {
    "cid": "036_ludomon",
-   "type": "boss",
-   "goal": 3,
-   "boss": "metaletemon",
+   "type": "boss_any",
+   "goal": 30,
    "name": "Cristal antiguo",
-   "desc": "Derrotá a MetalEtemon 3 veces"
+   "desc": "Derrotá 30 jefes del Digital Gate"
   },
   {
    "cid": "037_liollmon",
@@ -302,11 +296,10 @@
   },
   {
    "cid": "038_blucomon",
-   "type": "boss",
-   "goal": 3,
-   "boss": "machinedramon",
+   "type": "boss_any",
+   "goal": 40,
    "name": "Hielo eterno",
-   "desc": "Derrotá a Machinedramon 3 veces"
+   "desc": "Derrotá 40 jefes del Digital Gate"
   }
  ],
  "active": 3,

@@ -83,42 +83,47 @@ window.onXAntibody = q => { Bosses.banner('¡X-Antibody! ' + (formName(q, q.stag
 // Una invitación viaja por una conexión de control; si el invitado acepta, él se conecta al que invitó
 // (que pasa a ser el anfitrión/líder) y ahí queda armado el party. El líder inicia la partida.
 let peer = null, myPeerId = null, conn = null, isHost = false, isOnline = false;
+// Party de hasta MAX_PLAYERS (4). Topología en estrella: el líder es el anfitrión y tiene una conexión por invitado (gs);
+// cada invitado tiene una sola conexión (conn), con el anfitrión. roster = todos los del party, lo arma el anfitrión.
+let gs = [];       // anfitrión: [{ c, i (índice en P), uid, nick, cid, lo, ready, lost, lt }]
+let roster = [];   // [{ i, uid, nick, c }] (índice 0 = líder)
 // myIdx: índice de MI jugador en P (online: el anfitrión es 0). rk: teclas de cada jugador remoto (índice -> teclas).
 // picked: jugadores que ya eligieron carta / rama en esta ronda (online se espera a todos).
 let myIdx = 0, rk = {}, picked = new Set();
-// sync: el anfitrión manda el estado SYNC_HZ veces por segundo (antes, en cada cuadro); enId numera a los enemigos
-const SYNC_HZ = 15;
-let syncT = 0, enId = 0, inSig = '', inT = 0;
-// conexiones de juego abiertas (hoy una sola; con más invitados, el anfitrión tendría una por jugador)
-const conns = () => [conn].filter(Boolean);
+// sync: el anfitrión manda el estado SYNC_HZ veces por segundo (12 con 3 o más jugadores, para no saturar su subida)
+const SYNC_HZ = 15, SYNC_HZ_MANY = 12, SYNC_SLOW = 0.5, AOI = 1500;
+let syncT = 0, slowT = 0, enId = 0, inSig = '', inT = 0;
+// conexiones de juego abiertas: anfitrión = una por invitado conectado; invitado = la del anfitrión
+const conns = () => isHost ? gs.filter(g => g.c && !g.lost).map(g => g.c) : [conn].filter(Boolean);
 const sendAll = (m, except) => conns().forEach(c => { if (c !== except) sendTo(c, m); });
+const guestOf = c => gs.find(g => g.c === c);
 // Selección de criatura
-let pickRes = null, pickRej = null, pickList = [], picking = false, hostPick = null;
+let pickRes = null, pickRej = null, pickList = [], picking = false, hostPick = null, hostIds = null;
 // Digimon elegido en el menú principal (se recuerda entre partidas)
 let selected = null;
 try { selected = localStorage.getItem('digisurvivor_pick') || null; } catch (e) {}
 // Party
 let me = { uid: null, nick: null };   // lo carga social.js al iniciar sesión
-let party = null;                     // { uid, nick, c } del otro jugador mientras hay party
 let lobbyNote = '';                   // último aviso para mostrar en la ventana (rechazos, cortes, etc.)
 const pendingInv = {};                // invitaciones que mandé: uid -> hora
 const ctl = {};                       // conexiones de invitación en curso: peerId -> función que las da por fallidas
 const inbox = [];                     // invitaciones recibidas { id, uid, nick, peerId, c }
+const inParty = () => !!conn || gs.length > 0;
 
 const lobbyChanged = () => { if (window.onLobby) window.onLobby(); };
 const lobbyMsg = m => { lobbyNote = m || ''; lobbyChanged(); };
 const whenOpen = (c, fn) => { if (c.open) fn(); else c.on('open', fn); };
-const sendTo = (c, m) => { if (c.open === false) return; try { c.send(m); } catch (e) {} };
+const sendTo = (c, m) => { if (!c || c.open === false) return; try { c.send(m); } catch (e) {} };
 // PeerJS con serialización JSON no manda mensajes de más de ~16 KB ("message-too-big"): los grandes se parten en pedazos
 // ('part') y el otro lado los vuelve a armar (joinPart). Se corta en BIG caracteres porque al reenviar se escapan las comillas.
 const BIG = 9000;
 let bigId = 0;
 const bigIn = {};
-function sendBig(m) {
+function sendBigTo(c, m) {
   const str = JSON.stringify(m);
-  if (str.length <= BIG) { sendAll(m); return; }
+  if (str.length <= BIG) { sendTo(c, m); return; }
   const id = ++bigId, n = Math.ceil(str.length / BIG);
-  for (let i = 0; i < n; i++) sendAll({ type: 'part', id, i, n, d: str.slice(i * BIG, (i + 1) * BIG) });
+  for (let i = 0; i < n; i++) sendTo(c, { type: 'part', id, i, n, d: str.slice(i * BIG, (i + 1) * BIG) });
 }
 function joinPart(d) {
   const b = bigIn[d.id] || (bigIn[d.id] = { n: d.n, got: 0, p: [] });
@@ -130,6 +135,22 @@ function joinPart(d) {
 }
 const validId = id => CREATURES.some(x => x.id === id) ? id : null;
 const dropInvite = id => { const k = inbox.findIndex(x => x.id === id); if (k >= 0) { inbox.splice(k, 1); lobbyChanged(); } };
+
+// Anfitrión: arma la lista del party y se la manda a cada invitado (con su índice)
+function sendRoster() {
+  roster = [{ i: 0, uid: me.uid, nick: me.nick, c: selected }, ...gs.map(g => ({ i: g.i, uid: g.uid, nick: g.nick, c: g.cid }))];
+  for (const g of gs) sendTo(g.c, { type: 'roster', list: roster, you: g.i });
+  lobbyChanged();
+}
+// Anfitrión: un invitado se une al party (índice libre de 1 a MAX_PLAYERS-1)
+function addGuest(c, md) {
+  let i = 1; while (gs.some(g => g.i === i)) i++;
+  const g = { c, i, uid: md.uid, nick: String(md.nick || '').slice(0, 20), cid: null };
+  c.pi = i; gs.push(g); isHost = true; isOnline = false; myIdx = 0;
+  setupConn(c);
+  whenOpen(c, sendRoster);
+  lobbyMsg(g.nick + ' se unió al party');
+}
 
 window.initPeer = function () {
   if (peer) return;
@@ -144,19 +165,17 @@ window.initPeer = function () {
   peer.on('connection', c => {
     const md = c.metadata || {};
     if (md.kind === 'game') {
-      // el compañero vuelve después de un corte (misma partida, mismo jugador)
-      if (md.re && lost && running && !conn && party && md.uid === party.uid) {
-        conn = c; c.pi = 1; clearTimeout(lostT); setupConn(c);
-        whenOpen(c, () => { lost = null; Bosses.banner('¡' + (party.nick || 'Tu compañero') + ' volvió!'); });
+      // un invitado vuelve después de un corte (misma partida, mismo jugador)
+      const back = md.re && running && gs.find(g => g.lost && g.uid === md.uid);
+      if (back) {
+        back.c = c; c.pi = back.i; back.lost = false; clearTimeout(back.lt); setupConn(c);
+        whenOpen(c, () => Bosses.banner('¡' + (back.nick || 'Tu compañero') + ' volvió!'));
         return;
       }
       // alguien a quien invité se une a mi party: yo soy el líder/anfitrión
-      if (conn || !pendingInv[md.uid]) { try { c.close(); } catch (e) {} return; }
+      if (conn || running || !pendingInv[md.uid] || gs.length >= MAX_PLAYERS - 1 || gs.some(g => g.uid === md.uid)) { try { c.close(); } catch (e) {} return; }
       delete pendingInv[md.uid];
-      conn = c; c.pi = 1; isHost = true; isOnline = false; myIdx = 0;
-      party = { uid: md.uid, nick: String(md.nick || '').slice(0, 20), c: null };
-      setupConn(c);
-      lobbyMsg(party.nick + ' se unió al party');
+      addGuest(c, md);
     } else {
       // conexión de control: solo se aceptan invitaciones de amigos
       c.on('data', m => {
@@ -164,7 +183,7 @@ window.initPeer = function () {
         // se consulta en el momento si es amigo (así una amistad recién creada o eliminada se respeta al instante)
         Promise.resolve(window.isFriendUid ? window.isFriendUid(m.uid) : false).then(isF => {
           if (!isF) return;
-          if (conn || running || inbox.some(i => i.uid === m.uid)) { whenOpen(c, () => sendTo(c, { type: 'decline', busy: 1 })); return; }
+          if (inParty() || running || inbox.some(i => i.uid === m.uid)) { whenOpen(c, () => sendTo(c, { type: 'decline', busy: 1 })); return; }
           const inv = { id: Math.random().toString(36).slice(2), uid: m.uid, nick: String(m.nick || '').slice(0, 20), peerId: m.peerId, c };
           inbox.push(inv); setTimeout(() => dropInvite(inv.id), 60000); lobbyChanged();
         }).catch(() => {});
@@ -175,7 +194,6 @@ window.initPeer = function () {
 
 // Cierra todo lo online (se usa al cerrar sesión)
 window.stopPeer = function () {
-  if (conn) { const c = conn; conn = null; try { c.close(); } catch (e) {} }
   if (running && isOnline) endRun('Cerraste sesión');
   dropParty(); clearTimeout(lostT);
   if (peer) { try { peer.destroy(); } catch (e) {} }
@@ -186,9 +204,15 @@ window.stopPeer = function () {
 
 // Acciones que usa la ventana de Amigos / Party
 window.Lobby = {
+  max: MAX_PLAYERS,
   setSelf(uid, nick) { me = { uid, nick }; },
   state() {
-    return { me, myPeerId, ready: !!myPeerId, role: conn ? (isHost ? 'host' : 'guest') : null, party, selected,
+    const role = conn ? 'guest' : gs.length ? 'host' : null;
+    const list = role === 'host' ? [{ i: 0, uid: me.uid, nick: me.nick, c: selected }, ...gs.map(g => ({ i: g.i, uid: g.uid, nick: g.nick, c: g.cid }))]
+      : role ? roster.map(m => m.i === myIdx ? Object.assign({}, m, { c: selected }) : m) : [];
+    return { me, myPeerId, ready: !!myPeerId, role, selected, max: MAX_PLAYERS,
+      members: list.map(m => ({ i: m.i, uid: m.uid, nick: m.nick, c: m.c, me: m.i === myIdx, host: m.i === 0 })),
+      canInvite: !!myPeerId && !conn && gs.length < MAX_PLAYERS - 1 && !running,
       inbox: inbox.map(i => ({ id: i.id, uid: i.uid, nick: i.nick })), note: lobbyNote, running };
   },
   info(id) {
@@ -199,7 +223,9 @@ window.Lobby = {
   pick() { openMenuPick(); },
   invite(f) {   // f: { uid, nick, peerId }
     if (!peer || !myPeerId) return lobbyMsg('Todavía conectando con el servidor...');
-    if (conn) return lobbyMsg('Ya estás en un party');
+    if (conn) return lobbyMsg('Solo el líder del party puede invitar');
+    if (gs.length >= MAX_PLAYERS - 1) return lobbyMsg('El party está lleno (' + MAX_PLAYERS + ' jugadores)');
+    if (gs.some(g => g.uid === f.uid)) return lobbyMsg(f.nick + ' ya está en el party');
     if (!f.peerId) return lobbyMsg(f.nick + ' no está en línea');
     pendingInv[f.uid] = Date.now();
     const c = peer.connect(f.peerId, { metadata: { kind: 'ctl' } });
@@ -214,19 +240,19 @@ window.Lobby = {
       else if (m.type === 'accept') { done = true; clearTimeout(to); delete ctl[f.peerId]; setTimeout(() => { try { c.close(); } catch (e) {} }, 500); }
     });
     c.on('error', () => fail(f.nick + ' no está disponible'));
-    setTimeout(() => { if (!conn) delete pendingInv[f.uid]; }, 90000);
+    setTimeout(() => { if (!gs.some(g => g.uid === f.uid)) delete pendingInv[f.uid]; }, 90000);
     lobbyMsg('Invitación enviada a ' + f.nick);
   },
   accept(id) {
     const k = inbox.findIndex(x => x.id === id); if (k < 0) return;
     const inv = inbox.splice(k, 1)[0];
-    if (conn || !peer) { sendTo(inv.c, { type: 'decline', busy: 1 }); lobbyChanged(); return; }
+    if (inParty() || !peer) { sendTo(inv.c, { type: 'decline', busy: 1 }); lobbyChanged(); return; }
     sendTo(inv.c, { type: 'accept' });
     setTimeout(() => { try { inv.c.close(); } catch (e) {} }, 500);
     while (inbox.length) sendTo(inbox.pop().c, { type: 'decline', busy: 1 });   // las demás invitaciones se rechazan
     const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick }, serialization: 'json' });
     conn = c; isHost = false; isOnline = false; myIdx = 1;
-    party = { uid: inv.uid, nick: inv.nick, c: null };
+    roster = [{ i: 0, uid: inv.uid, nick: inv.nick, c: null }];
     setupConn(c);
     setTimeout(() => { if (conn === c && !c.open) { try { c.close(); } catch (e) {} connClosed(c); } }, 12000);
     lobbyMsg('Te uniste al party de ' + inv.nick);
@@ -238,40 +264,69 @@ window.Lobby = {
     setTimeout(() => { try { inv.c.close(); } catch (e) {} }, 500);
     lobbyChanged();
   },
-  leave() { if (conn) { const c = conn; conn = null; try { c.close(); } catch (e) {} } dropParty(); },
-  // solo el líder, y solo si los dos ya eligieron Digimon
+  leave() { dropParty(); },
+  // solo el líder, y solo si todos ya eligieron Digimon
   startOnline() {
-    if (!conn || !isHost || !selected || !party || !party.c || running) return;
-    hostPick = selected; isOnline = true;
-    World.nextSeed = (Math.random() * 2 ** 31) | 0;   // el mapa: los dos lo generan con la misma semilla
-    sendTo(conn, { type: 'start', c0: selected, seed: World.nextSeed });
+    if (!isHost || !gs.length || !selected || running || gs.some(g => !g.cid || g.lost)) return;
+    // índices seguidos (si alguien se fue del party quedaba un hueco): 1, 2, 3
+    gs.sort((a, b) => a.i - b.i).forEach((g, k) => { g.i = k + 1; g.c.pi = k + 1; g.ready = false; g.lo = null; });
+    sendRoster();
+    hostPick = selected; isOnline = true; rk = {};
+    hostIds = [selected, ...gs.map(g => g.cid)];
+    World.nextSeed = (Math.random() * 2 ** 31) | 0;   // el mapa: todos lo generan con la misma semilla
+    for (const g of gs) sendTo(g.c, { type: 'start', ids: hostIds, seed: World.nextSeed, you: g.i });
     lobbyMsg('Iniciando partida...');
   }
 };
 
 // Corte de la conexión de juego. Si están en partida no termina al instante: el invitado intenta reconectarse solo durante
-// RECON_S segundos (el anfitrión sigue jugando y acepta de vuelta a ese mismo jugador). Si no vuelve, recién ahí termina.
-// La conexión es directa entre los dos (WebRTC vía PeerJS): un corte suele ser un microcorte de internet de alguno.
+// RECON_S segundos (el anfitrión sigue jugando y acepta de vuelta a ese mismo jugador). Si no vuelve, su Digimon queda
+// fuera de la partida (los demás siguen). Si el que se corta es el anfitrión, los invitados esperan lo mismo y después termina.
+// La conexión es directa entre los jugadores (WebRTC vía PeerJS): un corte suele ser un microcorte de internet de alguno.
 const RECON_S = 20;
-let lost = null, lostT = null;   // lost: { peerId } mientras se intenta reconectar
+let lost = null, lostT = null;   // invitado: lost = { peerId } mientras se intenta reconectar al anfitrión
 function connClosed(c, why) {
+  const g = isHost && guestOf(c);
+  if (g) {   // anfitrión: se cortó un invitado
+    console.warn('DigiSurvivor: se cerró la conexión con ' + g.nick + ' (' + (why || 'close') + ')');
+    if (running && isOnline) {
+      g.lost = true; g.c = null; rk[g.i] = {};
+      Bosses.banner(g.nick + ' se desconectó. Esperando…');
+      if (paused && picked.has(myIdx)) allPicked();   // estaba esperando su carta: sigue sin él
+      clearTimeout(g.lt);
+      g.lt = setTimeout(() => {
+        if (!g.lost) return;
+        gs.splice(gs.indexOf(g), 1);
+        const q = P[g.i]; if (q) { q.dead = true; q.gone = true; q.hp = 0; }   // queda fuera (no se puede revivir)
+        if (running) Bosses.banner(g.nick + ' abandonó la partida');
+        if (paused && picked.has(myIdx)) allPicked();
+      }, RECON_S * 1000);
+      return;
+    }
+    gs.splice(gs.indexOf(g), 1);
+    if (gs.length) { sendRoster(); lobbyMsg(g.nick + ' salió del party'); } else dropParty(g.nick + ' salió del party');
+    return;
+  }
   if (conn !== c) return;
   console.warn('DigiSurvivor: se cerró la conexión de juego (' + (why || 'close') + ')');
   if (running && isOnline) { connLost(c); return; }
   dropParty();
 }
-function dropParty() {
-  const was = party && party.nick;
-  conn = null; isHost = false; isOnline = false; hostPick = null; party = null; myIdx = 0; rk = {}; lost = null;
-  lobbyMsg(was ? 'El party con ' + was + ' se cerró' : '');
+function dropParty(msg) {
+  const was = roster.length ? roster.find(m => m.i === 0) : null;
+  const cs = [conn, ...gs.map(g => g.c)].filter(Boolean);
+  gs.forEach(g => clearTimeout(g.lt));
+  conn = null; gs = []; roster = []; isHost = false; isOnline = false; hostPick = null; hostIds = null; myIdx = 0; rk = {}; lost = null;
+  cs.forEach(c => { try { c.close(); } catch (e) {} });
+  lobbyMsg(msg || (was && was.nick && was.nick !== me.nick ? 'El party de ' + was.nick + ' se cerró' : ''));
 }
+// invitado: se cortó la conexión con el anfitrión
 function connLost(c) {
   conn = null; rk = {}; lost = { peerId: c.peer };
   Bosses.banner('Se cortó la conexión. Reconectando…');
-  if (!isHost) rejoin();
-  else if (paused && picked.has(myIdx)) allPicked();   // estaba esperando la carta del que se cortó: sigue
+  rejoin();
   clearTimeout(lostT);
-  lostT = setTimeout(() => { if (lost && !conn) { if (running) endRun('Se perdió la conexión con el otro jugador'); dropParty(); } }, RECON_S * 1000);
+  lostT = setTimeout(() => { if (lost && !conn) { if (running) endRun('Se perdió la conexión con el anfitrión'); dropParty(); } }, RECON_S * 1000);
 }
 // invitado: vuelve a conectarse al anfitrión (reintenta cada 3 s mientras dure el plazo)
 function rejoin() {
@@ -293,26 +348,29 @@ function setupConn(c) {
   });
   c.on('data', data => {
     if (data && data.type === 'part') { data = joinPart(data); if (!data) return; }   // mensaje grande que llegó en pedazos
-    if (data.type === 'hello') {
-      if (party) { party.c = validId(data.c); if (data.nick) party.nick = String(data.nick).slice(0, 20); }
-      lobbyChanged();
-    } else if (data.type === 'pick') {
-      if (party) party.c = validId(data.c);
+    const g = isHost ? guestOf(c) : null;
+    if (data.type === 'hello' || data.type === 'pick') {
+      if (g) { g.cid = validId(data.c); if (data.nick) g.nick = String(data.nick).slice(0, 20); sendRoster(); }
+    } else if (data.type === 'roster') {
+      if (isHost) return;
+      roster = Array.isArray(data.list) ? data.list.slice(0, MAX_PLAYERS) : []; if (!running) myIdx = data.you | 0;
       lobbyChanged();
     } else if (data.type === 'input') {
       rk[c.pi || 1] = data.keys || {};
     } else if (data.type === 'start') {
       if (isHost) return;
-      isOnline = true;
+      isOnline = true; myIdx = data.you | 0;
       World.nextSeed = data.seed | 0;
-      joinOnline(data.c0);
+      joinOnline(data.ids);
     } else if (data.type === 'ready') {
-      // el invitado ya eligió: arranca la partida con las dos criaturas
-      if (isHost && hostPick) {
-        const ids = [hostPick, validId(data.c1) || '001_guilmon'];
+      // un invitado ya está listo: cuando estén todos, arranca la partida
+      if (!isHost || !hostPick || !g) return;
+      g.lo = Trees.clean(data.lo) || { m: {}, bond: 0 }; g.ready = true;
+      if (gs.every(x => x.ready)) {
+        const ids = hostIds.map(id => validId(id) || '001_guilmon');
         hostPick = null;
         $('up').style.display = 'none';
-        start(2, ids, [Trees.loadout(ids[0]), Trees.clean(data.lo) || { m: {}, bond: 0 }]);
+        start(ids.length, ids, [Trees.loadout(ids[0]), ...gs.map(x => x.lo)]);
       }
     } else if (data.type === 'sync') {
       applyOnlineSync(data);
@@ -355,9 +413,11 @@ function setupConn(c) {
   });
 }
 
+// Online (anfitrión): jugadores que tienen que elegir carta (él y los invitados conectados que siguen en la partida)
+const mustPick = () => [0, ...gs.filter(g => !g.lost && g.c).map(g => g.i)].filter(i => P[i] && !P[i].gone);
 // Online (anfitrión): si ya eligieron todos, sigue la partida (o arranca la evolución final)
 function allPicked() {
-  if (!isHost || picked.size < 1 + conns().length) return;   // espera solo a los que siguen conectados (si se cortó uno, no lo frena)
+  if (!isHost || !mustPick().every(i => picked.has(i))) return;   // espera solo a los que siguen conectados (si se cortó uno, no lo frena)
   $('up').style.display = 'none';
   if (cardMode === 'line') { sendAll({ type: 'trigger_evo', stage: 5 }); startEvo(5); }
   else { paused = false; last = performance.now(); sendAll({ type: 'resume_game' }); }
@@ -367,6 +427,49 @@ function applyCardOp(targetP, data) {
   if (Stats.cardOf(data.op)) Stats.card(targetP, data.op);   // carta de stat (stats.js)
   else if (data.op === 'wp' && data.wpKey) { SkillSys.forget(targetP, data.rep); if (SkillSys.canTake(targetP, data.wpKey)) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; }
   else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; targetP.dark = !!data.dark; }
+}
+
+// Anfitrión: arma y manda el sync. Para no saturar su subida con 3 invitados:
+// - a cada invitado le manda solo lo que tiene cerca (AOI px alrededor de su jugador; los jefes siempre),
+// - los datos que cambian poco (skills, contadores V-Pet, familia…) van cada SYNC_SLOW segundos,
+// - con 3 o más jugadores, SYNC_HZ_MANY veces por segundo.
+function hostSync(dt) {
+  if ((syncT -= dt) > 0) return;
+  const cs = gs.filter(g => g.c && !g.lost); if (!cs.length) return;
+  syncT = 1 / (P.length > 2 ? SYNC_HZ_MANY : SYNC_HZ);
+  const full = (slowT -= 1 / SYNC_HZ) <= 0; if (full) slowT = SYNC_SLOW;
+  const r = v => Math.round(v), r2 = v => Math.round(v * 100) / 100;
+  const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
+  const pl = P.map(q => {
+    const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp };
+    if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect });
+    return o;
+  });
+  // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
+  const E = en.map(e => { if (!e.id) e.id = ++enId;   // id para que el cliente pueda deslizar a cada uno
+    const a = [e.id, r(e.x), r(e.y), r2(e.r), e.k, e.bo != null ? 0 : e.ti, e.bo != null ? null : e.sk, e.bo != null ? null : e.et, e.st | 0, e.el, r2(e.fl), r2(e.ang), e.gun ? 1 : 0];
+    if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at));
+    return a; });
+  const G = gems.map(g => [r(g.x), r(g.y), r2(g.v)]);
+  const S = sh.map(s => [r(s.x), r(s.y), r(s.vx), r(s.vy), s.c || 0, r2(s.r || 5), s.fx || 0, r(s.sz || 0)]);
+  const B = eb.map(b => [r(b.x), r(b.y), r(b.vx), r(b.vy), b.el, b.r || 0]);
+  const F = ef.map(o => ({ k: o.k, x: o.x == null ? null : r(o.x), y: o.y == null ? null : r(o.y), R: o.R && r(o.R), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx }));
+  // números de daño y textos nuevos desde el sync anterior (se marcan una sola vez y se reparten por cercanía)
+  const X = fx.filter(f => !f.s).slice(-40).map(f => { f.s = 1; return { x: r(f.x), y: r(f.y), txt: f.txt, col: f.col, sz: f.sz, l: r2(f.l) }; });
+  const common = { type: 'sync', P: pl, it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })), gt: Gate.sync(), fn: Finale.sync(),
+    t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down };
+  const al = P.filter(q => !q.dead);
+  for (const g of cs) {
+    const q = P[g.i], c0 = q && !q.dead ? q : al[0] || q; if (!c0) continue;   // caído: lo que ve la cámara (un compañero vivo)
+    const cx0 = c0.x, cy0 = c0.y, near = (x, y, R) => Math.abs(x - cx0) < R && Math.abs(y - cy0) < R;
+    sendBigTo(g.c, Object.assign({}, common, {
+      en: E.filter(a => a.length > 13 || near(a[1], a[2], AOI)),
+      gems: G.filter(a => near(a[0], a[1], AOI)).flat(),
+      sh: S.filter(a => near(a[0], a[1], AOI)), eb: B.filter(a => near(a[0], a[1], AOI)),
+      ef: F.filter(o => o.x == null || near(o.x, o.y, AOI + 400)),
+      fx: X.filter(f => near(f.x, f.y, AOI))
+    }));
+  }
 }
 
 // Invitado: responde con su Digimon y arranca
@@ -387,10 +490,13 @@ function onlineSmooth(dt) {
   for (const b of eb) if (b.vx != null) { b.x += b.vx * dt; b.y += b.vy * dt; }
   for (const f of fx) { f.y -= 45 * dt; f.l -= dt; } fx = fx.filter(f => f.l > 0);   // los números de daño suben y se van
 }
-function joinOnline(c0) {
-  const id = selected || '001_guilmon';
-  if (conn) sendTo(conn, { type: 'ready', c1: id, lo: Trees.loadout(id) });
-  start(2, [validId(c0) || '001_guilmon', id], [null, Trees.loadout(id)]).catch(e => console.error(e));
+function joinOnline(ids) {
+  const id = selected || '001_guilmon', L = (Array.isArray(ids) ? ids : []).slice(0, MAX_PLAYERS).map(x => validId(x) || '001_guilmon');
+  if (!L[myIdx]) return;
+  L[myIdx] = id;
+  const los = L.map((_, i) => i === myIdx ? Trees.loadout(id) : null);
+  if (conn) sendTo(conn, { type: 'ready', lo: los[myIdx] });
+  start(L.length, L, los).catch(e => console.error(e));
 }
 
 // Cliente: el anfitrión manda el estado SYNC_HZ veces por segundo. Las posiciones no se pisan de golpe: se guardan como
@@ -572,7 +678,7 @@ async function beginLocal(m) {
   } catch (e) { if (e && e.message !== 'cancel') console.error(e); }
   finally { picking = false; }
 }
-$('go').onclick=()=>{isOnline=false;beginLocal(1)};$('go2').onclick=()=>{isOnline=false;beginLocal(2)};
+$('go').onclick=()=>{isOnline=false;beginLocal(1)}
 
 // ---------- Menú: Digimon elegido ----------
 function buildMenuSel() {
@@ -584,7 +690,7 @@ function buildMenuSel() {
   const bar = $('go').parentNode; bar.parentNode.insertBefore(row, bar);
   // menú nuevo: tu Digimon va en la pantalla del Digivice y "Elegir Digimon" queda debajo de las partidas
   if ($('dvscreen')) $('dvscreen').appendChild($('selinfo'));
-  if ($('mnu')) { $('go2').after($('selbtn')); row.remove(); }   // va debajo de "2 Jugadores Local"
+  if ($('mnu')) { $('go').after($('selbtn')); row.remove(); }   // va debajo de "Nueva Partida" (ya no hay 2 jugadores local)
   $('selbtn').onclick = openMenuPick;
 }
 function renderSel() {
@@ -595,14 +701,14 @@ function renderSel() {
   } else {
     info.innerHTML = '<span style="color:var(--gold)">Elegí tu Digimon para poder jugar</span>';
   }
-  ['go', 'go2'].forEach(id => { if ($(id)) $(id).disabled = !C; });
+  ['go'].forEach(id => { if ($(id)) $(id).disabled = !C; });
   if (C && !running) { P = [np(0, selected)]; p = P[0]; draw(); }   // el fondo muestra a tu Digimon
 }
 // Cambia tu Digimon elegido (lo usan la selección y la eclosión de un Digitama)
 window.setPick = function (id) {
   if (!unlocked(id) || running) return;
   selected = id; try { localStorage.setItem('digisurvivor_pick', id); } catch (e) {}
-  renderSel(); if (conn) sendTo(conn, { type: 'pick', c: selected }); lobbyChanged();
+  renderSel(); if (conn) sendTo(conn, { type: 'pick', c: selected }); else if (gs.length) sendRoster(); lobbyChanged();
 };
 // progress.js terminó de cargar: si tenías elegido uno que ahora está bloqueado, se saca; y se muestran eclosiones pendientes
 window.onProgressReady = function () {
@@ -674,7 +780,7 @@ $('pbtn').onclick=()=>{if(running)togglePause()};   // botón de pausa (celular:
 $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
- if(isOnline&&isHost&&conn){try{conn.send({type:'end',title:title})}catch(e){}}
+ if(isOnline&&isHost)sendAll({type:'end',title:title});
  running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();Sound.music(false);Gate.reset();Finale.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
@@ -954,7 +1060,7 @@ function choose(u){
     const payload = { type: isHost ? 'host_choice' : 'client_choice', i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark, rep: u.rep };
     sendAll(payload);
     picked.add(myIdx);
-    if (picked.size < (isHost ? 1 + conns().length : P.length)) {
+    if (isHost ? !mustPick().every(i => picked.has(i)) : picked.size < P.filter(q => !q.gone).length) {
       setHead('ESPERANDO A LOS DEMÁS');
       $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">Jugador ' + (myIdx + 1) + ' listo. Esperando a que elijan los demás (' + picked.size + '/' + P.length + ')...</p>';
       return;
@@ -1038,30 +1144,7 @@ function update(dt){
      // teclas: solo cuando cambian (y cada 0,25 s por las dudas)
      const ks = { w: keys.w, a: keys.a, s: keys.s, d: keys.d, arrowup: keys.arrowup, arrowleft: keys.arrowleft, arrowdown: keys.arrowdown, arrowright: keys.arrowright, tj: TJ ? [Math.round(TJ[0] * 10) / 10, Math.round(TJ[1] * 10) / 10] : null }, sg = JSON.stringify(ks);
      if (sg !== inSig || t - inT > 0.25) { conn.send({ type: 'input', keys: ks }); inSig = sg; inT = t; }
-   } else if (isHost && conns().length && (syncT -= dt) <= 0) {
-     syncT = 1 / SYNC_HZ;
-     const r = v => Math.round(v), r2 = v => Math.round(v * 100) / 100;
-     const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
-     sendBig({
-       type: 'sync',
-       P: P.map(q => ({ x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, face: q.face, dead: q.dead, moving: q.moving, line: q.line, branchId: q.branchId, wp: q.wp, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, dark: q.dark, xa: q.xa, vp: q.vp, spv: q.spv, emp: q.emp, fam: q.fam, perfect: q.perfect })),
-       // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync
-       en: en.map(e => { if (!e.id) e.id = ++enId;   // id para que el cliente pueda deslizar a cada uno
-         const a = [e.id, r(e.x), r(e.y), r2(e.r), e.k, e.bo != null ? 0 : e.ti, e.bo != null ? null : e.sk, e.bo != null ? null : e.et, e.st | 0, e.el, r2(e.fl), r2(e.ang), e.gun ? 1 : 0];
-         if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at));
-         return a; }),
-       gems: gems.flatMap(g => [r(g.x), r(g.y), r2(g.v)]),
-       sh: sh.map(s => [r(s.x), r(s.y), r(s.vx), r(s.vy), s.c || 0, r2(s.r || 5), s.fx || 0, r(s.sz || 0)]),
-       eb: eb.map(b => [r(b.x), r(b.y), r(b.vx), r(b.vy), b.el, b.r || 0]),
-       ef: ef.map(o => ({ k: o.k, x: r(o.x), y: r(o.y), R: o.R && r(o.R), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx })),
-       it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })),
-       gt: Gate.sync(),
-       fn: Finale.sync(),
-       // números de daño y textos nuevos desde el sync anterior (antes el invitado no los veía)
-       fx: fx.filter(f => !f.s).slice(-40).map(f => { f.s = 1; return { x: r(f.x), y: r(f.y), txt: f.txt, col: f.col, sz: f.sz, l: r2(f.l) }; }),
-       t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down
-     });
-   }
+   } else if (isHost) hostSync(dt);   // estado para los invitados (ver hostSync)
  }
 
  // final con Yggdrasill (finale.js): mientras dura, los jugadores quedan quietos y no corre el resto de la simulación
@@ -1090,7 +1173,8 @@ function update(dt){
  }
 
  // revivir: si un compañero vivo está parado sobre un jugador caído, se va llenando el progreso
- for(const d of P){if(!d.dead)continue;
+ for(const d of P){if(!d.dead||d.gone)continue;   // gone: se fue de la partida online (no se revive)
+
   let rv=0,rh=0;for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R){rv=Math.max(rv,a.revSpd||1);rh=Math.max(rh,(a.m&&a.m.revHP)||0)}
   d.revP=rv?(d.revP||0)+dt*rv:Math.max(0,(d.revP||0)-dt);
   if(d.revP>=REVIVE_TIME){d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
@@ -1170,7 +1254,7 @@ function draw(){
 }
 // Flechas en el borde de la pantalla hacia lo que no se ve: compañeros (nombre y distancia en metros; ✝ si están caídos)
 // y el Digital Gate. 1 metro = 40 px.
-function pname(i){return isOnline&&i!==myIdx?((party&&party.nick)||'J'+(i+1)):'J'+(i+1)}
+function pname(i){const m=isOnline&&i!==myIdx&&roster.find(x=>x.i===i);return(m&&m.nick)||'J'+(i+1)}
 function drawPointers(){
  const me=isOnline?P[myIdx]:null,ox=me&&!me.dead?me.x:cam.x,oy=me&&!me.dead?me.y:cam.y,list=[];
  if(mode>1)P.forEach((q,i)=>{if(isOnline&&i===myIdx)return;list.push({x:q.x,y:q.y-30,col:PC[i],txt:(q.dead?'✝ ':'')+pname(i)})});

@@ -511,7 +511,6 @@ body.touch.ingame #pbtn{display:block}
   #evt{font-size:24px;top:22%}
 }
 /* menú principal en celular */
-body.touch #go2{display:none}   /* 2 jugadores local necesita teclado: en el celular no */
 @media (max-width:560px){
   #ov{padding:calc(env(safe-area-inset-top) + 28px) 14px calc(env(safe-area-inset-bottom) + 20px);gap:10px}
   #ov .ovfx .tag{display:none}

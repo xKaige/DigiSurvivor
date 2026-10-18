@@ -26,7 +26,6 @@
     { "id": "s300",   "tier": 2, "type": "survive",     "goal": 300, "reward": 70, "name": "Resistencia",         "desc": "Sobreviví 5 minutos en una partida" },
     { "id": "st3",    "tier": 2, "type": "reach_stage", "goal": 3,   "reward": 60, "name": "Campeón digital",     "desc": "Llegá a etapa Campeón en una partida" },
     { "id": "lv10",   "tier": 2, "type": "reach_level", "goal": 10,  "reward": 70, "name": "Tamer en ascenso",    "desc": "Llegá al nivel 10 en una partida" },
-    { "id": "l2p",    "tier": 2, "type": "local2p_run", "goal": 1,   "reward": 60, "name": "Mismo teclado",       "desc": "Jugá una partida de 2 jugadores local" },
     { "id": "aVac",   "tier": 2, "type": "play_attr", "attr": 0, "goal": 1, "reward": 50, "name": "Escudo Vacuna",  "desc": "Terminá una partida con un Digimon de atributo Vacuna" },
     { "id": "aVir",   "tier": 2, "type": "play_attr", "attr": 1, "goal": 1, "reward": 50, "name": "Código Virus",   "desc": "Terminá una partida con un Digimon de atributo Virus" },
     { "id": "aDat",   "tier": 2, "type": "play_attr", "attr": 2, "goal": 1, "reward": 50, "name": "Flujo de Datos", "desc": "Terminá una partida con un Digimon de atributo Dato" },

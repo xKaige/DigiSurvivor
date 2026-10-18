@@ -41,7 +41,7 @@ function saveProgToCloud(st) {
   if (!uid) return;
   clearTimeout(progTimer);
   progTimer = setTimeout(() => {
-    setDoc(doc(db, 'users', uid), { prog: st, updated: Date.now() }, { merge: true })
+    setDoc(doc(db, 'users', uid), { prog: st, updated: Date.now() }, { mergeFields: ['prog', 'updated'] })   // mergeFields: reemplaza 'prog' entero (con merge quedaban Digitamas ya eclosionados)
       .catch(err => console.error('Error al guardar el progreso en Firestore:', err));
   }, 1500);
 }

@@ -259,7 +259,7 @@ function renderFriends(body) {
       el('span', { class: 'grow', text: f.nick }),
       el('span', { class: 'dim st' + (f.online ? ' on' : ''), text: f.online ? 'En línea' : 'Desconectado' }));
     const inv = el('button', { class: 'inv-btn', text: 'Invitar', onclick: () => inviteFriend(f) });
-    inv.disabled = !f.online || !!st.role || !st.ready;
+    inv.disabled = !f.online || !st.canInvite || st.members.some(m => m.uid === f.uid);
     row.appendChild(inv);
     const del = el('button', { class: 'del-btn', text: 'Eliminar' });
     del.onclick = () => {
@@ -279,17 +279,22 @@ function renderParty(body) {
     body.appendChild(el('div', { class: 'msg', id: 'soc-msg', text: S.msg || st.note || '' }));
     return;
   }
-  const host = st.role === 'host', other = st.party || {};
-  const mine = el('div', { class: 'row', id: 'pm-me' }, el('span', { class: 'grow', text: S.nick + (host ? ' (líder)' : '') }), chip(st.selected),
-    el('button', { id: 'pm-pick', text: 'Elegir Digimon', onclick: () => window.Lobby.pick() }));
-  const theirs = el('div', { class: 'row', id: 'pm-other' }, el('span', { class: 'grow', text: (other.nick || '...') + (host ? '' : ' (líder)') }), chip(other.c));
-  body.appendChild(el('div', { class: 'list' }, mine, theirs));
-  const ready = !!st.selected && !!other.c;
+  // party de hasta st.max (4) jugadores: vos (con el botón para elegir Digimon) y los demás
+  const host = st.role === 'host', list = el('div', { class: 'list' });
+  st.members.forEach(m => {
+    const row = el('div', { class: 'row', id: m.me ? 'pm-me' : 'pm-' + m.i },
+      el('span', { class: 'grow', text: (m.me ? S.nick : m.nick || '...') + (m.host ? ' (líder)' : '') }), chip(m.me ? st.selected : m.c));
+    if (m.me) row.appendChild(el('button', { id: 'pm-pick', text: 'Elegir Digimon', onclick: () => window.Lobby.pick() }));
+    list.appendChild(row);
+  });
+  body.appendChild(list);
+  body.appendChild(el('div', { class: 'dim', text: st.members.length + ' / ' + st.max + ' jugadores' + (host && st.members.length < st.max ? ' · invitá más amigos desde la pestaña Amigos' : '') }));
+  const ready = st.members.length > 1 && st.members.every(m => m.me ? !!st.selected : !!m.c);
   if (host) {
     const go = el('button', { id: 'pm-start', class: 'on', text: 'Iniciar partida', onclick: () => window.Lobby.startOnline() });
     go.disabled = !ready || st.running;
     body.appendChild(go);
-    if (!ready) body.appendChild(el('div', { class: 'dim', text: 'Los dos tienen que elegir su Digimon para iniciar.' }));
+    if (!ready) body.appendChild(el('div', { class: 'dim', text: 'Todos tienen que elegir su Digimon para iniciar.' }));
   } else {
     body.appendChild(el('div', { class: 'dim', text: ready ? 'Esperando a que el líder inicie la partida...' : 'Elegí tu Digimon y esperá al líder.' }));
   }

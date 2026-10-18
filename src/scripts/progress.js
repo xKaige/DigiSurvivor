@@ -37,13 +37,14 @@ const Progress = {
     try { s = JSON.parse(localStorage.getItem(this.KEY)); } catch (e) {}
     this.st = Object.assign(this.blank(), s || {});
     for (const cid in this.st.unl) this.st.seen[cid + ':stage_0'] = 1;   // al eclosionar ya conocés su forma bebé
+    for (const cid in this.st.eggs) if (this.st.unl[cid] || STARTERS.includes(cid)) delete this.st.eggs[cid];   // huevos de Digimon ya desbloqueados (quedaban en la cuenta)
     return this.st;
   },
   write() { try { localStorage.setItem(this.KEY, JSON.stringify(this.st)); } catch (e) {} if (window.onProgSave) window.onProgSave(this.st); this.badge(); },
   // aviso en el botón del Analyzer: cuántos Digitamas están listos para eclosionar
   badge() {
     const b = document.getElementById('anb'); if (!b) return;
-    const n = Object.keys(this.read().eggs).length;
+    const s = this.read(), n = Object.keys(s.eggs).filter(cid => !this.has(cid) && CREATURES.some(c => c.id === cid)).length;
     let bd = b.querySelector('.bd'); if (bd) bd.remove();
     if (n) { bd = document.createElement('span'); bd.className = 'bd'; bd.textContent = n; b.appendChild(bd); }
   },
@@ -125,6 +126,7 @@ const Progress = {
       case 'kills_with': return s.cidKills[u.with] | 0;
       case 'stage_with': return s.cidStage[u.with] | 0;
       case 'boss': return s.bosses[u.boss] | 0;
+      case 'boss_any': return Object.values(s.bosses).reduce((a, v) => a + (v | 0), 0);
       case 'analyzer': return this.seenCount();
     }
     return 0;
