@@ -26,10 +26,11 @@ const Progress = {
     const r = await fetch('src/data/unlocks.json');
     if (!r.ok) throw new Error('No se encontró src/data/unlocks.json (' + r.status + ')');
     this.data = await r.json();
+    this.activate();   // en memoria: se guarda en la próxima escritura (no pisar lo de la cuenta antes de loadProg)
   },
 
   // ---------- Estado guardado ----------
-  blank() { return { txp: 0, kills: 0, runs: 0, bestStage: 0, bestSecs: 0, cidKills: {}, cidStage: {}, bosses: {}, seen: {}, eggs: {}, unl: {}, hatchQ: [] }; },
+  blank() { return { txp: 0, kills: 0, runs: 0, bestStage: 0, bestSecs: 0, cidKills: {}, cidStage: {}, bosses: {}, seen: {}, eggs: {}, unl: {}, hatchQ: [], act: {}, pv: {} }; },
   read() {
     if (this.st) return this.st;
     let s = null;
@@ -91,7 +92,30 @@ const Progress = {
   },
 
   // ---------- Misiones de desbloqueo ----------
+  // ---------- Misiones en orden ----------
+  // Solo cuentan las primeras `active` (3) sin cumplir, en el orden de unlocks.json. Las de récord (BEST) se cumplen
+  // en UNA partida jugada mientras están activas (s.pv); las que suman cuentan desde que se activaron (s.act = base).
+  BEST: ['reach_stage', 'survive', 'stage_with'],
+  active() {
+    const s = this.read(), out = [];
+    if (!this.data) return out;
+    for (const u of this.data.unlocks) {
+      if (this.has(u.cid) || s.eggs[u.cid]) continue;
+      out.push(u); if (out.length >= (this.data.active || 3)) break;
+    }
+    return out;
+  },
+  isActive(u) { return this.active().includes(u); },
+  // fija la base de las misiones que se acaban de activar (las que suman arrancan de 0)
+  activate() { const s = this.read(); for (const u of this.active()) if (s.act[u.cid] == null) s.act[u.cid] = this.raw(u); },
   value(u) {
+    const s = this.read();
+    if (this.BEST.includes(u.type)) return s.pv[u.cid] | 0;
+    if (u.type === 'analyzer') return this.raw(u);
+    return s.act[u.cid] == null ? 0 : Math.max(0, this.raw(u) - s.act[u.cid]);
+  },
+  // valor de toda la vida (estadísticas acumuladas)
+  raw(u) {
     const s = this.read();
     switch (u.type) {
       case 'reach_stage': return s.bestStage;
@@ -117,13 +141,16 @@ const Progress = {
     const s = this.read(), e = s.eggs[cid];
     if (this.has(cid)) return 'Desbloqueado';
     if (e) return '¡Listo para eclosionar! Tocalo en el Digimon Analyzer (solapa Digitamas)';
-    return 'Cumplí la misión para conseguir su Digitama';
+    const u = this.unlockOf(cid);
+    if (u && !this.isActive(u)) return 'Misión bloqueada: primero cumplí las anteriores (hay ' + (this.data.active || 3) + ' activas a la vez)';
+    return 'Misión activa: cumplila para conseguir su Digitama (máximo ' + (this.data.perRun || 1) + ' por partida)';
   },
 
   // Se llama al terminar cada partida. r = { kills, secs, pl: [{cid, stage}] (tus jugadores), bosses: [ids] }
   // Devuelve { eggs: [unlock] nuevos, hatched: [cid] } y deja en cola la animación de eclosión.
   onRunEnd(r) {
     if (!this.data) return { eggs: [], hatched: [], txp: 0, rankUp: null, reward: 0 };
+    this.activate();   // por si alguna recién se activó (su base es lo de antes de esta partida)
     const s = this.read(), hatched = [], eggs = [];
     const r0 = this.rank(s.txp).i, txp = (r.kills | 0) + Math.floor(r.secs / 3) + 40 * r.bosses.length + 15 * Math.max(0, ...r.pl.map(q => q.stage));
     s.txp += txp;
@@ -137,11 +164,21 @@ const Progress = {
       s.cidKills[q.cid] = (s.cidKills[q.cid] | 0) + (r.kills | 0);
     }
     for (const id of r.bosses) s.bosses[id] = (s.bosses[id] | 0) + 1;
-    // los Digitamas ya no esperan partidas: se eclosionan a pedido desde el Analyzer (hatchNow)
-    for (const u of this.data.unlocks) {
-      if (this.has(u.cid) || s.eggs[u.cid] || this.value(u) < u.goal) continue;
-      s.eggs[u.cid] = { left: u.hatch || 1 }; eggs.push(u);
+    // récords de esta partida para las misiones activas (las de récord se cumplen en una sola partida)
+    const act = this.active();
+    for (const u of act) {
+      if (!this.BEST.includes(u.type)) continue;
+      const v = u.type === 'survive' ? Math.floor(r.secs) : u.type === 'reach_stage' ? Math.max(0, ...r.pl.map(q => q.stage))
+        : Math.max(0, ...r.pl.filter(q => q.cid === u.with).map(q => q.stage));
+      s.pv[u.cid] = Math.max(s.pv[u.cid] | 0, v);
     }
+    // como mucho `perRun` Digitamas por partida, en orden (se eclosionan a pedido desde el Analyzer: hatchNow)
+    for (const u of act) {
+      if (eggs.length >= (this.data.perRun || 1)) break;
+      if (this.value(u) < u.goal) continue;
+      s.eggs[u.cid] = { left: 1 }; eggs.push(u);
+    }
+    this.activate();   // las que entran ahora arrancan de cero (no cuenta lo de esta partida)
     this.write(); this.renderRank();
     return { eggs, hatched, txp, rankUp: r1.i > r0 ? r1.n : null, reward };
   },
@@ -281,7 +318,7 @@ window.getProg = () => Progress.read();
 window.loadProg = st => {
   Progress.st = null;
   try { if (st) localStorage.setItem(Progress.KEY, JSON.stringify(st)); else localStorage.removeItem(Progress.KEY); } catch (e) {}
-  Progress.read(); Progress.renderRank();
+  Progress.read(); if (Progress.data) Progress.activate(); Progress.renderRank();
   if (Progress.isOpen()) Progress.render();
   if (window.onProgressReady && Progress.data) window.onProgressReady();   // revisa el Digimon elegido (puede quedar bloqueado)
 };
