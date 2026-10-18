@@ -48,12 +48,10 @@ const Finale = {
   draw() {
     if (!this.on) return;
     const k = this.k;
-    // 0–3 s: parpadeo cada vez más rápido
-    if (k < 3) {
-      const f = 2 + k * 6;
-      if (Math.floor(k * f) % 2 === 0) { cx.fillStyle = 'rgba(255,255,255,' + (0.15 + k * 0.12) + ')'; cx.fillRect(0, 0, W, H); }
-      else { cx.fillStyle = 'rgba(0,0,0,' + (0.2 + k * 0.1) + ')'; cx.fillRect(0, 0, W, H); }
-    } else { cx.fillStyle = 'rgba(0,0,12,' + Math.min(0.78, 0.45 + (k - 3) * 0.12) + ')'; cx.fillRect(0, 0, W, H); }
+    // 0–3 s: tres pulsos de luz lentos y suaves (1 por segundo, sin cortes bruscos) mientras la pantalla se va oscureciendo
+    const dark = Math.min(0.78, k < 3 ? k * 0.15 : 0.45 + (k - 3) * 0.12);
+    cx.fillStyle = 'rgba(0,0,12,' + dark + ')'; cx.fillRect(0, 0, W, H);
+    if (k < 3) { const pulse = Math.pow(Math.sin(k * Math.PI), 2) * 0.22; cx.fillStyle = 'rgba(220,240,255,' + pulse + ')'; cx.fillRect(0, 0, W, H); }
     // los jugadores se ven por encima del oscurecido (son los que reciben el haz)
     if (k >= 3) { cx.save(); cx.translate(W / 2 - cam.x, H / 2 - cam.y); for (const q of P) dPl(q); cx.restore(); }
     // 3–7 s: Yggdrasill baja desde arriba hasta el medio
