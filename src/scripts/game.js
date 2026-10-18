@@ -969,8 +969,12 @@ function spawnOld(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  en.push({x:cam.x+Math.cos(a)*d,y:cam.y+Math.sin(a)*d,k,ti,sk,hp:T.hp*HM,sp:(55+Math.random()*25+t*.4)*T.sp*(1+.05*ti)*(chal('fast')?1.3:1),r:T.r*(1+.12*ti),v:T.v*(1+.5*ti),dm:[1,1.2,1.4,1.7,2,2.4][ti],fl:0,ang:0,el:Math.floor(Math.random()*3),gun:k!==1&&t>15&&Math.random()<Math.min(.4,(t-15)/150)+.08*ti,cd:1+Math.random()*2})}
 function burst(x,y,c){if(pt.length>=MAX_PT)return;for(let i=0;i<8;i++){const a=Math.random()*6.283,s=60+Math.random()*120;pt.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.4,c})}}
 
-// Gema de XP. Con demasiadas en el piso, la experiencia se suma a una que ya existe (se ve dorada si vale más de 5)
-function dropGem(x,y,v){if(gems.length<MAX_GEMS){gems.push({x,y,v});return}const g=gems[Math.floor(Math.random()*gems.length)];g.v+=v}
+// Gema de XP (se ve dorada si vale más de 5). Con MAX_GEMS en el piso, la nueva cae igual donde murió el virus y se recicla
+// la que está más lejos de todos los jugadores (su XP pasa a la nueva). Antes se sumaba a una al azar, que en partidas largas
+// solía estar lejísimos: no se veía caer ninguna y la XP se perdía.
+function dropGem(x,y,v){if(gems.length<MAX_GEMS){gems.push({x,y,v});return}
+ let far=0,fd=-1;for(let i=0;i<gems.length;i++){const g=gems[i];let d=1e12;for(const q of P){const dd=(q.x-g.x)**2+(q.y-g.y)**2;if(dd<d)d=dd}if(d>fd){fd=d;far=i}}
+ const old=gems[far];gems[far]={x,y,v:v+old.v}}
 // Dirección que elige cada jugador. Local: J1 WASD (con 1 jugador también flechas o joystick), J2 flechas, J3 y J4 joysticks
 // (el primero y el segundo que estén conectados). Online: el anfitrión mueve a los remotos con las teclas que mandan (rk).
 const KB=k=>[(k.d||k.arrowright?1:0)-(k.a||k.arrowleft?1:0),(k.s||k.arrowdown?1:0)-(k.w||k.arrowup?1:0)];

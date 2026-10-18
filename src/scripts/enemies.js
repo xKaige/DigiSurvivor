@@ -72,6 +72,10 @@ const Enemies = {
   // ---------- Aparición y números (balance) ----------
   // vida = (2 + t/45) × [nivel] × kind.hp · velocidad con tope · daño por nivel. group: los "swarm" vienen de a 3.
   HPT: 60,          // cada HPT segundos los enemigos ganan la vida base de uno nuevo
+  HPQ: 180,         // y además (t/HPQ)^HPE: crece cada vez más rápido desde mitad de partida (el daño del jugador escala mucho):
+  HPE: 2.4,         //   ~×1,5 de vida a los 5 min, ×2 a los 8, ×2,5 a los 10 y ×3 a los 12 (comparado con antes)
+  DMT: 300,         // desde DMT_0 segundos, el daño de los enemigos sube 1× cada DMT segundos
+  DMT_0: 180,
   HM: [1, 1.45, 2.1, 2.85, 3.9, 5.1],
   DM: [1, 1.15, 1.3, 1.5, 1.75, 2],
   spawn(ti, group) {
@@ -83,11 +87,11 @@ const Enemies = {
     const base = World.spawnPos({ k: 0, r: K.r * (1 + 0.1 * lv) }) || [cam.x + Math.hypot(W, H) / 2, cam.y];
     const n = group && d.kind === 'swarm' ? 3 : 1;
     for (let j = 0; j < n; j++) {
-      const hp = (2 + t / this.HPT) * this.HM[lv] * K.hp;
+      const hp = (2 + t / this.HPT + Math.pow(t / this.HPQ, this.HPE)) * this.HM[lv] * K.hp;
       en.push({ x: base[0] + j * 22, y: base[1] + j * 18, et: i, kd: d.kind,
         k: d.kind === 'swarm' ? 1 : d.kind === 'tank' ? 2 : 0, ti: lv, hp, mh: hp,
         sp: (55 + Math.random() * 25 + Math.min(45, t * 0.12)) * K.sp * (1 + 0.04 * lv) * (typeof Challenge !== 'undefined' && Challenge.has('fast') ? 1.3 : 1),
-        r: K.r * (1 + 0.1 * lv), v: K.xp * (1 + 0.5 * lv), dm: this.DM[lv], touch: K.touch, el: this.elOf(d),
+        r: K.r * (1 + 0.1 * lv), v: K.xp * (1 + 0.5 * lv), dm: this.DM[lv] * (1 + Math.max(0, t - this.DMT_0) / this.DMT), touch: K.touch, el: this.elOf(d),
         fl: 0, ang: 0, ac: (K.cd || 3) * (0.5 + Math.random() * 0.6), st: 0, stT: 0 });
       const e = en[en.length - 1], sp = World.freeSpot(e.x, e.y, e); e.x = sp[0]; e.y = sp[1];   // nunca dentro de una pared
     }
