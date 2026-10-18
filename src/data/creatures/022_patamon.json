@@ -1,0 +1,177 @@
+{
+  "id": "022_patamon",
+  "name": "Línea Patamon",
+  "attribute": "Dato",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2920445296, 2922418055, 3206800997, 3208431262). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 2,
+    "INT": 4,
+    "VEL": 2,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "bendicion",
+    "name": "Bendición",
+    "desc": "Si no lo golpean en 4 s, se cura un 1% de la vida por segundo"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Popomon",
+      "file": "popomon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 1,
+      "name": "Frimon",
+      "file": "frimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 2,
+      "name": "Patamon",
+      "file": "patamon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "air_shot",
+        "wing_slap"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 3,
+      "name": "Angemon",
+      "file": "angemon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "heaven_s_knuckle",
+        "holy_rod",
+        "angel_typhoon"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB"
+    },
+    {
+      "stage": 4,
+      "name": "HolyAngemon",
+      "file": "holyangemon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "heaven_s_gate",
+        "excalibur",
+        "hp_recovery"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Seraphimon",
+      "file": "seraphimon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "testament",
+        "hallowed_ascension",
+        "hallowed_knuckle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "Dominimon",
+      "file": "dominimon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "final_excalibur",
+        "zero_heavens"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    },
+    {
+      "id": "6_3",
+      "name": "LordKnightmon",
+      "file": "lordknightmon_6_3.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 4
+      },
+      "desc": "Poderoso: +5 de daño",
+      "skills": [
+        "spiral_masquerade"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 5
+      },
+      "vp": {
+        "care": 1
+      }
+    }
+  ]
+}

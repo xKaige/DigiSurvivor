@@ -1,0 +1,154 @@
+{
+  "id": "018_gabumon",
+  "name": "Línea Gabumon",
+  "attribute": "Dato",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2916229561). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 3,
+    "INT": 2,
+    "VEL": 3,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "manada",
+    "name": "Manada",
+    "desc": "+4% de daño por cada enemigo cerca (hasta +32%)"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Punimon",
+      "file": "punimon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 1,
+      "name": "Tunomon",
+      "file": "tunomon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 2,
+      "name": "Gabumon",
+      "file": "gabumon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "blue_blaster",
+        "little_horn"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 3,
+      "name": "Garurumon",
+      "file": "garurumon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "fox_fire",
+        "tai_atari",
+        "garuru_thrust"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 4,
+      "name": "WereGarurumon",
+      "file": "weregarurumon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "wolf_claw",
+        "baldy_blow",
+        "garuru_kick"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "MetalGarurumon",
+      "file": "metalgarurumon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "freezing_breath",
+        "garuru_tomahawk",
+        "ice_wolf_claw"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "CresGarurumon",
+      "file": "cresgarurumon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "yellow_beast_crescent_blade",
+        "beast_cyclone",
+        "fury_ice_moon_fang"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

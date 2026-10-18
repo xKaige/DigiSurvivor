@@ -19,7 +19,13 @@ const Enemies = {
     const r = await fetch('src/data/enemies.json');
     if (!r.ok) throw new Error('No se encontró src/data/enemies.json (' + r.status + ')');
     this.data = await r.json();
-    await Promise.all(this.data.list.filter(x => x.file).map(x => new Promise(res => {
+  },
+  // Sprites a demanda: son cientos, así que no se cargan todos al abrir el juego. Cada partida carga los de su plantel
+  // (prepare, desde start) y el invitado online carga los que le van apareciendo (sprite() pide el que falta).
+  loading: {},
+  loadSprite(x) {
+    if (!x || !x.file || this.spr[x.id] || this.loading[x.id]) return this.loading[x.id] || Promise.resolve();
+    return (this.loading[x.id] = new Promise(res => {
       const img = new Image();
       img.onload = () => {
         const cv = document.createElement('canvas'); cv.width = img.naturalWidth; cv.height = img.naturalHeight;
@@ -30,13 +36,16 @@ const Enemies = {
       };
       img.onerror = () => { console.error('No se pudo cargar el enemigo:', x.file); res(); };
       img.src = 'assets/sprites/enemies/' + x.file;
-    })));
+    }));
   },
+  // carga los sprites del plantel de esta partida (se espera antes de empezar)
+  prepare() { return this.data ? Promise.all([...new Set(this.roster.flat())].map(i => this.loadSprite(this.data.list[i]))) : Promise.resolve(); },
   def(i) { return this.data && this.data.list[i]; },
   K(e) { return this.data.kinds[e.kd] || this.data.kinds.chaser; },
   sprite(i) {
     const d = this.def(i); if (!d) return null;
     if (d.creature) { const C = CreatureLoader.cache[d.creature]; return C ? C.canvases[d.key] : null; }
+    if (!this.spr[d.id]) this.loadSprite(d);   // todavía no estaba (ej. invitado online): se pide y mientras se dibuja con figuras
     return this.spr[d.id] || null;
   },
   elOf(d) { return d.attribute === 'Virus' ? 1 : d.attribute === 'Dato' ? 2 : 0; },

@@ -13,7 +13,8 @@
     "001_guilmon": "egg_02", "002_renamon": "egg_08", "003_terriermon": "egg_03", "005_veemon": "egg_07",
     "006_gammamon": "egg_12", "007_pulsemon": "egg_16", "008_dorumon": "egg_09", "009_ryudamon": "egg_06",
     "010_wormmon": "egg_04", "011_zubamon": "egg_10", "012_jellymon": "egg_13", "013_loogamon": "egg_11",
-    "014_herissmon": "egg_14", "015_kudamon": "egg_05", "016_commandramon": "egg_01"
+    "014_herissmon": "egg_14", "015_kudamon": "egg_05", "016_commandramon": "egg_01",
+    "017_agumon": "egg_01", "018_gabumon": "egg_08", "019_tentomon": "egg_15", "020_biyomon": "egg_05", "021_armadillomon": "egg_12", "022_patamon": "egg_02", "023_dracomon": "egg_09", "024_agumon_savers": "egg_16", "025_gaomon": "egg_06", "026_lalamon": "egg_13", "027_falcomon": "egg_03", "028_coronamon": "egg_10", "029_lunamon": "egg_17", "030_dracmon": "egg_07", "031_bearmon": "egg_14", "032_fanbeemon": "egg_04", "033_kokuwamon": "egg_11", "034_sunarizamon": "egg_01", "035_sangomon": "egg_08", "036_ludomon": "egg_15", "037_liollmon": "egg_05", "038_blucomon": "egg_12"
   },
   "unlocks": [
     { "cid": "005_veemon",       "type": "reach_stage", "goal": 3,    "hatch": 1, "name": "Digimental del Valor",   "desc": "Llegá a etapa Campeón en una partida" },
@@ -27,6 +28,28 @@
     { "cid": "013_loogamon",     "type": "boss",        "boss": "warumonzaemon", "goal": 1, "hatch": 1, "name": "Juguetería rota", "desc": "Derrotá a WaruMonzaemon" },
     { "cid": "011_zubamon",      "type": "analyzer",    "goal": 30,   "hatch": 1, "name": "Base de datos",          "desc": "Registrá 30 datos en el Digimon Analyzer" },
     { "cid": "015_kudamon",      "type": "stage_with",  "with": "002_renamon", "goal": 5, "hatch": 1, "name": "Zorro sagrado", "desc": "Conseguí una evolución final con Renamon" },
-    { "cid": "016_commandramon", "type": "boss",        "boss": "machinedramon", "goal": 1, "hatch": 1, "name": "Caída del Dark Master", "desc": "Derrotá a Machinedramon" }
+    { "cid": "016_commandramon", "type": "boss",        "boss": "machinedramon", "goal": 1, "hatch": 1, "name": "Caída del Dark Master", "desc": "Derrotá a Machinedramon" },
+    { "cid": "017_agumon", "hatch": 1, "type": "reach_stage", "goal": 4, "name": "Emblema del Valor", "desc": "Llegá a etapa Perfecto en una partida" },
+    { "cid": "018_gabumon", "hatch": 1, "type": "kills_with", "with": "017_agumon", "goal": 500, "name": "Emblema de la Amistad", "desc": "Eliminá 500 virus en total jugando con Agumon" },
+    { "cid": "019_tentomon", "hatch": 1, "type": "analyzer", "goal": 30, "name": "Emblema del Conocimiento", "desc": "Registrá 30 datos en el Digimon Analyzer" },
+    { "cid": "020_biyomon", "hatch": 1, "type": "survive", "goal": 420, "name": "Emblema del Amor", "desc": "Sobreviví 7 minutos en una partida" },
+    { "cid": "021_armadillomon", "hatch": 1, "type": "kills_total", "goal": 4000, "name": "Digimental de la Sinceridad", "desc": "Eliminá 4000 virus en total" },
+    { "cid": "022_patamon", "hatch": 1, "type": "boss", "boss": "megadramon", "goal": 1, "name": "Emblema de la Esperanza", "desc": "Derrotá a Megadramon" },
+    { "cid": "023_dracomon", "hatch": 1, "type": "stage_with", "with": "001_guilmon", "goal": 5, "name": "Escama de dragón", "desc": "Llegá a una forma final con Guilmon" },
+    { "cid": "024_agumon_savers", "hatch": 1, "type": "kills_with", "with": "017_agumon", "goal": 1500, "name": "Puño de DATS", "desc": "Eliminá 1500 virus en total jugando con Agumon" },
+    { "cid": "025_gaomon", "hatch": 1, "type": "runs_total", "goal": 25, "name": "Guante de campeón", "desc": "Terminá 25 partidas" },
+    { "cid": "026_lalamon", "hatch": 1, "type": "survive", "goal": 600, "name": "Semilla de luz", "desc": "Sobreviví 10 minutos en una partida" },
+    { "cid": "027_falcomon", "hatch": 1, "type": "boss", "boss": "etemon", "goal": 2, "name": "Pluma ninja", "desc": "Derrotá a Etemon 2 veces" },
+    { "cid": "028_coronamon", "hatch": 1, "type": "reach_stage", "goal": 5, "name": "Corona solar", "desc": "Llegá a una forma final en una partida" },
+    { "cid": "029_lunamon", "hatch": 1, "type": "stage_with", "with": "028_coronamon", "goal": 4, "name": "Fragmento lunar", "desc": "Llegá a Perfecto con Coronamon" },
+    { "cid": "030_dracmon", "hatch": 1, "type": "boss", "boss": "warumonzaemon", "goal": 1, "name": "Colmillo nocturno", "desc": "Derrotá a WaruMonzaemon" },
+    { "cid": "031_bearmon", "hatch": 1, "type": "kills_total", "goal": 8000, "name": "Garra de oso", "desc": "Eliminá 8000 virus en total" },
+    { "cid": "032_fanbeemon", "hatch": 1, "type": "kills_with", "with": "019_tentomon", "goal": 800, "name": "Panal digital", "desc": "Eliminá 800 virus en total jugando con Tentomon" },
+    { "cid": "033_kokuwamon", "hatch": 1, "type": "analyzer", "goal": 60, "name": "Chip de escarabajo", "desc": "Registrá 60 datos en el Digimon Analyzer" },
+    { "cid": "034_sunarizamon", "hatch": 1, "type": "survive", "goal": 720, "name": "Arena del desierto", "desc": "Sobreviví 12 minutos en una partida" },
+    { "cid": "035_sangomon", "hatch": 1, "type": "stage_with", "with": "018_gabumon", "goal": 5, "name": "Coral del abismo", "desc": "Llegá a una forma final con Gabumon" },
+    { "cid": "036_ludomon", "hatch": 1, "type": "boss", "boss": "metaletemon", "goal": 1, "name": "Cristal antiguo", "desc": "Derrotá a MetalEtemon" },
+    { "cid": "037_liollmon", "hatch": 1, "type": "runs_total", "goal": 60, "name": "Melena de león", "desc": "Terminá 60 partidas" },
+    { "cid": "038_blucomon", "hatch": 1, "type": "boss", "boss": "machinedramon", "goal": 1, "name": "Hielo eterno", "desc": "Derrotá a Machinedramon" }
   ]
 }

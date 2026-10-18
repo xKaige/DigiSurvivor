@@ -1,0 +1,179 @@
+{
+  "id": "020_biyomon",
+  "name": "Línea Piyomon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 3206800997). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 2,
+    "INT": 3,
+    "VEL": 4,
+    "VIT": 1
+  },
+  "trait": {
+    "id": "kitsune",
+    "name": "Esquiva",
+    "desc": "12% de chance de esquivar un golpe"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Nyokimon",
+      "file": "nyokimon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "WG"
+    },
+    {
+      "stage": 1,
+      "name": "Pyocomon",
+      "file": "pyocomon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "WG"
+    },
+    {
+      "stage": 2,
+      "name": "Piyomon",
+      "file": "piyomon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "spiral_twister",
+        "violin_attack"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB"
+    },
+    {
+      "stage": 3,
+      "name": "Birdramon",
+      "file": "birdramon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "meteor_wing",
+        "fire_flap",
+        "mach_grinder"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG"
+    },
+    {
+      "stage": 4,
+      "name": "Garudamon",
+      "file": "garudamon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "shadow_wing",
+        "eagle_claw",
+        "phoenix_claw"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Hououmon",
+      "file": "hououmon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "starlight_explosion",
+        "crimson_flare",
+        "flaming_wing"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "Ravmon",
+      "file": "ravmon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "spiral_raven_claw",
+        "blast_wing",
+        "raven_king_sword"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    },
+    {
+      "id": "6_3",
+      "name": "Dominimon",
+      "file": "dominimon_6_3.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 4
+      },
+      "desc": "Poderoso: +5 de daño",
+      "skills": [
+        "final_excalibur",
+        "zero_heavens"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 5
+      },
+      "vp": {
+        "care": 1
+      }
+    }
+  ]
+}

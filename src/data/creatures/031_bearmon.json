@@ -1,0 +1,150 @@
+{
+  "id": "031_bearmon",
+  "name": "Línea Bearmon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2921267337, 2921536247, 2922418055, 3203580442, 3205929209). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 4,
+    "INT": 1,
+    "VEL": 2,
+    "VIT": 3
+  },
+  "trait": {
+    "id": "valor",
+    "name": "Valor",
+    "desc": "Al recibir un golpe, +25% de daño durante 3 s"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Popomon",
+      "file": "popomon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 1,
+      "name": "Wanyamon",
+      "file": "wanyamon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 2,
+      "name": "Bearmon",
+      "file": "bearmon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bear_fist",
+        "bear_roll"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 3,
+      "name": "Gryzmon",
+      "file": "gryzmon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "maul_attack",
+        "crescent_dawn"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 4,
+      "name": "GrappuLeomon",
+      "file": "grappuleomon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "the_king_of_fists",
+        "cyclonic_kick"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Marsmon",
+      "file": "marsmon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "corona_sanctions",
+        "mugenhadou"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "HeavyLeomon",
+      "file": "heavyleomon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "barrage_sweeper",
+        "resting_burner"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

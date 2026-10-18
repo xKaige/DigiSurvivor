@@ -1,0 +1,151 @@
+{
+  "id": "021_armadillomon",
+  "name": "Línea Armadimon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2918325548, 3205629110, 3208431262). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 3,
+    "INT": 1,
+    "VEL": 1,
+    "VIT": 5
+  },
+  "trait": {
+    "id": "kabuto",
+    "name": "Coraza",
+    "desc": "Su armadura bloquea un golpe cada 12 s"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Tsubumon",
+      "file": "tsubumon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "DS"
+    },
+    {
+      "stage": 1,
+      "name": "Upamon",
+      "file": "upamon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "DS"
+    },
+    {
+      "stage": 2,
+      "name": "Armadimon",
+      "file": "armadimon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "scratch_beat",
+        "diamond_shell"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 3,
+      "name": "Ankylomon",
+      "file": "ankylomon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "megaton_press",
+        "tail_hammer",
+        "armored_stampede"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME"
+    },
+    {
+      "stage": 4,
+      "name": "Shakkoumon",
+      "file": "shakkoumon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bombs",
+        "disaster_blaster"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Vikemon",
+      "file": "vikemon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "arctic_blizzard",
+        "viking_axe",
+        "viking_flare"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "Regalecusmon",
+      "file": "regalecusmon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "briona_strike"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "DS",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

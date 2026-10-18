@@ -1,0 +1,151 @@
+{
+  "id": "032_fanbeemon",
+  "name": "Línea Funbeemon",
+  "attribute": "Virus",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 3207405697). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 3,
+    "INT": 2,
+    "VEL": 4,
+    "VIT": 1
+  },
+  "trait": {
+    "id": "filo",
+    "name": "Filo",
+    "desc": "+10% de crítico y +25% de daño crítico"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Bubbmon",
+      "file": "bubbmon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 1,
+      "name": "Mochimon",
+      "file": "mochimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 2,
+      "name": "Funbeemon",
+      "file": "funbeemon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "gear_stinger",
+        "buzz_buzz_call"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG"
+    },
+    {
+      "stage": 3,
+      "name": "Waspmon",
+      "file": "waspmon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "turbo_stinger",
+        "bear_buster"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME"
+    },
+    {
+      "stage": 4,
+      "name": "Cannonbeemon",
+      "file": "cannonbeemon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "nitro_stinger"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "TigerVespamon",
+      "file": "tigervespamon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "mach_stinger_v",
+        "gear_stinger",
+        "royal_meister"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "HerakleKabuterimon",
+      "file": "heraklekabuterimon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "giga_blaster",
+        "mega_electro_shocker",
+        "horn_buster_ii"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "JT",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "id": "037_liollmon",
+  "name": "Línea Liollmon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2922418055, 3205929209). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 3,
+    "INT": 2,
+    "VEL": 3,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "manada",
+    "name": "Manada",
+    "desc": "+4% de daño por cada enemigo cerca (hasta +32%)"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Popomon",
+      "file": "popomon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 1,
+      "name": "Frimon",
+      "file": "frimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 2,
+      "name": "Liollmon",
+      "file": "liollmon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "lio_claw"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 3,
+      "name": "Liamon",
+      "file": "liamon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "thunder_of_king"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 4,
+      "name": "LoaderLeomon",
+      "file": "loaderleomon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bowling_storm",
+        "loader_morning_star"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Dinotigermon",
+      "file": "dinotigermon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "ground_fang"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "HeavyLeomon",
+      "file": "heavyleomon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "barrage_sweeper",
+        "resting_burner"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

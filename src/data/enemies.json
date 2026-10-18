@@ -827,6 +827,1860 @@
       "kind": "shooter",
       "creature": "004_impmon",
       "key": "branch_6_2"
+    },
+    {
+      "id": "agnimon",
+      "name": "Agnimon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "leaper",
+      "file": "agnimon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "aldamon",
+      "name": "Aldamon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "aldamon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "algomonadult",
+      "name": "Algomon(Adult)",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "algomonadult.png",
+      "pack": "2916229561"
+    },
+    {
+      "id": "amphimon",
+      "name": "Amphimon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "amphimon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "ancientgarurumon",
+      "name": "AncientGarurumon",
+      "tier": 4,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "ancientgarurumon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "ancientgreymon",
+      "name": "AncientGreymon",
+      "tier": 4,
+      "attribute": "Vacuna",
+      "kind": "tank",
+      "file": "ancientgreymon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "ancientirismon",
+      "name": "AncientIrismon",
+      "tier": 5,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "ancientirismon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "ancientmegatheriumon",
+      "name": "AncientMegatheriumon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "tank",
+      "file": "ancientmegatheriumon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "ancienttroiamon",
+      "name": "AncientTroiamon",
+      "tier": 4,
+      "attribute": "Dato",
+      "kind": "bomber",
+      "file": "ancienttroiamon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "ancientvolcamon",
+      "name": "AncientVolcamon",
+      "tier": 5,
+      "attribute": "Virus",
+      "kind": "tank",
+      "file": "ancientvolcamon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "ancientwisemon",
+      "name": "AncientWisemon",
+      "tier": 4,
+      "attribute": "Virus",
+      "kind": "tank",
+      "file": "ancientwisemon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "anomalocarimon",
+      "name": "Anomalocarimon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "anomalocarimon.png",
+      "pack": "2917716457"
+    },
+    {
+      "id": "anomalocarimonxantibody",
+      "name": "Anomalocarimon(X-Antibody)",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "anomalocarimonxantibody.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "arbormon",
+      "name": "Arbormon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "arbormon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "arcturusmon",
+      "name": "Arcturusmon",
+      "tier": 4,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "arcturusmon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "arkhaiangemon",
+      "name": "ArkhaiAngemon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "tank",
+      "file": "arkhaiangemon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "arresterdramon",
+      "name": "Arresterdramon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "arresterdramon.png",
+      "pack": "3205795834"
+    },
+    {
+      "id": "archnemon",
+      "name": "Archnemon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "archnemon.png",
+      "pack": "3208431262"
+    },
+    {
+      "id": "astamon",
+      "name": "Astamon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "astamon.png",
+      "pack": "3205929209"
+    },
+    {
+      "id": "bakemon",
+      "name": "Bakemon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "bakemon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "banchostingmon",
+      "name": "BanchoStingmon",
+      "tier": 4,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "banchostingmon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "baohuckmon",
+      "name": "BaoHuckmon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "baohuckmon.png",
+      "pack": "3205795834"
+    },
+    {
+      "id": "bastemon",
+      "name": "Bastemon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "bastemon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "belphemonragemode",
+      "name": "Belphemon: Rage Mode",
+      "tier": 4,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "belphemonragemode.png",
+      "pack": "3205929209"
+    },
+    {
+      "id": "beowolfmon",
+      "name": "Beowolfmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "leaper",
+      "file": "beowolfmon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "bigmamemon",
+      "name": "BigMamemon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "bigmamemon.png",
+      "pack": "2916229561"
+    },
+    {
+      "id": "blackkingnumemon",
+      "name": "BlackKingNumemon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "blackkingnumemon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "blitzmon",
+      "name": "Blitzmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "blitzmon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "blizzarmon",
+      "name": "Blizzarmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "blizzarmon.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "bokomon",
+      "name": "Bokomon",
+      "tier": 1,
+      "attribute": "Vacuna",
+      "kind": "swarm",
+      "file": "bokomon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "bolgmon",
+      "name": "Bolgmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "bolgmon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "bombermon",
+      "name": "Bombermon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "bombermon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "calamaramon",
+      "name": "Calamaramon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "calamaramon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "cannondramon",
+      "name": "Cannondramon",
+      "tier": 4,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "cannondramon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "caprimon",
+      "name": "Caprimon",
+      "tier": 1,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "caprimon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "cerberumon",
+      "name": "Cerberumon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "shooter",
+      "file": "cerberumon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "chackmon",
+      "name": "Chackmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "chackmon.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "chamblemon",
+      "name": "Chamblemon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "chamblemon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "choromon",
+      "name": "Choromon",
+      "tier": 0,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "choromon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "cockatrimon",
+      "name": "Cockatrimon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "cockatrimon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "coelamon",
+      "name": "Coelamon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "coelamon.png",
+      "pack": "2917716457"
+    },
+    {
+      "id": "coredramon",
+      "name": "Coredramon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "coredramon.png",
+      "pack": "3205795834"
+    },
+    {
+      "id": "cthyllamon",
+      "name": "Cthyllamon",
+      "tier": 5,
+      "attribute": "Virus",
+      "kind": "tank",
+      "file": "cthyllamon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "daipenmon",
+      "name": "Daipenmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "daipenmon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "darksuperstarmon",
+      "name": "DarkSuperstarmon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "darksuperstarmon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "deathmon",
+      "name": "Deathmon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "bomber",
+      "file": "deathmon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "deathmonblack",
+      "name": "Deathmon(Black)",
+      "tier": 4,
+      "attribute": "Dato",
+      "kind": "leaper",
+      "file": "deathmonblack.png",
+      "pack": "2927326254"
+    },
+    {
+      "id": "devimon",
+      "name": "Devimon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "devimon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "devitamamon",
+      "name": "Devitamamon",
+      "tier": 4,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "devitamamon.png",
+      "pack": "2927326254"
+    },
+    {
+      "id": "diarbbitmon",
+      "name": "Diarbbitmon",
+      "tier": 4,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "diarbbitmon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "digmon",
+      "name": "Digmon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "digmon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "dinorexmon",
+      "name": "Dinorexmon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "tank",
+      "file": "dinorexmon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "dobermon",
+      "name": "Dobermon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "dobermon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "dogmon",
+      "name": "Dogmon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "dogmon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "donedevimon",
+      "name": "DoneDevimon",
+      "tier": 4,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "donedevimon.png",
+      "pack": "2917716457"
+    },
+    {
+      "id": "duskmon",
+      "name": "Duskmon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "duskmon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "dynasmon",
+      "name": "Dynasmon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "dynasmon.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "ebidramon",
+      "name": "Ebidramon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "ebidramon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "eosmonperfect",
+      "name": "Eosmon(Perfect)",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "bomber",
+      "file": "eosmonperfect.png",
+      "pack": "3207405697"
+    },
+    {
+      "id": "espimon",
+      "name": "Espimon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "swarm",
+      "file": "espimon.png",
+      "pack": "2927326254"
+    },
+    {
+      "id": "fairimon",
+      "name": "Fairimon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "tank",
+      "file": "fairimon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "fantomon",
+      "name": "Fantomon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "fantomon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "flamon",
+      "name": "Flamon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "flamon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "frozomon",
+      "name": "Frozomon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "shooter",
+      "file": "frozomon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "fumamon",
+      "name": "Fumamon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "fumamon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "garummon",
+      "name": "Garummon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "shooter",
+      "file": "garummon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "gazimon",
+      "name": "Gazimon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "swarm",
+      "file": "gazimon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "ghilliedhumon",
+      "name": "Ghilliedhumon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "ghilliedhumon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "ghostmon",
+      "name": "Ghostmon",
+      "tier": 1,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "ghostmon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "gigaseadramon",
+      "name": "GigaSeadramon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "gigaseadramon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "gigasmon",
+      "name": "Gigasmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "gigasmon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "gizamon",
+      "name": "Gizamon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "swarm",
+      "file": "gizamon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "gokimon",
+      "name": "Gokimon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "gokimon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "gorimon",
+      "name": "Gorimon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "gorimon.png",
+      "pack": "2916229561"
+    },
+    {
+      "id": "gottsumon",
+      "name": "Gottsumon",
+      "tier": 1,
+      "attribute": "Dato",
+      "kind": "swarm",
+      "file": "gottsumon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "gracenovamon",
+      "name": "GraceNovamon",
+      "tier": 4,
+      "attribute": "Vacuna",
+      "kind": "leaper",
+      "file": "gracenovamon.png",
+      "pack": "3205929209"
+    },
+    {
+      "id": "grankuwagamon",
+      "name": "GranKuwagamon",
+      "tier": 5,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "grankuwagamon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "grottemon",
+      "name": "Grottemon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "tank",
+      "file": "grottemon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "groundramon",
+      "name": "Groundramon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "groundramon.png",
+      "pack": "3205795834"
+    },
+    {
+      "id": "gumdramon",
+      "name": "Gumdramon",
+      "tier": 1,
+      "attribute": "Vacuna",
+      "kind": "swarm",
+      "file": "gumdramon.png",
+      "pack": "3205795834"
+    },
+    {
+      "id": "gusokumon",
+      "name": "Gusokumon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "gusokumon.png",
+      "pack": "2918325548"
+    },
+    {
+      "id": "hippogriffomon",
+      "name": "Hippogriffomon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "hippogriffomon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "hoverespimon",
+      "name": "HoverEspimon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "hoverespimon.png",
+      "pack": "2927326254"
+    },
+    {
+      "id": "huankunmon",
+      "name": "Huankunmon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "tank",
+      "file": "huankunmon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "hudiemon",
+      "name": "Hudiemon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "hudiemon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "hyougamon",
+      "name": "Hyougamon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "hyougamon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "icemon",
+      "name": "Icemon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "icemon.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "ikkakumon",
+      "name": "Ikkakumon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "ikkakumon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "jazamon",
+      "name": "Jazamon",
+      "tier": 1,
+      "attribute": "Dato",
+      "kind": "swarm",
+      "file": "jazamon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "jazarichmon",
+      "name": "Jazarichmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "jazarichmon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "jesmon",
+      "name": "JESmon",
+      "tier": 4,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "jesmon.png",
+      "pack": "3205795834"
+    },
+    {
+      "id": "jetsilphymon",
+      "name": "JetSilphymon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "jetsilphymon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "jewelbeemon",
+      "name": "Jewelbeemon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "jewelbeemon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "jokermon",
+      "name": "Jokermon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "jokermon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "jyagamon",
+      "name": "Jyagamon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "bomber",
+      "file": "jyagamon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "kaisergreymon",
+      "name": "KaiserGreymon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "kaisergreymon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "kaiserleomon",
+      "name": "KaiserLeomon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "shooter",
+      "file": "kaiserleomon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "kinkakumon",
+      "name": "Kinkakumon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "kinkakumon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "kokabuterimon",
+      "name": "Kokabuterimon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "swarm",
+      "file": "kokabuterimon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "kongoumon",
+      "name": "Kongoumon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "kongoumon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "kuwagamon",
+      "name": "Kuwagamon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "kuwagamon.png",
+      "pack": "3207405697"
+    },
+    {
+      "id": "lotusmon",
+      "name": "Lotusmon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "bomber",
+      "file": "lotusmon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "lwemon",
+      "name": "Löwemon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "lwemon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "lucemonfalldownmode",
+      "name": "Lucemon: Falldown Mode",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "lucemonfalldownmode.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "luxmon",
+      "name": "Luxmon",
+      "tier": 1,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "luxmon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "madleomon",
+      "name": "MadLeomon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "madleomon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "magnagarurumon",
+      "name": "MagnaGarurumon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "magnagarurumon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "magnakidmon",
+      "name": "MagnaKidmon",
+      "tier": 5,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "magnakidmon.png",
+      "pack": "3205795834"
+    },
+    {
+      "id": "majiramon",
+      "name": "Majiramon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "majiramon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "belialvamdemon",
+      "name": "BelialVamdemon",
+      "tier": 5,
+      "attribute": "Virus",
+      "kind": "tank",
+      "file": "belialvamdemon.png",
+      "pack": "3208431262"
+    },
+    {
+      "id": "mamemon",
+      "name": "Mamemon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "mamemon.png",
+      "pack": "2917716457"
+    },
+    {
+      "id": "mammon",
+      "name": "Mammon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "tank",
+      "file": "mammon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "manticoremon",
+      "name": "Manticoremon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "tank",
+      "file": "manticoremon.png",
+      "pack": "2927326254"
+    },
+    {
+      "id": "marinchimairamon",
+      "name": "MarinChimairamon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "marinchimairamon.png",
+      "pack": "2918325548"
+    },
+    {
+      "id": "megaseadramon",
+      "name": "MegaSeadramon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "tank",
+      "file": "megaseadramon.png",
+      "pack": "2918325548"
+    },
+    {
+      "id": "mephismon",
+      "name": "Mephismon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "tank",
+      "file": "mephismon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "meramon",
+      "name": "Meramon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "meramon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "mercuremon",
+      "name": "Mercuremon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "mercuremon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "mermaimon",
+      "name": "Mermaimon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "leaper",
+      "file": "mermaimon.png",
+      "pack": "2918325548"
+    },
+    {
+      "id": "metallicdramon",
+      "name": "Metallicdramon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "tank",
+      "file": "metallicdramon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "metaltyranomon",
+      "name": "MetalTyranomon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "shooter",
+      "file": "metaltyranomon.png",
+      "pack": "2917716457"
+    },
+    {
+      "id": "mojyamon",
+      "name": "Mojyamon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "mojyamon.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "koemon",
+      "name": "Koemon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "koemon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "moosemon",
+      "name": "Moosemon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "moosemon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "morphomon",
+      "name": "Morphomon",
+      "tier": 1,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "morphomon.png",
+      "pack": "3207405697"
+    },
+    {
+      "id": "mummymon",
+      "name": "Mummymon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "mummymon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "murmukusmon",
+      "name": "Murmukusmon",
+      "tier": 4,
+      "attribute": "Virus",
+      "kind": "shooter",
+      "file": "murmukusmon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "vamdemon",
+      "name": "Vamdemon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "vamdemon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "nanomon",
+      "name": "Nanomon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "shooter",
+      "file": "nanomon.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "neodevimon",
+      "name": "NeoDevimon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "neodevimon.png",
+      "pack": "2917716457"
+    },
+    {
+      "id": "neovamdemon",
+      "name": "NeoVamdemon",
+      "tier": 5,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "neovamdemon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "noblepumpmon",
+      "name": "NoblePumpmon",
+      "tier": 5,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "noblepumpmon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "octmon",
+      "name": "Octmon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "octmon.png",
+      "pack": "2918325548"
+    },
+    {
+      "id": "orgemon",
+      "name": "Orgemon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "orgemon.png",
+      "pack": "2917716457"
+    },
+    {
+      "id": "okuwamon",
+      "name": "Okuwamon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "okuwamon.png",
+      "pack": "3207405697"
+    },
+    {
+      "id": "oleamon",
+      "name": "Oleamon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "oleamon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "olegmon",
+      "name": "Olegmon",
+      "tier": 4,
+      "attribute": "Vacuna",
+      "kind": "shooter",
+      "file": "olegmon.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "omegamon",
+      "name": "Omegamon",
+      "tier": 4,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "omegamon.png",
+      "pack": "2916229561"
+    },
+    {
+      "id": "pagumon",
+      "name": "Pagumon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "swarm",
+      "file": "pagumon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "paildramon",
+      "name": "Paildramon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "paildramon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "panjyamon",
+      "name": "Panjyamon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "panjyamon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "panjyamonxantibody",
+      "name": "Panjyamon(X-Antibody)",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "panjyamonxantibody.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "parrotmon",
+      "name": "Parrotmon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "parrotmon.png",
+      "pack": "2916229561"
+    },
+    {
+      "id": "peacockmon",
+      "name": "Peacockmon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "peacockmon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "pegasmon",
+      "name": "Pegasmon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "leaper",
+      "file": "pegasmon.png",
+      "pack": "3208431262"
+    },
+    {
+      "id": "petaldramon",
+      "name": "Petaldramon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "bomber",
+      "file": "petaldramon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "phascomon",
+      "name": "Phascomon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "swarm",
+      "file": "phascomon.png",
+      "pack": "3205929209"
+    },
+    {
+      "id": "phelesmon",
+      "name": "Phelesmon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "phelesmon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "piccolomon",
+      "name": "Piccolomon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "piccolomon.png",
+      "pack": "2927326254"
+    },
+    {
+      "id": "pidmon",
+      "name": "Pidmon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "pidmon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "piemon",
+      "name": "Piemon",
+      "tier": 4,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "piemon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "piranimon",
+      "name": "Piranimon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "piranimon.png",
+      "pack": "2918325548"
+    },
+    {
+      "id": "platinumnumemon",
+      "name": "PlatinumNumemon",
+      "tier": 5,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "platinumnumemon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "pomumon",
+      "name": "Pomumon",
+      "tier": 1,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "pomumon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "proximamon",
+      "name": "Proximamon",
+      "tier": 5,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "proximamon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "publimon",
+      "name": "Publimon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "publimon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "pucchiemon",
+      "name": "Pucchiemon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "pucchiemon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "pumpmon",
+      "name": "Pumpmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "pumpmon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "raihimon",
+      "name": "Raihimon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "raihimon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "ranamon",
+      "name": "Ranamon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "ranamon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "regulusmon",
+      "name": "Regulusmon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "regulusmon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "rhinokabuterimon",
+      "name": "RhinoKabuterimon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "rhinokabuterimon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "saberdramon",
+      "name": "Saberdramon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "saberdramon.png",
+      "pack": "2915748104"
+    },
+    {
+      "id": "saviorhuckmon",
+      "name": "SaviorHuckmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "leaper",
+      "file": "saviorhuckmon.png",
+      "pack": "3205795834"
+    },
+    {
+      "id": "scorpiomon",
+      "name": "Scorpiomon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "scorpiomon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "seadramon",
+      "name": "Seadramon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "seadramon.png",
+      "pack": "2918325548"
+    },
+    {
+      "id": "siesamon",
+      "name": "Siesamon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "siesamon.png",
+      "pack": "3203580442"
+    },
+    {
+      "id": "sephirothmon",
+      "name": "Sephirothmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "tank",
+      "file": "sephirothmon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "shadramon",
+      "name": "Shadramon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "shadramon.png",
+      "pack": "2915771451"
+    },
+    {
+      "id": "shakamon",
+      "name": "Shakamon",
+      "tier": 5,
+      "attribute": "Vacuna",
+      "kind": "tank",
+      "file": "shakamon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "karatukinumemon",
+      "name": "KaratukiNumemon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "karatukinumemon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "shutumon",
+      "name": "Shutumon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "shutumon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "sirenmon",
+      "name": "Sirenmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "leaper",
+      "file": "sirenmon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "siriusmon",
+      "name": "Siriusmon",
+      "tier": 4,
+      "attribute": "Vacuna",
+      "kind": "shooter",
+      "file": "siriusmon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "skullmammon",
+      "name": "SkullMammon",
+      "tier": 5,
+      "attribute": "Vacuna",
+      "kind": "bomber",
+      "file": "skullmammon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "skullsatamon",
+      "name": "SkullSatamon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "skullsatamon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "snowgoburimon",
+      "name": "SnowGoburimon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "swarm",
+      "file": "snowgoburimon.png",
+      "pack": "2921267337"
+    },
+    {
+      "id": "spinomon",
+      "name": "Spinomon",
+      "tier": 4,
+      "attribute": "Virus",
+      "kind": "tank",
+      "file": "spinomon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "splashmon",
+      "name": "Splashmon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "splashmon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "starmon",
+      "name": "Starmon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "starmon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "strabimon",
+      "name": "Strabimon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "strabimon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "submarimon",
+      "name": "Submarimon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "submarimon.png",
+      "pack": "3208431262"
+    },
+    {
+      "id": "superstarmon",
+      "name": "Superstarmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "superstarmon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "susanoomon",
+      "name": "Susanoomon",
+      "tier": 4,
+      "attribute": "Vacuna",
+      "kind": "leaper",
+      "file": "susanoomon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "thunderbirmon",
+      "name": "Thunderbirmon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "thunderbirmon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "tinkermon",
+      "name": "Tinkermon",
+      "tier": 1,
+      "attribute": "Virus",
+      "kind": "swarm",
+      "file": "tinkermon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "tobiumon",
+      "name": "Tobiumon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "tobiumon.png",
+      "pack": "2918325548"
+    },
+    {
+      "id": "togemon",
+      "name": "Togemon",
+      "tier": 2,
+      "attribute": "Dato",
+      "kind": "bomber",
+      "file": "togemon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "toropiamon",
+      "name": "Toropiamon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "bomber",
+      "file": "toropiamon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "tortamon",
+      "name": "Tortamon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "tortamon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "triceramon",
+      "name": "Triceramon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "chaser",
+      "file": "triceramon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "valvemon",
+      "name": "Valvemon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "shooter",
+      "file": "valvemon.png",
+      "pack": "2916229561"
+    },
+    {
+      "id": "velgrmon",
+      "name": "Velgrmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "dasher",
+      "file": "velgrmon.png",
+      "pack": "2922418055"
+    },
+    {
+      "id": "vritramon",
+      "name": "Vritramon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "tank",
+      "file": "vritramon.png",
+      "pack": "2920014100"
+    },
+    {
+      "id": "vulturemon",
+      "name": "Vulturemon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "vulturemon.png",
+      "pack": "2918572605"
+    },
+    {
+      "id": "waruseadramon",
+      "name": "WaruSeadramon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "waruseadramon.png",
+      "pack": "2916229561"
+    },
+    {
+      "id": "wisemon",
+      "name": "Wisemon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "leaper",
+      "file": "wisemon.png",
+      "pack": "2922117532"
+    },
+    {
+      "id": "wolfmon",
+      "name": "Wolfmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "leaper",
+      "file": "wolfmon.png",
+      "pack": "2921536247"
+    },
+    {
+      "id": "xiangpengmon",
+      "name": "Xiangpengmon",
+      "tier": 5,
+      "attribute": "Vacuna",
+      "kind": "dasher",
+      "file": "xiangpengmon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "xiquemon",
+      "name": "Xiquemon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "xiquemon.png",
+      "pack": "3206800997"
+    },
+    {
+      "id": "yukidarumon",
+      "name": "Yukidarumon",
+      "tier": 2,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "yukidarumon.png",
+      "pack": "2917184459"
+    },
+    {
+      "id": "zamielmon",
+      "name": "Zamielmon",
+      "tier": 3,
+      "attribute": "Dato",
+      "kind": "leaper",
+      "file": "zamielmon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "zanmetsumon",
+      "name": "Zanmetsumon",
+      "tier": 3,
+      "attribute": "Virus",
+      "kind": "dasher",
+      "file": "zanmetsumon.png",
+      "pack": "3203385245"
+    },
+    {
+      "id": "zassoumon",
+      "name": "Zassoumon",
+      "tier": 2,
+      "attribute": "Virus",
+      "kind": "chaser",
+      "file": "zassoumon.png",
+      "pack": "2920445296"
+    },
+    {
+      "id": "zudomon",
+      "name": "Zudomon",
+      "tier": 3,
+      "attribute": "Vacuna",
+      "kind": "chaser",
+      "file": "zudomon.png",
+      "pack": "3205629110"
+    },
+    {
+      "id": "zurumon",
+      "name": "Zurumon",
+      "tier": 0,
+      "attribute": "Vacuna",
+      "kind": "swarm",
+      "file": "zurumon.png",
+      "pack": "2915748104"
     }
   ]
 }

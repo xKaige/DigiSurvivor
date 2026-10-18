@@ -1,0 +1,149 @@
+{
+  "id": "033_kokuwamon",
+  "name": "Línea Kokuwamon",
+  "attribute": "Dato",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2915771451, 2922117532). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 2,
+    "INT": 4,
+    "VEL": 2,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "pulso",
+    "name": "Pulso",
+    "desc": "Mientras se mueve, suelta una descarga alrededor cada 3 s"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Leafmon",
+      "file": "leafmon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "ME"
+    },
+    {
+      "stage": 1,
+      "name": "Minomon",
+      "file": "minomon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "JT"
+    },
+    {
+      "stage": 2,
+      "name": "Kokuwamon",
+      "file": "kokuwamon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "mini_scissor_claw",
+        "assemble_work"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME"
+    },
+    {
+      "stage": 3,
+      "name": "Thunderballmon",
+      "file": "thunderballmon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "thunder_ball",
+        "thunder_bomber",
+        "intercepting_bomb"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME"
+    },
+    {
+      "stage": 4,
+      "name": "MetallifeKuwagamon",
+      "file": "metallifekuwagamon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "homing_laser"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "GrandisKuwagamon",
+      "file": "grandiskuwagamon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "gran_killer",
+        "grandis_scissor"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "JT",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "AncientBeatmon",
+      "file": "ancientbeatmon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "calamity_thunder"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

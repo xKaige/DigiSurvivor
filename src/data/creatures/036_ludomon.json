@@ -1,0 +1,122 @@
+{
+  "id": "036_ludomon",
+  "name": "Línea Ludomon",
+  "attribute": "Dato",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2927326254). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 2,
+    "INT": 4,
+    "VEL": 2,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "curioso",
+    "name": "Curiosidad",
+    "desc": "+12% de experiencia"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Cotsucomon",
+      "file": "cotsucomon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "UK"
+    },
+    {
+      "stage": 1,
+      "name": "Kakkinmon",
+      "file": "kakkinmon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "UK"
+    },
+    {
+      "stage": 2,
+      "name": "Ludomon",
+      "file": "ludomon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "UK"
+    },
+    {
+      "stage": 3,
+      "name": "TiaLudomon",
+      "file": "tialudomon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "frisbicker",
+        "assault_claw"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "UK"
+    },
+    {
+      "stage": 4,
+      "name": "RaijiLudomon",
+      "file": "raijiludomon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "lightning_buster",
+        "rocket_messer"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "VB"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Bryweludramon",
+      "file": "bryweludramon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "crimson_storm",
+        "blast_smash"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "UK",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    }
+  ]
+}

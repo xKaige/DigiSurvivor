@@ -1,0 +1,154 @@
+{
+  "id": "019_tentomon",
+  "name": "Línea Tentomon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 3207405697). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 2,
+    "INT": 4,
+    "VEL": 1,
+    "VIT": 3
+  },
+  "trait": {
+    "id": "chispa",
+    "name": "Chispa",
+    "desc": "15% de chance de que un golpe salte a otro enemigo cercano"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Bubbmon",
+      "file": "bubbmon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 1,
+      "name": "Mochimon",
+      "file": "mochimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "NSp"
+    },
+    {
+      "stage": 2,
+      "name": "Tentomon",
+      "file": "tentomon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "super_shocker",
+        "double_punch"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "JT"
+    },
+    {
+      "stage": 3,
+      "name": "Kabuterimon",
+      "file": "kabuterimon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "electro_shocker",
+        "beetle_horn_attack",
+        "quick_thrust"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "JT"
+    },
+    {
+      "stage": 4,
+      "name": "AtlurKabuterimon",
+      "file": "atlurkabuterimon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "horn_buster",
+        "mega_blaster",
+        "wild_scratcher"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "JT"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "HerakleKabuterimon",
+      "file": "heraklekabuterimon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "giga_blaster",
+        "mega_electro_shocker",
+        "horn_buster_ii"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "JT",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "TyrantKabuterimon",
+      "file": "tyrantkabuterimon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "shine_of_bee",
+        "bee_cyclone",
+        "insect_cannon"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

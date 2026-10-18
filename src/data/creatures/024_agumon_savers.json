@@ -1,0 +1,154 @@
+{
+  "id": "024_agumon_savers",
+  "name": "Línea Agumon (Savers)",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2917716457, 3205795834). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 4,
+    "INT": 1,
+    "VEL": 3,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "arsenal",
+    "name": "Arsenal",
+    "desc": "+1 disparo básico y ataca un 10% más rápido"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Botamon",
+      "file": "botamon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "VB"
+    },
+    {
+      "stage": 1,
+      "name": "Koromon",
+      "file": "koromon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "VB"
+    },
+    {
+      "stage": 2,
+      "name": "Agumon",
+      "file": "agumon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "pepper_breath",
+        "baby_burner"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 3,
+      "name": "GeoGreymon",
+      "file": "geogreymon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "mega_flame",
+        "mega_burst",
+        "horn_impulse"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "NSp"
+    },
+    {
+      "stage": 4,
+      "name": "RizeGreymon",
+      "file": "rizegreymon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "trident_revolver",
+        "rising_destroyer",
+        "solid_strike"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "ME"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "ShineGreymon",
+      "file": "shinegreymon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "glorious_burst",
+        "shining_blast",
+        "geogrey_sword"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "DR",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "ShineGreymon: Burst Mode",
+      "file": "shinegreymonburstmode_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "corona_blaze_sword",
+        "final_shining_burst",
+        "torrid_weiss"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "DR",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

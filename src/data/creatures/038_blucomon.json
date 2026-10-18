@@ -1,0 +1,149 @@
+{
+  "id": "038_blucomon",
+  "name": "Línea Blucomon",
+  "attribute": "Dato",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 2917184459). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 3,
+    "INT": 3,
+    "VEL": 2,
+    "VIT": 2
+  },
+  "trait": {
+    "id": "hilo",
+    "name": "Enredadera",
+    "desc": "Sus golpes ralentizan a los enemigos un 30%"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "YukimiBotamon",
+      "file": "yukimibotamon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "VB"
+    },
+    {
+      "stage": 1,
+      "name": "Hiyarimon",
+      "file": "hiyarimon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "DR"
+    },
+    {
+      "stage": 2,
+      "name": "Blucomon",
+      "file": "blucomon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "baby_hail"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "DR"
+    },
+    {
+      "stage": 3,
+      "name": "Paledramon",
+      "file": "paledramon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "meteor_hail"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "DR"
+    },
+    {
+      "stage": 4,
+      "name": "CrysPaledramon",
+      "file": "cryspaledramon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "frozen_claw",
+        "callous_dimension"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "DR"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Hexeblaumon",
+      "file": "hexeblaumon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "summon_frost",
+        "absolute_blast",
+        "hecto_edge_blizzard"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "UK",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "FrosVelgrmon",
+      "file": "frosvelgrmon_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "innocence_blizzard",
+        "freezing_ray"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}

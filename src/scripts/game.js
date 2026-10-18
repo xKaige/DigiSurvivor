@@ -10,7 +10,13 @@ const MAX_PLAYERS=4,PC=['#2ee6c8','#ff7ad9','#ffd23f','#7aa8ff'],ELC=['#4db8ff',
 const CREATURES = [
   { id: '001_guilmon' }, { id: '002_renamon' }, { id: '003_terriermon' }, { id: '005_veemon' }, { id: '006_gammamon' },
   { id: '007_pulsemon' }, { id: '008_dorumon' }, { id: '009_ryudamon' }, { id: '010_wormmon' }, { id: '011_zubamon' },
-  { id: '012_jellymon' }, { id: '013_loogamon' }, { id: '014_herissmon' }, { id: '015_kudamon' }, { id: '016_commandramon' }
+  { id: '012_jellymon' }, { id: '013_loogamon' }, { id: '014_herissmon' }, { id: '015_kudamon' }, { id: '016_commandramon' },
+  // líneas del Workshop (oct 2026): se desbloquean con su Digitama (unlocks.json)
+  { id: '017_agumon' }, { id: '018_gabumon' }, { id: '019_tentomon' }, { id: '020_biyomon' }, { id: '021_armadillomon' },
+  { id: '022_patamon' }, { id: '023_dracomon' }, { id: '024_agumon_savers' }, { id: '025_gaomon' }, { id: '026_lalamon' },
+  { id: '027_falcomon' }, { id: '028_coronamon' }, { id: '029_lunamon' }, { id: '030_dracmon' }, { id: '031_bearmon' },
+  { id: '032_fanbeemon' }, { id: '033_kokuwamon' }, { id: '034_sunarizamon' }, { id: '035_sangomon' }, { id: '036_ludomon' },
+  { id: '037_liollmon' }, { id: '038_blucomon' }
 ];
 // Criatura de un jugador (cada jugador elige la suya; guarda su id en q.cid)
 const CR = q => CreatureLoader.cache[(q && q.cid) || '001_guilmon'] || null;
@@ -436,7 +442,7 @@ async function start(m,ids,los){
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();await Enemies.prepare();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
   renderLegend();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);

@@ -1,0 +1,153 @@
+{
+  "id": "027_falcomon",
+  "name": "Línea Falcomon",
+  "attribute": "Vacuna",
+  "anySkill": false,
+  "source": "Sprites: Steam Workshop de Stream Avatars (packs 3206800997). Evoluciones y skills: Wikimon (canon)",
+  "stats": {
+    "FUE": 3,
+    "INT": 2,
+    "VEL": 4,
+    "VIT": 1
+  },
+  "trait": {
+    "id": "kitsune",
+    "name": "Esquiva",
+    "desc": "12% de chance de esquivar un golpe"
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Nyokimon",
+      "file": "nyokimon_1.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "bubble_blow"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "WG"
+    },
+    {
+      "stage": 1,
+      "name": "Pyocomon",
+      "file": "pyocomon_2.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "tackle"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Bebé: ataque típico",
+      "family": "WG"
+    },
+    {
+      "stage": 2,
+      "name": "Falcomon",
+      "file": "falcomon_3.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "scratch_smash",
+        "ninja_blade"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG"
+    },
+    {
+      "stage": 3,
+      "name": "Peckmon",
+      "file": "peckmon_4.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "spiral_claw",
+        "kunai_wing",
+        "thousand_beaks"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG"
+    },
+    {
+      "stage": 4,
+      "name": "Yatagaramon",
+      "file": "yatagaramon_5.png",
+      "cols": 2,
+      "rows": 6,
+      "skills": [
+        "savage_emperor",
+        "haguro",
+        "fire_jewels"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG"
+    }
+  ],
+  "branches": [
+    {
+      "id": "6_1",
+      "name": "Ravmon",
+      "file": "ravmon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "FUE": 3,
+        "VIT": 1
+      },
+      "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
+      "skills": [
+        "spiral_raven_claw",
+        "blast_wing",
+        "raven_king_sword"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "vp": {
+        "kills": 250
+      }
+    },
+    {
+      "id": "6_2",
+      "name": "Ravmon: Burst Mode",
+      "file": "ravmonburstmode_6_2.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
+      "skills": [
+        "crimson_formation",
+        "mourning_dance"
+      ],
+      "wiki": null,
+      "verified": false,
+      "note": "Skills del canon (Wikimon)",
+      "family": "WG",
+      "bonus": {
+        "dmg": 1,
+        "multi": 2,
+        "spP": 0.15
+      },
+      "vp": {
+        "nohit": 40
+      }
+    }
+  ]
+}
