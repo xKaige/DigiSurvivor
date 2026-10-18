@@ -128,7 +128,7 @@ const Bosses = {
     const id = B ? B.id + ':' + e.cyc : null;
     if (id !== this.shown) {             // apareció uno nuevo o cayó el que estaba
       if (B) this.banner('¡Apareció ' + B.name + '!');
-      else if (this.shownName && running) this.banner('¡Derrotaste a ' + this.shownName + '!');
+      else if (this.shownName && running) { this.banner('¡Derrotaste a ' + this.shownName + '!'); Sound.play('win'); }
       this.shown = id; this.shownName = B ? B.name : null;
     }
     if (!B) { this.hideBar(); return; }

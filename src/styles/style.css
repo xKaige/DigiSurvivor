@@ -528,3 +528,18 @@ body.touch #go2{display:none}   /* 2 jugadores local necesita teclado: en el cel
   #tsub{font-size:12px;margin:4px 0}#tree{padding-top:calc(env(safe-area-inset-top) + 18px)}
   #pause h2{font-size:28px}
 }
+
+/* ---------- Sonido: parlante y panel (audio.js) ---------- */
+#snd{display:none;position:fixed;z-index:6;top:40px;right:10px;font:700 13px 'Chakra Petch',sans-serif}
+body.ingame #snd{display:block}
+#sndb{display:block;width:36px;height:30px;padding:4px 7px;color:#f2fbff;background:rgba(4,16,34,.85);border:2px solid #1b6fa8;border-radius:2px 10px 2px 10px;cursor:pointer}
+#sndb svg{display:block;width:100%;height:100%}#sndb.off{color:#ff6b6b;border-color:#8a2f2f}
+#sndb:hover,#snd.open #sndb{border-color:#3fd0ff;box-shadow:0 0 10px rgba(63,208,255,.5)}
+#sndp{display:none;position:absolute;top:36px;right:0;width:200px;padding:10px 12px;flex-direction:column;gap:8px;color:#f2fbff;background:linear-gradient(180deg,rgba(14,52,90,.95),rgba(4,16,34,.97));border:2px solid #3fd0ff;border-radius:10px 2px 10px 2px;box-shadow:0 0 14px rgba(63,208,255,.35)}
+#snd.open #sndp{display:flex}
+#sndp b{font:900 12px 'Orbitron',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#3fd0ff}
+#sndp label{display:flex;flex-direction:column;gap:2px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#cfe8ff}
+#sndp input{width:100%;accent-color:#3fd0ff;cursor:pointer}
+#sndmut{padding:6px;font:700 12px 'Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#ffd23f;background:rgba(255,210,63,.1);border:2px solid #ffd23f;cursor:pointer}
+@media (max-width:700px){#snd{top:calc(env(safe-area-inset-top) + 40px);right:52px}#sndp{width:180px}}
+body.finale #snd{display:none!important}

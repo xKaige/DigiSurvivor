@@ -52,7 +52,7 @@ const Items = {
       for (const q of P) {
         if (q.dead || it.l <= 0 || Math.hypot(q.x - it.x, q.y - it.y) > q.r + 22) continue;
         if (it.k === 'xantibody' && q.xa) continue;   // ya lo tiene: queda para el otro jugador
-        this.apply(q, it.k); it.l = 0;
+        this.apply(q, it.k); it.l = 0; Sound.play('item');
       }
     }
     this.on = this.on.filter(it => it.l > 0);

@@ -432,7 +432,7 @@ function hit(e,d,el,q){const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.h
  if(q&&q.m){v=Stats.onHit(q,e,v);if(Math.random()<q.crit){v*=q.critD;cr=1}e.lh=q.id}
  e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,v,cr?'#ffd23f':m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',cr?32:m>1?30:m<1?14:18,cr?String(Math.max(1,Math.round(v*10)))+'!':0);
  if(q&&q.m)Stats.afterHit(q,e,v)}
-function hurt(q,d,el,src){if(q.dead)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
+function hurt(q,d,el,src){if(q.dead)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;if(!isOnline||q.id===myIdx)Sound.play('hurt');burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
 function tot(q,k){return Stats.pts(q,k)}   // puntos de stat: especie + partida + árbol (stats.js)
 function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
 
@@ -447,7 +447,7 @@ async function start(m,ids,los){
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();await Enemies.prepare();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
-  renderLegend();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
+  renderLegend();Sound.music(true);if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
 }
 
 // ---------- Selección de criatura ----------
@@ -675,7 +675,7 @@ $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
  if(isOnline&&isHost&&conn){try{conn.send({type:'end',title:title})}catch(e){}}
- running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();Gate.reset();Finale.reset();
+ running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();Sound.music(false);Gate.reset();Finale.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
  const bc=Math.round(Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
@@ -782,7 +782,7 @@ function drawEnemy(e){
  cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh,fw,fh,-(B.x0+B.x1)/2*kk,h/2-2-B.y1*kk,fw*kk,fh*kk);   // golpeado: silueta blanca
  cx.restore();return true}
 
-function startEvo(s){evo={t:0,s,done:0};const v=$('evt');v.style.display='block';v.textContent='¡Tu compañero está digievolucionando!'}
+function startEvo(s){evo={t:0,s,done:0};Sound.play('evo');const v=$('evt');v.style.display='block';v.textContent='¡Tu compañero está digievolucionando!'}
 function stepEvo(dt){evo.t+=dt;
  if(!evo.done&&evo.t>=1.3){evo.done=1;
   for(const q of P){
@@ -908,7 +908,7 @@ function startCards(){
 
 // keep: volver a mostrar las mismas cartas (al cancelar un reemplazo de skill)
 function showCards(keep){
-  paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');
+  if(!keep)Sound.play('level');paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');
   $('up').querySelector('p').textContent=TOUCH?'Tocá la carta que quieras':'Elegí con el mouse o con las teclas 1 a '+nCards(p);
   if(keep)cur=keep;else{const sk=SkillSys.cards(p).slice(0,2),st=Stats.CARDS.map(c=>({c:c.c,n:c.n,d:c.d,op:c.op,f:()=>{}})).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,nCards(p))}
   const c=$('cards');c.innerHTML='';
@@ -1117,7 +1117,7 @@ function update(dt){
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
-  if(tg){if(td<tg.mag||Items.magT>0){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN;g.dead=1}}}
+  if(tg){if(td<tg.mag||Items.magT>0){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN;g.dead=1;Sound.play('gem')}}}
  gems=gems.filter(g=>!g.dead);
  Items.update(dt);
  if(xp>=need)levelUp();

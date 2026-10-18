@@ -76,7 +76,7 @@ const Gate = {
   hud() {
     const st = World.arena ? (this.cd != null ? 3 : 2) : this.g ? 1 : 0;
     if (st === this.seen) return;
-    if (st === 1) Bosses.banner('¡DIGITAL GATE OPEN!');
+    if (st === 1) { Bosses.banner('¡DIGITAL GATE OPEN!'); Sound.play('gate'); }
     this.seen = st;
   },
 

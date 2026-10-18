@@ -91,6 +91,11 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `
 - **Cámara**: `W,H` son el tamaño LÓGICO de la vista. En pantallas de menos de 700 px de ancho la cámara se aleja (`CZ`, para ver ~560 px de ancho); el canvas usa `devicePixelRatio` y `draw()` aplica `CK` con `setTransform`. El "zoom" del mapa es `scale: 3.5` del bosque (map.js): los sprites no cambian de tamaño.
 - Estilos de celular al final de `style.css` (HUD en grilla 2×2 para 4 jugadores, sin `#pst`, skills sin nombre). En la selección de Digimon, tocar uno sube al detalle (`pickTop`).
 
+### Sonido (`audio.js`, objeto `Sound`, se carga primero)
+- Música de partida: `assets/audio/main_theme.mp3` (el `main_theme.mp3` de la raíz recomprimido a 128 kbps; es el mismo tema que `ost.mp3`) en **loop** (`<audio loop>`, dura lo que dure la partida). Va por WebAudio (`createMediaElementSource` + ganancias) porque en iOS no se puede cambiar el volumen del `<audio>`. `MUSIC_BASE` 0,4 = más baja que los efectos. Empieza en `start()` y para en `endRun()`.
+- Efectos sintetizados (no hay archivos): `Sound.play('gem'|'hurt'|'item'|'level'|'evo'|'gate'|'win')`, con tope de repetición (`GAP`). El invitado online no escucha gemas ni golpes (los calcula el anfitrión).
+- Parlante `#snd` arriba a la derecha (en celular, al lado de la pausa): panel con Música, Sonidos y "Silenciar todo". Se guarda en `localStorage['digisurvivor_audio']`. El audio se arma en el primer toque/tecla (`Sound.init`), por las reglas de autoplay.
+
 ### Pausa y HUD
 - **Escape pausa** (`togglePause`, flag `menuPause`): menú con Continuar / Abandonar partida. Nunca termina la partida directo. En online no frena la simulación (solo abre el menú). Con cartas o digievolución en pantalla, Escape no hace nada.
 - El HUD (barras, reloj, leyenda, skills) solo se ve con `body.ingame`, que pone `start()` y saca `endRun()`. Es compacto para que entren 4 barras de vida en fila (escritorio); `hudBoxes` pone `body.p1/p3/p4`. `#info` muestra solo el número de virus. El triángulo de atributos usa los íconos oficiales de Wikimon (`assets/sprites/attr/vaccine|virus|data.png`, `ATTR_ICON`).

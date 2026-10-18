@@ -46,6 +46,16 @@
 
   <div id="skbar"></div>
   <!-- celular: joystick que aparece donde apoyás el dedo, botón de pausa y aviso para jugar en vertical -->
+  <!-- sonido: parlante con volumen de música y sonidos (audio.js) -->
+  <div id="snd">
+    <button id="sndb" aria-label="Sonido"></button>
+    <div id="sndp">
+      <b>Sonido</b>
+      <label>Música<input type="range" id="sndmu" min="0" max="100"></label>
+      <label>Sonidos<input type="range" id="sndsf" min="0" max="100"></label>
+      <button id="sndmut">Silenciar todo</button>
+    </div>
+  </div>
   <div id="joy"><i></i></div>
   <button id="pbtn" aria-label="Pausa">II</button>
   <div id="rot"><b>Girá el celular</b><span>DigiSurvivor se juega en vertical</span></div>
@@ -176,6 +186,7 @@
     </div>
   </div>
 
+  <script src="src/scripts/audio.js"></script>
   <script src="src/scripts/loader.js"></script>
   <script src="src/scripts/skills.js"></script>
   <script src="src/scripts/stats.js"></script>
