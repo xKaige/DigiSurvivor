@@ -41,6 +41,14 @@ const LINE_LEVEL = FAST ? 6 : 25;                    // elección de la evoluci�
 const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisitos de stats de las ramas se achican
 // Experiencia para el próximo nivel: need = need × XP_GROW + XP_ADD (más bajo = se sigue subiendo en el late game)
 let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7, XP_GAIN = 0.55;   // XP_GAIN: multiplicador de toda la XP que juntás
+// XP para pasar del nivel L al L+1. Con XP_PACE (abajo) la forma final llega cerca del minuto 25 en una partida de 30
+// (lo pidió el usuario: antes se llegaba a los 7'). XP_GROW/XP_ADD/XP_START ya no se usan.
+const xpNeed = L => Math.round(4 * Math.pow(L, 1.65) + 4);
+// Ritmo: nivel esperado según el minuto (Bebé II ~2', Novato ~5', Campeón ~10', Perfecto ~17', forma final ~25', después 1 por minuto).
+// Si vas adelantado la XP rinde menos (×0,4 por cada nivel de ventaja); si vas atrasado, más (+80% por nivel, hasta ×8).
+const XP_PACE = [[1, 0], [5, 120], [10, 300], [15, 600], [20, 960], [25, 1440], [30, 1800]];   // los dos últimos, un minuto antes: medido con bots, la llegada real se atrasa ~1 min
+function paceLvl(s) { for (let i = 1; i < XP_PACE.length; i++) { const [l0, t0] = XP_PACE[i - 1], [l1, t1] = XP_PACE[i]; if (s <= t1) return l0 + (l1 - l0) * (s - t0) / (t1 - t0); } return 30 + (s - 1800) / 60; }
+function xpMul() { const d = lvl + xp / Math.max(1, need) - paceLvl(t); return d > 0 ? Math.pow(0.4, d) : Math.min(8, 1 - d * 0.8); }
 
 async function initGame(ids) {
   await SkillSys.load();
@@ -584,7 +592,7 @@ async function start(m,ids,los){
   await initGame(ids);
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
-  p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=XP_START;paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
+  p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=xpNeed(1);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();await Enemies.prepare();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
@@ -1009,7 +1017,7 @@ function chooseLine(){
 }
 
 function levelUp(){
-  xp-=need;lvl++;need=Math.round(need*XP_GROW+XP_ADD);paused=true;
+  xp-=need;lvl++;need=xpNeed(lvl);paused=true;
 
   const EL=evoLevels();
   if(EL.includes(lvl)){
@@ -1238,7 +1246,7 @@ function update(dt){
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
-  if(tg){if(td<tg.mag||Items.magT>0){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN;g.dead=1;Sound.play('gem')}}}
+  if(tg){if(td<tg.mag||Items.magT>0){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN*xpMul();g.dead=1;Sound.play('gem')}}}
  gems=gems.filter(g=>!g.dead);
  Items.update(dt);
  if(xp>=need)levelUp();
