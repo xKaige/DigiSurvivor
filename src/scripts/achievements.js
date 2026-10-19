@@ -25,7 +25,7 @@ const Achievements = {
     { id: 'st3', c: 'evo', n: 'Digievolución', d: 'Llegá a Campeón', goal: 1, v: S => S.s.bestStage >= 3 ? 1 : 0 },
     { id: 'st5', c: 'evo', n: 'Forma final', d: 'Conseguí tu primera forma final', goal: 1, v: S => S.s.bestStage >= 5 ? 1 : 0 },
     { id: 'perf', c: 'evo', n: 'Perfección', d: 'Hacé 4 evoluciones perfectas en una misma partida', goal: 4, v: S => S.ax.perfRun },
-    { id: 'dark', c: 'evo', n: 'Lado oscuro', d: 'Conseguí una evolución oscura', goal: 1, v: S => S.ax.dark },
+    { id: 'hard', c: 'evo', n: 'Camino difícil', d: 'Conseguí una forma final que no sea la de experiencia (cumpliendo sus requisitos)', goal: 1, v: S => S.ax.hard },
     { id: 'xa', c: 'evo', n: 'Anticuerpo', d: 'Usá el X-Antibody', goal: 1, v: S => S.ax.xa },
     { id: 'branches', c: 'evo', n: 'Todas las ramas', d: 'Conseguí todas las formas finales de un mismo Digimon', goal: 1, v: S => S.allBranches() },
 
@@ -99,7 +99,7 @@ const Achievements = {
     if (this.run.lowAt != null && t - this.run.lowAt >= 10 && !s.low5) this.flag('low5');
     if (t >= 60 && kills === 0 && !q.dead && !s.pac) this.flag('pac');
     if (q.xa && !s.xa) this.flag('xa');
-    if (q.dark && !s.dark) this.flag('dark');
+    if (q.stage >= 5 && (q.line | 0) > 0 && !s.hard) this.flag('hard');
     if (isOnline && P.length === 4 && t >= 900 && P.every(x => !x.dead) && !s.team15) this.flag('team15');
     if (q.wp && t >= 300 && Object.keys(q.wp).length === 1 && !s.mono) this.flag('mono');
   },

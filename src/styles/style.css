@@ -570,3 +570,4 @@ body.finale #snd{display:none!important}
 #lg-toast .lg-ic{color:#1a1000;background:radial-gradient(circle,#ffe066,#ffb800);border-color:#ffd23f}
 #lg-toast small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#ffd23f}#lg-toast b{font-size:16px}
 @media (max-width:560px){#logros{padding:10px}#lg-list{padding:6px 10px 12px}#logros .head{padding:12px}}
+#up .card.lv.line.locked img{filter:grayscale(1) brightness(.6)}#up .card.lv.line.locked .kt{color:#ff8a8a}   /* forma final bloqueada (falta algún requisito) */

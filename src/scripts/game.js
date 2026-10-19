@@ -974,41 +974,37 @@ function chooseLine(){
   p = isOnline ? P[myIdx] : pending[0];
   cardMode='line'; setHead('¡Elegí tu evolución final!');
 
+  // la primera forma final sale solo con experiencia (llegar al nivel); las demás piden sus requisitos y se ven
+  // bloqueadas hasta cumplirlos. Ya no hay evolución oscura.
   const C = CR(p), branches = C.meta.branches;
   const need = v => Math.ceil(v * REQ_FACTOR);
-  const meets = b => TEST || (Object.entries(b.req).every(([k, v]) => (p.st[k] | 0) >= need(v)) && Object.entries(b.vp || {}).every(([k, v]) => Stats.vpVal(p, k) >= need(v)));
-  const anyOk = branches.some(meets);
+  const meets = (b, idx) => idx === 0 || TEST || (Object.entries(b.req || {}).every(([k, v]) => (p.st[k] | 0) >= need(v)) && Object.entries(b.vp || {}).every(([k, v]) => Stats.vpVal(p, k) >= need(v)));
   cur = branches.map((b, idx) => {
-    const ok = meets(b);
+    const ok = meets(b, idx);
     return {
       n: b.name,
-      lock: !ok && anyOk,   // si no cumplís ninguna, quedan todas disponibles (inestables)
-      weak: !anyOk,
+      lock: !ok,
+      weak: false,
       op: 'line',
       lineIdx: idx,
       branchId: b.id,
       d: b.desc,
-      req: [...Object.entries(b.req).map(([k, v]) => `${SN[k]} ${Math.min(p.st[k] | 0, need(v))}/${need(v)}`),
+      req: idx === 0 ? 'solo experiencia (llegar al nivel ' + LINE_LEVEL + ')' : [...Object.entries(b.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(p.st[k] | 0, need(v))}/${need(v)}`),
         ...Object.entries(b.vp || {}).map(([k, v]) => `${Stats.VPN[k]} ${Math.min(Stats.vpVal(p, k), need(v))}/${need(v)}`)].join(' · '),
-      f: () => { p.line = idx; p.branchId = b.id; p.weak = !anyOk; p.dark = false; }
+      f: () => { p.line = idx; p.branchId = b.id; p.weak = false; p.dark = false; }
     };
   });
-  // sin ningún requisito cumplido: la única salida es la evolución oscura (más daño, pero pierde vida de a poco)
-  if (!anyOk) cur = [{ n: darkName(C), lock: false, weak: false, dark: 1, op: 'line', lineIdx: 0, branchId: null,
-    d: ((C.meta.dark && C.meta.dark.desc) || 'La oscuridad consume a tu compañero') + '. +7 de daño y +1 proyectil, pero pierde vida de a poco (hasta quedar al 35%)',
-    req: 'ningún requisito cumplido', f: () => { p.line = 0; p.branchId = null; p.weak = false; p.dark = true; } }];
 
   const c=$('cards');c.innerHTML='';
   cur.forEach((u,i)=>{
     const b=document.createElement('button');
-    b.className='card lv line';
+    b.className='card lv line'+(u.lock?' locked':'');
     b.disabled=u.lock;
-    b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(u.lock?'Bloqueada':u.dark?'Evolución oscura':'Evolución final')+'</span>'+thumbOf(C,u.dark?'dark':'branch_'+u.branchId)+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span><em>'+(u.dark?'Motivo: ':'Requiere: ')+u.req+'</em>';
-    if(u.dark)b.classList.add('dark');
+    b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(u.lock?'Bloqueada':i===0?'Por experiencia':'Evolución final')+'</span>'+thumbOf(C,'branch_'+u.branchId)+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span><em>'+(u.lock?'Te falta: ':'Requiere: ')+u.req+'</em>';
     b.onclick=()=>choose(u);
     c.appendChild(b);
   });
-  if(!anyOk && $('up').querySelector('p')) $('up').querySelector('p').textContent='No cumplís ningún requisito: la oscuridad toma a tu compañero';
+  if($('up').querySelector('p')) $('up').querySelector('p').textContent='La primera sale solo con experiencia; las demás se desbloquean cumpliendo sus requisitos en esta partida';
   showUp();
 }
 
@@ -1088,6 +1084,7 @@ function showReplace(u){
 function choose(u){
   if(performance.now() - cardsAt < 800) return;   // ignora clicks/teclas accidentales justo al aparecer
   if(!pending.length) return;                      // ya elegiste (esperando al otro jugador): ignora teclas repetidas
+  if(!u||u.lock) return;                            // forma final bloqueada (también por teclado)
   if(u.back){showCards(u.back);return}             // cancelar el reemplazo
   if(u.pickRep){const o=u.pickRep;o.rep=u.k;choose(o);return}   // eligió qué skill olvidar
   if(u.op==='wp'&&u.fresh&&u.full&&!u.rep&&!SkillSys.canTake(pending[0],u.wpKey)){showReplace(u);return}   // 4 ocupadas: preguntar cuál reemplazar

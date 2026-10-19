@@ -84,7 +84,7 @@ const Progress = {
   forms(C) {
     const M = C.meta;
     return [...M.stages.map(x => ({ k: 'stage_' + x.stage, n: x.name })), ...M.branches.map(x => ({ k: 'branch_' + x.id, n: x.name, fin: 1 })),
-      { k: 'dark', n: darkName(C), fin: 1, dk: 1 }, ...Object.keys(M.x || {}).map(k => ({ k: 'x_' + k, n: M.x[k].name, fin: 1, xx: 1 }))];
+      ...Object.keys(M.x || {}).map(k => ({ k: 'x_' + k, n: M.x[k].name, fin: 1, xx: 1 }))];
   },
   totalData() {
     let n = 0;
