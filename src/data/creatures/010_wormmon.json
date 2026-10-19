@@ -61,7 +61,66 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "JT"
+      "family": "JT",
+      "alts": [
+        {
+          "id": "goki",
+          "name": "Gokimon",
+          "file": "enemies/gokimon.png",
+          "from": [
+            "main"
+          ],
+          "req": {},
+          "vp": {
+            "kills": 200
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "hudie",
+          "name": "Hudiemon",
+          "file": "enemies/hudiemon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "FUE": 2
+          },
+          "vp": {
+            "kills": 360,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        },
+        {
+          "id": "shadra",
+          "name": "Shadramon",
+          "file": "enemies/shadramon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 540,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 35
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -76,7 +135,97 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "JT"
+      "family": "JT",
+      "alts": [
+        {
+          "id": "pucchie",
+          "name": "Pucchiemon",
+          "file": "enemies/pucchiemon.png",
+          "from": [
+            "shadra",
+            "goki"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 1000,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "jewelbee",
+          "name": "Jewelbeemon",
+          "file": "enemies/jewelbeemon.png",
+          "from": [
+            "main",
+            "hudie"
+          ],
+          "req": {
+            "FUE": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        },
+        {
+          "id": "paildra",
+          "name": "Paildramon",
+          "file": "enemies/paildramon.png",
+          "from": [
+            "main",
+            "hudie"
+          ],
+          "req": {
+            "VEL": 4
+          },
+          "vp": {
+            "kills": 1500,
+            "bosses": 3,
+            "nohit": 50
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 35
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+        },
+        {
+          "id": "kongou",
+          "name": "Kongoumon",
+          "file": "enemies/kongoumon.png",
+          "from": [
+            "shadra",
+            "goki"
+          ],
+          "req": {
+            "INT": 4
+          },
+          "vp": {
+            "kills": 1500,
+            "bosses": 3,
+            "nohit": 50
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 45
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +45 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -86,10 +235,7 @@
       "file": "imperialdramondragonmode_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "splendor_blade",
@@ -105,9 +251,7 @@
         "hp": 60,
         "pierce": 1
       },
-      "vp": {
-        "kills": 250
-      }
+      "vp": {}
     },
     {
       "id": "6_2",
@@ -144,7 +288,7 @@
       "cols": 2,
       "rows": 6,
       "req": {
-        "INT": 4
+        "VIT": 7
       },
       "desc": "Poderoso: +5 de daño",
       "skills": [
@@ -160,8 +304,80 @@
         "dmg": 5
       },
       "vp": {
-        "care": 1
-      }
+        "kills": 3500,
+        "bosses": 5,
+        "nohit": 50
+      },
+      "from": [
+        "main",
+        "paildra",
+        "pucchie"
+      ],
+      "vb": "imperialdra_p"
+    },
+    {
+      "id": "v_banchosting",
+      "name": "BanchoStingmon",
+      "file": "enemies/banchostingmon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "vp": {
+        "kills": 2250,
+        "bosses": 3,
+        "nohit": 30
+      },
+      "from": [
+        "jewelbee",
+        "kongou"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "splendor_blade",
+        "positron_laser",
+        "mega_death"
+      ],
+      "family": "DR",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "banchosting"
+    },
+    {
+      "id": "v_grankuwaga",
+      "name": "GranKuwagamon",
+      "file": "enemies/grankuwagamon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 5
+      },
+      "vp": {
+        "kills": 2250,
+        "bosses": 3,
+        "nohit": 50
+      },
+      "from": [
+        "jewelbee",
+        "kongou"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +4 de daño, +70 de vida",
+      "skills": [
+        "splendor_blade",
+        "positron_laser",
+        "mega_death"
+      ],
+      "family": "DR",
+      "bonus": {
+        "dmg": 4,
+        "hp": 70,
+        "multi": 0
+      },
+      "vb": "grankuwaga"
     }
   ],
   "stats": {
@@ -174,5 +390,6 @@
     "id": "hilo",
     "name": "Hilo pegajoso",
     "desc": "Sus golpes ralentizan a los enemigos un 30%"
-  }
+  },
+  "vbChart": "pwa"
 }

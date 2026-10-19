@@ -62,7 +62,49 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "DS"
+      "family": "DS",
+      "alts": [
+        {
+          "id": "geso",
+          "name": "Gesomon",
+          "file": "enemies/gesomon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "FUE": 2
+          },
+          "vp": {
+            "kills": 360,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "ruka",
+          "name": "Rukamon",
+          "file": "enemies/rukamon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 4
+          },
+          "vp": {
+            "kills": 660,
+            "bosses": 2
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -77,7 +119,52 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "DS"
+      "family": "DS",
+      "alts": [
+        {
+          "id": "wha",
+          "name": "Whamon",
+          "file": "enemies/whamon.png",
+          "from": [
+            "ruka",
+            "main"
+          ],
+          "req": {
+            "FUE": 3
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "hangyo",
+          "name": "Hangyomon",
+          "file": "enemies/hangyomon.png",
+          "from": [
+            "geso"
+          ],
+          "req": {
+            "VEL": 4
+          },
+          "vp": {
+            "kills": 1500,
+            "bosses": 3,
+            "nohit": 50
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -87,10 +174,7 @@
       "file": "ancientmermaimon_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "great_maelstrom",
@@ -105,9 +189,7 @@
         "hp": 60,
         "pierce": 1
       },
-      "vp": {
-        "kills": 250
-      }
+      "vp": {}
     },
     {
       "id": "6_2",
@@ -116,7 +198,7 @@
       "cols": 2,
       "rows": 6,
       "req": {
-        "VEL": 4
+        "VEL": 7
       },
       "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
       "skills": [
@@ -134,8 +216,47 @@
         "spP": 0.15
       },
       "vp": {
+        "kills": 3500,
+        "bosses": 5,
+        "nohit": 50
+      },
+      "from": [
+        "wha",
+        "main"
+      ],
+      "vb": "marinange"
+    },
+    {
+      "id": "v_puku",
+      "name": "Pukumon",
+      "file": "enemies/pukumon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 5
+      },
+      "vp": {
+        "kills": 2250,
+        "bosses": 3,
         "nohit": 40
-      }
+      },
+      "from": [
+        "wha",
+        "main",
+        "hangyo"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "great_maelstrom",
+        "crystal_billow"
+      ],
+      "family": "DS",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "puku"
     }
   ],
   "dark": {
@@ -157,5 +278,6 @@
     "id": "chispa",
     "name": "Chispa",
     "desc": "15% de chance de que un golpe salte a otro enemigo cercano"
-  }
+  },
+  "vbChart": "jelly"
 }

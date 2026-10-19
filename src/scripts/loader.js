@@ -41,20 +41,32 @@ const CreatureLoader = {
           console.error('No se pudo cargar el sprite:', basePath + fileName);
           resolve();
         };
-        img.src = basePath + fileName;
+        img.src = fileName.includes('/') ? 'assets/sprites/' + fileName : basePath + fileName;   // 'enemies/x.png', 'creatures/<id>/x.png': de otra carpeta
       });
     };
 
     const promises = [];
     data.stages.forEach(s => promises.push(loadSprite(`stage_${s.stage}`, s.file, s.cols, s.rows)));
-    data.branches.forEach(b => promises.push(loadSprite(`branch_${b.id}`, b.file, b.cols, b.rows)));
+    data.branches.forEach(b => { if (!b.file.includes('/')) promises.push(loadSprite(`branch_${b.id}`, b.file, b.cols, b.rows)); });   // las de otra carpeta: loadAlts
     // evolución oscura propia (si no tiene, game.js genera una teñida a partir de su primera forma final)
     if (data.dark) promises.push(loadSprite('dark', data.dark.file, data.dark.cols, data.dark.rows));
     // formas X-Antibody: x = { stage_3: {name, file}, branch_6_1: {...} } -> canvases x_stage_3, x_branch_6_1
     for (const k in (data.x || {})) promises.push(loadSprite('x_' + k, data.x[k].file));
 
     await Promise.all(promises);
+    loadedData.loadSprite = loadSprite;
     this.cache[creatureId] = loadedData;
     return loadedData;
+  },
+
+  // Evoluciones alternativas (Vital Bracelet): stages[3|4].alts -> canvases alt_<etapa>_<id>, y las formas finales que usan
+  // sprites de otra carpeta -> branch_<id>. Se cargan recién cuando hacen falta (partida, selección, Analyzer).
+  async loadAlts(creatureId) {
+    const C = await this.load(creatureId); if (C.altsP) return C.altsP;
+    const M = C.meta, ps = [];
+    for (const st of M.stages) for (const a of (st.alts || [])) ps.push(C.loadSprite(`alt_${st.stage}_${a.id}`, a.file, a.cols, a.rows));
+    for (const b of M.branches) if (b.file.includes('/')) ps.push(C.loadSprite(`branch_${b.id}`, b.file, b.cols, b.rows));
+    C.altsP = Promise.all(ps);
+    return C.altsP;
   }
 };

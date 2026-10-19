@@ -70,7 +70,8 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon)",
-      "family": "NSp"
+      "family": "NSp",
+      "alts": []
     },
     {
       "stage": 4,
@@ -85,7 +86,30 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon)",
-      "family": "ME"
+      "family": "ME",
+      "alts": [
+        {
+          "id": "kaiserleo",
+          "name": "KaiserLeomon",
+          "file": "enemies/kaiserleomon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "FUE": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -95,10 +119,7 @@
       "file": "dinotigermon_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "ground_fang"
@@ -112,9 +133,7 @@
         "hp": 60,
         "pierce": 1
       },
-      "vp": {
-        "kills": 250
-      }
+      "vp": {}
     },
     {
       "id": "6_2",
@@ -142,6 +161,66 @@
       "vp": {
         "nohit": 40
       }
+    },
+    {
+      "id": "v_death",
+      "name": "Deathmon",
+      "file": "enemies/deathmon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "vp": {
+        "kills": 2250,
+        "bosses": 3,
+        "nohit": 30
+      },
+      "from": [
+        "kaiserleo"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "ground_fang"
+      ],
+      "family": "NSp",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "death"
+    },
+    {
+      "id": "v_ancientsphinx",
+      "name": "AncientSphinxmon",
+      "file": "creatures/034_sunarizamon/ancientsphinxmon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 7
+      },
+      "vp": {
+        "kills": 3500,
+        "bosses": 5,
+        "nohit": 50
+      },
+      "from": [
+        "kaiserleo",
+        "main"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +4 de daño, +70 de vida",
+      "skills": [
+        "ground_fang"
+      ],
+      "family": "NSp",
+      "bonus": {
+        "dmg": 4,
+        "hp": 70,
+        "multi": 0
+      },
+      "vb": "ancientsphinx"
     }
-  ]
+  ],
+  "vbChart": "louwe_ex"
 }

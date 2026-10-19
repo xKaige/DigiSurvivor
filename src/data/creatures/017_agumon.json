@@ -73,7 +73,46 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon)",
-      "family": "NSp"
+      "family": "NSp",
+      "alts": [
+        {
+          "id": "coela",
+          "name": "Coelamon",
+          "file": "enemies/coelamon.png",
+          "from": [
+            "main"
+          ],
+          "req": {},
+          "vp": {
+            "kills": 200
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "algo_iv",
+          "name": "Algomon(Adult)",
+          "file": "enemies/algomonadult.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "FUE": 2
+          },
+          "vp": {
+            "kills": 480,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -89,7 +128,116 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon)",
-      "family": "ME"
+      "family": "ME",
+      "alts": [
+        {
+          "id": "neodevi",
+          "name": "NeoDevimon",
+          "file": "enemies/neodevimon.png",
+          "from": [
+            "coela"
+          ],
+          "req": {
+            "VIT": 2
+          },
+          "vp": {
+            "kills": 1000,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "metaltyrano",
+          "name": "MetalTyranomon",
+          "file": "enemies/metaltyranomon.png",
+          "from": [
+            "main",
+            "algo_iv"
+          ],
+          "req": {
+            "FUE": 2
+          },
+          "vp": {
+            "kills": 1000,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        },
+        {
+          "id": "anomalocari",
+          "name": "Anomalocarimon",
+          "file": "enemies/anomalocarimon.png",
+          "from": [
+            "main",
+            "coela"
+          ],
+          "req": {
+            "VEL": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 35
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+        },
+        {
+          "id": "mame",
+          "name": "Mamemon",
+          "file": "enemies/mamemon.png",
+          "from": [
+            "algo_iv"
+          ],
+          "req": {
+            "INT": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 45
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +45 de vida"
+        },
+        {
+          "id": "andro",
+          "name": "Andromon",
+          "file": "enemies/andromon.png",
+          "from": [
+            "coela"
+          ],
+          "req": {
+            "FUE": 4
+          },
+          "vp": {
+            "kills": 1500,
+            "bosses": 3,
+            "nohit": 50
+          },
+          "bonus": {
+            "dmg": 3,
+            "hp": 55
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +55 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -99,10 +247,7 @@
       "file": "wargreymon_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "terra_force",
@@ -118,9 +263,7 @@
         "hp": 60,
         "pierce": 1
       },
-      "vp": {
-        "kills": 250
-      }
+      "vp": {}
     },
     {
       "id": "6_2",
@@ -129,7 +272,7 @@
       "cols": 2,
       "rows": 6,
       "req": {
-        "VEL": 4
+        "VEL": 5
       },
       "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
       "skills": [
@@ -147,8 +290,18 @@
         "spP": 0.15
       },
       "vp": {
-        "nohit": 40
-      }
+        "kills": 2250,
+        "bosses": 3,
+        "nohit": 50
+      },
+      "from": [
+        "main",
+        "anomalocari",
+        "mame",
+        "neodevi",
+        "metaltyrano"
+      ],
+      "vb": "blitzgrey"
     },
     {
       "id": "6_3",
@@ -175,6 +328,40 @@
       "vp": {
         "care": 1
       }
+    },
+    {
+      "id": "v_donedevi",
+      "name": "DoneDevimon",
+      "file": "enemies/donedevimon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 7
+      },
+      "vp": {
+        "kills": 3500,
+        "bosses": 5,
+        "nohit": 50
+      },
+      "from": [
+        "andro",
+        "mame",
+        "neodevi"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "terra_force",
+        "terra_tornado",
+        "dramon_killer"
+      ],
+      "family": "VB",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "donedevi"
     }
-  ]
+  ],
+  "vbChart": "agu_ex"
 }

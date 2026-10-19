@@ -61,7 +61,8 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "DR"
+      "family": "DR",
+      "alts": []
     },
     {
       "stage": 4,
@@ -77,7 +78,8 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "NSp"
+      "family": "NSp",
+      "alts": []
     }
   ],
   "branches": [
@@ -87,10 +89,7 @@
       "file": "kazuchimon_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "nitou_seirai",
@@ -106,9 +105,7 @@
         "hp": 60,
         "pierce": 1
       },
-      "vp": {
-        "kills": 250
-      }
+      "vp": {}
     },
     {
       "id": "6_2",
@@ -148,5 +145,6 @@
     "id": "pulso",
     "name": "Pulso",
     "desc": "Mientras se mueve, suelta una descarga alrededor cada 3 s"
-  }
+  },
+  "vbChart": "ici"
 }

@@ -83,7 +83,7 @@ const Progress = {
   // formas que registra el Analyzer: etapas, formas finales, evolución oscura y formas X-Antibody
   forms(C) {
     const M = C.meta;
-    return [...M.stages.map(x => ({ k: 'stage_' + x.stage, n: x.name })), ...M.branches.map(x => ({ k: 'branch_' + x.id, n: x.name, fin: 1 })),
+    return [...M.stages.map(x => ({ k: 'stage_' + x.stage, n: x.name })), ...M.stages.flatMap(x => (x.alts || []).map(a => ({ k: 'alt_' + x.stage + '_' + a.id, n: a.name }))), ...M.branches.map(x => ({ k: 'branch_' + x.id, n: x.name, fin: 1 })),
       ...Object.keys(M.x || {}).map(k => ({ k: 'x_' + k, n: M.x[k].name, fin: 1, xx: 1 }))];
   },
   totalData() {
@@ -269,9 +269,16 @@ const Progress = {
     this.build();
     if (Object.keys(this.read().eggs).length) this.tab = 'egg';   // si hay huevos listos, abre directo en Digitamas
     this.render(); document.getElementById('analyzer').style.display = 'flex';
+    this.loadAlts();
   },
   close() { const w = document.getElementById('analyzer'); if (w) w.style.display = 'none'; },
   isOpen() { const w = document.getElementById('analyzer'); return !!w && w.style.display === 'flex'; },
+  // sprites de las evoluciones alternativas de los Digimon que tenés (se cargan al abrir el Analyzer)
+  loadAlts() {
+    if (this.altsBusy) return; this.altsBusy = true;
+    Promise.all(CREATURES.filter(c => this.has(c.id)).map(c => CreatureLoader.loadAlts(c.id).catch(() => {})))
+      .then(() => { this.altsBusy = false; if (this.isOpen()) this.render(); });
+  },
   render() {
     const list = document.getElementById('an-list'); if (!list) return;
     const s = this.read();

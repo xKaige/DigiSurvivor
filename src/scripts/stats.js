@@ -131,6 +131,9 @@ const Stats = {
       this.add(q.m, this.STAGE);
       for (const k of this.KEYS) q.bs[k] += Math.ceil((q.prof[k] | 0) / 2);
       const st = M && M.stages[s]; if (st && st.family) q.fam = st.family;
+      // evolución alternativa (Vital Bracelet): su bonus y, si tiene, su familia
+      const al = st && q.alt && q.alt[s] && (st.alts || []).find(a => a.id === q.alt[s]);
+      if (al) { const B = al.bonus || {}; this.add(q.m, { dmg: B.dmg || 0, hp: B.hp || 0, pierce: B.pierce || 0, multi: B.multi || 0, spP: B.spP || 0 }); if (al.family) q.fam = al.family; }
       // evolución perfecta (V-Pet): juntaste suficientes virus desde la anterior → +2 en su mejor stat
       const need = this.DP_NEED[s - 1] || 999;
       q.perfect = q.vp.dp >= need ? 1 : 0; if (q.perfect) q.pfc = (q.pfc | 0) + 1;   // pfc: evoluciones perfectas en la partida (logro Perfección)

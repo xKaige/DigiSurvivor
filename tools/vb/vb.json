@@ -1,0 +1,8288 @@
+{
+ "ici": {
+  "name": "Impulse City",
+  "stages": {
+   "babyII": [
+    {
+     "key": "bibi",
+     "name": "Bibimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "pulse",
+     "name": "Pulsemon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "bulk",
+     "name": "Bulkmon",
+     "from": [
+      "pulse"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "1,200+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "exer",
+     "name": "Exermon",
+     "from": [
+      "pulse"
+     ],
+     "reqs": [
+      {
+       "Trophies": "3+",
+       "Vital Values": "500+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "runner",
+     "name": "Runnermon",
+     "from": [
+      "pulse"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "800+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "namake",
+     "name": "Namakemon",
+     "from": [
+      "pulse"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "bout",
+     "name": "Boutmon",
+     "from": [
+      "bulk",
+      "runner"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "shoot",
+     "name": "Shootmon",
+     "from": [
+      "exer",
+      "namake"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "dive",
+     "name": "Divemon",
+     "from": [
+      "bulk",
+      "runner"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "tempo",
+     "name": "Tempomon",
+     "from": [
+      "exer",
+      "namake"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "climb",
+     "name": "Climbmon",
+     "from": [
+      "bulk",
+      "namake"
+     ],
+     "reqs": [
+      {
+       "Trophies": "6+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "pist",
+     "name": "Pistmon",
+     "from": [
+      "exer",
+      "runner"
+     ],
+     "reqs": [
+      {
+       "Trophies": "6+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "kazuchi",
+     "name": "Kazuchimon",
+     "from": [
+      "bout",
+      "tempo",
+      "pist"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "shiva",
+     "name": "Shivamon",
+     "from": [
+      "shoot",
+      "dive",
+      "climb"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "achilles",
+     "name": "Achillesmon",
+     "from": [
+      "shoot",
+      "tempo",
+      "pist"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "shroud",
+     "name": "Shroudmon",
+     "from": [
+      "bout",
+      "dive",
+      "climb"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "awa": {
+  "name": "Ancient Warriors",
+  "stages": {
+   "babyII": [
+    {
+     "key": "chibi",
+     "name": "Chibimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "v",
+     "name": "V-mon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "vdra",
+     "name": "V-dramon",
+     "from": [
+      "v"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "1,200+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "xv",
+     "name": "XV-mon",
+     "from": [
+      "v"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "800+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "fladra",
+     "name": "Fladramon",
+     "from": [
+      "v"
+     ],
+     "reqs": [
+      {
+       "Trophies": "3+",
+       "Vital Values": "500+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "lighdra",
+     "name": "Lighdramon",
+     "from": [
+      "v"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "aerovdra",
+     "name": "Aero V-dramon",
+     "from": [
+      "vdra",
+      "fladra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "paildra",
+     "name": "Paildramon",
+     "from": [
+      "xv",
+      "lighdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "sagittari",
+     "name": "Sagittarimon",
+     "from": [
+      "vdra",
+      "fladra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "dinobee",
+     "name": "Dinobeemon",
+     "from": [
+      "xv",
+      "lighdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "goldvdra",
+     "name": "Gold V-dramon",
+     "from": [
+      "vdra",
+      "xv"
+     ],
+     "reqs": [
+      {
+       "Trophies": "6+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "digitama",
+     "name": "Digitamamon",
+     "from": [
+      "fladra",
+      "lighdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "6+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "ulforcevdra",
+     "name": "Ulforce V-dramon",
+     "from": [
+      "aerovdra",
+      "sagittari",
+      "digitama"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "imperialdra_d",
+     "name": "Imperialdramon: Dragon Mode",
+     "from": [
+      "aerovdra",
+      "paildra",
+      "dinobee"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "magna",
+     "name": "Magnamon",
+     "from": [
+      "sagittari",
+      "goldvdra",
+      "digitama"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "imperialdra_f",
+     "name": "Imperialdramon: Fighter Mode",
+     "from": [
+      "paildra",
+      "dinobee",
+      "goldvdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "agu_ex": {
+  "name": "Agumon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "koro",
+     "name": "Koromon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "agu",
+     "name": "Agumon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "grey",
+     "name": "Greymon",
+     "from": [
+      "agu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "1,200+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "coela",
+     "name": "Coelamon",
+     "from": [
+      "agu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "ogre",
+     "name": "Ogremon",
+     "from": [
+      "agu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "3+",
+       "Vital Values": "500+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "algo_iv",
+     "name": "Algomon (Adult)",
+     "from": [
+      "agu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "800+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "metalgrey_va",
+     "name": "Metal Greymon (Vaccine)",
+     "from": [
+      "grey",
+      "algo_iv"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "andro",
+     "name": "Andromon",
+     "from": [
+      "coela",
+      "ogre"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "anomalocari",
+     "name": "Anomalocarimon",
+     "from": [
+      "grey",
+      "coela"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "mame",
+     "name": "Mamemon",
+     "from": [
+      "ogre",
+      "algo_iv"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "neodevi",
+     "name": "Neo Devimon",
+     "from": [
+      "coela",
+      "ogre"
+     ],
+     "reqs": [
+      {
+       "Trophies": "6+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "metaltyrano",
+     "name": "Metal Tyranomon",
+     "from": [
+      "grey",
+      "algo_iv"
+     ],
+     "reqs": [
+      {
+       "Trophies": "6+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "blitzgrey",
+     "name": "Blitz Greymon",
+     "from": [
+      "metalgrey_va",
+      "anomalocari",
+      "mame",
+      "neodevi",
+      "metaltyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "donedevi",
+     "name": "Done Devimon",
+     "from": [
+      "andro",
+      "mame",
+      "neodevi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "wargrey",
+     "name": "War Greymon",
+     "from": [
+      "metalgrey_va",
+      "andro",
+      "anomalocari",
+      "metaltyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      },
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "omega",
+     "name": "Omegamon",
+     "from": [
+      "wargrey"
+     ],
+     "reqs": [
+      {}
+     ]
+    }
+   ]
+  }
+ },
+ "gabu_ex": {
+  "name": "Gabumon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "tuno",
+     "name": "Tsunomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "gabu",
+     "name": "Gabumon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "garuru",
+     "name": "Garurumon",
+     "from": [
+      "gabu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "1,200+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "gori",
+     "name": "Gorimon",
+     "from": [
+      "gabu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "800+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "dokugu",
+     "name": "Dokugumon",
+     "from": [
+      "gabu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "3+",
+       "Vital Values": "500+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "algo_iv",
+     "name": "Algomon (Adult)",
+     "from": [
+      "gabu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "weregaruru",
+     "name": "Were Garurumon",
+     "from": [
+      "garuru",
+      "algo_iv"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "parrot",
+     "name": "Parrotmon",
+     "from": [
+      "gori",
+      "dokugu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "valve",
+     "name": "Valvemon",
+     "from": [
+      "garuru",
+      "gori"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "bigmame",
+     "name": "Big Mamemon",
+     "from": [
+      "dokugu",
+      "algo_iv"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "orochi",
+     "name": "Orochimon",
+     "from": [
+      "gori",
+      "dokugu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "6+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "waruseadra",
+     "name": "Waru Seadramon",
+     "from": [
+      "garuru",
+      "algo_iv"
+     ],
+     "reqs": [
+      {
+       "Trophies": "6+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "cresgaruru",
+     "name": "Cres Garurumon",
+     "from": [
+      "weregaruru",
+      "valve",
+      "bigmame",
+      "orochi",
+      "waruseadra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "nidhogg",
+     "name": "Nidhoggmon",
+     "from": [
+      "parrot",
+      "bigmame",
+      "orochi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "metalgaruru",
+     "name": "Metal Garurumon",
+     "from": [
+      "weregaruru",
+      "parrot",
+      "valve",
+      "waruseadra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "omega",
+     "name": "Omegamon",
+     "from": [
+      "metalgaruru"
+     ],
+     "reqs": [
+      {}
+     ]
+    }
+   ]
+  }
+ },
+ "vbe": {
+  "name": "Volcanic Beat",
+  "stages": {
+   "babyII": [
+    {
+     "key": "petimera",
+     "name": "Peti Meramon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "vorvo",
+     "name": "Vorvomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "birdra",
+     "name": "Birdramon",
+     "from": [
+      "vorvo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "mera",
+     "name": "Meramon",
+     "from": [
+      "vorvo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "tyrano",
+     "name": "Tyranomon",
+     "from": [
+      "vorvo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "lavorvo",
+     "name": "Lavorvomon",
+     "from": [
+      "vorvo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "mastertyrano",
+     "name": "Master Tyranomon",
+     "from": [
+      "birdra",
+      "tyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "flare",
+     "name": "Flaremon",
+     "from": [
+      "mera",
+      "lavorvo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "deathmera",
+     "name": "Death Meramon",
+     "from": [
+      "mera",
+      "tyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "volca",
+     "name": "Volcamon",
+     "from": [
+      "birdra",
+      "lavorvo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "lavogarita",
+     "name": "Lavogaritamon",
+     "from": [
+      "birdra",
+      "lavorvo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "groundra",
+     "name": "Groundramon",
+     "from": [
+      "mera",
+      "tyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "mars",
+     "name": "Marsmon",
+     "from": [
+      "flare",
+      "deathmera",
+      "groundra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "cannondra",
+     "name": "Cannondramon",
+     "from": [
+      "mastertyrano",
+      "lavogarita",
+      "groundra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "volcanicdra",
+     "name": "Volcanicdramon",
+     "from": [
+      "mastertyrano",
+      "volca",
+      "lavogarita"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientvolca",
+     "name": "Ancient Volcamon",
+     "from": [
+      "flare",
+      "deathmera",
+      "volca"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "bfa": {
+  "name": "Blizzard Fang",
+  "stages": {
+   "babyII": [
+    {
+     "key": "hiyari",
+     "name": "Hiyarimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "bluco",
+     "name": "Blucomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "yukidaru",
+     "name": "Yukidarumon",
+     "from": [
+      "bluco"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "paledra",
+     "name": "Paledramon",
+     "from": [
+      "bluco"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "hyouga",
+     "name": "Hyougamon",
+     "from": [
+      "bluco"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "moose",
+     "name": "Moosemon",
+     "from": [
+      "bluco"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "mam",
+     "name": "Mammon",
+     "from": [
+      "yukidaru",
+      "moose"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "panjya",
+     "name": "Panjyamon",
+     "from": [
+      "paledra",
+      "hyouga"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "cryspaledra",
+     "name": "Crys Paledramon",
+     "from": [
+      "paledra",
+      "hyouga"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "cresce",
+     "name": "Crescemon",
+     "from": [
+      "yukidaru",
+      "moose"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "frozo",
+     "name": "Frozomon",
+     "from": [
+      "paledra",
+      "hyouga"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "daipen",
+     "name": "Daipenmon",
+     "from": [
+      "yukidaru",
+      "moose"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "skullmam",
+     "name": "Skull Mammon",
+     "from": [
+      "mam",
+      "panjya",
+      "daipen"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "hexeblau",
+     "name": "Hexeblaumon",
+     "from": [
+      "cryspaledra",
+      "cresce",
+      "frozo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      },
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "frosvelgr",
+     "name": "Fros Velgrmon",
+     "from": [
+      "panjya",
+      "cresce",
+      "daipen"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientmegatheriu",
+     "name": "Ancient Megatheriumon",
+     "from": [
+      "mam",
+      "cryspaledra",
+      "frozo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "iti": {
+  "name": "Infinite Tide",
+  "stages": {
+   "babyII": [
+    {
+     "key": "puka",
+     "name": "Pukamon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "sango",
+     "name": "Sangomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "tobiu",
+     "name": "Tobiumon",
+     "from": [
+      "sango"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "seadra",
+     "name": "Seadramon",
+     "from": [
+      "sango"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "shell",
+     "name": "Shellmon",
+     "from": [
+      "sango"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "oct",
+     "name": "Octmon",
+     "from": [
+      "sango"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "gusoku",
+     "name": "Gusokumon",
+     "from": [
+      "tobiu",
+      "shell"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "marinchimaira",
+     "name": "Marin Chimairamon",
+     "from": [
+      "seadra",
+      "oct"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "mermai",
+     "name": "Mermaimon",
+     "from": [
+      "tobiu",
+      "shell"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "megaseadra",
+     "name": "Mega Seadramon",
+     "from": [
+      "seadra",
+      "oct"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "pirani",
+     "name": "Piranimon",
+     "from": [
+      "tobiu",
+      "seadra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "dago",
+     "name": "Dagomon",
+     "from": [
+      "shell",
+      "oct"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "neptune",
+     "name": "Neptunemon",
+     "from": [
+      "gusoku",
+      "mermai",
+      "pirani"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "metalseadra",
+     "name": "Metal Seadramon",
+     "from": [
+      "mermai",
+      "megaseadra",
+      "dago"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "regalecus",
+     "name": "Regalecusmon",
+     "from": [
+      "gusoku",
+      "marinchimaira",
+      "pirani"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "plesio",
+     "name": "Plesiomon",
+     "from": [
+      "marinchimaira",
+      "megaseadra",
+      "dago"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "tdu": {
+  "name": "Titan of Dust",
+  "stages": {
+   "babyII": [
+    {
+     "key": "goro",
+     "name": "Goromon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "sunariza",
+     "name": "Sunarizamon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "torta",
+     "name": "Tortamon",
+     "from": [
+      "sunariza"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "toge",
+     "name": "Togemon",
+     "from": [
+      "sunariza"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "gole",
+     "name": "Golemon",
+     "from": [
+      "sunariza"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "dig",
+     "name": "Digmon",
+     "from": [
+      "sunariza"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "gogma",
+     "name": "Gogmamon",
+     "from": [
+      "torta",
+      "gole"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "jyaga",
+     "name": "Jyagamon",
+     "from": [
+      "toge",
+      "dig"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "tricera",
+     "name": "Triceramon",
+     "from": [
+      "toge",
+      "gole"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "scorpio",
+     "name": "Scorpiomon",
+     "from": [
+      "torta",
+      "dig"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "vulture",
+     "name": "Vulturemon",
+     "from": [
+      "toge",
+      "gole"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "mummy",
+     "name": "Mummymon",
+     "from": [
+      "torta",
+      "dig"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "blast",
+     "name": "Blastmon",
+     "from": [
+      "gogma",
+      "jyaga",
+      "scorpio"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "dinorex",
+     "name": "Dinorexmon",
+     "from": [
+      "gogma",
+      "tricera",
+      "vulture"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "pharaoh",
+     "name": "Pharaohmon",
+     "from": [
+      "tricera",
+      "vulture",
+      "mummy"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientsphinx",
+     "name": "Ancient Sphinxmon",
+     "from": [
+      "jyaga",
+      "scorpio",
+      "mummy"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "hju": {
+  "name": "Hermit in the Jungle",
+  "stages": {
+   "babyII": [
+    {
+     "key": "tane",
+     "name": "Tanemon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "pal",
+     "name": "Palmon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "sni",
+     "name": "Snimon",
+     "from": [
+      "pal"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "sunflow",
+     "name": "Sunflowmon",
+     "from": [
+      "pal"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "parasaur",
+     "name": "Parasaurmon",
+     "from": [
+      "pal"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "vegi",
+     "name": "Vegimon",
+     "from": [
+      "pal"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "ajatar",
+     "name": "Ajatarmon",
+     "from": [
+      "parasaur",
+      "vegi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "jewelbee",
+     "name": "Jewelbeemon",
+     "from": [
+      "sni",
+      "sunflow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "lili",
+     "name": "Lilimon",
+     "from": [
+      "sunflow",
+      "parasaur"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "blosso",
+     "name": "Blossomon",
+     "from": [
+      "sni",
+      "vegi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "toropia",
+     "name": "Toropiamon",
+     "from": [
+      "sunflow",
+      "parasaur"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "archne",
+     "name": "Arachnemon",
+     "from": [
+      "sni",
+      "vegi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "bloomlord",
+     "name": "Bloom Lordmon",
+     "from": [
+      "ajatar",
+      "jewelbee",
+      "lili"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "rafflesi",
+     "name": "Rafflesimon",
+     "from": [
+      "jewelbee",
+      "lili",
+      "archne"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "spino",
+     "name": "Spinomon",
+     "from": [
+      "ajatar",
+      "blosso",
+      "toropia"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "hydra",
+     "name": "Hydramon",
+     "from": [
+      "blosso",
+      "toropia",
+      "archne"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "nme": {
+  "name": "Nu Metal Empire",
+  "stages": {
+   "babyII": [
+    {
+     "key": "missi",
+     "name": "Missimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "haguru",
+     "name": "Hagurumon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "mach",
+     "name": "Machmon",
+     "from": [
+      "haguru"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "ballista",
+     "name": "Ballistamon",
+     "from": [
+      "haguru"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "mailbirdra",
+     "name": "Mail Birdramon",
+     "from": [
+      "haguru"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "rare",
+     "name": "Raremon",
+     "from": [
+      "haguru"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "loaderlio",
+     "name": "Loader Leomon",
+     "from": [
+      "mach",
+      "rare"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "atlurballista",
+     "name": "Atlur Ballistamon",
+     "from": [
+      "ballista",
+      "mailbirdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "metalmame",
+     "name": "Metal Mamemon",
+     "from": [
+      "mach",
+      "rare"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "loco",
+     "name": "Locomon",
+     "from": [
+      "ballista",
+      "mailbirdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "rebelli",
+     "name": "Rebellimon",
+     "from": [
+      "mach",
+      "rare"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "metalgrey_2010",
+     "name": "Metal Greymon (2010)",
+     "from": [
+      "ballista",
+      "mailbirdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "heavyleo",
+     "name": "Heavy Leomon",
+     "from": [
+      "loaderlio",
+      "metalmame",
+      "rebelli"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "grandloco",
+     "name": "Grand Locomon",
+     "from": [
+      "loaderlio",
+      "atlurballista",
+      "loco"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "zekegrey",
+     "name": "Zeke Greymon",
+     "from": [
+      "loco",
+      "rebelli",
+      "metalgrey_2010"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "mugendra",
+     "name": "Mugendramon",
+     "from": [
+      "atlurballista",
+      "metalmame",
+      "metalgrey_2010"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "dev": {
+  "name": "Dynasty of the Evil",
+  "stages": {
+   "babyII": [
+    {
+     "key": "pagu",
+     "name": "Pagumon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "ghost",
+     "name": "Ghostmon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "saberdra",
+     "name": "Saberdramon",
+     "from": [
+      "ghost"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "wizar",
+     "name": "Wizarmon",
+     "from": [
+      "ghost"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "devi",
+     "name": "Devimon",
+     "from": [
+      "ghost"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "bake",
+     "name": "Bakemon",
+     "from": [
+      "ghost"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "baal",
+     "name": "Baalmon",
+     "from": [
+      "wizar",
+      "devi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "cyberdra_2010",
+     "name": "Cyberdramon (2010)",
+     "from": [
+      "saberdra",
+      "bake"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "pump",
+     "name": "Pumpmon",
+     "from": [
+      "wizar",
+      "bake"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "vamde",
+     "name": "Vamdemon",
+     "from": [
+      "saberdra",
+      "devi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "joker",
+     "name": "Jokermon",
+     "from": [
+      "wizar",
+      "devi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "fanto",
+     "name": "Fantomon",
+     "from": [
+      "saberdra",
+      "bake"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "noblepump",
+     "name": "Noble Pumpmon",
+     "from": [
+      "baal",
+      "pump",
+      "fanto"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "pie",
+     "name": "Piemon",
+     "from": [
+      "pump",
+      "vamde",
+      "joker"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "beelzebu_2010",
+     "name": "Beelzebumon (2010)",
+     "from": [
+      "baal",
+      "cyberdra_2010",
+      "joker"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "neovamde",
+     "name": "Neo Vamdemon",
+     "from": [
+      "cyberdra_2010",
+      "vamde",
+      "fanto"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "mbr": {
+  "name": "Mad Black Roar",
+  "stages": {
+   "babyII": [
+    {
+     "key": "koro",
+     "name": "Koromon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "agu_b",
+     "name": "Agumon (Black)",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "grey",
+     "name": "Greymon",
+     "from": [
+      "agu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "monochro",
+     "name": "Monochromon",
+     "from": [
+      "agu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "grey_b",
+     "name": "Greymon (Blue)",
+     "from": [
+      "agu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "darktyrano",
+     "name": "Dark Tyranomon",
+     "from": [
+      "agu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "metalgrey_am",
+     "name": "Metal Greymon: Alterous Mode",
+     "from": [
+      "grey",
+      "grey_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "extyrano",
+     "name": "Ex-Tyranomon",
+     "from": [
+      "monochro",
+      "darktyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "vermilli",
+     "name": "Vermillimon",
+     "from": [
+      "monochro",
+      "darktyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "mametyra",
+     "name": "Mametyramon",
+     "from": [
+      "monochro",
+      "darktyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "metalgrey_vi",
+     "name": "Metal Greymon (Virus)",
+     "from": [
+      "grey",
+      "grey_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "skullgrey",
+     "name": "Skull Greymon",
+     "from": [
+      "grey",
+      "grey_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "victorygrey",
+     "name": "Victory Greymon",
+     "from": [
+      "metalgrey_am",
+      "extyrano",
+      "vermilli"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "blackwargrey",
+     "name": "Black War Greymon",
+     "from": [
+      "extyrano",
+      "metalgrey_vi",
+      "skullgrey"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "gaiou",
+     "name": "Gaioumon",
+     "from": [
+      "vermilli",
+      "mametyra",
+      "skullgrey"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "omega_z",
+     "name": "Omegamon Zwart",
+     "from": [
+      "metalgrey_am",
+      "mametyra",
+      "metalgrey_vi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "tsh": {
+  "name": "True Shadow Howl",
+  "stages": {
+   "babyII": [
+    {
+     "key": "tuno",
+     "name": "Tsunomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "gabu_b",
+     "name": "Gabumon (Black)",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "garuru",
+     "name": "Garurumon",
+     "from": [
+      "gabu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "drimoge",
+     "name": "Drimogemon",
+     "from": [
+      "gabu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "dorulu",
+     "name": "Dorulumon",
+     "from": [
+      "gabu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "garuru_b",
+     "name": "Garurumon (Black)",
+     "from": [
+      "gabu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "weregaruru_s",
+     "name": "Were Garurumon: Saggitarius Mode",
+     "from": [
+      "garuru",
+      "garuru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "cerberu",
+     "name": "Cerberumon",
+     "from": [
+      "drimoge",
+      "dorulu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "rhino",
+     "name": "Rhinomon",
+     "from": [
+      "drimoge",
+      "dorulu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "panda",
+     "name": "Pandamon",
+     "from": [
+      "garuru",
+      "garuru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "weregaruru_b",
+     "name": "Were Garurumon (Black)",
+     "from": [
+      "garuru",
+      "garuru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "jaegerdorulu",
+     "name": "Jaeger Dorulumon",
+     "from": [
+      "drimoge",
+      "dorulu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "zdgaruru",
+     "name": "Z'd Garurumon",
+     "from": [
+      "weregaruru_s",
+      "rhino",
+      "panda"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "metalgaruru_b",
+     "name": "Metal Garurumon (Black)",
+     "from": [
+      "cerberu",
+      "rhino",
+      "weregaruru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "mercury",
+     "name": "Mercurymon",
+     "from": [
+      "cerberu",
+      "panda",
+      "jaegerdorulu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "omega_z",
+     "name": "Omegamon Zwart",
+     "from": [
+      "weregaruru_s",
+      "weregaruru_b",
+      "jaegerdorulu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "gamma": {
+  "name": "Gammamon",
+  "stages": {
+   "babyII": [
+    {
+     "key": "guri",
+     "name": "Gurimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "gamma",
+     "name": "Gammamon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "betelgamma",
+     "name": "Betel Gammamon",
+     "from": [
+      "gamma"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,100+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "kausgamma",
+     "name": "Kaus Gammamon",
+     "from": [
+      "gamma"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "wezengamma",
+     "name": "Wezen Gammamon",
+     "from": [
+      "gamma"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "gulusgamma",
+     "name": "Gulus Gammamon",
+     "from": [
+      "gamma"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "canoweiss",
+     "name": "Canoweissmon",
+     "from": [
+      "betelgamma",
+      "kausgamma",
+      "wezengamma",
+      "gulusgamma"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "brachio",
+     "name": "Brachiomon",
+     "from": [
+      "betelgamma",
+      "kausgamma"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      },
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "chimaira",
+     "name": "Chimairamon",
+     "from": [
+      "betelgamma",
+      "gulusgamma"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "tankdra",
+     "name": "Tankdramon",
+     "from": [
+      "wezengamma"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "aegisdra",
+     "name": "Aegisdramon",
+     "from": [
+      "canoweiss",
+      "tankdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "5,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ultimatebrachi",
+     "name": "Ultimate Brachiomon",
+     "from": [
+      "canoweiss",
+      "brachio",
+      "chimaira"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      },
+      {
+       "Trophies": "15+",
+       "Vital Values": "5,000+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      }
+     ]
+    },
+    {
+     "key": "chaosdra",
+     "name": "Chaosdramon",
+     "from": [
+      "canoweiss",
+      "brachio",
+      "chimaira",
+      "tankdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "angora": {
+  "name": "Angoramon",
+  "stages": {
+   "babyII": [
+    {
+     "key": "bosa",
+     "name": "Bosamon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "angora",
+     "name": "Angoramon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "symbareangora",
+     "name": "Symbare Angoramon",
+     "from": [
+      "angora"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,100+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "leo",
+     "name": "Leomon",
+     "from": [
+      "angora"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "komondo",
+     "name": "Komondomon",
+     "from": [
+      "angora"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "porcupa",
+     "name": "Porcupamon",
+     "from": [
+      "angora"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "lamort",
+     "name": "Lamortmon",
+     "from": [
+      "symbareangora",
+      "leo",
+      "komondo",
+      "porcupa"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "grappuleo",
+     "name": "Grappu Leomon",
+     "from": [
+      "symbareangora",
+      "leo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      },
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "skullbaluchi",
+     "name": "Skull Baluchimon",
+     "from": [
+      "symbareangora",
+      "porcupa"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "warumonzae",
+     "name": "Waru Monzaemon",
+     "from": [
+      "komondo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "anubi",
+     "name": "Anubimon",
+     "from": [
+      "lamort",
+      "skullbaluchi",
+      "warumonzae"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "saberleo",
+     "name": "Saber Leomon",
+     "from": [
+      "lamort",
+      "grappuleo",
+      "warumonzae"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      },
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      },
+      {
+       "Trophies": "15+",
+       "Vital Values": "5,000+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      }
+     ]
+    },
+    {
+     "key": "griffo",
+     "name": "Griffomon",
+     "from": [
+      "lamort",
+      "grappuleo",
+      "skullbaluchi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "5,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      },
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      },
+      {
+       "Trophies": "15+",
+       "Vital Values": "5,000+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "jelly": {
+  "name": "Jellymon",
+  "stages": {
+   "babyII": [
+    {
+     "key": "puyoyo",
+     "name": "Puyoyomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "jelly",
+     "name": "Jellymon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "ruka",
+     "name": "Rukamon",
+     "from": [
+      "jelly"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,100+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "teslajelly",
+     "name": "Tesla Jellymon",
+     "from": [
+      "jelly"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "geso",
+     "name": "Gesomon",
+     "from": [
+      "jelly"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "manbo",
+     "name": "Manbomon",
+     "from": [
+      "jelly"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "wha",
+     "name": "Whamon",
+     "from": [
+      "ruka",
+      "teslajelly"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      },
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "thetis",
+     "name": "Thetismon",
+     "from": [
+      "ruka",
+      "teslajelly",
+      "manbo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "hangyo",
+     "name": "Hangyomon",
+     "from": [
+      "geso",
+      "manbo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      },
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "marindevi",
+     "name": "Marin Devimon",
+     "from": [
+      "teslajelly",
+      "geso"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "marinange",
+     "name": "Marin Angemon",
+     "from": [
+      "wha",
+      "thetis",
+      "marindevi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientmermai",
+     "name": "Ancient Mermaimon",
+     "from": [
+      "thetis",
+      "marindevi",
+      "hangyo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "5,000+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      },
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "puku",
+     "name": "Pukumon",
+     "from": [
+      "wha",
+      "thetis",
+      "hangyo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      },
+      {
+       "Trophies": "15+",
+       "Vital Values": "5,000+",
+       "Battles": "15+",
+       "Win Ratio": "60%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "guil_ex": {
+  "name": "Guilmon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "gigi",
+     "name": "Gigimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "guil",
+     "name": "Guilmon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "siesa",
+     "name": "Siesamon",
+     "from": [
+      "guil"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "grow_o",
+     "name": "Growmon (Orange)",
+     "from": [
+      "guil"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "grow",
+     "name": "Growmon",
+     "from": [
+      "guil"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "devidra",
+     "name": "Devidramon",
+     "from": [
+      "guil"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "vajra",
+     "name": "Vajramon",
+     "from": [
+      "siesa",
+      "devidra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "majira",
+     "name": "Majiramon",
+     "from": [
+      "siesa",
+      "devidra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "mihira",
+     "name": "Mihiramon",
+     "from": [
+      "siesa",
+      "grow_o"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "megalogrow_o",
+     "name": "Megalo Growmon (Orange)",
+     "from": [
+      "grow_o",
+      "grow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "megalogrow",
+     "name": "Megalo Growmon",
+     "from": [
+      "grow_o",
+      "grow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "sandira",
+     "name": "Sandiramon",
+     "from": [
+      "grow",
+      "devidra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "duke",
+     "name": "Dukemon",
+     "from": [
+      "vajra",
+      "majira",
+      "mihira",
+      "megalogrow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "duke_x",
+     "name": "Dukemon X",
+     "from": [
+      "mihira",
+      "megalogrow_o",
+      "sandira"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "megidra",
+     "name": "Megidramon",
+     "from": [
+      "vajra",
+      "majira",
+      "megalogrow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "duke_c",
+     "name": "Dukemon: Crimson Mode",
+     "from": [
+      "megalogrow_o",
+      "megalogrow",
+      "sandira"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "terrier_ex": {
+  "name": "Terriermon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "gummy",
+     "name": "Gummymon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "terrier",
+     "name": "Terriermon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "galgo",
+     "name": "Galgomon",
+     "from": [
+      "terrier"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "turuie",
+     "name": "Turuiemon",
+     "from": [
+      "terrier"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "harpy",
+     "name": "Harpymon",
+     "from": [
+      "terrier"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "wendi",
+     "name": "Wendimon",
+     "from": [
+      "terrier"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "rapid",
+     "name": "Rapidmon",
+     "from": [
+      "galgo",
+      "turuie"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "sindura",
+     "name": "Sinduramon",
+     "from": [
+      "harpy",
+      "wendi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "makura",
+     "name": "Makuramon",
+     "from": [
+      "turuie",
+      "harpy"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "andira_d",
+     "name": "Andiramon (Deva)",
+     "from": [
+      "galgo",
+      "wendi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "pajira",
+     "name": "Pajiramon",
+     "from": [
+      "turuie",
+      "harpy"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "andira",
+     "name": "Andiramon",
+     "from": [
+      "galgo",
+      "wendi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "saintgalgo",
+     "name": "Saint Galgomon",
+     "from": [
+      "rapid",
+      "makura",
+      "pajira"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "cherubi",
+     "name": "Cherubimon (Virtue)",
+     "from": [
+      "sindura",
+      "andira_d",
+      "andira"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "cherubi_vice",
+     "name": "Cherubimon (Vice)",
+     "from": [
+      "sindura",
+      "andira_d",
+      "andira"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "rapid_a",
+     "name": "Rapidmon (Armor)",
+     "from": [
+      "rapid",
+      "makura",
+      "pajira"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "rena_ex": {
+  "name": "Renamon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "poko",
+     "name": "Pokomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "rena",
+     "name": "Renamon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "kyubi",
+     "name": "Kyubimon",
+     "from": [
+      "rena"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "youko",
+     "name": "Youkomon",
+     "from": [
+      "rena"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "icedevi",
+     "name": "Ice Devimon",
+     "from": [
+      "rena"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "lynx",
+     "name": "Lynxmon",
+     "from": [
+      "rena"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "kumbhira",
+     "name": "Kumbhiramon",
+     "from": [
+      "kyubi",
+      "lynx"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "vikarala",
+     "name": "Vikaralamon",
+     "from": [
+      "youko",
+      "icedevi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "tao",
+     "name": "Taomon",
+     "from": [
+      "kyubi",
+      "lynx"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "dou",
+     "name": "Doumon",
+     "from": [
+      "youko",
+      "icedevi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "catura",
+     "name": "Caturamon",
+     "from": [
+      "kyubi",
+      "lynx"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "indara",
+     "name": "Indaramon",
+     "from": [
+      "youko",
+      "icedevi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "sakuya",
+     "name": "Sakuyamon",
+     "from": [
+      "kumbhira",
+      "tao",
+      "dou"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "kuzuha_m",
+     "name": "Kuzuhamon: Miko Mode",
+     "from": [
+      "vikarala",
+      "dou",
+      "indara"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "parasi",
+     "name": "Parasimon",
+     "from": [
+      "vikarala",
+      "catura",
+      "indara"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "sakuya_x",
+     "name": "Sakuyamon X",
+     "from": [
+      "kumbhira",
+      "tao",
+      "catura"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "pwa": {
+  "name": "Primeval Warriors",
+  "stages": {
+   "babyII": [
+    {
+     "key": "mino",
+     "name": "Minomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "worm",
+     "name": "Wormmon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "sting",
+     "name": "Stingmon",
+     "from": [
+      "worm"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "shadra",
+     "name": "Shadramon",
+     "from": [
+      "worm"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "hudie",
+     "name": "Hudiemon",
+     "from": [
+      "worm"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "goki",
+     "name": "Gokimon",
+     "from": [
+      "worm"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "jewelbee",
+     "name": "Jewelbeemon",
+     "from": [
+      "sting",
+      "hudie"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "paildra",
+     "name": "Paildramon",
+     "from": [
+      "sting",
+      "hudie"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "dinobee",
+     "name": "Dinobeemon",
+     "from": [
+      "shadra",
+      "goki"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "kongou",
+     "name": "Kongoumon",
+     "from": [
+      "shadra",
+      "goki"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "pucchie",
+     "name": "Pucchiemon",
+     "from": [
+      "shadra",
+      "goki"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "pucchie_g",
+     "name": "Pucchiemon (Green)",
+     "from": [
+      "sting",
+      "hudie"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "banchosting",
+     "name": "Bancho Stingmon",
+     "from": [
+      "jewelbee",
+      "kongou",
+      "pucchie_g"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "grankuwaga",
+     "name": "Gran Kuwagamon",
+     "from": [
+      "jewelbee",
+      "kongou",
+      "pucchie_g"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "imperialdra_d",
+     "name": "Imperialdramon: Dragon Mode",
+     "from": [
+      "dinobee",
+      "paildra",
+      "pucchie"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "imperialdra_p",
+     "name": "Imperialdramon: Paladin Mode",
+     "from": [
+      "dinobee",
+      "paildra",
+      "pucchie"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "espi": {
+  "name": "Espimon",
+  "stages": {
+   "babyII": [
+    {
+     "key": "kakkin",
+     "name": "Kakkinmon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "ludo",
+     "name": "Ludomon",
+     "from": [
+      "kakkin"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "espi",
+     "name": "Espimon",
+     "from": [
+      "kakkin"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "tialudo",
+     "name": "Tia Ludomon",
+     "from": [
+      "ludo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "hoverespi",
+     "name": "Hover Espimon",
+     "from": [
+      "espi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "reppa",
+     "name": "Reppamon",
+     "from": [
+      "ludo",
+      "espi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "blacktail_u",
+     "name": "Black Tailmon Uver.",
+     "from": [
+      "ludo",
+      "espi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "raijiludo",
+     "name": "Raiji Ludomon",
+     "from": [
+      "tialudo",
+      "reppa"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "digitama",
+     "name": "Digitamamon",
+     "from": [
+      "hoverespi",
+      "blacktail_u"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "piccolo",
+     "name": "Piccolomon",
+     "from": [
+      "hoverespi",
+      "blacktail_u"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "rarerare",
+     "name": "Rare Raremon",
+     "from": [
+      "tialudo",
+      "reppa"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "manticore",
+     "name": "Manticoremon",
+     "from": [
+      "tialudo",
+      "hoverespi",
+      "reppa",
+      "blacktail_u"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "bryweludra",
+     "name": "Bryweludramon",
+     "from": [
+      "raijiludo",
+      "piccolo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "death_b",
+     "name": "Deathmon (Black)",
+     "from": [
+      "digitama",
+      "rarerare",
+      "manticore"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "devitama",
+     "name": "Devitamamon",
+     "from": [
+      "raijiludo",
+      "digitama",
+      "piccolo",
+      "rarerare",
+      "manticore"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "ragnalord",
+     "name": "Ragna Lordmon",
+     "from": [
+      "bryweludra"
+     ],
+     "reqs": [
+      {}
+     ]
+    }
+   ]
+  }
+ },
+ "ryuda": {
+  "name": "Ryudamon",
+  "stages": {
+   "babyII": [
+    {
+     "key": "sakutto",
+     "name": "Sakuttomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "zuba",
+     "name": "Zubamon",
+     "from": [
+      "sakutto"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "ryuda",
+     "name": "Ryudamon",
+     "from": [
+      "sakutto"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "zubaeager",
+     "name": "Zubaeagermon",
+     "from": [
+      "zuba"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "ginryu",
+     "name": "Ginryumon",
+     "from": [
+      "ryuda"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "musya",
+     "name": "Musyamon",
+     "from": [
+      "zuba",
+      "ryuda"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "dokugu",
+     "name": "Dokugumon",
+     "from": [
+      "zuba",
+      "ryuda"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "dura",
+     "name": "Duramon",
+     "from": [
+      "zubaeager",
+      "musya"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "hisyaryu",
+     "name": "Hisyaryumon",
+     "from": [
+      "ginryu",
+      "dokugu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "asura",
+     "name": "Asuramon",
+     "from": [
+      "zubaeager",
+      "musya"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "gyuki",
+     "name": "Gyukimon",
+     "from": [
+      "ginryu",
+      "dokugu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "oboro",
+     "name": "Oboromon",
+     "from": [
+      "zubaeager",
+      "ginryu",
+      "musya",
+      "dokugu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "duranda",
+     "name": "Durandamon",
+     "from": [
+      "dura",
+      "asura"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ouryu",
+     "name": "Ouryumon",
+     "from": [
+      "hisyaryu",
+      "gyuki",
+      "oboro"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "zanba",
+     "name": "Zanbamon",
+     "from": [
+      "dura",
+      "hisyaryu",
+      "asura",
+      "gyuki",
+      "oboro"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "ragnalord",
+     "name": "Ragna Lordmon",
+     "from": [
+      "duranda"
+     ],
+     "reqs": [
+      {}
+     ]
+    }
+   ]
+  }
+ },
+ "agni_ex": {
+  "name": "Agnimon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "petimera",
+     "name": "Peti Meramon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "fla",
+     "name": "Flamon",
+     "from": [
+      "petimera"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "gottsu",
+     "name": "Gottsumon",
+     "from": [
+      "petimera"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "agni",
+     "name": "Agnimon",
+     "from": [
+      "fla"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "mera",
+     "name": "Meramon",
+     "from": [
+      "fla"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "star",
+     "name": "Starmon",
+     "from": [
+      "gottsu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "grotte",
+     "name": "Grottemon",
+     "from": [
+      "gottsu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "alda",
+     "name": "Aldamon",
+     "from": [
+      "agni"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "vritra",
+     "name": "Vritramon",
+     "from": [
+      "mera",
+      "agni"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "superstar",
+     "name": "Super Starmon",
+     "from": [
+      "star",
+      "grotte"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "gigas",
+     "name": "Gigasmon",
+     "from": [
+      "grotte"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "darksuperstar",
+     "name": "Dark Super Starmon",
+     "from": [
+      "mera",
+      "star"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "kaisergrey",
+     "name": "Kaiser Greymon",
+     "from": [
+      "alda",
+      "vritra",
+      "superstar"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientgrey",
+     "name": "Ancient Greymon",
+     "from": [
+      "alda",
+      "vritra",
+      "gigas",
+      "darksuperstar"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientvolca",
+     "name": "Ancient Volcamon",
+     "from": [
+      "superstar",
+      "gigas",
+      "darksuperstar"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "susanoo",
+     "name": "Susanoomon",
+     "from": [
+      "kaisergrey"
+     ],
+     "reqs": [
+      {}
+     ]
+    }
+   ]
+  }
+ },
+ "fairi_ex": {
+  "name": "Fairimon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "tane",
+     "name": "Tanemon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "tinker",
+     "name": "Tinkermon",
+     "from": [
+      "tane"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "pomu",
+     "name": "Pomumon",
+     "from": [
+      "tane"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "fairi",
+     "name": "Fairimon",
+     "from": [
+      "tinker"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "cockatri",
+     "name": "Cockatrimon",
+     "from": [
+      "pomu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "arbor",
+     "name": "Arbormon",
+     "from": [
+      "pomu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "zassou",
+     "name": "Zassoumon",
+     "from": [
+      "tinker"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "jetsilphy",
+     "name": "Jet Silphymon",
+     "from": [
+      "fairi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "shutu",
+     "name": "Shutumon",
+     "from": [
+      "fairi",
+      "cockatri"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "petaldra",
+     "name": "Petaldramon",
+     "from": [
+      "arbor"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "peacock",
+     "name": "Peacockmon",
+     "from": [
+      "cockatri",
+      "zassou"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "zamiel",
+     "name": "Zamielmon",
+     "from": [
+      "arbor",
+      "zassou"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "ancientiris",
+     "name": "Ancient Irismon",
+     "from": [
+      "jetsilphy",
+      "shutu",
+      "peacock"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,500+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "lotus",
+     "name": "Lotusmon",
+     "from": [
+      "jetsilphy",
+      "petaldra",
+      "peacock"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "ancienttroia",
+     "name": "Ancient Troiamon",
+     "from": [
+      "petaldra",
+      "zamiel"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,500+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "lordknight",
+     "name": "Lord Knightmon",
+     "from": [
+      "shutu",
+      "zamiel"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "chack_ex": {
+  "name": "Chackmon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "hiyari",
+     "name": "Hiyarimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "bear",
+     "name": "Bearmon",
+     "from": [
+      "hiyari"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "snowgobli",
+     "name": "Snow Goblimon",
+     "from": [
+      "hiyari"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "chack",
+     "name": "Chackmon",
+     "from": [
+      "bear"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "gryz",
+     "name": "Gryzmon",
+     "from": [
+      "bear"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "ice",
+     "name": "Icemon",
+     "from": [
+      "snowgobli"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "mojya",
+     "name": "Mojyamon",
+     "from": [
+      "snowgobli"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "daipen",
+     "name": "Daipenmon",
+     "from": [
+      "chack"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "blizzar",
+     "name": "Blizzarmon",
+     "from": [
+      "chack",
+      "mojya"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "panjya_x",
+     "name": "Panjyamon X",
+     "from": [
+      "gryz",
+      "ice"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "nano",
+     "name": "Nanomon",
+     "from": [
+      "ice",
+      "mojya"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "asta",
+     "name": "Astamon",
+     "from": [
+      "gryz"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "oleg",
+     "name": "Olegmon",
+     "from": [
+      "daipen",
+      "blizzar",
+      "panjya_x",
+      "asta"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "frosvelgr",
+     "name": "Fros Velgrmon",
+     "from": [
+      "blizzar",
+      "nano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,500+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientmegatheriu",
+     "name": "Ancient Megatheriumon",
+     "from": [
+      "daipen",
+      "panjya_x"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,500+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "dynas",
+     "name": "Dynasmon",
+     "from": [
+      "nano",
+      "asta"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "wolf_ex": {
+  "name": "Wolfmon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "wanya",
+     "name": "Wanyamon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "strabi",
+     "name": "Strabimon",
+     "from": [
+      "wanya"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "giza",
+     "name": "Gizamon",
+     "from": [
+      "wanya"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "wolf",
+     "name": "Wolfmon",
+     "from": [
+      "strabi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "dober",
+     "name": "Dobermon",
+     "from": [
+      "strabi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "rana",
+     "name": "Ranamon",
+     "from": [
+      "giza"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "ebidra",
+     "name": "Ebidramon",
+     "from": [
+      "giza"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "beowolf",
+     "name": "Beowolfmon",
+     "from": [
+      "wolf"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "garum",
+     "name": "Garummon",
+     "from": [
+      "wolf",
+      "dober"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "calamara",
+     "name": "Calamaramon",
+     "from": [
+      "rana"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "siren",
+     "name": "Sirenmon",
+     "from": [
+      "ebidra",
+      "rana"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "splash",
+     "name": "Splashmon",
+     "from": [
+      "dober",
+      "ebidra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "magnagaruru",
+     "name": "Magna Garurumon",
+     "from": [
+      "beowolf",
+      "garum",
+      "calamara"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientgaruru",
+     "name": "Ancient Garurumon",
+     "from": [
+      "beowolf",
+      "garum",
+      "siren",
+      "splash"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientmermai",
+     "name": "Ancient Mermaimon",
+     "from": [
+      "calamara",
+      "siren",
+      "splash"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "susanoo",
+     "name": "Susanoomon",
+     "from": [
+      "magnagaruru"
+     ],
+     "reqs": [
+      {}
+     ]
+    }
+   ]
+  }
+ },
+ "blitz_ex": {
+  "name": "Blitzmon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "capri",
+     "name": "Caprimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "kokabuteri",
+     "name": "Kokabuterimon",
+     "from": [
+      "capri"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "kokuwa",
+     "name": "Kokuwamon",
+     "from": [
+      "capri"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "blitz",
+     "name": "Blitzmon",
+     "from": [
+      "kokabuteri"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "thunderball",
+     "name": "Thunderballmon",
+     "from": [
+      "kokabuteri"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "mercure",
+     "name": "Mercuremon",
+     "from": [
+      "kokuwa"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "bladekuwaga",
+     "name": "Blade Kuwagamon",
+     "from": [
+      "kokuwa"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "rhinokabuteri",
+     "name": "Rhino Kabuterimon",
+     "from": [
+      "blitz"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "bolg",
+     "name": "Bolgmon",
+     "from": [
+      "blitz",
+      "thunderball"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "sephiroth",
+     "name": "Sephirothmon",
+     "from": [
+      "mercure"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "metallifekuwaga",
+     "name": "Metallife Kuwagamon",
+     "from": [
+      "bladekuwaga",
+      "thunderball"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "wise",
+     "name": "Wisemon",
+     "from": [
+      "mercure",
+      "bladekuwaga"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "ancientbeat",
+     "name": "Ancient Beatmon",
+     "from": [
+      "rhinokabuteri",
+      "bolg",
+      "metallifekuwaga"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "grandiskuwaga",
+     "name": "Grandis Kuwagamon",
+     "from": [
+      "rhinokabuteri",
+      "bolg",
+      "metallifekuwaga"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientwise",
+     "name": "Ancient Wisemon",
+     "from": [
+      "sephiroth",
+      "wise"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "murmukus",
+     "name": "Murmukusmon",
+     "from": [
+      "sephiroth",
+      "wise"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "louwe_ex": {
+  "name": "Louwemon EX",
+  "stages": {
+   "babyII": [
+    {
+     "key": "fri",
+     "name": "Frimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "lioll",
+     "name": "Liollmon",
+     "from": [
+      "fri"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "gazi",
+     "name": "Gazimon",
+     "from": [
+      "fri"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "louwe",
+     "name": "Louwemon",
+     "from": [
+      "lioll"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "lia",
+     "name": "Liamon",
+     "from": [
+      "lioll"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "dusk",
+     "name": "Duskmon",
+     "from": [
+      "gazi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "madleo",
+     "name": "Mad Leomon",
+     "from": [
+      "gazi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "raihi",
+     "name": "Raihimon",
+     "from": [
+      "louwe"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "kaiserleo",
+     "name": "Kaiser Leomon",
+     "from": [
+      "louwe",
+      "lia"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "loaderlio",
+     "name": "Loader Leomon",
+     "from": [
+      "lia",
+      "madleo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "velgr",
+     "name": "Velgrmon",
+     "from": [
+      "dusk"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "skullsata",
+     "name": "Skull Satamon",
+     "from": [
+      "dusk",
+      "madleo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "luce_f",
+     "name": "Lucemon: Falldown Mode",
+     "from": [
+      "dusk",
+      "madleo"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "4,500+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "death",
+     "name": "Deathmon",
+     "from": [
+      "kaiserleo",
+      "velgr",
+      "skullsata"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "dinotiger",
+     "name": "Dinotigermon",
+     "from": [
+      "raihi",
+      "loaderlio",
+      "velgr",
+      "skullsata"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "ancientsphinx",
+     "name": "Ancient Sphinxmon",
+     "from": [
+      "raihi",
+      "kaiserleo",
+      "loaderlio"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "dro": {
+  "name": "Dinosaur Roar",
+  "stages": {
+   "babyII": [
+    {
+     "key": "koro",
+     "name": "Koromon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "agu",
+     "name": "Agumon",
+     "from": [
+      "koro"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "agu_b",
+     "name": "Agumon (Black)",
+     "from": [
+      "koro"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "grey",
+     "name": "Greymon",
+     "from": [
+      "agu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "monochro",
+     "name": "Monochromon",
+     "from": [
+      "agu",
+      "agu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "grey_b",
+     "name": "Greymon (Blue)",
+     "from": [
+      "agu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "darktyrano",
+     "name": "Dark Tyranomon",
+     "from": [
+      "agu",
+      "agu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "metalgrey_va",
+     "name": "Metal Greymon (Vaccine)",
+     "from": [
+      "grey",
+      "darktyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "vermilli",
+     "name": "Vermillimon",
+     "from": [
+      "grey",
+      "monochro",
+      "grey_b",
+      "darktyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "skullgrey",
+     "name": "Skull Greymon",
+     "from": [
+      "grey",
+      "monochro",
+      "grey_b",
+      "darktyrano"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "metalgrey_vi",
+     "name": "Metal Greymon (Virus)",
+     "from": [
+      "monochro",
+      "grey_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "wargrey",
+     "name": "War Greymon",
+     "from": [
+      "metalgrey_va",
+      "vermilli",
+      "metalgrey_vi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "victorygrey",
+     "name": "Victory Greymon",
+     "from": [
+      "metalgrey_va",
+      "vermilli",
+      "skullgrey"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "blackwargrey",
+     "name": "Black War Greymon",
+     "from": [
+      "skullgrey",
+      "metalgrey_vi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "omega",
+     "name": "Omegamon",
+     "from": [
+      "wargrey"
+     ],
+     "reqs": [
+      {
+       "Trophies": "30+",
+       "Vital Values": "8,500+",
+       "Battles": "30+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "omega_z",
+     "name": "Omegamon Zwart",
+     "from": [
+      "blackwargrey"
+     ],
+     "reqs": [
+      {
+       "Trophies": "30+",
+       "Vital Values": "8,500+",
+       "Battles": "30+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "who": {
+  "name": "Wolf Howl",
+  "stages": {
+   "babyII": [
+    {
+     "key": "tuno",
+     "name": "Tsunomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "gabu",
+     "name": "Gabumon",
+     "from": [
+      "tuno"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "1,200+",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "gabu_b",
+     "name": "Gabumon (Black)",
+     "from": [
+      "tuno"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "adult": [
+    {
+     "key": "garuru",
+     "name": "Garurumon",
+     "from": [
+      "gabu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "drimoge",
+     "name": "Drimogemon",
+     "from": [
+      "gabu",
+      "gabu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "dorulu",
+     "name": "Dorulumon",
+     "from": [
+      "gabu",
+      "gabu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "garuru_b",
+     "name": "Garurumon (Black)",
+     "from": [
+      "gabu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "weregaruru",
+     "name": "Were Garurumon",
+     "from": [
+      "garuru",
+      "dorulu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "panda",
+     "name": "Pandamon",
+     "from": [
+      "garuru",
+      "drimoge",
+      "dorulu",
+      "garuru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "jaegerdorulu",
+     "name": "Jaeger Dorulumon",
+     "from": [
+      "garuru",
+      "drimoge",
+      "dorulu",
+      "garuru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "weregaruru_b",
+     "name": "Were Garurumon (Black)",
+     "from": [
+      "drimoge",
+      "garuru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "metalgaruru",
+     "name": "Metal Garurumon",
+     "from": [
+      "weregaruru",
+      "panda",
+      "weregaruru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "zdgaruru",
+     "name": "Z'd Garurumon",
+     "from": [
+      "weregaruru",
+      "panda",
+      "jaegerdorulu"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "metalgaruru_b",
+     "name": "Metal Garurumon (Black)",
+     "from": [
+      "jaegerdorulu",
+      "weregaruru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "omega",
+     "name": "Omegamon",
+     "from": [
+      "metalgaruru"
+     ],
+     "reqs": [
+      {
+       "Trophies": "30+",
+       "Vital Values": "8,500+",
+       "Battles": "30+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "omega_z",
+     "name": "Omegamon Zwart",
+     "from": [
+      "metalgaruru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "30+",
+       "Vital Values": "8,500+",
+       "Battles": "30+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "medarot": {
+  "name": "Medarot",
+  "stages": {
+   "babyII": [
+    {
+     "key": "medal",
+     "name": "Medal",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "tinpet",
+     "name": "Tinpet",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "grey",
+     "name": "Greymon",
+     "from": [
+      "tinpet"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "garuru",
+     "name": "Garurumon",
+     "from": [
+      "tinpet"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "900+",
+       "Battles": "5+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "metabee_p",
+     "name": "Metabee (Head and Arm)",
+     "from": [
+      "tinpet"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "600+",
+       "Battles": "3+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    },
+    {
+     "key": "rokusho_p",
+     "name": "Rokusho (Head and Arm)",
+     "from": [
+      "tinpet"
+     ],
+     "reqs": [
+      {
+       "Trophies": "N/A",
+       "Vital Values": "N/A",
+       "Battles": "N/A",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "greywars",
+     "name": "Grey Wars",
+     "from": [
+      "grey"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "garurumetal",
+     "name": "Garuru Metal",
+     "from": [
+      "garuru"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "metabee",
+     "name": "Metabee",
+     "from": [
+      "grey",
+      "garuru",
+      "metabee_p",
+      "rokusho_p"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "2,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "rokusho",
+     "name": "Rokusho",
+     "from": [
+      "grey",
+      "garuru",
+      "metabee_p",
+      "rokusho_p"
+     ],
+     "reqs": [
+      {
+       "Trophies": "8+",
+       "Vital Values": "2,000+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "omegaknight",
+     "name": "Omega Knight",
+     "from": [
+      "greywars"
+     ],
+     "reqs": [
+      {}
+     ]
+    },
+    {
+     "key": "omeda",
+     "name": "Omedamon",
+     "from": [
+      "greywars",
+      "garurumetal",
+      "metabee",
+      "rokusho"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      },
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "bro": {
+  "name": "Black Roar",
+  "stages": {
+   "babyII": [
+    {
+     "key": "koro",
+     "name": "Koromon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "agu_b",
+     "name": "Agumon (Black)",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "grey_b",
+     "name": "Greymon (Blue)",
+     "from": [
+      "agu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "1,200+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "metalgrey_vi",
+     "name": "Metal Greymon (Virus)",
+     "from": [
+      "grey_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "blackwargrey",
+     "name": "Black War Greymon",
+     "from": [
+      "metalgrey_vi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "omega_z",
+     "name": "Omegamon Zwart",
+     "from": [
+      "blackwargrey"
+     ],
+     "reqs": [
+      {}
+     ]
+    }
+   ]
+  }
+ },
+ "sho": {
+  "name": "Shadow Howl",
+  "stages": {
+   "babyII": [
+    {
+     "key": "tuno",
+     "name": "Tsunomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "gabu_b",
+     "name": "Gabumon (Black)",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "garuru_b",
+     "name": "Garurumon (Black)",
+     "from": [
+      "gabu_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "5+",
+       "Vital Values": "1,200+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "weregaruru_b",
+     "name": "Were Garurumon (Black)",
+     "from": [
+      "garuru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "metalgaruru_b",
+     "name": "Metal Garurumon (Black)",
+     "from": [
+      "weregaruru_b"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "super": [
+    {
+     "key": "omega_z",
+     "name": "Omegamon Zwart",
+     "from": [
+      "metalgaruru_b"
+     ],
+     "reqs": [
+      {}
+     ]
+    }
+   ]
+  }
+ },
+ "guil_gp": {
+  "name": "Guilmon GP",
+  "stages": {
+   "babyII": [
+    {
+     "key": "gigi",
+     "name": "Gigimon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "guil",
+     "name": "Guilmon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "grow",
+     "name": "Growmon",
+     "from": [
+      "guil"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "megalogrow",
+     "name": "Megalo Growmon",
+     "from": [
+      "grow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "medievalduke",
+     "name": "Medieval Dukemon",
+     "from": [
+      "megalogrow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "duke",
+     "name": "Dukemon",
+     "from": [
+      "megalogrow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "chaosduke",
+     "name": "Chaos Dukemon",
+     "from": [
+      "megalogrow"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "imp_gp": {
+  "name": "Impmon GP",
+  "stages": {
+   "babyII": [
+    {
+     "key": "yaa",
+     "name": "Yaamon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "imp",
+     "name": "Impmon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "wizar",
+     "name": "Wizarmon",
+     "from": [
+      "imp"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "baal",
+     "name": "Baalmon",
+     "from": [
+      "wizar"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "beelzebu_2010",
+     "name": "Beelzebumon (2010)",
+     "from": [
+      "baal"
+     ],
+     "reqs": [
+      {
+       "Trophies": "15+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "beelzebu",
+     "name": "Beelzebumon",
+     "from": [
+      "baal"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "beelzebu_b",
+     "name": "Beelzebumon: Blast Mode",
+     "from": [
+      "baal"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "rena_gp": {
+  "name": "Renamon GP",
+  "stages": {
+   "babyII": [
+    {
+     "key": "poko",
+     "name": "Pokomon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "rena",
+     "name": "Renamon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "kyubi",
+     "name": "Kyubimon",
+     "from": [
+      "rena"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "tao",
+     "name": "Taomon",
+     "from": [
+      "kyubi"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "sakuya",
+     "name": "Sakuyamon",
+     "from": [
+      "tao"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "5,000+",
+       "Battles": "20+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "kuzuha",
+     "name": "Kuzuhamon",
+     "from": [
+      "tao"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "15+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "sakuya_m",
+     "name": "Sakuyamon: Miko Mode",
+     "from": [
+      "tao"
+     ],
+     "reqs": [
+      {
+       "Trophies": "20+",
+       "Vital Values": "7,000+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "monodra_gp": {
+  "name": "Monodramon GP",
+  "stages": {
+   "babyII": [
+    {
+     "key": "hop",
+     "name": "Hopmon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "child": [
+    {
+     "key": "monodra",
+     "name": "Monodramon",
+     "from": [],
+     "reqs": []
+    }
+   ],
+   "adult": [
+    {
+     "key": "strikedra",
+     "name": "Strikedramon",
+     "from": [
+      "monodra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "1,300+",
+       "Battles": "8+",
+       "Win Ratio": "N/A"
+      }
+     ]
+    }
+   ],
+   "perfect": [
+    {
+     "key": "cyberdra",
+     "name": "Cyberdramon",
+     "from": [
+      "strikedra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "12+",
+       "Vital Values": "3,000+",
+       "Battles": "15+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ],
+   "ultimate": [
+    {
+     "key": "justi_a",
+     "name": "Justimon: Accel Arm",
+     "from": [
+      "cyberdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "30+",
+       "Vital Values": "4,500+",
+       "Battles": "10+",
+       "Win Ratio": "50%+"
+      }
+     ]
+    },
+    {
+     "key": "justi",
+     "name": "Justimon: Blitz Arm",
+     "from": [
+      "cyberdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "4,500+",
+       "Battles": "25+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    },
+    {
+     "key": "justi_c",
+     "name": "Justimon: Critical Arm",
+     "from": [
+      "cyberdra"
+     ],
+     "reqs": [
+      {
+       "Trophies": "10+",
+       "Vital Values": "7,000+",
+       "Battles": "10+",
+       "Win Ratio": "70%+"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

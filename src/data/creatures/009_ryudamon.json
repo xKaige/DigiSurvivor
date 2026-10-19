@@ -61,7 +61,46 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "DR"
+      "family": "DR",
+      "alts": [
+        {
+          "id": "dokugu",
+          "name": "Dokugumon",
+          "file": "enemies/dokugumon.png",
+          "from": [
+            "main"
+          ],
+          "req": {},
+          "vp": {
+            "kills": 200
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "musya",
+          "name": "Musyamon",
+          "file": "enemies/musyamon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 540,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -76,7 +115,96 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "DR"
+      "family": "DR",
+      "alts": [
+        {
+          "id": "oboro",
+          "name": "Oboromon",
+          "file": "enemies/oboromon.png",
+          "from": [
+            "main",
+            "musya",
+            "dokugu"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 1000,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "asura",
+          "name": "Asuramon",
+          "file": "enemies/asuramon.png",
+          "from": [
+            "musya"
+          ],
+          "req": {
+            "VEL": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        },
+        {
+          "id": "gyuki",
+          "name": "Gyukimon",
+          "file": "enemies/gyukimon.png",
+          "from": [
+            "main",
+            "dokugu"
+          ],
+          "req": {
+            "INT": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 35
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+        },
+        {
+          "id": "dura",
+          "name": "Duramon",
+          "file": "creatures/011_zubamon/duramon_5.png",
+          "from": [
+            "musya"
+          ],
+          "req": {
+            "FUE": 4
+          },
+          "vp": {
+            "kills": 1500,
+            "bosses": 3,
+            "nohit": 50
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 45
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +45 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -86,10 +214,7 @@
       "file": "ouryumon_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "eiseiryuoujin",
@@ -104,9 +229,7 @@
         "hp": 60,
         "pierce": 1
       },
-      "vp": {
-        "kills": 250
-      }
+      "vp": {}
     },
     {
       "id": "6_2",
@@ -135,6 +258,71 @@
       "vp": {
         "nohit": 40
       }
+    },
+    {
+      "id": "v_duranda",
+      "name": "Durandamon",
+      "file": "creatures/011_zubamon/durandamon_6_1.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 7
+      },
+      "vp": {
+        "kills": 2500,
+        "bosses": 4,
+        "nohit": 50
+      },
+      "from": [
+        "dura",
+        "asura"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "eiseiryuoujin",
+        "ougai"
+      ],
+      "family": "DR",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "duranda"
+    },
+    {
+      "id": "v_zanba",
+      "name": "Zanbamon",
+      "file": "enemies/zanbamon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 4
+      },
+      "vp": {
+        "kills": 2250,
+        "bosses": 3,
+        "nohit": 30
+      },
+      "from": [
+        "dura",
+        "main",
+        "asura",
+        "gyuki",
+        "oboro"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +4 de daño, +70 de vida",
+      "skills": [
+        "eiseiryuoujin",
+        "ougai"
+      ],
+      "family": "DR",
+      "bonus": {
+        "dmg": 4,
+        "hp": 70,
+        "multi": 0
+      },
+      "vb": "zanba"
     }
   ],
   "stats": {
@@ -147,5 +335,6 @@
     "id": "kabuto",
     "name": "Kabuto",
     "desc": "Su armadura bloquea un golpe cada 12 s"
-  }
+  },
+  "vbChart": "ryuda"
 }

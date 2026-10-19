@@ -59,7 +59,49 @@
       ],
       "wiki": "gargomon",
       "verified": true,
-      "family": "NSp"
+      "family": "NSp",
+      "alts": [
+        {
+          "id": "wendi",
+          "name": "Wendimon",
+          "file": "enemies/wendimon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "FUE": 2
+          },
+          "vp": {
+            "kills": 360,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "turuie",
+          "name": "Turuiemon",
+          "file": "enemies/turuiemon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 540,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -74,7 +116,94 @@
       ],
       "wiki": "rapidmon",
       "verified": true,
-      "family": "ME"
+      "family": "ME",
+      "alts": [
+        {
+          "id": "pajira",
+          "name": "Pajiramon",
+          "file": "enemies/pajiramon.png",
+          "from": [
+            "turuie"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 1000,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "makura",
+          "name": "Makuramon",
+          "file": "enemies/makuramon.png",
+          "from": [
+            "turuie"
+          ],
+          "req": {
+            "VEL": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        },
+        {
+          "id": "andira_d",
+          "name": "Andiramon",
+          "file": "enemies/andiramon.png",
+          "from": [
+            "main",
+            "wendi"
+          ],
+          "req": {
+            "INT": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 35
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+        },
+        {
+          "id": "sindura",
+          "name": "Sinduramon",
+          "file": "enemies/sinduramon.png",
+          "from": [
+            "wendi"
+          ],
+          "req": {
+            "FUE": 4
+          },
+          "vp": {
+            "kills": 1500,
+            "bosses": 3,
+            "nohit": 50
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 45
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +45 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -84,10 +213,7 @@
       "file": "saintgalgomon_6.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "saint_kick",
@@ -102,9 +228,39 @@
         "hp": 60,
         "pierce": 1
       },
+      "vp": {}
+    },
+    {
+      "id": "v_cherubi",
+      "name": "Cherubimon (Virtud)",
+      "file": "enemies/cherubimonvirtud.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 7
+      },
       "vp": {
-        "kills": 250
-      }
+        "kills": 2500,
+        "bosses": 4,
+        "nohit": 50
+      },
+      "from": [
+        "sindura",
+        "andira_d"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "saint_kick",
+        "burst_shot",
+        "giant_missile"
+      ],
+      "family": "ME",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "cherubi"
     }
   ],
   "dark": {
@@ -126,5 +282,6 @@
     "id": "momentai",
     "name": "Momentai",
     "desc": "Sus disparos básicos rebotan a otro enemigo"
-  }
+  },
+  "vbChart": "terrier_ex"
 }

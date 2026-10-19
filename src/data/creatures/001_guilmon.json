@@ -59,7 +59,29 @@
       ],
       "wiki": "growlmon",
       "verified": true,
-      "family": "DR"
+      "family": "DR",
+      "alts": [
+        {
+          "id": "siesa",
+          "name": "Siesamon",
+          "file": "enemies/siesamon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 2
+          },
+          "vp": {
+            "kills": 360,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -74,7 +96,30 @@
       ],
       "wiki": "wargrowlmon",
       "verified": true,
-      "family": "DR"
+      "family": "DR",
+      "alts": [
+        {
+          "id": "majira",
+          "name": "Majiramon",
+          "file": "enemies/majiramon.png",
+          "from": [
+            "siesa"
+          ],
+          "req": {
+            "FUE": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -84,10 +129,7 @@
       "file": "dukemon_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "royal_slash",
@@ -102,9 +144,7 @@
         "hp": 60,
         "pierce": 1
       },
-      "vp": {
-        "kills": 250
-      }
+      "vp": {}
     },
     {
       "id": "6_2",
@@ -171,5 +211,6 @@
     "id": "hazard",
     "name": "Hazard",
     "desc": "Cuanta menos vida tiene, más daño hace (hasta +40%)"
-  }
+  },
+  "vbChart": "guil_ex"
 }

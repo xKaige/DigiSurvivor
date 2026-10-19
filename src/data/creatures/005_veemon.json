@@ -64,7 +64,65 @@
       ],
       "wiki": "veedramon",
       "verified": true,
-      "family": "DR"
+      "family": "DR",
+      "alts": [
+        {
+          "id": "lighdra",
+          "name": "Lighdramon",
+          "file": "enemies/lighdramon.png",
+          "from": [
+            "main"
+          ],
+          "req": {},
+          "vp": {
+            "kills": 200
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "fladra",
+          "name": "Fladramon",
+          "file": "enemies/fladramon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "FUE": 1
+          },
+          "vp": {
+            "kills": 300
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        },
+        {
+          "id": "xv",
+          "name": "XV-mon",
+          "file": "enemies/xvmon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 2
+          },
+          "vp": {
+            "kills": 480,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 35
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -80,7 +138,97 @@
       ],
       "wiki": "aeroveedramon",
       "verified": true,
-      "family": "DR"
+      "family": "DR",
+      "alts": [
+        {
+          "id": "digitama",
+          "name": "Digitamamon",
+          "file": "enemies/digitamamon.png",
+          "from": [
+            "fladra",
+            "lighdra"
+          ],
+          "req": {
+            "VIT": 2
+          },
+          "vp": {
+            "kills": 1000,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "sagittari",
+          "name": "Sagittarimon",
+          "file": "enemies/sagittarimon.png",
+          "from": [
+            "main",
+            "fladra"
+          ],
+          "req": {
+            "VEL": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        },
+        {
+          "id": "dinobee",
+          "name": "Dinobeemon",
+          "file": "creatures/010_wormmon/dinobeemon_5.png",
+          "from": [
+            "xv",
+            "lighdra"
+          ],
+          "req": {
+            "INT": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 35
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+        },
+        {
+          "id": "paildra",
+          "name": "Paildramon",
+          "file": "enemies/paildramon.png",
+          "from": [
+            "xv",
+            "lighdra"
+          ],
+          "req": {
+            "FUE": 4
+          },
+          "vp": {
+            "kills": 1500,
+            "bosses": 3,
+            "nohit": 50
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 45
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +45 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -91,10 +239,7 @@
       "cols": 2,
       "rows": 6,
       "sprite": "dtr:d124",
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "splendor_blade",
@@ -110,9 +255,7 @@
         "hp": 60,
         "pierce": 1
       },
-      "vp": {
-        "kills": 250
-      }
+      "vp": {}
     },
     {
       "id": "6_2",
@@ -122,7 +265,7 @@
       "rows": 6,
       "sprite": "dtr:d127",
       "req": {
-        "VEL": 4
+        "VEL": 7
       },
       "desc": "Veloz: +2 proyectiles, +1 de daño y +15% de velocidad",
       "skills": [
@@ -139,8 +282,16 @@
         "spP": 0.15
       },
       "vp": {
-        "nohit": 40
-      }
+        "kills": 2500,
+        "bosses": 4,
+        "nohit": 50
+      },
+      "from": [
+        "main",
+        "sagittari",
+        "digitama"
+      ],
+      "vb": "ulforcevdra"
     },
     {
       "id": "6_3",
@@ -150,7 +301,7 @@
       "rows": 6,
       "sprite": "dtr:d355",
       "req": {
-        "INT": 4
+        "INT": 7
       },
       "desc": "Poderoso: +5 de daño",
       "skills": [
@@ -166,8 +317,47 @@
         "dmg": 5
       },
       "vp": {
-        "care": 1
-      }
+        "kills": 3500,
+        "bosses": 5,
+        "nohit": 50
+      },
+      "from": [
+        "paildra",
+        "dinobee"
+      ],
+      "vb": "imperialdra_f"
+    },
+    {
+      "id": "v_magna",
+      "name": "Magnamon",
+      "file": "enemies/magnamon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 4
+      },
+      "vp": {
+        "kills": 2250,
+        "bosses": 3,
+        "nohit": 30
+      },
+      "from": [
+        "sagittari",
+        "digitama"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "splendor_blade",
+        "positron_laser",
+        "mega_death"
+      ],
+      "family": "DR",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "magna"
     }
   ],
   "stats": {
@@ -180,5 +370,6 @@
     "id": "valor",
     "name": "Valor",
     "desc": "Al recibir un golpe, +25% de daño durante 3 s"
-  }
+  },
+  "vbChart": "awa"
 }

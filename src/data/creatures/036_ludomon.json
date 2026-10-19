@@ -71,7 +71,29 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon)",
-      "family": "UK"
+      "family": "UK",
+      "alts": [
+        {
+          "id": "reppa",
+          "name": "Reppamon",
+          "file": "creatures/015_kudamon/reppamon_4.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 540,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -86,7 +108,31 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon)",
-      "family": "VB"
+      "family": "VB",
+      "alts": [
+        {
+          "id": "manticore",
+          "name": "Manticoremon",
+          "file": "enemies/manticoremon.png",
+          "from": [
+            "main",
+            "reppa"
+          ],
+          "req": {
+            "FUE": 3
+          },
+          "vp": {
+            "kills": 1000,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -96,10 +142,7 @@
       "file": "bryweludramon_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "crimson_storm",
@@ -114,9 +157,69 @@
         "hp": 60,
         "pierce": 1
       },
+      "vp": {}
+    },
+    {
+      "id": "v_death_b",
+      "name": "Deathmon(Black)",
+      "file": "enemies/deathmonblack.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 7
+      },
       "vp": {
-        "kills": 250
-      }
+        "kills": 2500,
+        "bosses": 4,
+        "nohit": 50
+      },
+      "from": [
+        "manticore"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "crimson_storm",
+        "blast_smash"
+      ],
+      "family": "UK",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "death_b"
+    },
+    {
+      "id": "v_devitama",
+      "name": "Devitamamon",
+      "file": "enemies/devitamamon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 4
+      },
+      "vp": {
+        "kills": 2250,
+        "bosses": 3,
+        "nohit": 30
+      },
+      "from": [
+        "main",
+        "manticore"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +4 de daño, +70 de vida",
+      "skills": [
+        "crimson_storm",
+        "blast_smash"
+      ],
+      "family": "UK",
+      "bonus": {
+        "dmg": 4,
+        "hp": 70,
+        "multi": 0
+      },
+      "vb": "devitama"
     }
-  ]
+  ],
+  "vbChart": "espi"
 }

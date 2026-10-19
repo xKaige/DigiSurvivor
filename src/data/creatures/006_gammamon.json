@@ -61,7 +61,46 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "VB"
+      "family": "VB",
+      "alts": [
+        {
+          "id": "gulusgamma",
+          "name": "GulusGammamon",
+          "file": "enemies/gulusgammamon.png",
+          "from": [
+            "main"
+          ],
+          "req": {},
+          "vp": {
+            "kills": 200
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "kausgamma",
+          "name": "KausGammamon",
+          "file": "enemies/kausgammamon.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 540,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        }
+      ]
     },
     {
       "stage": 4,
@@ -76,7 +115,76 @@
       "wiki": null,
       "verified": false,
       "note": "Skills del canon (Wikimon); no está en la wiki DSR",
-      "family": "VB"
+      "family": "VB",
+      "alts": [
+        {
+          "id": "chimaira",
+          "name": "Chimairamon",
+          "file": "enemies/chimairamon.png",
+          "from": [
+            "main",
+            "gulusgamma"
+          ],
+          "req": {
+            "INT": 3
+          },
+          "vp": {
+            "kills": 1000,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 15
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+        },
+        {
+          "id": "brachio",
+          "name": "Brachiomon",
+          "file": "enemies/brachiomon.png",
+          "from": [
+            "main",
+            "kausgamma"
+          ],
+          "req": {
+            "VEL": 4
+          },
+          "vp": {
+            "kills": 1250,
+            "bosses": 2,
+            "nohit": 30
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+        },
+        {
+          "id": "canoweiss",
+          "name": "Canoweissmon",
+          "file": "creatures/006_gammamon/canoweissmon_6_1.png",
+          "from": [
+            "main",
+            "kausgamma",
+            "gulusgamma"
+          ],
+          "req": {
+            "FUE": 4
+          },
+          "vp": {
+            "kills": 1500,
+            "bosses": 3,
+            "nohit": 50
+          },
+          "bonus": {
+            "dmg": 2,
+            "hp": 35
+          },
+          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+        }
+      ]
     }
   ],
   "branches": [
@@ -86,10 +194,7 @@
       "file": "canoweissmon_6_1.png",
       "cols": 2,
       "rows": 6,
-      "req": {
-        "FUE": 3,
-        "VIT": 1
-      },
+      "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
         "gallia_fissure",
@@ -105,9 +210,71 @@
         "hp": 60,
         "pierce": 1
       },
+      "vp": {}
+    },
+    {
+      "id": "v_aegisdra",
+      "name": "Aegisdramon",
+      "file": "enemies/aegisdramon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "VEL": 5
+      },
       "vp": {
-        "kills": 250
-      }
+        "kills": 2500,
+        "bosses": 3,
+        "nohit": 50
+      },
+      "from": [
+        "canoweiss"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
+      "skills": [
+        "gallia_fissure",
+        "dragonia",
+        "meteor_lux"
+      ],
+      "family": "VB",
+      "bonus": {
+        "dmg": 3,
+        "hp": 50,
+        "multi": 0
+      },
+      "vb": "aegisdra"
+    },
+    {
+      "id": "v_ultimatebrachi",
+      "name": "UltimateBrachiomon",
+      "file": "enemies/ultimatebrachiomon.png",
+      "cols": 2,
+      "rows": 6,
+      "req": {
+        "INT": 5
+      },
+      "vp": {
+        "kills": 2250,
+        "bosses": 3,
+        "nohit": 40
+      },
+      "from": [
+        "canoweiss",
+        "brachio",
+        "chimaira"
+      ],
+      "desc": "Evolución alternativa (Vital Bracelet): +4 de daño, +70 de vida",
+      "skills": [
+        "gallia_fissure",
+        "dragonia",
+        "meteor_lux"
+      ],
+      "family": "VB",
+      "bonus": {
+        "dmg": 4,
+        "hp": 70,
+        "multi": 0
+      },
+      "vb": "ultimatebrachi"
     }
   ],
   "dark": {
@@ -129,5 +296,6 @@
     "id": "curioso",
     "name": "Curiosidad",
     "desc": "+12% de experiencia"
-  }
+  },
+  "vbChart": "gamma"
 }

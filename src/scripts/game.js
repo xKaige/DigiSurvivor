@@ -40,7 +40,7 @@ const EVO_LEVELS = FAST ? [2,3,4,5] : [5,10,15,20];  // etapas 1,2,3,4 (cada 5 n
 const LINE_LEVEL = FAST ? 6 : 25;                    // elección de la evolución final (rama)
 const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisitos de stats de las ramas se achican
 // Experiencia para el próximo nivel: need = need × XP_GROW + XP_ADD (más bajo = se sigue subiendo en el late game)
-let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7, XP_GAIN = 0.55;   // XP_GAIN: multiplicador de toda la XP que juntás
+let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7, XP_GAIN = 0.65;   // XP_GAIN: multiplicador de toda la XP que juntás
 // XP para pasar del nivel L al L+1. Con XP_PACE (abajo) la forma final llega cerca del minuto 25 en una partida de 30
 // (lo pidió el usuario: antes se llegaba a los 7'). XP_GROW/XP_ADD/XP_START ya no se usan.
 const xpNeed = L => Math.round(4 * Math.pow(L, 1.65) + 4);
@@ -63,7 +63,7 @@ const unlocked = id => typeof Progress === 'undefined' || Progress.has(id);
 // Jugadores de ESTE navegador (en online, solo el tuyo): para el Analyzer y las misiones
 const mine = () => isOnline ? [P[myIdx]].filter(Boolean) : P;
 // Clave de canvas de la forma de q en la etapa s: stage_N, branch_<id> o 'dark' (evolución oscura)
-const formKey = (q, s) => { if (s < 5) return 'stage_' + s; if (q.dark) return 'dark'; const C = CR(q), b = C && C.meta.branches[q.line || 0]; return 'branch_' + (q.branchId || (b ? b.id : '6_1')); };
+const formKey = (q, s) => { if (s < 5) return q.alt && q.alt[s] ? 'alt_' + s + '_' + q.alt[s] : 'stage_' + s; if (q.dark) return 'dark'; const C = CR(q), b = C && C.meta.branches[q.line || 0]; return 'branch_' + (q.branchId || (b ? b.id : '6_1')); };
 // Evolución oscura: sprite propio (JSON "dark") o, si no tiene, su primera forma final teñida de violeta (se genera una vez)
 function darkSpr(C) {
   if (!C) return null;
@@ -79,7 +79,21 @@ const darkName = C => (C.meta.dark && C.meta.dark.name) || (C.meta.branches[0].n
 // Nombre de la forma (con X-Antibody, el de su forma X si existe)
 const formName = (q, s) => { const C = CR(q); if (!C) return ''; const M = C.meta, k = formKey(q, s);
   if (q.xa && M.x && M.x[k]) return M.x[k].name; if (k === 'dark') return darkName(C);
-  const o = s < 5 ? M.stages[s] : (M.branches.find(b => 'branch_' + b.id === k) || M.branches[0]); return o ? o.name : ''; };
+  const o = s < 5 ? (q.alt && q.alt[s] && altOf(M, s, q.alt[s])) || M.stages[s] : (M.branches.find(b => 'branch_' + b.id === k) || M.branches[0]); return o ? o.name : ''; };
+// ---------- Evoluciones alternativas (Vital Bracelet, tools/vb/gen_alts.py) ----------
+// stages[3|4].alts = [{id, name, file, from, req, vp, bonus, desc}]; q.alt = {3: id, 4: id} (sin id = la forma de siempre).
+// La forma de siempre de cada etapa (y la primera forma final) sale solo con experiencia; las demás piden requisitos.
+const altOf = (M, s, id) => ((M.stages[s] && M.stages[s].alts) || []).find(a => a.id === id);
+const prevForm = (q, s) => (s > 3 && q.alt && q.alt[s - 1]) || 'main';   // forma de la etapa anterior ('main' = la de siempre)
+// opciones de q para la etapa s (3, 4 o 5 = formas finales), las que salen de su forma actual
+function formOpts(q, s) {
+  const C = CR(q); if (!C) return [];
+  const M = C.meta, pf = prevForm(q, s), ok = a => !a.from || a.from.includes(pf);
+  if (s >= 5) return M.branches.map((b, idx) => ({ b, idx })).filter(o => o.idx === 0 || ok(o.b)).map(o => ({ id: o.b.id, idx: o.idx, name: o.b.name, desc: o.b.desc, req: o.b.req, vp: o.b.vp, key: 'branch_' + o.b.id, xp: o.idx === 0 }));
+  const st = M.stages[s]; if (!st) return [];
+  return [{ id: null, name: st.name, desc: 'La forma de siempre de la línea', key: 'stage_' + s, xp: true },
+    ...(st.alts || []).filter(ok).map(a => ({ id: a.id, name: a.name, desc: a.desc, req: a.req, vp: a.vp, key: 'alt_' + s + '_' + a.id }))];
+}
 const seeForm = q => { if (typeof Progress === 'undefined' || !q) return; const k = formKey(q, q.stage | 0), C = CR(q);
   Progress.see(q.cid, k); if (q.xa && C && C.canvases['x_' + k]) Progress.see(q.cid, 'x_' + k); };
 // Reglas del desafío diario (challenge.js) activas en esta partida
@@ -102,7 +116,7 @@ let myIdx = 0, rk = {}, picked = new Set();
 // suya (gRnd) y descarta lo viejo (así un resume_game atrasado no le cierra las cartas de la ronda nueva)
 let rnd = 0, rndAt = 0, rndOpen = false, gRnd = -1;
 // anfitrión: abre una ronda de cartas y se la avisa a todos
-function hostRound(type) { rnd++; rndAt = performance.now(); rndOpen = true; gs.forEach(g => g.rs = 0); sendAll({ type, rnd }); }
+function hostRound(type) { rnd++; rndAt = performance.now(); rndOpen = true; gs.forEach(g => g.rs = 0); sendAll({ type, rnd, stage: lineStage }); }
 // sync: el anfitrión manda el estado SYNC_HZ veces por segundo (12 con 3 o más jugadores, para no saturar su subida)
 const SYNC_HZ = 15, SYNC_HZ_MANY = 12, SYNC_SLOW = 0.5, AOI = 1500;
 let syncT = 0, slowT = 0, enId = 0, inSig = '', inT = 0;
@@ -395,6 +409,7 @@ function setupConn(c) {
       showCards();
     } else if (data.type === 'trigger_line') {
       if (data.rnd != null) { if (data.rnd === gRnd) return; gRnd = data.rnd; }
+      lineStage = data.stage || 5;
       paused = true;
       picked = new Set();
       pending = [P[myIdx]];
@@ -438,7 +453,7 @@ function allPicked() {
   if (!isHost || !mustPick().every(i => picked.has(i))) return;   // espera solo a los que siguen conectados (si se cortó uno, no lo frena)
   $('up').style.display = 'none';
   rndOpen = false;
-  if (cardMode === 'line') { sendAll({ type: 'trigger_evo', stage: 5 }); startEvo(5); }
+  if (cardMode === 'line') { sendAll({ type: 'trigger_evo', stage: lineStage }); startEvo(lineStage); }
   else { paused = false; last = performance.now(); sendAll({ type: 'resume_game', rnd }); }
 }
 // Anfitrión: si una ronda de cartas tarda, se la reenvía cada 5 s a quien no eligió; a los 30 s elige por él
@@ -449,13 +464,13 @@ setInterval(() => {
   if (!late.length) return;
   if (dt < 30000) {
     const ty = cardMode === 'line' ? 'trigger_line' : 'trigger_levelup';
-    for (const g of gs) if (late.includes(g.i) && g.c && Math.floor(dt / 5000) > (g.rs | 0)) { g.rs = Math.floor(dt / 5000); sendTo(g.c, { type: ty, rnd }); }
+    for (const g of gs) if (late.includes(g.i) && g.c && Math.floor(dt / 5000) > (g.rs | 0)) { g.rs = Math.floor(dt / 5000); sendTo(g.c, { type: ty, rnd, stage: lineStage }); }
     return;
   }
   for (const i of late) {
     const q = P[i]; if (!q) continue;
     let data;
-    if (cardMode === 'line') { const C = CR(q), b = C && C.meta.branches[0]; data = { op: 'line', lineIdx: 0, branchId: b ? b.id : null, weak: false, dark: false }; }
+    if (cardMode === 'line') { const C = CR(q), b = C && C.meta.branches[0]; data = lineStage < 5 ? { op: 'line', stage: lineStage, altId: null } : { op: 'line', stage: 5, lineIdx: 0, branchId: b ? b.id : null, weak: false, dark: false }; }
     else { const k = Stats.CARDS[Math.floor(Math.random() * Stats.CARDS.length)]; data = { op: k.op, c: k.c }; }
     applyCardOp(q, data); picked.add(i);
     sendAll(Object.assign({ type: 'host_choice', i, rnd, auto: 1 }, data));
@@ -468,6 +483,7 @@ function applyCardOp(targetP, data) {
   if (data.c) targetP.st[data.c]++;
   if (Stats.cardOf(data.op)) Stats.card(targetP, data.op);   // carta de stat (stats.js)
   else if (data.op === 'wp' && data.wpKey) { SkillSys.forget(targetP, data.rep); if (SkillSys.canTake(targetP, data.wpKey)) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; }
+  else if (data.op === 'line' && data.stage && data.stage < 5) { targetP.alt = targetP.alt || {}; targetP.alt[data.stage] = data.altId || null; }   // Campeón / Perfecto alternativo
   else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; targetP.dark = !!data.dark; }
 }
 
@@ -483,7 +499,7 @@ function hostSync(dt) {
   const r = v => Math.round(v), r2 = v => Math.round(v * 100) / 100;
   const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
   const pl = P.map(q => {
-    const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp };
+    const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, alt: q.alt, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp };
     if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs });
     return o;
   });
@@ -583,7 +599,7 @@ function hit(e,d,el,q){const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.h
  if(q&&q.m)Stats.afterHit(q,e,v)}
 function hurt(q,d,el,src){if(q.dead)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;if(!isOnline||q.id===myIdx)Sound.play('hurt');burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
 function tot(q,k){return Stats.pts(q,k)}   // puntos de stat: especie + partida + árbol (stats.js)
-function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
+function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,alt:{},line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
 
 // ids: criatura de cada jugador, ej. ['002_renamon'] o ['001_guilmon','003_terriermon']
 // los: "loadout" de cada jugador (árbol y vínculo de SU guardado, ver trees.js). Si falta, se arma con el de este navegador.
@@ -593,7 +609,7 @@ async function start(m,ids,los){
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=xpNeed(1);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();await Enemies.prepare();if(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
   renderLegend();Sound.music(true);if(typeof Achievements!=='undefined')Achievements.onStart();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -653,13 +669,15 @@ function pickShow(i, key) {
   key = key || 'stage_2';
   const forms = M.stages.map(s => ({ key: 'stage_' + s.stage, name: s.name }));
   const finals = M.branches.map(b => ({ key: 'branch_' + b.id, name: b.name }));
-  const shown = [...forms, ...finals].find(f => f.key === key) || forms[0];
+  const alts = M.stages.flatMap(st => (st.alts || []).map(a => ({ key: 'alt_' + st.stage + '_' + a.id, name: a.name })));   // evoluciones alternativas (Vital Bracelet)
+  const shown = [...forms, ...alts, ...finals].find(f => f.key === key) || forms[0];
   const chip = f => '<button class="pk-f' + (f.key === shown.key ? ' on' : '') + '" data-k="' + f.key + '">' + f.name.replace(/-/g, '‑') + '</button>';
   const d = $('pk-detail'); d.style.setProperty('--ac', ELC[el]);
   d.innerHTML = '<div class="pk-spr"><canvas id="pk-cv"></canvas><span class="pk-viewing">' + shown.name + '</span></div>' +
     '<b class="pk-name">' + String(i + 1).padStart(2, '0') + '. ' + nm.replace(/-/g, '‑') + '</b>' +
     '<div class="pk-lbl">Evoluciones <small>(tocá una para verla)</small></div>' +
     '<div class="pk-evo">' + forms.map(chip).join('<i>→</i>') + '</div>' +
+    (alts.length ? '<div class="pk-lbl">Evoluciones alternativas <small>(con requisitos)</small></div><div class="pk-evo fin">' + alts.map(chip).join('') + '</div>' : '') +
     '<div class="pk-lbl">Formas finales</div><div class="pk-evo fin">' + finals.map(chip).join('') + '</div>' +
     pickStats(cr.id, shown.key) +
     '<span class="pc-type">Tipo ' + ATTR[el] + '</span>' +
@@ -668,6 +686,8 @@ function pickShow(i, key) {
   d.querySelector('.pk-ok').onclick = () => pickDone(cr.id);
   // sprite en grande, animado (fila 0 = quieto, alterna las dos columnas), escala entera para que no se deforme el pixel art
   clearInterval(pickAnim);
+  // los sprites de las alternativas se cargan recién ahora: cuando llegan, se vuelve a dibujar
+  if (!C.altsOk) CreatureLoader.loadAlts(cr.id).then(() => { C.altsOk = 1; if (pickSel === i && $('pk-detail') && $('up').style.display !== 'none') pickShow(i, key); }).catch(() => {});
   const S = C.canvases[shown.key], cv = $('pk-cv'); if (!S || !cv) return;
   const fw = S.canvas.width / S.cols, fh = S.canvas.height / S.rows, sc = Math.max(1, Math.floor(200 / Math.max(fw, fh)));
   cv.width = fw * sc; cv.height = fh * sc;
@@ -977,38 +997,30 @@ function thumbOf(C, key){
   return '<img src="' + c.toDataURL() + '" style="display:block;height:72px;image-rendering:pixelated;margin-bottom:6px">';
 }
 
+// Elegir evolución: en Campeón y Perfecto (si la línea tiene alternativas) y en la forma final. lineStage = etapa que se elige.
+// La forma de siempre (y la primera forma final) sale solo con experiencia; las demás se ven bloqueadas hasta cumplir requisitos.
+let lineStage = 5;
+const STAGE_NAMES_UP = ['Bebé', 'Bebé II', 'Novato', 'Campeón', 'Perfecto', 'forma final'];
 function chooseLine(){
   paused = true;
   p = isOnline ? P[myIdx] : pending[0];
-  cardMode='line'; setHead('¡Elegí tu evolución final!');
-
-  // la primera forma final sale solo con experiencia (llegar al nivel); las demás piden sus requisitos y se ven
-  // bloqueadas hasta cumplirlos. Ya no hay evolución oscura.
-  const C = CR(p), branches = C.meta.branches;
-  const need = v => Math.ceil(v * REQ_FACTOR);
-  const meets = (b, idx) => idx === 0 || TEST || (Object.entries(b.req || {}).every(([k, v]) => (p.st[k] | 0) >= need(v)) && Object.entries(b.vp || {}).every(([k, v]) => Stats.vpVal(p, k) >= need(v)));
-  cur = branches.map((b, idx) => {
-    const ok = meets(b, idx);
-    return {
-      n: b.name,
-      lock: !ok,
-      weak: false,
-      op: 'line',
-      lineIdx: idx,
-      branchId: b.id,
-      d: b.desc,
-      req: idx === 0 ? 'solo experiencia (llegar al nivel ' + LINE_LEVEL + ')' : [...Object.entries(b.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(p.st[k] | 0, need(v))}/${need(v)}`),
-        ...Object.entries(b.vp || {}).map(([k, v]) => `${Stats.VPN[k]} ${Math.min(Stats.vpVal(p, k), need(v))}/${need(v)}`)].join(' · '),
-      f: () => { p.line = idx; p.branchId = b.id; p.weak = false; p.dark = false; }
-    };
-  });
-
+  const s = lineStage;
+  cardMode='line'; setHead(s >= 5 ? '¡Elegí tu evolución final!' : '¡Elegí tu evolución a ' + STAGE_NAMES_UP[s] + '!');
+  const C = CR(p), need = v => Math.ceil(v * REQ_FACTOR);
+  const meets = o => o.xp || TEST || (Object.entries(o.req || {}).every(([k, v]) => (p.st[k] | 0) >= need(v)) && Object.entries(o.vp || {}).every(([k, v]) => Stats.vpVal(p, k) >= need(v)));
+  cur = formOpts(p, s).map(o => ({
+    n: o.name, lock: !meets(o), weak: false, op: 'line', stage: s, lineIdx: o.idx, branchId: s >= 5 ? o.id : null, altId: s < 5 ? o.id : null, key: o.key, xp: o.xp,
+    d: o.desc || '',
+    req: o.xp ? 'solo experiencia' + (s >= 5 ? ' (llegar al nivel ' + LINE_LEVEL + ')' : '') : [...Object.entries(o.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(p.st[k] | 0, need(v))}/${need(v)}`),
+      ...Object.entries(o.vp || {}).map(([k, v]) => `${Stats.VPN[k]} ${Math.min(Stats.vpVal(p, k), need(v))}/${need(v)}`)].join(' · '),
+    f: s >= 5 ? () => { p.line = o.idx; p.branchId = o.id; p.weak = false; p.dark = false; } : () => { p.alt = p.alt || {}; p.alt[s] = o.id; }
+  }));
   const c=$('cards');c.innerHTML='';
   cur.forEach((u,i)=>{
     const b=document.createElement('button');
     b.className='card lv line'+(u.lock?' locked':'');
     b.disabled=u.lock;
-    b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(u.lock?'Bloqueada':i===0?'Por experiencia':'Evolución final')+'</span>'+thumbOf(C,'branch_'+u.branchId)+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span><em>'+(u.lock?'Te falta: ':'Requiere: ')+u.req+'</em>';
+    b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(u.lock?'Bloqueada':u.xp?'Por experiencia':'Evolución alternativa')+'</span>'+thumbOf(C,u.key)+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span><em>'+(u.lock?'Te falta: ':'Requiere: ')+u.req+'</em>';
     b.onclick=()=>choose(u);
     c.appendChild(b);
   });
@@ -1022,20 +1034,13 @@ function levelUp(){
   const EL=evoLevels();
   if(EL.includes(lvl)){
     const nextStage = EL.indexOf(lvl) + 1;
+    // con evoluciones alternativas para alguno: primero se elige (como la forma final), después evoluciona
+    if (nextStage >= 3 && P.some(q => !q.gone && formOpts(q, nextStage).length > 1)) { lineStage = nextStage; openLine(); return; }
     startEvo(nextStage);
     if (isOnline && isHost) sendAll({ type: 'trigger_evo', stage: nextStage });
     return;
   }
-  if(lvl===LINE_LEVEL){
-    if (isOnline) {
-      pending = [P[myIdx]]; picked = new Set();
-      if (isHost) hostRound('trigger_line');
-    } else {
-      pending = [...P];
-    }
-    chooseLine();
-    return;
-  }
+  if(lvl===LINE_LEVEL){ lineStage = 5; openLine(); return; }
   if (isOnline) {
     pending = [P[myIdx]];
     if (isHost) hostRound('trigger_levelup');
@@ -1043,6 +1048,16 @@ function levelUp(){
     pending = [...P];
   }
   startCards();
+}
+// abre la elección de evolución (lineStage) para todos
+function openLine(){
+  if (isOnline) {
+    pending = [P[myIdx]]; picked = new Set();
+    if (isHost) hostRound('trigger_line');
+  } else {
+    pending = [...P];
+  }
+  chooseLine();
 }
 
 function startCards(){
@@ -1099,7 +1114,7 @@ function choose(u){
   const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c){q.st[u.c]++;Stats.card(q,u.op)}p=P[0];pending.shift();
 
   if (isOnline) {
-    const payload = { type: isHost ? 'host_choice' : 'client_choice', rnd: isHost ? rnd : gRnd, i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark, rep: u.rep };
+    const payload = { type: isHost ? 'host_choice' : 'client_choice', rnd: isHost ? rnd : gRnd, i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, stage: u.stage, altId: u.altId, weak: u.weak, dark: u.dark, rep: u.rep };
     sendAll(payload);
     picked.add(myIdx);
     if (isHost ? !mustPick().every(i => picked.has(i)) : picked.size < P.filter(q => !q.gone).length) {
@@ -1115,7 +1130,7 @@ function choose(u){
     allPicked();
   } else {
     $('up').style.display = 'none';
-    if (modo === 'line') startEvo(5);
+    if (modo === 'line') startEvo(lineStage);
     else { paused = false; last = performance.now(); }
   }
 }
