@@ -571,3 +571,27 @@ body.finale #snd{display:none!important}
 #lg-toast small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#ffd23f}#lg-toast b{font-size:16px}
 @media (max-width:560px){#logros{padding:10px}#lg-list{padding:6px 10px 12px}#logros .head{padding:12px}}
 #up .card.lv.line.locked img{filter:grayscale(1) brightness(.6)}#up .card.lv.line.locked .kt{color:#ff8a8a}   /* forma final bloqueada (falta algún requisito) */
+
+/* ---------- HUD minimalista (pedido): barras de vida finitas apiladas arriba a la izquierda, contador arriba a la derecha ---------- */
+#hud{top:calc(env(safe-area-inset-top) + 8px);left:10px;right:auto;width:190px;display:flex;flex-direction:column;align-items:stretch;gap:6px}
+#hud .hpbox{display:grid;grid-template-columns:1fr;row-gap:2px;padding:0;background:none;border:0;box-shadow:none;border-radius:0;min-width:0}
+#hud .hpbox .pl{font-size:11px;line-height:1;letter-spacing:.04em;text-shadow:0 0 4px #000,0 1px 2px #000}
+#bar,#bar2,#bar3,#bar4{width:auto;height:10px;background:rgba(2,8,18,.65);border:1px solid rgba(255,255,255,.22);border-radius:2px}
+#fill,#fill2,#fill3,#fill4{box-shadow:none}
+#fill::after,#fill2::after,#fill3::after,#fill4::after{background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(2,8,18,.45) 9px 10px)}
+.hpt{font-size:8px;letter-spacing:.02em}
+#hud .spx{width:auto;gap:1px}#hud .spx i{height:2px}
+#hud .hpbox.low{animation:none}#hud .hpbox.low #bar,#hud .hpbox.low #bar2,#hud .hpbox.low #bar3,#hud .hpbox.low #bar4{animation:hplowbar .7s steps(2) infinite}
+@keyframes hplowbar{50%{border-color:#ff4a4a;box-shadow:0 0 8px #ff4a4a}}
+#info{position:fixed;top:calc(env(safe-area-inset-top) + 8px);right:10px;margin:0;padding:2px 9px;font-size:13px}
+#pst{top:auto;bottom:165px;left:10px}   /* stats de la partida: arriba del triángulo de atributos */
+/* skills un poco más chicas */
+#skbar{gap:14px}.skgrp{gap:4px}.sk{width:50px}.skbox{width:36px;height:36px;border-width:2px}.skname{font-size:9px}.skbox b{font-size:10px;line-height:15px;min-width:15px;right:-5px;bottom:-5px}
+@media (max-width:700px){
+  #hud{left:6px;width:150px;display:flex;grid-template-columns:none;gap:5px}
+  body.p1 #hp1box{grid-column:auto}
+  #hud .hpbox{grid-column:auto!important;grid-row:auto!important}
+  #info{right:6px}
+  #snd{right:52px}
+  .sk{width:36px}.skbox{width:30px;height:30px}
+}

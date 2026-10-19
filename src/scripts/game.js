@@ -583,6 +583,10 @@ function applyOnlineSync(data) {
   if (data.fx) for (const f of data.fx) if (fx.length < MAX_FX) fx.push(f);
 }
 
+// sin zoom del navegador (Ctrl + ruedita, Ctrl +/-/0, pellizco en iOS): el juego maneja su propia cámara
+addEventListener('wheel',e=>{if(e.ctrlKey)e.preventDefault()},{passive:false});
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['+','-','=','_','0'].includes(e.key))e.preventDefault()});
+['gesturestart','gesturechange'].forEach(ev=>addEventListener(ev,e=>e.preventDefault(),{passive:false}));
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('Arrow'))e.preventDefault();
  if(pickRes){if(pickKey(e.key))e.preventDefault();else if(e.key==='Escape'&&!isOnline)pickCancel();return}
  if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline&&!(typeof Progress!=='undefined'&&(Progress.isOpen()||Progress.hatching))&&!document.querySelector('#news[style*="flex"],#challenge[style*="flex"],#missions[style*="flex"]')){if(selected)beginLocal(lastMode);else openMenuPick()}
@@ -984,7 +988,7 @@ function stepEvo(dt){evo.t+=dt;
  }}
 
 const SN={FUE:'Fuerza',VEL:'Velocidad',VIT:'Vitalidad',INT:'Inteligencia'};
-function setHead(txt){$('up').classList.remove('pick');const h=$('up').querySelector('h2');h.textContent=txt+(mode>1&&!txt.startsWith('ESPERANDO')?' · Jugador '+(p.id+1):'');h.style.color=mode>1?PC[p.id]:''}
+function setHead(txt){$('up').classList.remove('pick');const h=$('up').querySelector('h2');h.textContent=txt+(mode>1&&!isOnline&&!txt.startsWith('ESPERANDO')?' · '+pname(p.id):'');h.style.color=mode>1?PC[p.id]:''}
 
 // Evita que un click o tecla de la pantalla anterior elija una carta sin querer
 // (en modo FAST los niveles se encadenan y la elección aparece justo donde estaba la carta anterior).
@@ -1120,7 +1124,7 @@ function choose(u){
     picked.add(myIdx);
     if (isHost ? !mustPick().every(i => picked.has(i)) : picked.size < P.filter(q => !q.gone).length) {
       setHead('ESPERANDO A LOS DEMÁS');
-      $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">Jugador ' + (myIdx + 1) + ' listo. Esperando a que elijan los demás (' + picked.size + '/' + P.length + ')...</p>';
+      $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">' + pname(myIdx) + ' listo. Esperando a que elijan los demás (' + picked.size + '/' + P.length + ')...</p>';
       return;
     }
   }
@@ -1189,14 +1193,14 @@ function evoLevels(){return P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LE
 // Cajas de vida: la 1 y la 2 están en index.html; la 3 y la 4 se crean copiando la 2 (mismos ids con otro número)
 function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)continue;const b=$('hp2box').cloneNode(true);b.id='hp'+i+'box';b.className='hpbox p'+i;
   b.querySelectorAll('[id]').forEach(e=>{e.id=e.id.replace(/2$/,String(i))});$('hp'+(i-1)+'box').after(b)}
- for(let i=1;i<=MAX_PLAYERS;i++){const b=$('hp'+i+'box');if(!b)continue;b.style.display=i<=m?'':'none';const l=$('l'+i);if(l)l.textContent=m>1?'J'+i:''};document.body.classList.toggle('p1',m===1);document.body.classList.toggle('p3',m===3);document.body.classList.toggle('p4',m===4)}
+ for(let i=1;i<=MAX_PLAYERS;i++){const b=$('hp'+i+'box');if(!b)continue;b.style.display=i<=m?'':'none';const l=$('l'+i);if(l)l.textContent=m>1?pname(i-1):''};document.body.classList.toggle('p1',m===1);document.body.classList.toggle('p3',m===3);document.body.classList.toggle('p4',m===4)}
 function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill'+n:'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3);
  const sp=$('sp'+n),dp=$('dp'+n);if(sp){sp.style.width=(q.spv||0)+'%';sp.classList.toggle('full',!!q.emp)}if(dp){const nd=Stats.DP_NEED[q.stage|0];dp.style.width=nd&&q.vp?Math.min(100,q.vp.dp/nd*100)+'%':'0'}};
  P.forEach((q,i)=>hb(i,q));Gate.hud();
  $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills;Bosses.hud()}
 
 function update(dt){
- t+=dt;SkillSys.renderBar(P);if(typeof Achievements!=='undefined')Achievements.tick();
+ t+=dt;SkillSys.renderBar(isOnline?mine():P);if(typeof Achievements!=='undefined')Achievements.tick();
  if (isOnline) {
    if (!isHost && conn) {
      // teclas: solo cuando cambian (y cada 0,25 s por las dudas)
@@ -1270,7 +1274,7 @@ function update(dt){
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
  if(P.every(q=>q.dead))endRun('Fuiste borrado');
  hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
- $('pst').textContent=P.map(q=>(mode>1?'J'+(q.id+1)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
+ $('pst').textContent=(isOnline?mine():P).map(q=>(mode>1&&!isOnline?pname(q.id)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
 }
 
 // la cámara sigue al promedio de los jugadores vivos
@@ -1313,7 +1317,8 @@ function draw(){
 }
 // Flechas en el borde de la pantalla hacia lo que no se ve: compañeros (nombre y distancia en metros; ✝ si están caídos)
 // y el Digital Gate. 1 metro = 40 px.
-function pname(i){const m=isOnline&&i!==myIdx&&roster.find(x=>x.i===i);return(m&&m.nick)||'J'+(i+1)}
+// nombre de cada jugador: online, el nick que eligió cada uno (también el tuyo); en local, J1, J2…
+function pname(i){const m=isOnline&&roster.find(x=>x.i===i);return(m&&m.nick)||(isOnline&&i===myIdx&&me.nick)||'J'+(i+1)}
 function drawPointers(){
  const me=isOnline?P[myIdx]:null,ox=me&&!me.dead?me.x:cam.x,oy=me&&!me.dead?me.y:cam.y,list=[];
  if(mode>1)P.forEach((q,i)=>{if(isOnline&&i===myIdx)return;list.push({x:q.x,y:q.y-30,col:PC[i],txt:(q.dead?'✝ ':'')+pname(i)})});
@@ -1337,7 +1342,7 @@ function dEn(e){
 function dPl(q){const s=q.stage|0,hh=96;
   if(q.dead)drawBuddy(q,s,q.x,q.y,q.face,.25);
   else if(!evo&&(q.inv<=0||Math.floor(t*20)%2))drawBuddy(q,s,q.x,q.y,q.face,1);
-  if(mode>1){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?'J'+(q.id+1)+' ✝ (pararse encima para revivir)':'J'+(q.id+1),q.x,q.y+48-(q.dh||hh)-8)}
+  if(mode>1){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?pname(q.id)+' ✝ (pararse encima para revivir)':pname(q.id),q.x,q.y+48-(q.dh||hh)-8)}
   if(q.dead&&mode>1){const pr=Math.min(1,(q.revP||0)/REVIVE_TIME);cx.lineWidth=3;cx.strokeStyle='rgba(255,210,63,.35)';cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,0,6.283);cx.stroke();if(pr>0){cx.strokeStyle='#ffd23f';cx.lineWidth=6;cx.beginPath();cx.arc(q.x,q.y,REVIVE_R,-Math.PI/2,-Math.PI/2+6.283*pr);cx.stroke()}}}
 
 // Loop principal. Si algo tira un error, se registra en la consola y el juego SIGUE (antes se congelaba para siempre).

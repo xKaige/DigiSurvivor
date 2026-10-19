@@ -99,6 +99,8 @@ Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `
 
 ### Pausa y HUD
 - **Escape pausa** (`togglePause`, flag `menuPause`): menú con Continuar / Abandonar partida. Nunca termina la partida directo. En online no frena la simulación (solo abre el menú). Con cartas o digievolución en pantalla, Escape no hace nada.
+- **HUD minimalista** (pedido): barras de vida finitas apiladas arriba a la izquierda (nombre + barra + SP/DP de 2 px; reglas al final de style.css), contador de Digimon arriba a la derecha (`#info` fijo), stats de la partida (`#pst`) abajo a la izquierda. **Online, cada jugador se ve con su nick** (`pname(i)` usa `roster`, también para vos) en las barras, sobre el Digimon, en las flechas y al esperar cartas; en local siguen J1, J2. **Online ves solo tus skills** (`SkillSys.renderBar(isOnline ? mine() : P)`).
+- **Sin zoom del navegador**: Ctrl + ruedita, Ctrl +/−/0 y el pellizco de iOS se bloquean (game.js, antes del keydown).
 - El HUD (barras, reloj, leyenda, skills) solo se ve con `body.ingame`, que pone `start()` y saca `endRun()`. Es compacto para que entren 4 barras de vida en fila (escritorio); `hudBoxes` pone `body.p1/p3/p4`. `#info` muestra solo el número de virus. El triángulo de atributos usa los íconos oficiales de Wikimon (`assets/sprites/attr/vaccine|virus|data.png`, `ATTR_ICON`).
 
 ### Loop
