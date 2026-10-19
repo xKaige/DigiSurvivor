@@ -90,6 +90,11 @@ let roster = [];   // [{ i, uid, nick, c }] (índice 0 = líder)
 // myIdx: índice de MI jugador en P (online: el anfitrión es 0). rk: teclas de cada jugador remoto (índice -> teclas).
 // picked: jugadores que ya eligieron carta / rama en esta ronda (online se espera a todos).
 let myIdx = 0, rk = {}, picked = new Set();
+// rondas de cartas online: el anfitrión numera cada ronda (rnd) y lo manda en trigger_* / resume_game; el invitado guarda la
+// suya (gRnd) y descarta lo viejo (así un resume_game atrasado no le cierra las cartas de la ronda nueva)
+let rnd = 0, rndAt = 0, rndOpen = false, gRnd = -1;
+// anfitrión: abre una ronda de cartas y se la avisa a todos
+function hostRound(type) { rnd++; rndAt = performance.now(); rndOpen = true; gs.forEach(g => g.rs = 0); sendAll({ type, rnd }); }
 // sync: el anfitrión manda el estado SYNC_HZ veces por segundo (12 con 3 o más jugadores, para no saturar su subida)
 const SYNC_HZ = 15, SYNC_HZ_MANY = 12, SYNC_SLOW = 0.5, AOI = 1500;
 let syncT = 0, slowT = 0, enId = 0, inSig = '', inT = 0;
@@ -250,7 +255,7 @@ window.Lobby = {
     sendTo(inv.c, { type: 'accept' });
     setTimeout(() => { try { inv.c.close(); } catch (e) {} }, 500);
     while (inbox.length) sendTo(inbox.pop().c, { type: 'decline', busy: 1 });   // las demás invitaciones se rechazan
-    const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick }, serialization: 'json' });
+    const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick }, serialization: 'json', reliable: true });
     conn = c; isHost = false; isOnline = false; myIdx = 1;
     roster = [{ i: 0, uid: inv.uid, nick: inv.nick, c: null }];
     setupConn(c);
@@ -331,7 +336,7 @@ function connLost(c) {
 // invitado: vuelve a conectarse al anfitrión (reintenta cada 3 s mientras dure el plazo)
 function rejoin() {
   if (!lost || conn || !peer || !running) return;
-  const c = peer.connect(lost.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick, re: 1 }, serialization: 'json' });
+  const c = peer.connect(lost.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick, re: 1 }, serialization: 'json', reliable: true });
   let ok = false;
   c.on('open', () => { if (conn || !lost) { try { c.close(); } catch (e) {} return; } ok = true; conn = c; lost = null; clearTimeout(lostT); setupConn(c); Bosses.banner('¡Reconectado!'); });
   c.on('error', () => {});
@@ -375,11 +380,13 @@ function setupConn(c) {
     } else if (data.type === 'sync') {
       applyOnlineSync(data);
     } else if (data.type === 'trigger_levelup') {
+      if (data.rnd != null) { if (data.rnd === gRnd) return; gRnd = data.rnd; }   // repetido (el anfitrión lo reenvía si tarda)
       paused = true;
       picked = new Set();
       pending = [P[myIdx]];
       showCards();
     } else if (data.type === 'trigger_line') {
+      if (data.rnd != null) { if (data.rnd === gRnd) return; gRnd = data.rnd; }
       paused = true;
       picked = new Set();
       pending = [P[myIdx]];
@@ -390,7 +397,8 @@ function setupConn(c) {
     } else if (data.type === 'client_choice') {
       // un invitado eligió: el anfitrión lo aplica, se lo pasa a los demás y, si ya eligieron todos, sigue
       const i = c.pi || 1;
-      if (isHost && P[i]) {
+      if (data.rnd != null && data.rnd !== rnd) return;   // elección de una ronda que ya terminó
+      if (isHost && P[i] && !picked.has(i)) {
         applyCardOp(P[i], data);
         picked.add(i);
         sendAll(Object.assign({}, data, { type: 'host_choice', i }), c);
@@ -399,13 +407,15 @@ function setupConn(c) {
     } else if (data.type === 'host_choice') {
       // elección de otro jugador (i; si no viene, es el anfitrión)
       const i = data.i == null ? 0 : data.i;
-      if (!isHost && P[i] && i !== myIdx) {
+      if (!isHost && P[i] && (i !== myIdx || data.auto)) {   // auto: el anfitrión eligió por mí porque tardé demasiado
         applyCardOp(P[i], data);
         picked.add(i);
+        if (i === myIdx) { pending = []; $('up').style.display = 'none'; }
       }
     } else if (data.type === 'end') {
       if (running) endRun(data.title || 'Run terminada');
     } else if (data.type === 'resume_game') {
+      if (data.rnd != null && data.rnd !== gRnd) return;   // de una ronda vieja
       $('up').style.display = 'none';
       paused = false;
       last = performance.now();
@@ -419,9 +429,33 @@ const mustPick = () => [0, ...gs.filter(g => !g.lost && g.c).map(g => g.i)].filt
 function allPicked() {
   if (!isHost || !mustPick().every(i => picked.has(i))) return;   // espera solo a los que siguen conectados (si se cortó uno, no lo frena)
   $('up').style.display = 'none';
+  rndOpen = false;
   if (cardMode === 'line') { sendAll({ type: 'trigger_evo', stage: 5 }); startEvo(5); }
-  else { paused = false; last = performance.now(); sendAll({ type: 'resume_game' }); }
+  else { paused = false; last = performance.now(); sendAll({ type: 'resume_game', rnd }); }
 }
+// Anfitrión: si una ronda de cartas tarda, se la reenvía cada 5 s a quien no eligió; a los 30 s elige por él
+// (una carta de stat, o la primera forma final) para que la partida nunca quede trabada esperando.
+setInterval(() => {
+  if (!isHost || !isOnline || !running || !rndOpen) return;
+  const late = mustPick().filter(i => i !== myIdx && !picked.has(i)), dt = performance.now() - rndAt;
+  if (!late.length) return;
+  if (dt < 30000) {
+    const ty = cardMode === 'line' ? 'trigger_line' : 'trigger_levelup';
+    for (const g of gs) if (late.includes(g.i) && g.c && Math.floor(dt / 5000) > (g.rs | 0)) { g.rs = Math.floor(dt / 5000); sendTo(g.c, { type: ty, rnd }); }
+    return;
+  }
+  for (const i of late) {
+    const q = P[i]; if (!q) continue;
+    let data;
+    if (cardMode === 'line') { const C = CR(q), b = C && C.meta.branches[0]; data = { op: 'line', lineIdx: 0, branchId: b ? b.id : null, weak: false, dark: false }; }
+    else { const k = Stats.CARDS[Math.floor(Math.random() * Stats.CARDS.length)]; data = { op: k.op, c: k.c }; }
+    applyCardOp(q, data); picked.add(i);
+    sendAll(Object.assign({ type: 'host_choice', i, rnd, auto: 1 }, data));
+    console.warn('DigiSurvivor: el jugador ' + (i + 1) + ' no eligió carta a tiempo, se eligió sola');
+  }
+  gs.forEach(g => g.rs = 0);
+  allPicked();
+}, 1000);
 function applyCardOp(targetP, data) {
   if (data.c) targetP.st[data.c]++;
   if (Stats.cardOf(data.op)) Stats.card(targetP, data.op);   // carta de stat (stats.js)
@@ -912,7 +946,7 @@ function stepEvo(dt){evo.t+=dt;
   setTimeout(()=>{if(!evo)v.style.display='none'},2600);
   if (isOnline) {
     if (isHost) {
-      sendAll({ type: 'trigger_levelup' });
+      hostRound('trigger_levelup');
       startCards();
     }
   } else {
@@ -991,7 +1025,7 @@ function levelUp(){
   if(lvl===LINE_LEVEL){
     if (isOnline) {
       pending = [P[myIdx]]; picked = new Set();
-      if (isHost) sendAll({ type: 'trigger_line' });
+      if (isHost) hostRound('trigger_line');
     } else {
       pending = [...P];
     }
@@ -1000,7 +1034,7 @@ function levelUp(){
   }
   if (isOnline) {
     pending = [P[myIdx]];
-    if (isHost) sendAll({ type: 'trigger_levelup' });
+    if (isHost) hostRound('trigger_levelup');
   } else {
     pending = [...P];
   }
@@ -1060,7 +1094,7 @@ function choose(u){
   const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c){q.st[u.c]++;Stats.card(q,u.op)}p=P[0];pending.shift();
 
   if (isOnline) {
-    const payload = { type: isHost ? 'host_choice' : 'client_choice', i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark, rep: u.rep };
+    const payload = { type: isHost ? 'host_choice' : 'client_choice', rnd: isHost ? rnd : gRnd, i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, weak: u.weak, dark: u.dark, rep: u.rep };
     sendAll(payload);
     picked.add(myIdx);
     if (isHost ? !mustPick().every(i => picked.has(i)) : picked.size < P.filter(q => !q.gone).length) {
