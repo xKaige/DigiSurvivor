@@ -1,7 +1,8 @@
 const cv=document.getElementById('c'),cx=cv.getContext('2d');
-// W,H = tamaño LÓGICO de la vista (en píxeles del mundo). En pantallas angostas (celular vertical) la cámara se aleja (CZ < 1)
-// para ver unos 560 px de ancho; el canvas real usa devicePixelRatio (CK = escala del contexto, la aplica draw()).
-let W,H,CZ=1,CK=1;function rs(){CZ=innerWidth<700?Math.max(.55,Math.min(1,innerWidth/560)):1;W=Math.round(innerWidth/CZ);H=Math.round(innerHeight/CZ);const d=Math.min(2,devicePixelRatio||1);cv.width=Math.round(innerWidth*d);cv.height=Math.round(innerHeight*d);CK=cv.width/W}addEventListener('resize',rs);rs();
+// W,H = tamaño LÓGICO de la vista (en píxeles del mundo). CZ = zoom de la cámara (1,2 en PC; en pantallas angostas, para ver
+// unos 480 px de ancho); el canvas real usa devicePixelRatio (CK = escala del contexto, la aplica draw()).
+let W,H,CZ=1,CK=1;function rs(){CZ=innerWidth<700?Math.max(.6,Math.min(1.2,innerWidth/480)):1.2;   // cámara: en PC 20% más cerca; en celular ~480 px de ancho
+ W=Math.round(innerWidth/CZ);H=Math.round(innerHeight/CZ);const d=Math.min(2,devicePixelRatio||1);cv.width=Math.round(innerWidth*d);cv.height=Math.round(innerHeight*d);CK=cv.width/W}addEventListener('resize',rs);rs();
 const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
 // Hasta MAX_PLAYERS jugadores (hoy el menú ofrece 1 y 2; el código ya acepta 3 y 4: ver inputOf y el HUD)
@@ -590,7 +591,7 @@ addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
-const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=110;   // MAX_EN: enemigos a la vez con 1 jugador (+30 por cada jugador más)
+const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=matchMedia('(pointer:coarse)').matches?140:170;   // MAX_EN: enemigos a la vez con 1 jugador (+40 por cada jugador más; en celular menos)
 function dmgNum(x,y,v,col,sz,txt){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:txt||String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
 // q: quién golpea (para el crítico, las pasivas y a quién se le cuenta la muerte; ver stats.js)
 function hit(e,d,el,q){const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.hp0=e.hp;
@@ -1238,7 +1239,7 @@ function update(dt){
    d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
  spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);!World.arena&&i<n&&en.length<MAX_EN+30*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);!World.arena&&i<n&&en.length<MAX_EN+40*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
  Gate.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}

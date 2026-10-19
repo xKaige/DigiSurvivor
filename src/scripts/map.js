@@ -300,7 +300,8 @@ const World = {
   // lugar de aparición fuera de pantalla, libre y CONECTADO con el jugador (el mapa tiene niveles separados por barrancos)
   spawnPos(e) {
     if (this.arena) { const A = this.AR; return this.freeSpot((Math.random() - 0.5) * A.w * 0.8, (Math.random() - 0.5) * A.h * 0.8, e); }
-    const dist = Math.max(Math.hypot(W, H) / 2, 900) + 40, [ccx, ccy] = this.spawnCenter();   // fuera de la pantalla aunque la del compañero sea más grande
+    // justo fuera de la pantalla (antes, como mínimo a 900 px: tardaban en llegar y había pocos a la vista); online, un poco más
+    const dist = Math.max(Math.hypot(W, H) / 2, isOnline && P.length > 1 ? 750 : 0) + 60, [ccx, ccy] = this.spawnCenter();
     let best = null;
     for (let k = 0; k < 14; k++) {
       const a = Math.random() * 6.283, sp = this.freeSpot(ccx + Math.cos(a) * dist, ccy + Math.sin(a) * dist, e);
@@ -315,11 +316,13 @@ const World = {
   relocate(dt) {
     if (this.arena || !this.flow || (this.relocT -= dt) > 0) return;
     this.relocT = 1.5;
-    let budget = 6;   // como mucho 6 mudanzas por vez (cada una busca lugar libre: es trabajo)
+    let budget = 10;   // como mucho 10 mudanzas por vez (cada una busca lugar libre: es trabajo)
     const al = P.filter(q => !q.dead);
     for (const e of en) {
       if (budget <= 0) break;
-      const v = this.reach(e.x, e.y + this.foot(e));
+      if (e.bo != null) continue;   // los jefes no se mudan
+      const far = !al.some(q => Math.abs(q.x - e.x) < 1300 && Math.abs(q.y - e.y) < 1300);   // muy lejos de todos: ocupa lugar en el tope y no se ve
+      const v = far ? 65535 : this.reach(e.x, e.y + this.foot(e));
       if (v !== 65535 && v !== -1) continue;   // tiene camino: queda donde está (65535 = encerrado, -1 = fuera del mapa de distancias)
       // fuera del mapa de distancias pero cerca de algún jugador (online pueden estar lejos entre sí): se queda
       if (v === -1 && al.some(q => Math.abs(q.x - e.x) < 1500 && Math.abs(q.y - e.y) < 1500)) continue;
