@@ -661,3 +661,9 @@ body.ingame.touch #dbtn{display:block}
 @media (max-width:700px),(any-pointer:coarse){body.ingame #dbtn{display:block}}   /* como la pausa: en algunos celulares no se detecta el táctil */
 body.finale #dbtn{display:none}
 #dbtn:active{background:rgba(63,208,255,.35)}
+/* Rareza (pedido): la carta entera toma el color de su rareza */
+#up .card.lv[class*=" rar"]{background:linear-gradient(170deg,color-mix(in srgb,var(--rar) 62%,#050b1a),color-mix(in srgb,var(--rar) 30%,#050b1a) 70%,color-mix(in srgb,var(--rar) 18%,#050b1a))!important;border-width:2px}
+#up .card.lv[class*=" rar"] b,#up .card.lv[class*=" rar"] .kd,#up .card.lv[class*=" rar"] em{text-shadow:0 1px 2px rgba(0,0,0,.85)}
+#up .card.lv[class*=" rar"] .kd,#up .card.lv[class*=" rar"] em{color:#f2f7ff}
+#up .card.lv[class*=" rar"] .kt{background:#05101e;color:var(--rar)}
+#up .card.lv[class*=" rar"] .rlab{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.85)}
