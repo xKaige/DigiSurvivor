@@ -1294,6 +1294,8 @@ function draw(){
  World.draw();   // mapa del Digimundo (map.js)
  Gate.drawWorld();   // Digital Gate (gate.js)
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
+ // alcance del imán de tus jugadores (solo si lo mejoraste): un círculo tenue, para que se note cuánto creció
+ for(const q of mine())if(!q.dead&&q.mag>110){cx.save();cx.globalAlpha=.16;cx.strokeStyle='#5cf2ff';cx.lineWidth=2;cx.setLineDash([6,8]);cx.beginPath();cx.arc(q.x,q.y,q.mag,0,6.283);cx.stroke();cx.restore()}
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
  Items.draw();
  const vx0=cam.x-W/2-160,vx1=cam.x+W/2+160,vy0=cam.y-H/2-200,vy1=cam.y+H/2+200;

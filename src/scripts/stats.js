@@ -89,7 +89,7 @@ const Stats = {
     q.sp = 210 * Math.max(0.4, 1 + g('spP') + 0.02 * VEL) * (q.xa ? 1.1 : 1);
     q.max = Math.max(10, (100 + g('hp')) * Math.max(0.2, 1 + g('hpP') + 0.04 * VIT + 0.02 * bond) * m.hpX);
     q.arm = Math.min(0.6, g('arm'));
-    q.mag = 70 * (1 + g('magP'));
+    q.mag = 100 * (1 + g('magP'));   // alcance del imán de XP (antes 70: con el mapa y la cámara nuevos casi no se notaba)
     q.xpm = 1 + g('xp') + 0.02 * INT;
     q.coin = 1 + g('coin');
     q.crit = Math.min(0.75, 0.05 + g('crit')); q.critD = 1.5 + g('critD');
@@ -112,7 +112,7 @@ const Stats = {
     { c: 'VEL', n: 'Disparo rápido',  d: 'Ataca un 15% más seguido',            op: 'rate',  m: { rateP: 0.15 } },
     { c: 'VIT', n: 'Reparación',      d: '+25 de vida máxima y cura 25',        op: 'hp',    m: { hp: 25 } },
     { c: 'VIT', n: 'Regeneración',    d: '+0,6 de vida por segundo',            op: 'regen', m: { regen: 0.6 } },
-    { c: 'INT', n: 'Imán de datos',   d: 'Atrae el XP desde más lejos',         op: 'mag',   m: { magP: 0.6 } },
+    { c: 'INT', n: 'Imán de datos',   d: 'Atrae el XP desde el doble de lejos (+100 px)', op: 'mag', m: { magP: 1 } },
     { c: 'INT', n: 'Procesador',      d: '-6% de recarga de las skills',        op: 'cdr',   m: { cdr: 0.06 } },
     { c: 'INT', n: 'Expansión',       d: '+8% de área de las skills',           op: 'area',  m: { area: 0.08 } }
   ],

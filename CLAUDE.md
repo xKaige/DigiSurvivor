@@ -135,6 +135,7 @@ Campos clave: `cid, el (atributo), hp/max, dmg, rate, sp, multi, pierce, mag, ar
 
 ### Stats (`stats.js`, 0.6)
 - Cada especie tiene `stats` (FUE/INT/VEL/VIT, suman 10) y `trait` (rasgo único) en su JSON; cada forma tiene `family` (Fields de Wikimon: NSp, DS, NSo, WG, ME, VB, DR, JT, DA, UK). La familia de la forma actual da su pasiva (`Stats.FAM`).
+- **Imán de XP**: `q.mag = 100 × (1 + magP)` (antes 70: no se notaba) y la carta "Imán de datos" da `magP` +1 (+100 px). Con el imán mejorado se dibuja un círculo punteado tenue con su alcance alrededor de tus jugadores (`draw`, antes de las gemas). Las mejoras por nivel de skill (`SkillSys.perks`) se revisaron el 19/10/2026 y se aplican bien.
 - Cada punto: FUE +3% daño; INT -1,5% recarga, +2% XP, +4% SP; VEL +2% velocidad y ataque; VIT +4% vida. Puntos = especie (`bs`) + partida (`st`) + árbol (`m.FUE`…): `Stats.pts`.
 - Todo lo que cambia stats pasa por `q.m` + `Stats.calc(q)`: cartas (`Stats.card`), evolución (`Stats.evolve`), árbol/vínculo (`Stats.init` con el loadout), X-Antibody (`q.xa` → calc). Lo que depende del momento va en hooks: `onHit` (vida baja, manada, Berserker…), `afterHit` (robo de vida, SP, ralentizar, infectar, chispa), `onKill`, `onHurt` (esquiva, escudo, balas), `onDeath` (Último Bastión, Respaldo), `tick` (regeneración, auras, Pulso, oscuridad), `enemyTick`.
 - `hit(e, d, el, q)`: el 4º parámetro es quién golpea (crítico, pasivas y a quién se le cuenta la muerte con `e.lh`). Skills y disparos lo pasan; el daño de infección no.
