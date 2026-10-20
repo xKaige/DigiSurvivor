@@ -353,7 +353,7 @@ const World = {
   // Una plataforma chica con grilla amarilla, centrada en (0, 0), flotando en un vacío negro con columnas de cubos verdes de
   // alambre. Mientras World.arena está prendido, todo lo que no es la plataforma es pared (solid) y no se dibuja el bosque.
   arena: false,
-  AR: { w: 15 * 64, h: 11 * 64, T: 64 },
+  AR: { w: 22 * 64, h: 16 * 64, T: 64 },   // arena del jefe (más grande, pedido: 15×11 → 22×16 baldosas)
   arenaBg: null, cubes: null,
   buildArena() {
     if (this.arenaBg) return;

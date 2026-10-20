@@ -114,7 +114,7 @@ const Stats = {
     { c: 'VIT', n: 'Regeneración',    d: '+0,6 de vida por segundo',            op: 'regen', m: { regen: 0.6 } },
     { c: 'INT', n: 'Imán de datos',   d: 'Atrae el XP desde el doble de lejos (+100 px)', op: 'mag', m: { magP: 1 } },
     { c: 'INT', n: 'Procesador',      d: '-6% de recarga de las skills',        op: 'cdr',   m: { cdr: 0.06 } },
-    { c: 'INT', n: 'Expansión',       d: '+8% de área de las skills',           op: 'area',  m: { area: 0.08 } }
+    { c: 'INT', n: 'Expansión',       d: '+15% de área y tamaño de las skills',  op: 'area',  m: { area: 0.15 } }
   ],
   cardOf(op) { return this.CARDS.find(c => c.op === op); },
   // aplica una carta de stat a q (suma el punto de su stat y su efecto)

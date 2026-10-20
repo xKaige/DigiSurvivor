@@ -69,9 +69,27 @@ const Bosses = {
     const b = en[en.length - 1], sp = World.spawnPos(b) || World.freeSpot(b.x, b.y, b); b.x = sp[0]; b.y = sp[1];
   },
   // comportamiento de un jefe en el loop de enemigos (tg = jugador más cercano, dd = distancia, a = ángulo hacia él)
+  // Ataques extra de todos los jefes (pedido: más mecánicas). Fase 1 suma el terremoto; desde el 50% de vida (furia)
+  // suman espiral de balas, lluvia de impactos y cruz de rayos, atacan más seguido y se mueven más rápido.
+  P1: [{ n: 'Terremoto', k: 'quake' }],
+  P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz', k: 'cross' }, { n: 'Terremoto', k: 'quake' }],
   act(e, dt, tg, dd, a) {
     const B = this.def(e.bo); if (!B) return;
     e.at -= dt;
+    // furia: al bajar del 50% de vida
+    if (!e.p2 && e.hp < e.mh * 0.5) {
+      e.p2 = 1; e.sp *= 1.25; e.pt = Math.min(e.pt, 1.2);
+      this.banner('¡' + B.name + ' se enfurece!');
+      for (let j = 0; j < 30; j++) burst(e.x, e.y, j % 2 ? '#ff3d3d' : '#ffd23f');
+    }
+    // espiral en curso: dos brazos de balas que giran mientras camina despacio
+    if (e.spT > 0) {
+      e.spT -= dt; e.spE = (e.spE || 0) - dt;
+      while (e.spE <= 0) { e.spE += 0.07; e.spA += 0.33;
+        for (let j = 0; j < 2; j++) { const g = e.spA + j * Math.PI; eb.push({ x: e.x, y: e.y, vx: Math.cos(g) * 200, vy: Math.sin(g) * 200, l: 4, el: e.el, dm: e.dm, r: 9 }); } }
+      const m = World.steer(e, a); World.move(e, Math.cos(m) * e.sp * 0.35 * dt, Math.sin(m) * e.sp * 0.35 * dt);
+      return;
+    }
     if (e.wd > 0) {                     // preparando una embestida: se queda quieto un instante (aviso)
       e.wd -= dt; e.fl = Math.max(e.fl, Math.floor(e.wd * 10) % 2 ? 0.05 : 0);
       if (e.wd <= 0) e.ch = e.chDur;   // embiste en la dirección que marcó el aviso
@@ -85,8 +103,9 @@ const Bosses = {
     const ma = World.steer(e, a); World.move(e, Math.cos(ma) * e.sp * dt, Math.sin(ma) * e.sp * dt);   // rodea las paredes
     e.pt -= dt;
     if (e.pt > 0 || dd > 720) return;
-    const k = B.atk[e.ai++ % B.atk.length];
-    e.pt = Math.max(1.4, 2.6 - e.cyc * 0.3); e.at = 0.6;
+    const L = e.p2 ? B.atk.concat(this.P2) : B.atk.concat(this.P1);
+    const k = e.p2 ? L[(Math.random() * L.length) | 0] : L[e.ai++ % L.length];
+    e.pt = e.p2 ? Math.max(1.0, 1.9 - e.cyc * 0.25) : Math.max(1.4, 2.6 - e.cyc * 0.3); e.at = 0.6;
     fx.push({ x: e.x, y: e.y - this.h(e) / 2 - 14, txt: k.n, col: '#ffd23f', sz: 22, l: 1.4 });
     const shot = (ang, sp) => eb.push({ x: e.x, y: e.y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, l: 4, el: e.el, dm: e.dm, r: 9 });
     if (k.k === 'ring') {
@@ -98,6 +117,17 @@ const Bosses = {
     } else if (k.k === 'charge') {
       e.wd = 0.7; e.chDur = k.dur || 1; e.ca = a;   // marca el recorrido antes de embestir
       Enemies.warnLine(e.x, e.y, a, e.sp * 3.6 * e.chDur + e.r, e.r * 2 + 10, 0.7);
+    } else if (k.k === 'spiral') {
+      e.spT = 2.4; e.spA = Math.random() * 6.283; e.spE = 0;
+    } else if (k.k === 'rain') {   // impactos marcados alrededor de los jugadores
+      const al = P.filter(q => !q.dead), n = Math.min(12, 6 + 2 * e.cyc);
+      for (let j = 0; j < n && al.length; j++) { const q = al[j % al.length], g = Math.random() * 6.283, r = Math.random() * 260;
+        Enemies.bomb(q.x + Math.cos(g) * r, q.y + Math.sin(g) * r, 70, 1.2 + j * 0.12, e, 1.1, '#ffb02e'); }
+    } else if (k.k === 'cross') {  // rayos en cruz (o en estrella) desde el jefe
+      const n = e.cyc ? 6 : 4, g0 = Math.random() * 6.283;
+      for (let j = 0; j < n; j++) Enemies.lineBomb(e.x, e.y, g0 + j / n * 6.283, 1100, 58, 1.15, e, 1.3, '#ff3d81');
+    } else if (k.k === 'quake') {  // tres anillos que van saliendo del jefe: hay que meterse entre uno y otro
+      [[0, 140, 0.9], [140, 280, 1.45], [280, 420, 2.0]].forEach(([r0, r1, d]) => Enemies.bomb(e.x, e.y, r1, d, e, 1.2, '#ffd23f', r0));
     } else if (k.k === 'summon') {
       const ti = Math.max(0, Math.max(...P.map(q => q.stage | 0)) - 1);
       for (let j = 0; j < k.c; j++) {

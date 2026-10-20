@@ -507,12 +507,12 @@ function hostSync(dt) {
   // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
   const E = en.map(e => { if (!e.id) e.id = ++enId;   // id para que el cliente pueda deslizar a cada uno
     const a = [e.id, r(e.x), r(e.y), r2(e.r), e.k, e.bo != null ? 0 : e.ti, e.bo != null ? null : e.sk, e.bo != null ? null : e.et, e.st | 0, e.el, r2(e.fl), r2(e.ang), e.gun ? 1 : 0];
-    if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at));
+    if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at), e.p2 ? 1 : 0);
     return a; });
   const G = gems.map(g => [r(g.x), r(g.y), r2(g.v)]);
   const S = sh.map(s => [r(s.x), r(s.y), r(s.vx), r(s.vy), s.c || 0, r2(s.r || 5), s.fx || 0, r(s.sz || 0)]);
   const B = eb.map(b => [r(b.x), r(b.y), r(b.vx), r(b.vy), b.el, b.r || 0]);
-  const F = ef.map(o => ({ k: o.k, x: o.x == null ? null : r(o.x), y: o.y == null ? null : r(o.y), R: o.R && r(o.R), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx }));
+  const F = ef.map(o => ({ k: o.k, x: o.x == null ? null : r(o.x), y: o.y == null ? null : r(o.y), R: o.R && r(o.R), R0: o.R0 && r(o.R0), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx }));
   // números de daño y textos nuevos desde el sync anterior (se marcan una sola vez y se reparten por cercanía)
   const X = fx.filter(f => !f.s).slice(-40).map(f => { f.s = 1; return { x: r(f.x), y: r(f.y), txt: f.txt, col: f.col, sz: f.sz, l: r2(f.l) }; });
   const common = { type: 'sync', P: pl, it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })), gt: Gate.sync(), fn: Finale.sync(),
@@ -535,7 +535,7 @@ function hostSync(dt) {
 // enemigo que llegó como lista de números (ver el sync del anfitrión)
 function unpackEn(a) {
   const e = { id: a[0], x: a[1], y: a[2], r: a[3], k: a[4], ti: a[5], sk: a[6], et: a[7], st: a[8], el: a[9], fl: a[10], ang: a[11], gun: !!a[12] };
-  if (a.length > 13) { e.bo = a[13]; e.cyc = a[14]; e.hp = a[15]; e.mh = a[16]; e.at = a[17]; }
+  if (a.length > 13) { e.p2 = a[18]; e.bo = a[13]; e.cyc = a[14]; e.hp = a[15]; e.mh = a[16]; e.at = a[17]; }
   return e;
 }
 function onlineSmooth(dt) {
@@ -595,7 +595,7 @@ addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
-const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=matchMedia('(pointer:coarse)').matches?140:170;   // MAX_EN: enemigos a la vez con 1 jugador (+40 por cada jugador más; en celular menos)
+const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=matchMedia('(pointer:coarse)').matches?210:320;   // MAX_EN: enemigos a la vez con 1 jugador (+60 por cada jugador más; en celular menos). Con la grilla espacial (buildEG) aguanta
 function dmgNum(x,y,v,col,sz,txt){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:txt||String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
 // q: quién golpea (para el crítico, las pasivas y a quién se le cuenta la muerte; ver stats.js)
 function hit(e,d,el,q){const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.hp0=e.hp;
@@ -953,6 +953,7 @@ function drawEnemy(e){
  const th=e.bo!=null?h*.68:dd?Math.max(enMin()*(e.kd==='swarm'?.9:1),ENEMY_H[Math.min(5,dd.tier)]*(e.kd==='tank'?1.25:e.kd==='swarm'?.9:1)):h*.62;
  const kk=th/Math.max(B.y1-B.y0,(B.x1-B.x0)*.75),w=(B.x1-B.x0)*kk*1.35;
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
+ if(e.bo!=null&&e.p2){cx.save();cx.globalAlpha=.22+.1*Math.sin(t*8);cx.fillStyle='#ff2d2d';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.55,th*.6,0,0,6.283);cx.fill();cx.restore()}   // jefe enfurecido (fase 2): aura roja
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
  cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
@@ -1033,8 +1034,12 @@ function chooseLine(){
   showUp();
 }
 
+// al subir de nivel: una onda de poder alrededor de cada jugador que empuja a los enemigos cercanos y los daña un poco
+function powerPulse(){if(isOnline&&!isHost)return;for(const q of P){if(q.dead)continue;const R=200+12*(q.stage|0)*(q.area||1);
+ ef.push({k:'ring',x:q.x,y:q.y,R,col:'#ffe066',l:.45,m:.45});for(let i=0;i<18;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');
+ for(const e of en){if(e.bo!=null)continue;const dx=e.x-q.x,dy=e.y-q.y,d=Math.hypot(dx,dy);if(d<R&&d>0){World.move(e,dx/d*90,dy/d*90);hit(e,q.dmg*3,q.el,q)}}}}
 function levelUp(){
-  xp-=need;lvl++;need=xpNeed(lvl);paused=true;
+  xp-=need;lvl++;need=xpNeed(lvl);paused=true;powerPulse();
 
   const EL=evoLevels();
   if(EL.includes(lvl)){
@@ -1142,6 +1147,12 @@ function choose(u){
 
 // Enemigos comunes: los arma enemies.js con el plantel sorteado de la partida (group: los "swarm" vienen de a 3).
 // Si enemies.json no cargó, queda la aparición vieja con la línea de Impmon (spawnOld).
+// ---------- Grilla espacial de enemigos (rendimiento: choques y disparos solo miran a los que están cerca) ----------
+const EG_C=96;let EG=new Map();
+function buildEG(){EG=new Map();for(let i=0;i<en.length;i++){const e=en[i];e._i=i;const k=(Math.floor(e.x/EG_C)+50000)*100000+Math.floor(e.y/EG_C)+50000;let c=EG.get(k);if(!c)EG.set(k,c=[]);c.push(e)}}
+// llama fn(e) para cada enemigo con alguna celda a menos de R de (x,y); fn puede devolver true para cortar
+function enNear(x,y,R,fn){const c0=Math.floor((x-R)/EG_C),c1=Math.floor((x+R)/EG_C),r0=Math.floor((y-R)/EG_C),r1=Math.floor((y+R)/EG_C);
+ for(let cx_=c0;cx_<=c1;cx_++)for(let cy_=r0;cy_<=r1;cy_++){const c=EG.get((cx_+50000)*100000+cy_+50000);if(c)for(const e of c)if(fn(e))return}}
 function spawn(ti,group){if(Enemies.data&&Enemies.roster.length)Enemies.spawn(ti,group);else spawnOld(ti)}
 function spawnOld(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  const q=Math.random(),k=t>25&&q<.15?2:t>10&&q<.4?1:0,b=2+Math.floor(t/40);
@@ -1216,7 +1227,7 @@ function update(dt){
   if(q.dead||Finale.on)continue;
   const [dx,dy]=inputOf(q);
   q.moving = !!(dx || dy);
-  if(dx||dy){const l=Math.hypot(dx,dy),v=Stats.speedOf(q);World.move(q,dx/l*v*dt,dy/l*v*dt);if(dx)q.face=dx}   // choca con las paredes (map.js)
+  if(dx||dy){const l=Math.hypot(dx,dy),v=Stats.speedOf(q);World.move(q,dx/l*v*dt,dy/l*v*dt);if(dx)q.face=dx;q.vx=dx/l*v;q.vy=dy/l*v}else{q.vx=0;q.vy=0}   // choca con las paredes (map.js); vx/vy: para los enemigos que interceptan
   q.inv-=dt;
  }
 
@@ -1242,14 +1253,17 @@ function update(dt){
   if(d.revP>=REVIVE_TIME){for(const a of al)if(Math.hypot(a.x-d.x,a.y-d.y)<REVIVE_R)a.revs=(a.revs|0)+1;   // logro Salvavidas
    d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
- spawnT-=dt;const iv=Math.max(.3,.75-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/120);!World.arena&&i<n&&en.length<MAX_EN+40*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
+ // (más densidad, pedido: intervalo de 0,6 s que baja hasta 0,15 s y tandas +1 cada 90 s; además, oleadas: Enemies.events)
+ spawnT-=dt;const iv=Math.max(.15,.6-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
+ if(!World.arena)Enemies.events(dt,Math.max(0,mt-1));
  Gate.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
-   if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0})}q.atkT=q.rate}}}
- for(const s of sh){s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=dt;
-  for(const e of en)if(s.l>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+6){hit(e,s.d,s.el,P[s.q]);s.h.add(e);if(s.pi>0)s.pi--;else if(s.rb>0)bounce(s,e);else s.l=0;if(s.ex)SkillSys.explode(s,e);burst(s.x,s.y,'#ffd23f')}}
+   if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0,r:5+Math.min(9,Math.log2(Math.max(1,q.dmg))*2.2)})}q.atkT=q.rate}}}
+ buildEG();
+ for(const s of sh){s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=dt;const sr=(s.r||5)+1;
+  enNear(s.x,s.y,70,e=>{if(s.l<=0)return true;if(e.hp>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+sr){hit(e,s.d,s.el,P[s.q]);s.h.add(e);if(s.pi>0)s.pi--;else if(s.rb>0)bounce(s,e);else s.l=0;if(s.ex)SkillSys.explode(s,e);burst(s.x,s.y,'#ffd23f')}})}
  sh=sh.filter(s=>s.l>0);
  for(const q of al)SkillSys.update(q,dt);
  for(const e of en){let tg=null,dd=1e9;for(const q of al){if(q.dead)continue;const d=Math.hypot(q.x-e.x,q.y-e.y);if(d<dd){dd=d;tg=q}}
@@ -1260,9 +1274,10 @@ function update(dt){
   e.fl-=dt;
   for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4){Stats.lastTouch=e;hurt(q,e.bo!=null?12*e.dm:Enemies.touch(e),e.el);Stats.lastTouch=null}}
  for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el,'b');b.l=0}}eb=eb.filter(b=>b.l>0);
- for(let i=0;i<en.length;i++)for(let j=i+1;j<en.length;j++){const a=en[i],b=en[j],d=Math.hypot(a.x-b.x,a.y-b.y);
-  if(d>0&&d<a.r*1.6&&a.st!==2&&b.st!==2){const k=(a.r*1.6-d)/2/d,px=(a.x-b.x)*k,py=(a.y-b.y)*k;World.move(a,px,py);World.move(b,-px,-py)}}
- for(const e of en)if(e.hp<=0){kills++;if(e.lh!=null)Stats.onKill(P[e.lh],e);if(e.bo!=null){Bosses.onDeath(e);bossReward(e)}else{dropGem(e.x,e.y,e.v);Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
+ buildEG();
+ for(const a of en){if(a.st===2)continue;const R=a.r*1.6;enNear(a.x,a.y,R,b=>{if(b._i<=a._i||b.st===2)return;const d=Math.hypot(a.x-b.x,a.y-b.y);
+  if(d>0&&d<R){const k=(R-d)/2/d,px=(a.x-b.x)*k,py=(a.y-b.y)*k;World.move(a,px,py);World.move(b,-px,-py)}})}   // empuje entre enemigos (solo vecinos de la grilla)
+ for(const e of en)if(e.hp<=0&&!e.nr){kills++;if(e.lh!=null)Stats.onKill(P[e.lh],e);if(e.bo!=null){Bosses.onDeath(e);bossReward(e)}else{dropGem(e.x,e.y,e.v);Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
@@ -1270,7 +1285,7 @@ function update(dt){
  gems=gems.filter(g=>!g.dead);
  Items.update(dt);
  if(xp>=need)levelUp();
- for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);if(ef.length>MAX_EF){const wn=ef.filter(o=>o.k==='wline'||o.k==='wcirc'),vi=ef.filter(o=>o.k!=='wline'&&o.k!=='wcirc');ef=wn.concat(vi.slice(Math.max(0,vi.length-(MAX_EF-wn.length))))}   // tope de efectos (los avisos de ataque nunca se descartan)
+ for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);if(ef.length>MAX_EF){const wn=ef.filter(o=>o.k==='wline'||o.k==='wcirc'||o.k==='pool'),vi=ef.filter(o=>o.k!=='wline'&&o.k!=='wcirc'&&o.k!=='pool');ef=wn.concat(vi.slice(Math.max(0,vi.length-(MAX_EF-wn.length))))}   // tope de efectos (los avisos de ataque nunca se descartan)
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
  if(P.every(q=>q.dead))endRun('Fuiste borrado');
  hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');

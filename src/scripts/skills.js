@@ -65,7 +65,7 @@ const SkillSys = {
   UNIT: { projectile: 'proyectil', melee_arc: 'tajo', cone: 'abanico', beam: 'rayo', nova: 'onda', orbit: 'orbe' },
   perkText(d, lv) {
     const k = (this.PERKS[d.type] || [])[lv - 2], u = this.UNIT[d.type] || 'golpe';
-    return { dmg: '+30% de daño', area: '+15% de área', cd: '-12% de recarga', cnt: '+1 ' + u, pierce: 'Atraviesa 1 enemigo más',
+    return { dmg: '+30% de daño', area: '+20% de área', cd: '-12% de recarga', cnt: '+1 ' + u, pierce: 'Atraviesa 1 enemigo más',
       big: 'MÁXIMO PODER: +40% de daño, +25% de área y +1 ' + u }[k] || '+30% de daño';
   },
   // valores efectivos de una skill a cierto nivel (suma de todas las mejoras hasta ese nivel)
@@ -74,7 +74,7 @@ const SkillSys = {
     for (let i = 2; i <= lv; i++) {
       const k = L[i - 2] || 'dmg';
       if (k === 'dmg') S.dmg *= 1.3;
-      else if (k === 'area') { S.area *= 1.15; S.size *= 1.1; }
+      else if (k === 'area') { S.area *= 1.2; S.size *= 1.2; }   // más área = se ve más grande (pedido: que se note)
       else if (k === 'cd') S.cd *= 0.88;
       else if (k === 'cnt') S.cnt++;
       else if (k === 'pierce') S.pierce++;
@@ -132,7 +132,7 @@ const SkillSys = {
       const d = this.def(k); if (!d) continue;
       const S = this.perks(d, lv);
       // stats del jugador (stats.js): área, recarga y duración
-      if (q.area) { S.area *= q.area; S.size *= Math.sqrt(q.area); }
+      if (q.area) { S.area *= q.area; S.size *= q.area; }   // el tamaño crece igual que el área (antes la mitad: no se notaba)
       if (d.type === 'orbit') { this.orbit(q, k, d, S, dt); continue; }
       q.wt[k] = (q.wt[k] === undefined ? 0 : q.wt[k]) - dt * (q.moving && q.m && q.m.moveCdr ? 1 + q.m.moveCdr : 1);
       if (q.wt[k] > 0) continue;
@@ -284,7 +284,7 @@ const SkillSys = {
       cx.globalAlpha = Math.max(0, o.l / o.m); cx.lineWidth = o.w || 14; cx.beginPath(); cx.moveTo(o.x, o.y); cx.lineTo(x2, y2); cx.stroke();
       cx.strokeStyle = '#fff'; cx.lineWidth = Math.max(2, (o.w || 14) * .35); cx.beginPath(); cx.moveTo(o.x, o.y); cx.lineTo(x2, y2); cx.stroke();
       cx.lineCap = 'butt';
-    } else if (o.k === 'wline' || o.k === 'wcirc') {
+    } else if (o.k === 'wline' || o.k === 'wcirc' || o.k === 'pool') {
       Enemies.drawWarn(o);   // aviso de ataque enemigo (enemies.js)
     } else if (o.k === 'hit' || o.k === 'nova') {
       const S = this.fxOf(o.fx, o.k === 'hit' ? 'hit' : 'nv');

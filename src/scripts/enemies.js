@@ -54,7 +54,7 @@ const Enemies = {
   // Para el nivel de aparición ti entran las especies de nivel ti y ti+1. Se garantiza al menos un enemigo "común"
   // (swarm o chaser) por nivel, para que no sean todos especiales.
   newRun() {
-    this.bombs = [];
+    this.bombs = []; this.pools = []; this.evT = 100;
     if (!this.data) return;
     const L = this.data.list, n = this.data.perRun || 5, sh = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
     this.roster = [];
@@ -95,24 +95,83 @@ const Enemies = {
     // lugar fuera de pantalla, libre y con camino hasta el jugador (map.js)
     const base = World.spawnPos({ k: 0, r: K.r * (1 + 0.1 * lv) }) || [cam.x + Math.hypot(W, H) / 2, cam.y];
     const n = group && d.kind === 'swarm' ? 3 : 1;
-    for (let j = 0; j < n; j++) {
-      const hp = (2 + t / this.HPT + Math.pow(t / this.HPQ, this.HPE)) * this.HM[lv] * K.hp;
-      en.push({ x: base[0] + j * 22, y: base[1] + j * 18, et: i, kd: d.kind,
-        k: d.kind === 'swarm' ? 1 : d.kind === 'tank' ? 2 : 0, ti: lv, hp, mh: hp,
-        sp: (55 + Math.random() * 25 + Math.min(45, t * 0.12)) * K.sp * (1 + 0.04 * lv) * (typeof Challenge !== 'undefined' && Challenge.has('fast') ? 1.3 : 1),
-        r: K.r * (1 + 0.1 * lv), v: K.xp * (1 + 0.5 * lv), dm: this.DM[lv] * (1 + Math.max(0, t - this.DMT_0) / this.DMT), touch: K.touch, el: this.elOf(d),
-        fl: 0, ang: 0, ac: (K.cd || 3) * (0.5 + Math.random() * 0.6), st: 0, stT: 0 });
-      const e = en[en.length - 1], sp = World.freeSpot(e.x, e.y, e); e.x = sp[0]; e.y = sp[1];   // nunca dentro de una pared
+    for (let j = 0; j < n; j++) this.make(i, lv, base[0] + j * 22, base[1] + j * 18);
+  },
+  // crea un enemigo de la especie i (nivel lv) en (x, y), con su patrón de movimiento y su variante de ataque
+  make(i, lv, x, y, mv) {
+    const d = this.data.list[i], K = this.data.kinds[d.kind];
+    const hp = (2 + t / this.HPT + Math.pow(t / this.HPQ, this.HPE)) * this.HM[lv] * K.hp;
+    const e = { x, y, et: i, kd: d.kind,
+      k: d.kind === 'swarm' ? 1 : d.kind === 'tank' ? 2 : 0, ti: lv, hp, mh: hp,
+      sp: (55 + Math.random() * 25 + Math.min(45, t * 0.12)) * K.sp * (1 + 0.04 * lv) * (typeof Challenge !== 'undefined' && Challenge.has('fast') ? 1.3 : 1),
+      r: K.r * (1 + 0.1 * lv), v: K.xp * (1 + 0.5 * lv), dm: this.DM[lv] * (1 + Math.max(0, t - this.DMT_0) / this.DMT), touch: K.touch, el: this.elOf(d),
+      fl: 0, ang: 0, ac: (K.cd || 3) * (0.5 + Math.random() * 0.6), st: 0, stT: 0,
+      mv: mv || this.pattern(d.kind), fs: Math.random() < 0.5 ? 1 : -1, zp: Math.random() * 6.283, sub: this.variant(d.kind) };
+    en.push(e);
+    const sp = World.freeSpot(e.x, e.y, e); e.x = sp[0]; e.y = sp[1];   // nunca dentro de una pared
+    return e;
+  },
+  // ---------- Patrones de movimiento (pedido: que intercepten y se muevan distinto) ----------
+  // direct: va derecho · intercept: apunta a donde vas a estar · flank: llega de costado y recién cerca se tira encima ·
+  // zigzag: avanza serpenteando · orbit: da vueltas y se acerca de a poco · rush: estampida en línea recta (oleadas)
+  pattern(kind) {
+    if (kind !== 'swarm' && kind !== 'chaser') return kind === 'tank' ? 'direct' : Math.random() < 0.35 ? 'intercept' : 'direct';
+    const r = Math.random(); return r < 0.4 ? 'direct' : r < 0.65 ? 'intercept' : r < 0.82 ? 'flank' : r < 0.94 ? 'zigzag' : 'orbit';
+  },
+  // variante de ataque: no todos los tiradores marcan una línea roja (fan: abanico lento; ring: anillo de balas);
+  // los bomber a veces dejan un charco tóxico (pool) en vez de explotar
+  variant(kind) {
+    const r = Math.random();
+    if (kind === 'shooter') return r < 0.35 ? 'aim' : r < 0.7 ? 'fan' : 'ring';
+    if (kind === 'bomber') return r < 0.45 ? 'pool' : 'blast';
+    return null;
+  },
+  // ángulo de movimiento según el patrón (si hay paredes en el medio, manda el mapa de distancias)
+  steerPat(e, tg, dd, a) {
+    const f = World.steer(e, a); let da = Math.abs(f - a) % 6.283; if (da > Math.PI) da = 6.283 - da;
+    if (da > 0.9) return f;   // el camino directo está tapado: rodea por donde dice el mapa
+    if (e.mv === 'intercept' && (tg.vx || tg.vy)) { const lead = Math.min(1.2, dd / Math.max(60, e.sp * 1.3)); return Math.atan2(tg.y + (tg.vy || 0) * lead - e.y, tg.x + (tg.vx || 0) * lead - e.x); }
+    if (e.mv === 'flank' && dd > 200) return a + e.fs * 0.95;
+    if (e.mv === 'zigzag') return a + Math.sin(t * 4 + e.zp) * 0.85;
+    if (e.mv === 'orbit' && dd > 150) return a + e.fs * (dd > 380 ? 0.6 : 1.25);
+    return a;
+  },
+  // ---------- Oleadas (pedido: más densidad y que te rodeen) ----------
+  // cada 35–55 s desde el minuto 2: un cerco (te rodean desde todos lados) o una estampida (una fila que cruza la pantalla)
+  evT: 100,
+  events(dt, ti) {
+    if (!this.data || !this.roster.length || (this.evT -= dt) > 0 || t < 120) return;
+    this.evT = 35 + Math.random() * 20;
+    const al = P.filter(q => !q.dead); if (!al.length) return;
+    const q = al[(Math.random() * al.length) | 0], pool = (this.roster[Math.max(0, Math.min(4, ti))] || []).filter(i => { const k = this.data.list[i].kind; return k === 'swarm' || k === 'chaser'; });
+    if (!pool.length) return;
+    const pick = () => pool[(Math.random() * pool.length) | 0], R = Math.hypot(W, H) / 2 + 40;
+    if (Math.random() < 0.55) {   // cerco
+      const n = Math.min(36, 14 + Math.floor(t / 60));
+      for (let j = 0; j < n; j++) { const g = j / n * 6.283; this.make(pick(), ti, q.x + Math.cos(g) * R, q.y + Math.sin(g) * R, 'direct'); }
+      Bosses.banner('¡Te rodean!');
+    } else {   // estampida: una fila que cruza de un lado al otro
+      const g = Math.random() * 6.283, n = Math.min(26, 10 + Math.floor(t / 90)), px = -Math.sin(g), py = Math.cos(g);
+      for (let j = 0; j < n; j++) {
+        const o = (j - (n - 1) / 2) * 46, x = q.x - Math.cos(g) * R + px * o, y = q.y - Math.sin(g) * R + py * o;
+        const e = this.make(pick(), ti, x, y, 'rush'); e.ra = g; e.sp *= 1.6; e.ru = t + 2 * R / e.sp + 1.5;
+      }
+      Bosses.banner('¡Estampida!');
     }
   },
   // daño al tocar (embistiendo o cayendo de un salto pega más)
   touch(e) { return (e.touch || [7, 5, 12][e.k] || 7) * (e.st === 2 ? 1.6 : 1) * e.dm; },
 
   // ---------- Comportamientos (solo anfitrión / local) ----------
-  warnLine(x, y, a, Lg, w, dur) { ef.push({ k: 'wline', x, y, a, Lg, w, l: dur, m: dur, col: this.RED }); },
-  warnCirc(x, y, R, dur) { ef.push({ k: 'wcirc', x, y, R, l: dur, m: dur, col: this.RED }); },
-  // golpe de área diferido: se resuelve en tick()
-  bomb(x, y, R, dur, e, mult) { this.warnCirc(x, y, R, dur); this.bombs.push({ x, y, R, t: dur, dm: 9 * (mult || 1) * e.dm, el: e.el }); },
+  warnLine(x, y, a, Lg, w, dur, col) { ef.push({ k: 'wline', x, y, a, Lg, w, l: dur, m: dur, col: col || this.RED }); },
+  warnCirc(x, y, R, dur, col, R0) { ef.push({ k: 'wcirc', x, y, R, R0, l: dur, m: dur, col: col || this.RED }); },
+  warns() { let n = 0; for (const o of ef) if (o.k === 'wline' || o.k === 'wcirc') n++; return n; },
+  // golpe de área diferido: se resuelve en tick(). R0: radio de adentro (anillo: el centro queda a salvo)
+  bomb(x, y, R, dur, e, mult, col, R0) { this.warnCirc(x, y, R, dur, col, R0); this.bombs.push({ x, y, R, R0: R0 || 0, t: dur, dm: 9 * (mult || 1) * e.dm, el: e.el }); },
+  // golpe en línea diferido (jefes: cruz, barridos)
+  lineBomb(x, y, a, Lg, w, dur, e, mult, col) { this.warnLine(x, y, a, Lg, w, dur, col); this.bombs.push({ x, y, a, Lg, w, line: 1, t: dur, dm: 9 * (mult || 1) * e.dm, el: e.el }); },
+  // charco tóxico: aviso verde y después un charco que daña de a poco (lo dibuja drawWarn como 'pool')
+  pool(x, y, R, dur, e) { this.warnCirc(x, y, R, dur, '#5dff7a'); this.bombs.push({ x, y, R, t: dur, pool: 4.5, dm: 2.2 * e.dm, el: e.el }); },
   move(e, a, sp, dt) { sp *= Stats.slowOf(e); World.move(e, Math.cos(a) * sp * dt, Math.sin(a) * sp * dt); },   // con choque contra las paredes (y ralentizado: stats.js)
 
   act(e, dt, tg, dd, a) {
@@ -133,8 +192,10 @@ const Enemies = {
       }
       return;
     }
-    // movimiento normal: sigue el mapa de distancias para rodear paredes (World.steer)
-    const ma = World.steer(e, a);
+    // estampida: derecho en su dirección; cuando cruzó, se va (sin premio)
+    if (e.mv === 'rush') { this.move(e, e.ra, e.sp, dt); if (t > e.ru) { e.hp = -1; e.nr = 1; } return; }
+    // movimiento normal: su patrón (interceptar, flanquear, zigzag…) y, si hay paredes, el mapa de distancias
+    const ma = this.steerPat(e, tg, dd, a);
     if (e.kd === 'shooter') {                                   // se mantiene a media distancia, de costado
       const s = dd < 210 ? -1 : dd > 330 ? 1 : 0;
       if (s) this.move(e, s > 0 ? ma : a, e.sp * s, dt); else this.move(e, a + Math.PI / 2 * (e.et % 2 ? 1 : -1), e.sp * 0.6, dt);
@@ -144,6 +205,15 @@ const Enemies = {
     if (!K.cd) return;
     e.ac -= dt;
     if (e.ac > 0 || t < 8) return;
+    // demasiados avisos en pantalla: espera (pedido: "llega un punto que solo ves marcas rojas")
+    if (this.warns() > 10 || (e.kd === 'shooter' && eb.length > 70)) { e.ac = 0.4 + Math.random() * 0.6; return; }   // y no más de ~70 balas enemigas a la vez
+    // tiradores sin línea: parpadean y sueltan un abanico lento o un anillo de balas
+    if (e.kd === 'shooter' && e.sub !== 'aim' && dd < 520) { e.la = a; e.st = 1; e.stT = 0.5; e.fl = 0.5; return; }
+    // charco tóxico: marca verde donde estás y queda un charco que daña unos segundos
+    if (e.kd === 'bomber' && e.sub === 'pool' && dd < 460) {
+      e.st = 1; e.stT = 0.3; e.ac = K.cd * (0.8 + Math.random() * 0.4);
+      this.pool(tg.x, tg.y, 70 + 6 * e.ti, 1.0, e); return;
+    }
     // empieza un ataque (con aviso)
     if (e.kd === 'dasher' && dd < 430) {
       e.la = a; e.dl = Math.min(480, dd + 140); e.st = 1; e.stT = 0.8;
@@ -167,7 +237,13 @@ const Enemies = {
     const K = this.K(e);
     if (e.kd === 'dasher') { e.st = 2; e.stT = e.dl / 760; return; }
     if (e.kd === 'leaper') { e.st = 2; e.dur = e.stT = 0.45; return; }
-    if (e.kd === 'shooter') {
+    if (e.kd === 'shooter' && e.sub === 'fan') {
+      const n = 3 + Math.min(2, e.ti >> 1);
+      for (let j = 0; j < n; j++) { const aa = e.la + (j - (n - 1) / 2) * 0.24; eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 240, vy: Math.sin(aa) * 240, l: 3, el: e.el, dm: e.dm, r: 7 }); }
+    } else if (e.kd === 'shooter' && e.sub === 'ring') {
+      const n = 6 + Math.min(4, e.ti), off = Math.random() * 6.283;
+      for (let j = 0; j < n; j++) { const aa = off + j / n * 6.283; eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 200, vy: Math.sin(aa) * 200, l: 3, el: e.el, dm: e.dm, r: 7 }); }
+    } else if (e.kd === 'shooter') {
       const n = e.ti >= 3 ? 3 : 1;
       for (let j = 0; j < n; j++) {
         const aa = e.la + (j - (n - 1) / 2) * 0.16;
@@ -177,14 +253,28 @@ const Enemies = {
     e.st = 0; e.ac = K.cd * (0.8 + Math.random() * 0.4);
   },
   // golpes de área pendientes (bombas, aterrizajes, pisotones)
+  pools: [],   // charcos activos { x, y, R, l, dm, el, tk }
   tick(dt) {
     for (const b of this.bombs) {
       b.t -= dt; if (b.t > 0) continue;
+      if (b.pool) { this.pools.push({ x: b.x, y: b.y, R: b.R, l: b.pool, dm: b.dm, el: b.el, tk: 0 }); ef.push({ k: 'pool', x: b.x, y: b.y, R: b.R, l: b.pool, m: b.pool }); continue; }
+      if (b.line) {
+        ef.push({ k: 'ray', x: b.x, y: b.y, a: b.a, Lg: b.Lg, w: b.w, col: '#ff6a3d', l: 0.25, m: 0.25 });
+        const ca = Math.cos(b.a), sa = Math.sin(b.a);
+        for (const q of P) { if (q.dead || q.inv > 0) continue; const px = q.x - b.x, py = q.y - b.y, al = px * ca + py * sa;
+          if (al > 0 && al < b.Lg && Math.abs(-px * sa + py * ca) < b.w / 2 + q.r * 0.5) hurt(q, b.dm, b.el); }
+        continue;
+      }
       ef.push({ k: 'ring', x: b.x, y: b.y, R: b.R, col: '#ff6a3d', l: 0.3, m: 0.3 });
-      if (SkillSys.fxOf('fire', 'hit')) ef.push({ k: 'hit', fx: 'fire', x: b.x, y: b.y, R: b.R * 1.3, l: 0.35, m: 0.35 });
-      for (const q of P) if (!q.dead && q.inv <= 0 && Math.hypot(q.x - b.x, q.y - b.y) < b.R + q.r * 0.5) hurt(q, b.dm, b.el);
+      if (!b.R0 && SkillSys.fxOf('fire', 'hit')) ef.push({ k: 'hit', fx: 'fire', x: b.x, y: b.y, R: b.R * 1.3, l: 0.35, m: 0.35 });
+      for (const q of P) { if (q.dead || q.inv > 0) continue; const d = Math.hypot(q.x - b.x, q.y - b.y); if (d < b.R + q.r * 0.5 && d > (b.R0 || 0) - q.r * 0.5) hurt(q, b.dm, b.el); }
     }
     this.bombs = this.bombs.filter(b => b.t > 0);
+    for (const o of this.pools) {   // charcos: dañan cada 0,5 s a quien esté adentro
+      o.l -= dt; o.tk -= dt; if (o.tk > 0) continue; o.tk = 0.5;
+      for (const q of P) if (!q.dead && q.inv <= 0 && Math.hypot(q.x - o.x, q.y - o.y) < o.R) hurt(q, o.dm, o.el);
+    }
+    this.pools = this.pools.filter(o => o.l > 0);
   },
 
   // ---------- Dibujo de los avisos (lo llama SkillSys.drawFx) ----------
@@ -193,9 +283,18 @@ const Enemies = {
     cx.save();
     if (o.k === 'wline') {
       cx.translate(o.x, o.y); cx.rotate(o.a);
-      cx.globalAlpha = 0.16; cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2, o.Lg, o.w);
-      cx.globalAlpha = 0.38; cx.fillRect(0, -o.w / 2, o.Lg * f, o.w);
-      cx.globalAlpha = 0.85; cx.strokeStyle = o.col; cx.lineWidth = 2; cx.strokeRect(0, -o.w / 2, o.Lg, o.w);
+      // más transparentes que antes (con muchos enemigos se superponían y tapaban todo)
+      cx.globalAlpha = 0.08; cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2, o.Lg, o.w);
+      cx.globalAlpha = 0.22; cx.fillRect(0, -o.w / 2, o.Lg * f, o.w);
+      cx.globalAlpha = 0.6; cx.strokeStyle = o.col; cx.lineWidth = 1.5; cx.strokeRect(0, -o.w / 2, o.Lg, o.w);
+    } else if (o.k === 'pool') {   // charco tóxico: verde, late suave y se apaga al final
+      const al = Math.min(1, o.l / 0.6) * (0.28 + 0.08 * Math.sin(t * 6));
+      cx.globalAlpha = al; cx.fillStyle = '#3dff6a'; cx.beginPath(); cx.arc(o.x, o.y, o.R, 0, 6.283); cx.fill();
+      cx.globalAlpha = Math.min(1, al * 1.6); cx.strokeStyle = '#9dffb0'; cx.lineWidth = 2; cx.stroke();
+    } else if (o.R0) {             // anillo: el centro queda a salvo
+      cx.globalAlpha = 0.18; cx.fillStyle = o.col; cx.beginPath(); cx.arc(o.x, o.y, o.R, 0, 6.283); cx.arc(o.x, o.y, o.R0, 0, 6.283, true); cx.fill();
+      cx.globalAlpha = 0.9; cx.strokeStyle = o.col; cx.lineWidth = 2.5; cx.setLineDash([10, 6]);
+      cx.beginPath(); cx.arc(o.x, o.y, o.R * Math.max(f, o.R0 / o.R), 0, 6.283); cx.stroke(); cx.setLineDash([]);
     } else {
       cx.globalAlpha = 0.14; cx.fillStyle = o.col; cx.beginPath(); cx.arc(o.x, o.y, o.R, 0, 6.283); cx.fill();
       cx.globalAlpha = 0.35; cx.beginPath(); cx.arc(o.x, o.y, o.R * f, 0, 6.283); cx.fill();
