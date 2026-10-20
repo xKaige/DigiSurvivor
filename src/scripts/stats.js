@@ -31,6 +31,7 @@ const Stats = {
   TRAIT_M: { kitsune: { dodge: 0.12 }, curioso: { xp: 0.12 }, filo: { crit: 0.1, critD: 0.25 }, arsenal: { multi: 1, rateP: 0.1 },
     kabuto: { shield: 12 }, puas: { thorns: 3 } },
   STAGE: { dmg: 1.5, hp: 30 },                       // cada evolución (etapas 1 a 4)
+  LV_DMG: 0.05,                                       // +5% de daño por cada nivel de la partida (pedido: al minuto 8 no alcanzaba para matar a los que se juntaban)
   DARK: { dmg: 7, multi: 1, spP: 0.08, hp: 40 },     // evolución oscura (si la línea no trae "bonus" en "dark")
   DP_NEED: [25, 60, 110, 170],                       // virus para una evolución perfecta (etapas 1 a 4)
 
@@ -83,7 +84,7 @@ const Stats = {
     const FUE = this.pts(q, 'FUE'), INT = this.pts(q, 'INT'), VEL = this.pts(q, 'VEL'), VIT = this.pts(q, 'VIT');
     const xa = q.xa ? (q.tr === 'prototipo' ? 1.5 : 1.25) : 1, bond = q.bond | 0;
     const oldMax = q.max || 0;
-    q.dmg = (1 + g('dmg')) * (1 + g('dmgP') + 0.03 * FUE + 0.015 * bond) * m.dmgX * xa;
+    q.dmg = (1 + g('dmg')) * (1 + g('dmgP') + 0.03 * FUE + 0.015 * bond) * m.dmgX * xa * (1 + this.LV_DMG * Math.max(0, (typeof lvl !== 'undefined' ? lvl : 1) - 1));
     q.rate = 0.6 / (1 + g('rateP') + 0.02 * VEL);
     q.multi = 1 + g('multi'); q.pierce = g('pierce');
     q.sp = 210 * Math.max(0.4, 1 + g('spP') + 0.02 * VEL) * (q.xa ? 1.1 : 1);

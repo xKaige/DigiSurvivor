@@ -625,7 +625,7 @@ async function start(m,ids,los){
   await initGame(ids);
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
-  p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=xpNeed(1);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
+  p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=xpNeed(1);for(const q of P)Stats.calc(q);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Weather.reset();Explore.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
@@ -1054,7 +1054,7 @@ function powerPulse(){if(isOnline&&!isHost)return;for(const q of P){if(q.dead)co
  ef.push({k:'ring',x:q.x,y:q.y,R,col:'#ffe066',l:.45,m:.45});for(let i=0;i<18;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');
  for(const e of en){if(e.bo!=null)continue;const dx=e.x-q.x,dy=e.y-q.y,d=Math.hypot(dx,dy);if(d<R&&d>0){World.move(e,dx/d*90,dy/d*90);hit(e,q.dmg*3,q.el,q)}}}}
 function levelUp(){
-  xp-=need;lvl++;need=xpNeed(lvl);paused=true;powerPulse();
+  xp-=need;lvl++;need=xpNeed(lvl);paused=true;powerPulse();for(const q of P)Stats.calc(q);   // el daño crece con el nivel (Stats.LV_DMG)
 
   const EL=evoLevels();
   if(EL.includes(lvl)){
