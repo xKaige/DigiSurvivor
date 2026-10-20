@@ -629,3 +629,13 @@ body.finale #snd{display:none!important}
   #up .card.lv .kn{top:8px;right:8px;width:22px;height:22px;font-size:12px}
   #up .card.lv:hover:not(:disabled),#up .card.lv:focus-visible{transform:none}
 }
+
+/* ---------- Esquina del menú: versión + botón rojo de reportes (report.js) ---------- */
+#ov-corner{position:absolute;left:18px;bottom:16px;z-index:3;display:flex;align-items:center;gap:10px}
+#ov-corner #news-btn{position:static}
+#rp-btn{display:flex;align-items:center;gap:8px;padding:5px 14px 5px 6px;font:700 13px 'Chakra Petch',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#ffd0d0;background:rgba(40,6,10,.88);border:2px solid #ff3d3d;cursor:pointer;box-shadow:0 0 12px rgba(255,61,61,.45)}
+#rp-btn .rp-ic{display:flex;align-items:center;justify-content:center;width:22px;height:22px;font:900 15px 'Orbitron',sans-serif;color:#fff;background:#ff2d2d;border-radius:50%;box-shadow:0 0 10px #ff2d2d;animation:rppulse 1.6s ease-in-out infinite}
+#rp-btn:hover,#rp-btn:focus-visible{outline:none;color:#fff;border-color:#fff;box-shadow:0 0 18px rgba(255,61,61,.8)}
+@keyframes rppulse{50%{box-shadow:0 0 18px 4px #ff2d2d;transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){#rp-btn .rp-ic{animation:none}}
+@media (max-width:560px){#ov-corner{position:relative;left:auto;bottom:auto;align-self:center;flex-wrap:wrap;justify-content:center}}

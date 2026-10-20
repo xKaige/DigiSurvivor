@@ -13,8 +13,22 @@ const Report = {
       b.onclick = () => this.open();
       if (before && document.getElementById(before)) box.insertBefore(b, document.getElementById(before)); else box.appendChild(b);
     };
-    add('mnu');
+    // menú: botón rojo con "!" en la esquina, al lado de la versión (en la botonera se perdía entre los demás)
+    this.corner(); let n = 0; const iv = setInterval(() => { if (this.corner() || ++n > 40) clearInterval(iv); }, 500);   // news.js arma su botón cuando carga el changelog
     const pq = document.getElementById('pquit'); if (pq) { const b = document.createElement('button'); b.id = 'prep'; b.textContent = 'Reportar un error'; b.onclick = () => this.open(); pq.before(b); }
+  },
+  // esquina del menú: [v0.x · Novedades] [! Reportar un error]. Devuelve true cuando ya está todo junto
+  corner() {
+    const ov = document.getElementById('ov'); if (!ov) return true;
+    let c = document.getElementById('ov-corner');
+    if (!c) {
+      c = document.createElement('div'); c.id = 'ov-corner'; ov.appendChild(c);
+      const b = document.createElement('button'); b.id = 'rp-btn'; b.title = 'Contanos si algo anda mal';
+      b.innerHTML = '<span class="rp-ic">!</span>Reportar un error'; b.onclick = () => this.open(); c.appendChild(b);
+    }
+    const nb = document.getElementById('news-btn'); if (!nb) return false;
+    if (nb.parentNode !== c) c.insertBefore(nb, c.firstChild);
+    return true;
   },
   info() {
     const q = typeof P !== 'undefined' && P && (typeof mine === 'function' ? mine()[0] : P[0]);
