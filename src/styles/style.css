@@ -610,3 +610,22 @@ body.finale #snd{display:none!important}
 #report #rp-send{padding:10px 22px;font:700 15px 'Chakra Petch',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#1a1000;background:linear-gradient(180deg,#ffe066,#ffb800);border:0;cursor:pointer}
 #report #rp-send:disabled{opacity:.5;cursor:wait}
 #mnu .rp-open{font-size:clamp(13px,1.4vw,16px);padding-top:10px;padding-bottom:10px;opacity:.85}
+
+/* ---------- Cartas en celular (issue #1: "el menú de selección de habilidades en celular se encuadra mal") ----------
+   Antes el contenedor centraba verticalmente y, si las cartas no entraban, se cortaban arriba (sin título ni primera carta).
+   Ahora arranca arriba, se puede desplazar y cada carta es una fila compacta: imagen a la izquierda, texto a la derecha. */
+@media (max-width:700px){
+  #up:not(.pick){justify-content:flex-start;overflow-y:auto;gap:6px;padding:calc(env(safe-area-inset-top) + 14px) 10px calc(env(safe-area-inset-bottom) + 18px)}
+  #up:not(.pick) h2{font-size:19px;padding:0 18px}
+  #up:not(.pick) p{font-size:11px;letter-spacing:.03em}
+  #up:not(.pick) #cards{flex-direction:column;flex-wrap:nowrap;align-items:stretch;width:100%;max-width:440px;gap:8px;margin-top:4px}
+  #up .card.lv{width:auto;min-height:0;display:grid;grid-template-columns:auto 1fr;column-gap:10px;row-gap:3px;padding:10px 40px 10px 12px;align-items:start}
+  #up .card.lv > :not(img):not(.kn):not(canvas){grid-column:2}
+  #up .card.lv > img,#up .card.lv > canvas{grid-column:1;grid-row:1 / span 4;align-self:center;height:54px!important;width:auto;margin:0!important}
+  #up .card.lv b{font-size:15px;margin:0}
+  #up .card.lv .kd{font-size:12px;line-height:1.3}
+  #up .card.lv em{font-size:11px;padding-top:4px;margin-top:2px}
+  #up .card.lv .kt{font-size:9px;justify-self:start}
+  #up .card.lv .kn{top:8px;right:8px;width:22px;height:22px;font-size:12px}
+  #up .card.lv:hover:not(:disabled),#up .card.lv:focus-visible{transform:none}
+}
