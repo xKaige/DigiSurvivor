@@ -62,7 +62,7 @@ const Bosses = {
     this.n++;
     const a = Math.random() * 6.283, d = Math.hypot(W, H) / 2 + 60;
     // la vida escala con la etapa del más evolucionado (0,5× en Bebé … 1,75× en forma final), el ciclo y la cantidad de jugadores
-    const st = Math.max(...P.map(q => q.stage | 0)), hp = 1.6 * B.hp * (0.5 + 0.25 * st) * (1 + cyc * 1.5) * (1 + 0.6 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores y, desde los 4 min, con el tiempo
+    const st = Math.max(...P.map(q => q.stage | 0)), hp = 1.6 * B.hp * (0.5 + 0.25 * st) * (1 + cyc * 1.5) * (1 + 1.1 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores (+110% c/u: en party morían antes de la furia) y, desde los 4 min, con el tiempo
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
       hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5) * (1 + Math.max(0, t - 240) / 600), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
       pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0, t0: t });

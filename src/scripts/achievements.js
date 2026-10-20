@@ -100,7 +100,7 @@ const Achievements = {
     if (t >= 60 && kills === 0 && !q.dead && !s.pac) this.flag('pac');
     if (q.xa && !s.xa) this.flag('xa');
     if (q.stage >= 5 && (q.line | 0) > 0 && !s.hard) this.flag('hard');
-    if (isOnline && P.length === 4 && t >= 900 && P.every(x => !x.dead) && !s.team15) this.flag('team15');
+    if (isOnline && P.length === 4 && t >= 880 && P.every(x => !x.dead) && !s.team15) this.flag('team15');
     if (q.wp && t >= 300 && Object.keys(q.wp).length === 1 && !s.mono) this.flag('mono');
   },
   // al terminar la partida (después de Progress.onRunEnd, antes de Challenge.onRunEnd)

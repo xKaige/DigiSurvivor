@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, writeBatch, runTransaction } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, writeBatch, runTransaction, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 import { firebaseConfig } from './firebase-config.js';
 import { initSocial, stopSocial } from './social.js';
@@ -11,7 +11,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 // funciones de Firestore que usa social.js (nick, amigos, perfil)
-const fb = { doc, getDoc, setDoc, collection, getDocs, writeBatch, runTransaction };
+const fb = { doc, getDoc, setDoc, collection, getDocs, writeBatch, runTransaction, query, orderBy, limit };
 let uid = null;
 
 async function saveToCloud(saveData) {

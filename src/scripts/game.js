@@ -37,18 +37,19 @@ const REVIVE_TIME = 5, REVIVE_R = 48;
 const TEST = new URLSearchParams(location.search).has('test');
 // FAST = true: niveles bajos para probar todo rápido. Poné false para los niveles normales (3,6,9,12 y 15).
 const FAST = false;
-const EVO_LEVELS = FAST ? [2,3,4,5] : [5,10,15,20];  // etapas 1,2,3,4 (cada 5 niveles)
-const LINE_LEVEL = FAST ? 6 : 25;                    // elección de la evolución final (rama)
+const EVO_LEVELS = FAST ? [2,3,4,5] : [8,16,24,32];  // etapas 1,2,3,4 (cada 8 niveles; antes cada 5)
+const LINE_LEVEL = FAST ? 6 : 40;                    // elección de la evolución final (rama)
+const MAX_LVL = 50;                                  // nivel máximo (pedido 22/10/2026: antes se llegaba rápido al 30 y no quedaba qué subir)
 const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisitos de stats de las ramas se achican
 // Experiencia para el próximo nivel: need = need × XP_GROW + XP_ADD (más bajo = se sigue subiendo en el late game)
 let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7, XP_GAIN = 0.75;   // XP_GAIN: multiplicador de toda la XP que juntás
-// XP para pasar del nivel L al L+1. Con XP_PACE (abajo) la forma final llega cerca del minuto 25 en una partida de 30
-// (lo pidió el usuario: antes se llegaba a los 7'). XP_GROW/XP_ADD/XP_START ya no se usan.
-const xpNeed = L => Math.round(4 * Math.pow(L, 1.65) + 4);
-// Ritmo: nivel esperado según el minuto (Bebé II ~2', Novato ~5', Campeón ~10', Perfecto ~17', forma final ~25', después 1 por minuto).
+// XP para pasar del nivel L al L+1. Con XP_PACE (abajo) la forma final llega cerca del minuto 10,5 y el nivel 50 cerca
+// del 14,5 en una partida de 15. XP_GROW/XP_ADD/XP_START ya no se usan.
+const xpNeed = L => Math.round(4 * Math.pow(L, 1.5) + 4);
+// Ritmo: nivel esperado según el segundo (Bebé II ~1,5', Novato ~3,3', Campeón ~5,5', Perfecto ~8', forma final ~10,5', nivel 50 ~14,5').
 // Si vas adelantado la XP rinde menos (×0,4 por cada nivel de ventaja); si vas atrasado, más (+80% por nivel, hasta ×8).
-const XP_PACE = [[1, 0], [5, 120], [10, 300], [15, 600], [20, 960], [25, 1440], [30, 1800]];   // los dos últimos, un minuto antes: medido con bots, la llegada real se atrasa ~1 min
-function paceLvl(s) { for (let i = 1; i < XP_PACE.length; i++) { const [l0, t0] = XP_PACE[i - 1], [l1, t1] = XP_PACE[i]; if (s <= t1) return l0 + (l1 - l0) * (s - t0) / (t1 - t0); } return 30 + (s - 1800) / 60; }
+const XP_PACE = [[1, 0], [8, 90], [16, 200], [24, 330], [32, 470], [40, 630], [50, 870]];   // los dos últimos, un minuto antes: medido con bots, la llegada real se atrasa ~1 min
+function paceLvl(s) { for (let i = 1; i < XP_PACE.length; i++) { const [l0, t0] = XP_PACE[i - 1], [l1, t1] = XP_PACE[i]; if (s <= t1) return l0 + (l1 - l0) * (s - t0) / (t1 - t0); } return MAX_LVL; }
 function xpMul() { const d = lvl + xp / Math.max(1, need) - paceLvl(t); return d > 0 ? Math.pow(0.4, d) : Math.min(8, 1 - d * 0.8); }
 
 async function initGame(ids) {
@@ -879,6 +880,7 @@ function endRun(title){if(!running)return;
   if(r.hatched.length)setTimeout(()=>Progress.showHatch(),700)}
  // logros (achievements.js): antes que Challenge.onRunEnd, que borra las reglas del desafío
  if(typeof Achievements!=='undefined')Achievements.onRunEnd({kills,coins:c,online:isOnline,n:P.length,chal:typeof Challenge!=='undefined'&&!!Challenge.active,fin:title==='Yggdrasill reinició el Digimundo',fast:Bosses.fast,me:mine()[0]});
+ if(typeof Ranking!=='undefined')Ranking.onRunEnd({q:mine()[0],kills,bosses:Bosses.down.length,secs:t,lvl,n:P.length,chal:typeof Challenge!=='undefined'&&!!Challenge.active});   // ranking.js (antes que Challenge.onRunEnd)
  if(typeof Challenge!=='undefined')$('m').textContent+=Challenge.onRunEnd({kills,secs:t,bosses:Bosses.down.length,cid:(mine()[0]||P[0]).cid});
  wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
 
@@ -968,7 +970,7 @@ function drawEnemy(e){
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  if(e.mn){cx.save();cx.strokeStyle='#c05bff';cx.lineWidth=2.5;cx.globalAlpha=.8;cx.beginPath();cx.ellipse(e.x,e.y+h/2-2,e.r*1.3,6,0,0,6.283);cx.stroke();cx.restore()}   // refuerzo del jefe: aro violeta
  if(e.bo!=null&&e.p2){cx.save();cx.globalAlpha=.22+.1*Math.sin(t*8);cx.fillStyle='#ff2d2d';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.55,th*.6,0,0,6.283);cx.fill();cx.restore()}   // jefe enfurecido (fase 2): aura roja
- if(e.bo!=null&&e.shd){cx.save();const R=th*.62,yy=e.y+h/2-th*.45;cx.globalAlpha=.18+.06*Math.sin(t*10);cx.fillStyle='#7fdcff';cx.beginPath();cx.arc(e.x,yy,R,0,6.283);cx.fill();cx.globalAlpha=.85;cx.strokeStyle='#bff0ff';cx.lineWidth=3;cx.setLineDash([14,8]);cx.lineDashOffset=-t*40;cx.stroke();cx.setLineDash([]);cx.restore()}   // escudo (Cruz giratoria): inmune
+ if(e.bo!=null&&e.shd>0){cx.save();const R=th*.62,yy=e.y+h/2-th*.45;cx.globalAlpha=.18+.06*Math.sin(t*10);cx.fillStyle='#7fdcff';cx.beginPath();cx.arc(e.x,yy,R,0,6.283);cx.fill();cx.globalAlpha=.85;cx.strokeStyle='#bff0ff';cx.lineWidth=3;cx.setLineDash([14,8]);cx.lineDashOffset=-t*40;cx.stroke();cx.setLineDash([]);cx.restore()}   // escudo (Cruz giratoria): inmune
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
  cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
@@ -1238,7 +1240,7 @@ function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)con
 function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill'+n:'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3);
  const sp=$('sp'+n),dp=$('dp'+n);if(sp){sp.style.width=(q.spv||0)+'%';sp.classList.toggle('full',!!q.emp)}if(dp){const nd=Stats.DP_NEED[q.stage|0];dp.style.width=nd&&q.vp?Math.min(100,q.vp.dp/nd*100)+'%':'0'}};
  P.forEach((q,i)=>hb(i,q));Gate.hud();
- $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills;Bosses.hud()}
+ $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl+(lvl>=MAX_LVL?' MÁX':'');$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills;Bosses.hud()}
 
 function update(dt){
  t+=dt;SkillSys.renderBar(isOnline?mine():P);if(typeof Achievements!=='undefined')Achievements.tick();
@@ -1320,7 +1322,7 @@ function update(dt){
   if(tg){if(td<tg.mag||Items.magT>0||g.mg){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0||g.mg?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN*xpMul();g.dead=1;Sound.play('gem')}}}
  gems=gems.filter(g=>!g.dead);
  Items.update(dt);Explore.tick(dt);
- if(xp>=need)levelUp();
+ if(xp>=need&&lvl<MAX_LVL)levelUp();else if(lvl>=MAX_LVL)xp=Math.min(xp,need);   // nivel máximo
  for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);if(ef.length>MAX_EF){const wn=ef.filter(o=>o.k==='wline'||o.k==='wcirc'||o.k==='pool'),vi=ef.filter(o=>o.k!=='wline'&&o.k!=='wcirc'&&o.k!=='pool');ef=wn.concat(vi.slice(Math.max(0,vi.length-(MAX_EF-wn.length))))}   // tope de efectos (los avisos de ataque nunca se descartan)
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
  if(P.every(q=>q.dead))endRun('Fuiste borrado');

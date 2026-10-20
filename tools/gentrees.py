@@ -21,7 +21,7 @@ TREES = {
            mi('Botiquín', {'healP': 0.06}), mi('Coraza II', {'arm': 0.01}),
            ma('Fortaleza Sagrada', {'arm': 0.1, 'hpP': 0.1}, '-10% de daño recibido y +10% de vida')],
    'FUE': [mi('Poder', {'dmgP': 0.02}), mi('Antivirus', {'vs1': 0.03}),
-           ma('Purificación', {'purify': 1}, 'Cada Virus que eliminás te cura un 1% de la vida'),
+           ma('Purificación', {'purify': 1}, 'Cada Digimon de atributo Virus que eliminás te cura un 1% de la vida'),
            mi('Precisión', {'crit': 0.01}), mi('Poder II', {'dmgP': 0.02}),
            ma('Juicio', {'vs1': 0.25}, '+25% de daño contra Virus')],
    'VEL': [mi('Paso', {'spP': 0.02}), mi('Reflejos', {'dodge': 0.01}),
@@ -96,7 +96,30 @@ TAMER = {'name': 'Tamer', 'col': '#4dffb8', 'cur': 'coins', 'about': 'Mejoras de
   'VEL': ('Mando', [mi('Socorrista', {'revSpd': 0.1}),
           ma('Re-sortear', {'reroll': 2}, 'Dos veces por partida podés cambiar las cartas que te salieron'),
           mi('Fortuna', {'luck': 0.03}),
-          ma('Visión de Tamer', {'cards': 1}, 'Elegís entre una carta más al subir de nivel')])}}
+          ma('Visión de Tamer', {'cards': 1}, 'Elegís entre una carta más al subir de nivel')])},
+ # conectores entre ramas (anillos 2, 5 y 8), ampliación del 22/10/2026
+ 'links': {('FUE', 'INT'): [at('Sueldo de Tamer', {'xp': 0.02, 'coin': 0.03}), at('Contrato', {'xp': 0.02, 'luck': 0.02}), at('Patrocinio', {'coin': 0.05, 'xp': 0.03})],
+           ('INT', 'VIT'): [at('Inventario', {'healP': 0.04, 'coin': 0.02}), at('Proveedor', {'magP': 0.05, 'luck': 0.01}), at('Mercado Negro', {'rcChance': 0.05, 'acoin': 0.04})],
+           ('VIT', 'VEL'): [at('Enfermería', {'revSpd': 0.08, 'hp': 4}), at('Primera Línea', {'hpP': 0.015, 'spP': 0.01}), at('Brigada', {'revSpd': 0.1, 'arm': 0.008})],
+           ('VEL', 'FUE'): [at('Entrenamiento', {'dmgP': 0.015, 'xp': 0.01}), at('Disciplina', {'rateP': 0.015, 'dmgP': 0.01}), at('Instrucción', {'cdr': 0.012, 'xp': 0.02})]}}
+# Ampliación del árbol de Tamer (22/10/2026, a pedido: era muy básico). Se agrega al final de cada rama sin tocar lo anterior.
+TAMER_EXT = {
+ 'FUE': [mi('Estudio III', {'xp': 0.03}), mi('Práctica', {'dmgP': 0.012}), ma('Veterano', {'xp': 0.08, 'dmgP': 0.04}, '+8% de experiencia y +4% de daño'),
+         mi('Maestría II', {'xp': 0.04}), mi('Técnica', {'crit': 0.006}), mi('Golpe de Tamer', {'dmgP': 0.015}),
+         mi('Estrategia', {'cdr': 0.01}), ma('Gran Maestro', {'xp': 0.12, 'dmgP': 0.08, 'critD': 0.15}, '+12% de experiencia, +8% de daño y +15% de daño crítico')],
+ 'INT': [mi('Ahorro II', {'coin': 0.06}), mi('Cosecha II', {'acoin': 0.06}), ma('Saqueo', {'coin': 0.15, 'luck': 0.05}, '+15% de monedas y +5% de suerte'),
+         mi('Suerte II', {'luck': 0.04}), mi('Tesoro', {'bossCoin': 0.1}), mi('Reciclaje Pro', {'rcChance': 0.05}),
+         mi('Inversión', {'coin': 0.07}), ma('Magnate', {'coin': 0.25, 'acoin': 0.15, 'bossCoin': 0.25}, '+25% de monedas, +15% de datos de atributo y +25% de monedas de jefes')],
+ 'VIT': [mi('Imán II', {'magP': 0.06}), mi('Botiquín', {'healP': 0.05}), ma('Kit de Supervivencia', {'healP': 0.15, 'hp': 20}, 'Los ítems curan un 15% más y +20 de vida'),
+         mi('Vida de Tamer', {'hp': 5}), mi('Abrigo', {'arm': 0.006}), mi('Descanso', {'regen': 0.1}),
+         mi('Constitución', {'hpP': 0.015}), ma('Guardián', {'hpP': 0.08, 'regen': 0.4, 'arm': 0.04}, '+8% de vida, +0,4 de vida por segundo y -4% de daño recibido')],
+ 'VEL': [mi('Socorrista II', {'revSpd': 0.1}), mi('Fortuna II', {'luck': 0.03}), mi('Táctica', {'spP': 0.015}),
+         ma('Re-sortear II', {'reroll': 2}, 'Dos re-sorteos más por partida'), mi('Reflejos', {'dodge': 0.005}), mi('Mando II', {'cdr': 0.01}),
+         mi('Ritmo', {'rateP': 0.015}), ma('Comandante', {'rateP': 0.06, 'spP': 0.06, 'cdr': 0.04}, '+6% de velocidad de ataque y de velocidad, y -4% de recarga')]}
+TAMER_NOTABLE = {'FUE': [('Prodigio', {'xp': 0.08}), ('Instinto de Tamer', {'dmgP': 0.05, 'crit': 0.02}), ('Leyenda', {'xp': 0.06, 'dmgP': 0.05})],
+                 'INT': [('Billetera', {'coin': 0.12}), ('Coleccionista', {'acoin': 0.12, 'rcChance': 0.08}), ('Jackpot', {'luck': 0.1, 'bossCoin': 0.2})],
+                 'VIT': [('Mochila Grande', {'healP': 0.1, 'magP': 0.1}), ('Corazón Firme', {'hp': 18, 'regen': 0.2}), ('Refugio', {'arm': 0.03, 'hpP': 0.03})],
+                 'VEL': [('Rescatista', {'revSpd': 0.3, 'revHP': 0.15}), ('Viento a Favor', {'spP': 0.05, 'dodge': 0.02}), ('Mente Rápida', {'cdr': 0.03, 'rateP': 0.03})]}
 
 # ---- Ampliación (~100 nodos por árbol). Los nodos de arriba NO se tocan (ids y efectos), así no se rompe lo comprado. ----
 # EXT: nodos que se agregan al final de cada rama (la rama sigue derecho; el último es un principal nuevo)
@@ -157,14 +180,14 @@ PERP = {'FUE': (1, 0), 'VIT': (1, 0), 'INT': (0, 1), 'VEL': (0, 1)}
 ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']
 
 def cost(t, depth, tamer):
-    if tamer: return {'minor': [30 + 15 * depth, 1], 'major': [200 + 100 * depth, 0]}[t]
+    if tamer: return {'minor': [30 + 15 * depth, 1], 'attr': [60 + 20 * depth, 1], 'major': [200 + 100 * depth, 0]}[t]
     return {'minor': [2 + depth, 1], 'attr': [4 + depth, 1], 'major': [10 + 6 * depth, 0]}[t]
 
 def build(T, tamer=False, key=None):
     nodes = [{'id': 'start', 't': 'start', 'n': 'Inicio', 'x': 0, 'y': 0, 'm': 1, 'fx': {}, 'link': [], 'd': T['about']}]
     arms = {}
     for arm, spec in T['arms'].items():
-        title, lst = (spec if tamer else (ARMN[arm], spec + EXT[key][arm]))
+        title, lst = ((spec[0], spec[1] + TAMER_EXT[arm]) if tamer else (ARMN[arm], spec + EXT[key][arm]))
         dx, dy = DIRS[arm]; prev = 'start'; ids = []
         for i, nd in enumerate(lst, 1):
             nid = arm.lower() + str(i)
@@ -174,23 +197,24 @@ def build(T, tamer=False, key=None):
             if nd.get('d'): n['d'] = nd['d']
             nodes.append(n); prev = nid; ids.append(nid)
         arms[arm] = ids
-    if not tamer:
+    if True:
         for (a, b), lst in T['links'].items():
-            for k, (ring, nd) in enumerate(zip((2, 5, 8, 10), lst + LINKS2[key][(a, b)])):
+            for k, (ring, nd) in enumerate(zip((2, 5, 8, 10), lst + (LINKS2[key][(a, b)] if not tamer else []))):
                 (ax, ay), (bx, by) = DIRS[a], DIRS[b]
                 r = STEP * ring * 0.78
                 nid = 'x' + a.lower() + b.lower() + str(k + 1)
-                c = cost('attr', ring, False)
+                c = cost('attr', ring, tamer)
                 n = {'id': nid, 't': 'attr', 'n': T['name'] + ': ' + nd['n'], 'x': round((ax + bx) * r), 'y': round((ay + by) * r), 'm': nd['m'],
                      'fx': nd['fx'], 'link': [arms[a][ring - 1], arms[b][ring - 1]], 'c': c[0], 'cl': c[1]}
                 nodes.append(n)
         # ramitas laterales: salen de los nodos 3, 6, 9 (y 12 en la rama larga), alternando el lado: 2 secundarios + un notable
         for arm, ids in arms.items():
             dx, dy = DIRS[arm]; px, py = PERP[arm]
-            tmpl = [n for n in T['arms'][arm] + EXT[key][arm] if n['t'] == 'minor']
+            tmpl = [n for n in (T['arms'][arm][1] + TAMER_EXT[arm] if tamer else T['arms'][arm] + EXT[key][arm]) if n['t'] == 'minor']
+            NOT = TAMER_NOTABLE if tamer else NOTABLE[key]
             used = {}
             for w, k in enumerate(range(3, len(ids) + 1, 3)):
-                if w >= len(NOTABLE[key][arm]): break
+                if w >= len(NOT[arm]): break
                 side = 1 if w % 2 == 0 else -1
                 bx, by = dx * STEP * k, dy * STEP * k; prev = ids[k - 1]
                 for j in (1, 2, 3):
@@ -203,9 +227,9 @@ def build(T, tamer=False, key=None):
                         used[base] = used.get(base, 3) + 1
                         nd = {'t': 'minor', 'n': base + ' ' + ROMAN[used[base]], 'fx': t0['fx'], 'm': 5}
                     else:
-                        nm, fx = NOTABLE[key][arm][w]
+                        nm, fx = NOT[arm][w]
                         nd = {'t': 'major', 'n': nm, 'fx': fx, 'm': 1}
-                    c = cost(nd['t'], k + j, False)
+                    c = cost(nd['t'], k + j, tamer)
                     n = {'id': nid, 't': nd['t'], 'n': nd['n'], 'x': x, 'y': y, 'm': nd['m'], 'fx': nd['fx'], 'link': [prev], 'c': c[0], 'cl': c[1]}
                     if nd['t'] == 'major': n['notable'] = 1
                     nodes.append(n); prev = nid

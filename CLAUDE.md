@@ -32,6 +32,14 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - **Potenciadores** (`BUFFS`, ítems `buff_*` de Items, sin sprite: `drawBuffItem`): Poder +50% daño, Frenesí ataque/skills más rápidos, Turbo +40% velocidad, Coraza 30% menos daño, por `BUFF_T` (15) s. Se suman a `q.m` y se restan al vencer (`buffTick`); `q.bf` = segundos que quedan (aura y barritas bajo el jugador). También caen de los Digimon con poco peso.
 - Flechas en el borde (`Explore.pointers` dentro de `drawPointers`) hacia lo que está a menos de 1800 px. Online: `xo` en el sync y `bf` en cada jugador (el invitado no simula los potenciadores).
 
+## Cambios del 22/10/2026 (pedido)
+- **Partida de 15 min** (`FINALE_T` 900), **Digital Gate cada 90 s** (`every` en bosses.json) y **nivel máximo 50** (`MAX_LVL`): evoluciones en los niveles 8, 16, 24 y 32 (`EVO_LEVELS`), forma final en el 40 (`LINE_LEVEL`). `xpNeed(L)` = 4·L^1,5 + 4 y `XP_PACE` nuevo. Medido con bot (15 min): nivel 40 ~11', 50 al final, 6 Gates. En el nivel máximo la barra dice "NV 50 MÁX" y la XP no sube más. Además, el daño sube 5% por nivel (`Stats.LV_DMG`).
+- **Vida por jugadores**: enemigos ×(1 + 0,6 por cada jugador extra) (`Enemies.make`); jefes ×(1 + 1,1 por cada jugador extra) (`Bosses.spawn`).
+- **Dos jefes en el Gate**: chance (t − 180)/1200, tope 50% (`Gate.enter`); cada uno con 80% de la vida y aviso "¡DOS JEFES!". La barra del HUD muestra uno.
+- El escudo de la Cruz giratoria se dibuja solo con `e.shd > 0` (antes quedaba la burbuja con el valor negativo).
+- **Árbol de Tamer ampliado a 97 nodos** (gentrees.py: `TAMER_EXT` alarga cada rama a 12, `TAMER_NOTABLE` = ramitas laterales y `TAMER['links']` = conectores; costos con `cost(…, tamer=True)`, incluye `attr`). Los 17 nodos viejos no cambiaron.
+- **Ranking** (`ranking.js`, botón `#rkb`): tablas Solo y Party con la mejor partida de cada cuenta en `ranking_solo/{uid}` y `ranking_party/{uid}` (`window.rankCloud` en social.js: `submit` solo si supera su récord, `top` = 50 por `score`). Guarda nick, puntaje (eliminados + 150×jefes + 2×segundos), Digimon/forma, skills con nivel, eliminados, jefes, nivel, tiempo y jugadores. No entran partidas del desafío. **Requiere reglas de Firestore**: leer con sesión y escribir solo el documento propio.
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.
@@ -91,7 +99,7 @@ assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de 
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `finale.js` → `weather.js` → `explore.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `finale.js` → `weather.js` → `explore.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `ranking.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 

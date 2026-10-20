@@ -5,7 +5,7 @@
 // World, burst, endRun, isOnline, isHost). Solo el anfitrión (o el juego local) decide; el cliente recibe el tiempo de la
 // secuencia por el sync (`fn`) y la dibuja igual; el final le llega con el mensaje 'end'.
 // 30 minutos; para probar la escena, agregá ?finale a la URL y llega al minuto
-const FINALE_T = new URLSearchParams(location.search).has('finale') ? 60 : 1800;
+const FINALE_T = new URLSearchParams(location.search).has('finale') ? 60 : 900;   // 15 min (antes 30; pedido 22/10/2026)
 const Finale = {
   on: false,
   k: 0,              // segundos desde que empezó la secuencia

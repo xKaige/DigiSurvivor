@@ -5188,6 +5188,147 @@
      "arm": "FUE"
     },
     {
+     "id": "fue5",
+     "t": "minor",
+     "n": "Estudio III",
+     "x": 0,
+     "y": -550,
+     "m": 5,
+     "fx": {
+      "xp": 0.03
+     },
+     "link": [
+      "fue4"
+     ],
+     "c": 105,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue6",
+     "t": "minor",
+     "n": "Práctica",
+     "x": 0,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.012
+     },
+     "link": [
+      "fue5"
+     ],
+     "c": 120,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue7",
+     "t": "major",
+     "n": "Veterano",
+     "x": 0,
+     "y": -770,
+     "m": 1,
+     "fx": {
+      "xp": 0.08,
+      "dmgP": 0.04
+     },
+     "link": [
+      "fue6"
+     ],
+     "c": 900,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "+8% de experiencia y +4% de daño"
+    },
+    {
+     "id": "fue8",
+     "t": "minor",
+     "n": "Maestría II",
+     "x": 0,
+     "y": -880,
+     "m": 5,
+     "fx": {
+      "xp": 0.04
+     },
+     "link": [
+      "fue7"
+     ],
+     "c": 150,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue9",
+     "t": "minor",
+     "n": "Técnica",
+     "x": 0,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "crit": 0.006
+     },
+     "link": [
+      "fue8"
+     ],
+     "c": 165,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue10",
+     "t": "minor",
+     "n": "Golpe de Tamer",
+     "x": 0,
+     "y": -1100,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.015
+     },
+     "link": [
+      "fue9"
+     ],
+     "c": 180,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue11",
+     "t": "minor",
+     "n": "Estrategia",
+     "x": 0,
+     "y": -1210,
+     "m": 5,
+     "fx": {
+      "cdr": 0.01
+     },
+     "link": [
+      "fue10"
+     ],
+     "c": 195,
+     "cl": 1,
+     "arm": "FUE"
+    },
+    {
+     "id": "fue12",
+     "t": "major",
+     "n": "Gran Maestro",
+     "x": 0,
+     "y": -1320,
+     "m": 1,
+     "fx": {
+      "xp": 0.12,
+      "dmgP": 0.08,
+      "critD": 0.15
+     },
+     "link": [
+      "fue11"
+     ],
+     "c": 1400,
+     "cl": 0,
+     "arm": "FUE",
+     "d": "+12% de experiencia, +8% de daño y +15% de daño crítico"
+    },
+    {
      "id": "int1",
      "t": "minor",
      "n": "Ahorro",
@@ -5255,6 +5396,147 @@
      "c": 90,
      "cl": 1,
      "arm": "INT"
+    },
+    {
+     "id": "int5",
+     "t": "minor",
+     "n": "Ahorro II",
+     "x": 550,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "coin": 0.06
+     },
+     "link": [
+      "int4"
+     ],
+     "c": 105,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int6",
+     "t": "minor",
+     "n": "Cosecha II",
+     "x": 660,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "acoin": 0.06
+     },
+     "link": [
+      "int5"
+     ],
+     "c": 120,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int7",
+     "t": "major",
+     "n": "Saqueo",
+     "x": 770,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "coin": 0.15,
+      "luck": 0.05
+     },
+     "link": [
+      "int6"
+     ],
+     "c": 900,
+     "cl": 0,
+     "arm": "INT",
+     "d": "+15% de monedas y +5% de suerte"
+    },
+    {
+     "id": "int8",
+     "t": "minor",
+     "n": "Suerte II",
+     "x": 880,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "luck": 0.04
+     },
+     "link": [
+      "int7"
+     ],
+     "c": 150,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int9",
+     "t": "minor",
+     "n": "Tesoro",
+     "x": 990,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "bossCoin": 0.1
+     },
+     "link": [
+      "int8"
+     ],
+     "c": 165,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int10",
+     "t": "minor",
+     "n": "Reciclaje Pro",
+     "x": 1100,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "rcChance": 0.05
+     },
+     "link": [
+      "int9"
+     ],
+     "c": 180,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int11",
+     "t": "minor",
+     "n": "Inversión",
+     "x": 1210,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "coin": 0.07
+     },
+     "link": [
+      "int10"
+     ],
+     "c": 195,
+     "cl": 1,
+     "arm": "INT"
+    },
+    {
+     "id": "int12",
+     "t": "major",
+     "n": "Magnate",
+     "x": 1320,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "coin": 0.25,
+      "acoin": 0.15,
+      "bossCoin": 0.25
+     },
+     "link": [
+      "int11"
+     ],
+     "c": 1400,
+     "cl": 0,
+     "arm": "INT",
+     "d": "+25% de monedas, +15% de datos de atributo y +25% de monedas de jefes"
     },
     {
      "id": "vit1",
@@ -5326,6 +5608,147 @@
      "arm": "VIT"
     },
     {
+     "id": "vit5",
+     "t": "minor",
+     "n": "Imán II",
+     "x": 0,
+     "y": 550,
+     "m": 5,
+     "fx": {
+      "magP": 0.06
+     },
+     "link": [
+      "vit4"
+     ],
+     "c": 105,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit6",
+     "t": "minor",
+     "n": "Botiquín",
+     "x": 0,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "healP": 0.05
+     },
+     "link": [
+      "vit5"
+     ],
+     "c": 120,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit7",
+     "t": "major",
+     "n": "Kit de Supervivencia",
+     "x": 0,
+     "y": 770,
+     "m": 1,
+     "fx": {
+      "healP": 0.15,
+      "hp": 20
+     },
+     "link": [
+      "vit6"
+     ],
+     "c": 900,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "Los ítems curan un 15% más y +20 de vida"
+    },
+    {
+     "id": "vit8",
+     "t": "minor",
+     "n": "Vida de Tamer",
+     "x": 0,
+     "y": 880,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "vit7"
+     ],
+     "c": 150,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit9",
+     "t": "minor",
+     "n": "Abrigo",
+     "x": 0,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "arm": 0.006
+     },
+     "link": [
+      "vit8"
+     ],
+     "c": 165,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit10",
+     "t": "minor",
+     "n": "Descanso",
+     "x": 0,
+     "y": 1100,
+     "m": 5,
+     "fx": {
+      "regen": 0.1
+     },
+     "link": [
+      "vit9"
+     ],
+     "c": 180,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit11",
+     "t": "minor",
+     "n": "Constitución",
+     "x": 0,
+     "y": 1210,
+     "m": 5,
+     "fx": {
+      "hpP": 0.015
+     },
+     "link": [
+      "vit10"
+     ],
+     "c": 195,
+     "cl": 1,
+     "arm": "VIT"
+    },
+    {
+     "id": "vit12",
+     "t": "major",
+     "n": "Guardián",
+     "x": 0,
+     "y": 1320,
+     "m": 1,
+     "fx": {
+      "hpP": 0.08,
+      "regen": 0.4,
+      "arm": 0.04
+     },
+     "link": [
+      "vit11"
+     ],
+     "c": 1400,
+     "cl": 0,
+     "arm": "VIT",
+     "d": "+8% de vida, +0,4 de vida por segundo y -4% de daño recibido"
+    },
+    {
      "id": "vel1",
      "t": "minor",
      "n": "Socorrista",
@@ -5394,6 +5817,960 @@
      "cl": 0,
      "arm": "VEL",
      "d": "Elegís entre una carta más al subir de nivel"
+    },
+    {
+     "id": "vel5",
+     "t": "minor",
+     "n": "Socorrista II",
+     "x": -550,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "revSpd": 0.1
+     },
+     "link": [
+      "vel4"
+     ],
+     "c": 105,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel6",
+     "t": "minor",
+     "n": "Fortuna II",
+     "x": -660,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "luck": 0.03
+     },
+     "link": [
+      "vel5"
+     ],
+     "c": 120,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel7",
+     "t": "minor",
+     "n": "Táctica",
+     "x": -770,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "spP": 0.015
+     },
+     "link": [
+      "vel6"
+     ],
+     "c": 135,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel8",
+     "t": "major",
+     "n": "Re-sortear II",
+     "x": -880,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "reroll": 2
+     },
+     "link": [
+      "vel7"
+     ],
+     "c": 1000,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "Dos re-sorteos más por partida"
+    },
+    {
+     "id": "vel9",
+     "t": "minor",
+     "n": "Reflejos",
+     "x": -990,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "dodge": 0.005
+     },
+     "link": [
+      "vel8"
+     ],
+     "c": 165,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel10",
+     "t": "minor",
+     "n": "Mando II",
+     "x": -1100,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "cdr": 0.01
+     },
+     "link": [
+      "vel9"
+     ],
+     "c": 180,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel11",
+     "t": "minor",
+     "n": "Ritmo",
+     "x": -1210,
+     "y": 0,
+     "m": 5,
+     "fx": {
+      "rateP": 0.015
+     },
+     "link": [
+      "vel10"
+     ],
+     "c": 195,
+     "cl": 1,
+     "arm": "VEL"
+    },
+    {
+     "id": "vel12",
+     "t": "major",
+     "n": "Comandante",
+     "x": -1320,
+     "y": 0,
+     "m": 1,
+     "fx": {
+      "rateP": 0.06,
+      "spP": 0.06,
+      "cdr": 0.04
+     },
+     "link": [
+      "vel11"
+     ],
+     "c": 1400,
+     "cl": 0,
+     "arm": "VEL",
+     "d": "+6% de velocidad de ataque y de velocidad, y -4% de recarga"
+    },
+    {
+     "id": "xfueint1",
+     "t": "attr",
+     "n": "Tamer: Sueldo de Tamer",
+     "x": 172,
+     "y": -172,
+     "m": 3,
+     "fx": {
+      "xp": 0.02,
+      "coin": 0.03
+     },
+     "link": [
+      "fue2",
+      "int2"
+     ],
+     "c": 100,
+     "cl": 1
+    },
+    {
+     "id": "xfueint2",
+     "t": "attr",
+     "n": "Tamer: Contrato",
+     "x": 429,
+     "y": -429,
+     "m": 3,
+     "fx": {
+      "xp": 0.02,
+      "luck": 0.02
+     },
+     "link": [
+      "fue5",
+      "int5"
+     ],
+     "c": 160,
+     "cl": 1
+    },
+    {
+     "id": "xfueint3",
+     "t": "attr",
+     "n": "Tamer: Patrocinio",
+     "x": 686,
+     "y": -686,
+     "m": 3,
+     "fx": {
+      "coin": 0.05,
+      "xp": 0.03
+     },
+     "link": [
+      "fue8",
+      "int8"
+     ],
+     "c": 220,
+     "cl": 1
+    },
+    {
+     "id": "xintvit1",
+     "t": "attr",
+     "n": "Tamer: Inventario",
+     "x": 172,
+     "y": 172,
+     "m": 3,
+     "fx": {
+      "healP": 0.04,
+      "coin": 0.02
+     },
+     "link": [
+      "int2",
+      "vit2"
+     ],
+     "c": 100,
+     "cl": 1
+    },
+    {
+     "id": "xintvit2",
+     "t": "attr",
+     "n": "Tamer: Proveedor",
+     "x": 429,
+     "y": 429,
+     "m": 3,
+     "fx": {
+      "magP": 0.05,
+      "luck": 0.01
+     },
+     "link": [
+      "int5",
+      "vit5"
+     ],
+     "c": 160,
+     "cl": 1
+    },
+    {
+     "id": "xintvit3",
+     "t": "attr",
+     "n": "Tamer: Mercado Negro",
+     "x": 686,
+     "y": 686,
+     "m": 3,
+     "fx": {
+      "rcChance": 0.05,
+      "acoin": 0.04
+     },
+     "link": [
+      "int8",
+      "vit8"
+     ],
+     "c": 220,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel1",
+     "t": "attr",
+     "n": "Tamer: Enfermería",
+     "x": -172,
+     "y": 172,
+     "m": 3,
+     "fx": {
+      "revSpd": 0.08,
+      "hp": 4
+     },
+     "link": [
+      "vit2",
+      "vel2"
+     ],
+     "c": 100,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel2",
+     "t": "attr",
+     "n": "Tamer: Primera Línea",
+     "x": -429,
+     "y": 429,
+     "m": 3,
+     "fx": {
+      "hpP": 0.015,
+      "spP": 0.01
+     },
+     "link": [
+      "vit5",
+      "vel5"
+     ],
+     "c": 160,
+     "cl": 1
+    },
+    {
+     "id": "xvitvel3",
+     "t": "attr",
+     "n": "Tamer: Brigada",
+     "x": -686,
+     "y": 686,
+     "m": 3,
+     "fx": {
+      "revSpd": 0.1,
+      "arm": 0.008
+     },
+     "link": [
+      "vit8",
+      "vel8"
+     ],
+     "c": 220,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue1",
+     "t": "attr",
+     "n": "Tamer: Entrenamiento",
+     "x": -172,
+     "y": -172,
+     "m": 3,
+     "fx": {
+      "dmgP": 0.015,
+      "xp": 0.01
+     },
+     "link": [
+      "vel2",
+      "fue2"
+     ],
+     "c": 100,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue2",
+     "t": "attr",
+     "n": "Tamer: Disciplina",
+     "x": -429,
+     "y": -429,
+     "m": 3,
+     "fx": {
+      "rateP": 0.015,
+      "dmgP": 0.01
+     },
+     "link": [
+      "vel5",
+      "fue5"
+     ],
+     "c": 160,
+     "cl": 1
+    },
+    {
+     "id": "xvelfue3",
+     "t": "attr",
+     "n": "Tamer: Instrucción",
+     "x": -686,
+     "y": -686,
+     "m": 3,
+     "fx": {
+      "cdr": 0.012,
+      "xp": 0.02
+     },
+     "link": [
+      "vel8",
+      "fue8"
+     ],
+     "c": 220,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_1",
+     "t": "minor",
+     "n": "Estudio IV",
+     "x": 86,
+     "y": -330,
+     "m": 5,
+     "fx": {
+      "xp": 0.03
+     },
+     "link": [
+      "fue3"
+     ],
+     "c": 90,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_2",
+     "t": "minor",
+     "n": "Estudio V",
+     "x": 172,
+     "y": -330,
+     "m": 5,
+     "fx": {
+      "xp": 0.03
+     },
+     "link": [
+      "fuet3_1"
+     ],
+     "c": 105,
+     "cl": 1
+    },
+    {
+     "id": "fuet3_3",
+     "t": "major",
+     "n": "Prodigio",
+     "x": 257,
+     "y": -330,
+     "m": 1,
+     "fx": {
+      "xp": 0.08
+     },
+     "link": [
+      "fuet3_2"
+     ],
+     "c": 800,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet6_1",
+     "t": "minor",
+     "n": "Maestría IV",
+     "x": -86,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "xp": 0.04
+     },
+     "link": [
+      "fue6"
+     ],
+     "c": 135,
+     "cl": 1
+    },
+    {
+     "id": "fuet6_2",
+     "t": "minor",
+     "n": "Estudio VI",
+     "x": -172,
+     "y": -660,
+     "m": 5,
+     "fx": {
+      "xp": 0.03
+     },
+     "link": [
+      "fuet6_1"
+     ],
+     "c": 150,
+     "cl": 1
+    },
+    {
+     "id": "fuet6_3",
+     "t": "major",
+     "n": "Instinto de Tamer",
+     "x": -257,
+     "y": -660,
+     "m": 1,
+     "fx": {
+      "dmgP": 0.05,
+      "crit": 0.02
+     },
+     "link": [
+      "fuet6_2"
+     ],
+     "c": 1100,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "fuet9_1",
+     "t": "minor",
+     "n": "Práctica IV",
+     "x": 86,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "dmgP": 0.012
+     },
+     "link": [
+      "fue9"
+     ],
+     "c": 180,
+     "cl": 1
+    },
+    {
+     "id": "fuet9_2",
+     "t": "minor",
+     "n": "Maestría V",
+     "x": 172,
+     "y": -990,
+     "m": 5,
+     "fx": {
+      "xp": 0.04
+     },
+     "link": [
+      "fuet9_1"
+     ],
+     "c": 195,
+     "cl": 1
+    },
+    {
+     "id": "fuet9_3",
+     "t": "major",
+     "n": "Leyenda",
+     "x": 257,
+     "y": -990,
+     "m": 1,
+     "fx": {
+      "xp": 0.06,
+      "dmgP": 0.05
+     },
+     "link": [
+      "fuet9_2"
+     ],
+     "c": 1400,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt3_1",
+     "t": "minor",
+     "n": "Ahorro IV",
+     "x": 330,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "coin": 0.06
+     },
+     "link": [
+      "int3"
+     ],
+     "c": 90,
+     "cl": 1
+    },
+    {
+     "id": "intt3_2",
+     "t": "minor",
+     "n": "Cosecha IV",
+     "x": 330,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "acoin": 0.06
+     },
+     "link": [
+      "intt3_1"
+     ],
+     "c": 105,
+     "cl": 1
+    },
+    {
+     "id": "intt3_3",
+     "t": "major",
+     "n": "Billetera",
+     "x": 330,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "coin": 0.12
+     },
+     "link": [
+      "intt3_2"
+     ],
+     "c": 800,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt6_1",
+     "t": "minor",
+     "n": "Suerte IV",
+     "x": 660,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "luck": 0.04
+     },
+     "link": [
+      "int6"
+     ],
+     "c": 135,
+     "cl": 1
+    },
+    {
+     "id": "intt6_2",
+     "t": "minor",
+     "n": "Ahorro V",
+     "x": 660,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "coin": 0.06
+     },
+     "link": [
+      "intt6_1"
+     ],
+     "c": 150,
+     "cl": 1
+    },
+    {
+     "id": "intt6_3",
+     "t": "major",
+     "n": "Coleccionista",
+     "x": 660,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "acoin": 0.12,
+      "rcChance": 0.08
+     },
+     "link": [
+      "intt6_2"
+     ],
+     "c": 1100,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "intt9_1",
+     "t": "minor",
+     "n": "Cosecha V",
+     "x": 990,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "acoin": 0.06
+     },
+     "link": [
+      "int9"
+     ],
+     "c": 180,
+     "cl": 1
+    },
+    {
+     "id": "intt9_2",
+     "t": "minor",
+     "n": "Suerte V",
+     "x": 990,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "luck": 0.04
+     },
+     "link": [
+      "intt9_1"
+     ],
+     "c": 195,
+     "cl": 1
+    },
+    {
+     "id": "intt9_3",
+     "t": "major",
+     "n": "Jackpot",
+     "x": 990,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "luck": 0.1,
+      "bossCoin": 0.2
+     },
+     "link": [
+      "intt9_2"
+     ],
+     "c": 1400,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt3_1",
+     "t": "minor",
+     "n": "Imán IV",
+     "x": 86,
+     "y": 330,
+     "m": 5,
+     "fx": {
+      "magP": 0.06
+     },
+     "link": [
+      "vit3"
+     ],
+     "c": 90,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_2",
+     "t": "minor",
+     "n": "Reciclaje IV",
+     "x": 172,
+     "y": 330,
+     "m": 5,
+     "fx": {
+      "rcChance": 0.06
+     },
+     "link": [
+      "vitt3_1"
+     ],
+     "c": 105,
+     "cl": 1
+    },
+    {
+     "id": "vitt3_3",
+     "t": "major",
+     "n": "Mochila Grande",
+     "x": 257,
+     "y": 330,
+     "m": 1,
+     "fx": {
+      "healP": 0.1,
+      "magP": 0.1
+     },
+     "link": [
+      "vitt3_2"
+     ],
+     "c": 800,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt6_1",
+     "t": "minor",
+     "n": "Primeros Auxilios IV",
+     "x": -86,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "healP": 0.05
+     },
+     "link": [
+      "vit6"
+     ],
+     "c": 135,
+     "cl": 1
+    },
+    {
+     "id": "vitt6_2",
+     "t": "minor",
+     "n": "Imán V",
+     "x": -172,
+     "y": 660,
+     "m": 5,
+     "fx": {
+      "magP": 0.06
+     },
+     "link": [
+      "vitt6_1"
+     ],
+     "c": 150,
+     "cl": 1
+    },
+    {
+     "id": "vitt6_3",
+     "t": "major",
+     "n": "Corazón Firme",
+     "x": -257,
+     "y": 660,
+     "m": 1,
+     "fx": {
+      "hp": 18,
+      "regen": 0.2
+     },
+     "link": [
+      "vitt6_2"
+     ],
+     "c": 1100,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "vitt9_1",
+     "t": "minor",
+     "n": "Botiquín IV",
+     "x": 86,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "healP": 0.05
+     },
+     "link": [
+      "vit9"
+     ],
+     "c": 180,
+     "cl": 1
+    },
+    {
+     "id": "vitt9_2",
+     "t": "minor",
+     "n": "Vida de Tamer IV",
+     "x": 172,
+     "y": 990,
+     "m": 5,
+     "fx": {
+      "hp": 5
+     },
+     "link": [
+      "vitt9_1"
+     ],
+     "c": 195,
+     "cl": 1
+    },
+    {
+     "id": "vitt9_3",
+     "t": "major",
+     "n": "Refugio",
+     "x": 257,
+     "y": 990,
+     "m": 1,
+     "fx": {
+      "arm": 0.03,
+      "hpP": 0.03
+     },
+     "link": [
+      "vitt9_2"
+     ],
+     "c": 1400,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt3_1",
+     "t": "minor",
+     "n": "Socorrista IV",
+     "x": -330,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "revSpd": 0.1
+     },
+     "link": [
+      "vel3"
+     ],
+     "c": 90,
+     "cl": 1
+    },
+    {
+     "id": "velt3_2",
+     "t": "minor",
+     "n": "Fortuna IV",
+     "x": -330,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "luck": 0.03
+     },
+     "link": [
+      "velt3_1"
+     ],
+     "c": 105,
+     "cl": 1
+    },
+    {
+     "id": "velt3_3",
+     "t": "major",
+     "n": "Rescatista",
+     "x": -330,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "revSpd": 0.3,
+      "revHP": 0.15
+     },
+     "link": [
+      "velt3_2"
+     ],
+     "c": 800,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt6_1",
+     "t": "minor",
+     "n": "Socorrista V",
+     "x": -660,
+     "y": -86,
+     "m": 5,
+     "fx": {
+      "revSpd": 0.1
+     },
+     "link": [
+      "vel6"
+     ],
+     "c": 135,
+     "cl": 1
+    },
+    {
+     "id": "velt6_2",
+     "t": "minor",
+     "n": "Fortuna V",
+     "x": -660,
+     "y": -172,
+     "m": 5,
+     "fx": {
+      "luck": 0.03
+     },
+     "link": [
+      "velt6_1"
+     ],
+     "c": 150,
+     "cl": 1
+    },
+    {
+     "id": "velt6_3",
+     "t": "major",
+     "n": "Viento a Favor",
+     "x": -660,
+     "y": -257,
+     "m": 1,
+     "fx": {
+      "spP": 0.05,
+      "dodge": 0.02
+     },
+     "link": [
+      "velt6_2"
+     ],
+     "c": 1100,
+     "cl": 0,
+     "notable": 1
+    },
+    {
+     "id": "velt9_1",
+     "t": "minor",
+     "n": "Táctica IV",
+     "x": -990,
+     "y": 86,
+     "m": 5,
+     "fx": {
+      "spP": 0.015
+     },
+     "link": [
+      "vel9"
+     ],
+     "c": 180,
+     "cl": 1
+    },
+    {
+     "id": "velt9_2",
+     "t": "minor",
+     "n": "Reflejos IV",
+     "x": -990,
+     "y": 172,
+     "m": 5,
+     "fx": {
+      "dodge": 0.005
+     },
+     "link": [
+      "velt9_1"
+     ],
+     "c": 195,
+     "cl": 1
+    },
+    {
+     "id": "velt9_3",
+     "t": "major",
+     "n": "Mente Rápida",
+     "x": -990,
+     "y": 257,
+     "m": 1,
+     "fx": {
+      "cdr": 0.03,
+      "rateP": 0.03
+     },
+     "link": [
+      "velt9_2"
+     ],
+     "c": 1400,
+     "cl": 0,
+     "notable": 1
     }
    ]
   }

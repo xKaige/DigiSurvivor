@@ -58,6 +58,11 @@ const Gate = {
     cam.x = 0; cam.y = A.h / 2 - 150;
     Bosses.spawn();                                   // el jefe que tocaba, arriba de la plataforma
     const b = en[en.length - 1]; if (b) { b.x = 0; b.y = -A.h / 2 + 120; b.pt = 3; }
+    // a medida que avanza la partida, chance de que sean DOS jefes (hasta 50%; cada uno con 80% de la vida)
+    if (Math.random() < Math.min(0.5, Math.max(0, (t - 180) / 1200))) {
+      Bosses.spawn(); const c = en[en.length - 1];
+      if (c && c !== b) { c.x = 260; c.y = -A.h / 2 + 140; c.pt = 4.5; b.x = -260; for (const e of [b, c]) { e.hp *= 0.8; e.mh = e.hp; } setTimeout(() => Bosses.banner('¡DOS JEFES!'), 2700); }
+    }
     Bosses.next = Infinity;                           // no se abre otra mientras están acá
     this.g = null; this.cd = null;
   },

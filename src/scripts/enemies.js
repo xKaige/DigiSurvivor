@@ -100,7 +100,8 @@ const Enemies = {
   // crea un enemigo de la especie i (nivel lv) en (x, y), con su patrón de movimiento y su variante de ataque
   make(i, lv, x, y, mv) {
     const d = this.data.list[i], K = this.data.kinds[d.kind];
-    const hp = (2 + t / this.HPT + Math.pow(t / this.HPQ, this.HPE)) * this.HM[lv] * K.hp;
+    // más vida con más jugadores (+60% por cada uno: en party se rompía todo)
+    const hp = (2 + t / this.HPT + Math.pow(t / this.HPQ, this.HPE)) * this.HM[lv] * K.hp * (1 + 0.6 * Math.max(0, P.length - 1));
     const e = { x, y, et: i, kd: d.kind,
       k: d.kind === 'swarm' ? 1 : d.kind === 'tank' ? 2 : 0, ti: lv, hp, mh: hp,
       sp: (55 + Math.random() * 25 + Math.min(45, t * 0.12)) * K.sp * (1 + 0.04 * lv) * (typeof Challenge !== 'undefined' && Challenge.has('fast') ? 1.3 : 1),
