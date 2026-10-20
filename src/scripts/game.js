@@ -502,7 +502,7 @@ function hostSync(dt) {
   const r = v => Math.round(v), r2 = v => Math.round(v * 100) / 100;
   const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
   const pl = P.map(q => {
-    const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, alt: q.alt, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp };
+    const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, alt: q.alt, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp, bf: Explore.bfSync(q) };
     if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs });
     return o;
   });
@@ -517,7 +517,7 @@ function hostSync(dt) {
   const F = ef.map(o => ({ k: o.k, x: o.x == null ? null : r(o.x), y: o.y == null ? null : r(o.y), R: o.R && r(o.R), R0: o.R0 && r(o.R0), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx }));
   // números de daño y textos nuevos desde el sync anterior (se marcan una sola vez y se reparten por cercanía)
   const X = fx.filter(f => !f.s).slice(-40).map(f => { f.s = 1; return { x: r(f.x), y: r(f.y), txt: f.txt, col: f.col, sz: f.sz, l: r2(f.l) }; });
-  const common = { type: 'sync', P: pl, it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })), gt: Gate.sync(), fn: Finale.sync(), wx: Weather.sync(),
+  const common = { type: 'sync', P: pl, it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })), gt: Gate.sync(), fn: Finale.sync(), wx: Weather.sync(), xo: Explore.sync(),
     t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down, bf: Bosses.fast ? 1 : 0 };
   const al = P.filter(q => !q.dead);
   for (const g of cs) {
@@ -583,6 +583,7 @@ function applyOnlineSync(data) {
   if (data.gt) Gate.apply(data.gt);
   if ('fn' in data) Finale.apply(data.fn);
   if (data.wx) Weather.apply(data.wx);
+  if (data.xo) Explore.apply(data.xo);
   if (data.fx) for (const f of data.fx) if (fx.length < MAX_FX) fx.push(f);
 }
 
@@ -625,7 +626,7 @@ async function start(m,ids,los){
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=xpNeed(1);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Weather.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Weather.reset();Explore.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
   renderLegend();Sound.music(true);if(typeof Achievements!=='undefined')Achievements.onStart();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -1318,7 +1319,7 @@ function update(dt){
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
   if(tg){if(td<tg.mag||Items.magT>0||g.mg){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0||g.mg?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN*xpMul();g.dead=1;Sound.play('gem')}}}
  gems=gems.filter(g=>!g.dead);
- Items.update(dt);
+ Items.update(dt);Explore.tick(dt);
  if(xp>=need)levelUp();
  for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);if(ef.length>MAX_EF){const wn=ef.filter(o=>o.k==='wline'||o.k==='wcirc'||o.k==='pool'),vi=ef.filter(o=>o.k!=='wline'&&o.k!=='wcirc'&&o.k!=='pool');ef=wn.concat(vi.slice(Math.max(0,vi.length-(MAX_EF-wn.length))))}   // tope de efectos (los avisos de ataque nunca se descartan)
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
@@ -1345,7 +1346,7 @@ function draw(){
  Gate.drawWorld();   // Digital Gate (gate.js)
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
- Items.draw();
+ Explore.draw();Items.draw();
  const vx0=cam.x-W/2-160,vx1=cam.x+W/2+160,vy0=cam.y-H/2-200,vy1=cam.y+H/2+200;
  const ents=[];   // lo que puede quedar detrás de un árbol (World.drawTall)
  const vis=en.filter(e=>e.bo!=null||!(e.x<vx0||e.x>vx1||e.y<vy0||e.y>vy1)).sort((a,b)=>a.y-b.y);   // fuera de pantalla no se dibuja; de atrás para adelante (el de más abajo queda delante)
@@ -1374,6 +1375,7 @@ function drawPointers(){
  const me=isOnline?P[myIdx]:null,ox=me&&!me.dead?me.x:cam.x,oy=me&&!me.dead?me.y:cam.y,list=[];
  if(mode>1)P.forEach((q,i)=>{if(isOnline&&i===myIdx)return;list.push({x:q.x,y:q.y-30,col:PC[i],txt:(q.dead?'✝ ':'')+pname(i)})});
  if(Gate.g&&!World.arena)list.push({x:Gate.g[0],y:Gate.g[1]-60,col:'#3dff7a',txt:'Digital Gate'});
+ list.push(...Explore.pointers(ox,oy));   // cofres y zonas de datos (explore.js)
  for(const o of list){const sx=o.x-cam.x+W/2,sy=o.y-cam.y+H/2;if(sx>20&&sx<W-20&&sy>20&&sy<H-20)continue;
   const a=Math.atan2(sy-H/2,sx-W/2),mg=46,k=Math.min((W/2-mg)/Math.max(1e-6,Math.abs(Math.cos(a))),(H/2-mg)/Math.max(1e-6,Math.abs(Math.sin(a)))),px=W/2+Math.cos(a)*k,py=H/2+Math.sin(a)*k;
   const txt=o.txt+' · '+Math.round(Math.hypot(o.x-ox,o.y-oy)/40)+' m';
@@ -1393,6 +1395,7 @@ function dEn(e){
 function dPl(q){const s=q.stage|0,hh=96;
   // dash: estela de imágenes que se apagan; y las cargas (dos rayitas bajo tus pies)
   if(q.gh&&q.gh.length){for(const g of q.gh){g.l-=1/60;if(g.l>0){cx.globalAlpha=g.l*1.6;drawBuddy(q,s,g.x,g.y,q.face,1);cx.globalAlpha=1}}q.gh=q.gh.filter(g=>g.l>0)}
+  Explore.drawBuffs(q);   // potenciadores activos (explore.js)
   // aggro del jefe: mira roja sobre el jugador que persigue (solo con más de un jugador)
   if(!q.dead&&P.length>1&&en.some(e=>e.bo!=null&&e.ag===q.id)){const y=q.y+48-(q.dh||96)-26,s=7+Math.sin(t*8);cx.strokeStyle='#ff3d3d';cx.lineWidth=2.5;cx.beginPath();cx.arc(q.x,y,s,0,6.283);cx.moveTo(q.x-s-5,y);cx.lineTo(q.x+s+5,y);cx.moveTo(q.x,y-s-5);cx.lineTo(q.x,y+s+5);cx.stroke()}
   if(!q.dead&&(!isOnline||q.id===myIdx)&&q.dc!=null&&q.dc<DASH_N){for(let i=0;i<DASH_N;i++){const f=Math.max(0,Math.min(1,q.dc-i));cx.fillStyle='rgba(0,0,0,.5)';cx.fillRect(q.x-17+i*18,q.y+54,16,4);cx.fillStyle=f>=1?'#3fd0ff':'rgba(63,208,255,.45)';cx.fillRect(q.x-17+i*18,q.y+54,16*f,4)}}

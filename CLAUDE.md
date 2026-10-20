@@ -27,6 +27,11 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - **Imán**: sin círculo de alcance; el ítem marca todas las gemas (`g.mg`) y siguen hasta que las juntás.
 - **Arreglos visuales**: el empuje entre enemigos usa el radio de los dos (antes se encimaban y se tapaban), los que quedan en el mismo punto se separan, se dibujan ordenados por `y` y `World.spawnPos` exige quedar fuera de la vista de TODOS los jugadores (`World.offAll`).
 
+## Exploración del mapa (`explore.js`, `Explore`, después de weather.js; 21/10/2026, a pedido: que incite a explorar)
+- Cada 18–32 s aparece algo a 500–1300 px de un jugador (lugar libre y con camino; nunca en la arena ni en el final): **cofres** (hasta 3; 1 de cada 6 dorado) que se abren pasando por encima y sueltan 3 ítems (dorado: 5 y siempre un potenciador) + gemas, y **Zonas de datos** (1 a la vez, desde los 45 s): quedarte adentro `ZONE_T` (8) s la completa (más rápido con más jugadores adentro; afuera se descarga despacio), mientras tanto llegan tandas de Digimon (`wave`); al terminar da 60% del nivel de XP, gemas con imán y un potenciador a los que estén adentro.
+- **Potenciadores** (`BUFFS`, ítems `buff_*` de Items, sin sprite: `drawBuffItem`): Poder +50% daño, Frenesí ataque/skills más rápidos, Turbo +40% velocidad, Coraza 30% menos daño, por `BUFF_T` (15) s. Se suman a `q.m` y se restan al vencer (`buffTick`); `q.bf` = segundos que quedan (aura y barritas bajo el jugador). También caen de los Digimon con poco peso.
+- Flechas en el borde (`Explore.pointers` dentro de `drawPointers`) hacia lo que está a menos de 1800 px. Online: `xo` en el sync y `bf` en cada jugador (el invitado no simula los potenciadores).
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.
@@ -86,7 +91,7 @@ assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de 
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `finale.js` → `weather.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `finale.js` → `weather.js` → `explore.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 

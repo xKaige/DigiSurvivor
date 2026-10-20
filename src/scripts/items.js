@@ -13,14 +13,17 @@ const Items = {
     digicore:  { n: 'Digicore',        w: 14, col: '#ffe14d', d: 'Da un 40% de la experiencia del nivel' },
     magnet:    { n: 'Imán de datos',   w: 10, col: '#5cf2ff', d: 'Atrae toda la experiencia del mapa' },
     floppy:    { n: 'Recovery Floppy', w: 8,  col: '#ff7ad9', d: 'Cura toda la vida y da 2 s de invulnerabilidad' },
-    xantibody: { n: 'X-Antibody',      w: 0,  col: '#c05bff', d: 'Despierta el X-Antibody: +25% de daño y +10% de velocidad' }
+    xantibody: { n: 'X-Antibody',      w: 0,  col: '#c05bff', d: 'Despierta el X-Antibody: +25% de daño y +10% de velocidad' },
+    // potenciadores temporales (explore.js): sin sprite, los dibuja Explore.drawBuffItem
+    buff_pow:  { n: 'Poder',  w: 4, col: '#ff4a4a', buff: 1 }, buff_frz: { n: 'Frenesí', w: 4, col: '#ffd23f', buff: 1 },
+    buff_spd:  { n: 'Turbo',  w: 4, col: '#3fd0ff', buff: 1 }, buff_arm: { n: 'Coraza',  w: 4, col: '#b35cff', buff: 1 }
   },
   img: {},
   on: [],           // ítems en el piso { x, y, k, l }
   magT: 0,          // segundos que queda el imán activo
 
   load() {
-    for (const k in this.defs) { const i = new Image(); i.src = 'assets/sprites/items/' + k + '.png'; this.img[k] = i; }
+    for (const k in this.defs) { if (this.defs[k].buff) continue; const i = new Image(); i.src = 'assets/sprites/items/' + k + '.png'; this.img[k] = i; }
   },
   reset() { this.on = []; this.magT = 0; },
 
@@ -61,6 +64,7 @@ const Items = {
   },
   apply(q, k) {
     const D = this.defs[k];
+    if (D.buff) { Explore.buff(q, k); return; }   // potenciador (explore.js)
     const heal = 1 + ((q.m && q.m.healP) || 0);   // curación de ítems (árbol de Vacuna)
     if (k === 'meat') q.hp = Math.min(q.max, q.hp + q.max * 0.25 * heal);
     else if (k === 'floppy') { q.hp = q.max; q.inv = Math.max(q.inv, 2); }
@@ -74,6 +78,7 @@ const Items = {
   // ---------- Dibujo (anfitrión y cliente) ----------
   draw() {
     for (const it of this.on) {
+      if (this.defs[it.k] && this.defs[it.k].buff) { if (!(it.l != null && it.l < 5 && Math.floor(t * 8) % 2)) Explore.drawBuffItem(it); continue; }
       const im = this.img[it.k], D = this.defs[it.k]; if (!im || !im.complete || !D) continue;
       const bob = Math.sin(t * 4 + it.x * 0.05) * 4, s = 2, w = im.naturalWidth * s, h = im.naturalHeight * s;
       if (it.l != null && it.l < 5 && Math.floor(t * 8) % 2) continue;   // parpadea antes de desaparecer
