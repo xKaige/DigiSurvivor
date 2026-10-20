@@ -82,7 +82,7 @@ const Enemies = {
   // vida = (2 + t/45) × [nivel] × kind.hp · velocidad con tope · daño por nivel. group: los "swarm" vienen de a 3.
   HPT: 60,          // cada HPT segundos los enemigos ganan la vida base de uno nuevo
   HPQ: 180,         // y además (t/HPQ)^HPE: crece cada vez más rápido desde mitad de partida (el daño del jugador escala mucho):
-  HPE: 2.4,         //   ~×1,5 de vida a los 5 min, ×2 a los 8, ×2,5 a los 10 y ×3 a los 12 (comparado con antes)
+  HPE: 2.2,         //   (2,4 → 2,2 a pedido: a los 10 min ~13% menos vida y a los 20 ~26% menos; costaba matarlos)
   DMT: 300,         // desde DMT_0 segundos, el daño de los enemigos sube 1× cada DMT segundos
   DMT_0: 180,
   HM: [1, 1.45, 2.1, 2.85, 3.9, 5.1],

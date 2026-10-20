@@ -62,7 +62,7 @@ const Bosses = {
     this.n++;
     const a = Math.random() * 6.283, d = Math.hypot(W, H) / 2 + 60;
     // la vida escala con la etapa del más evolucionado (0,5× en Bebé … 1,75× en forma final), el ciclo y la cantidad de jugadores
-    const st = Math.max(...P.map(q => q.stage | 0)), hp = B.hp * (0.5 + 0.25 * st) * (1 + cyc * 1.5) * (1 + 0.6 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores y, desde los 4 min, con el tiempo
+    const st = Math.max(...P.map(q => q.stage | 0)), hp = 1.6 * B.hp * (0.5 + 0.25 * st) * (1 + cyc * 1.5) * (1 + 0.6 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores y, desde los 4 min, con el tiempo
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
       hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5) * (1 + Math.max(0, t - 240) / 600), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
       pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0, t0: t });
@@ -71,8 +71,8 @@ const Bosses = {
   // comportamiento de un jefe en el loop de enemigos (tg = jugador más cercano, dd = distancia, a = ángulo hacia él)
   // Ataques extra de todos los jefes (pedido: más mecánicas). Fase 1 suma el terremoto; desde el 50% de vida (furia)
   // suman espiral de balas, lluvia de impactos y cruz de rayos, atacan más seguido y se mueven más rápido.
-  P1: [{ n: 'Terremoto', k: 'quake' }],
-  P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz', k: 'cross' }, { n: 'Terremoto', k: 'quake' }],
+  P1: [{ n: 'Terremoto', k: 'quake' }, { n: 'Muralla', k: 'wall' }],
+  P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz', k: 'cross' }, { n: 'Terremoto', k: 'quake' }, { n: 'Orbes', k: 'homing' }],
   act(e, dt, tg, dd, a) {
     const B = this.def(e.bo); if (!B) return;
     e.at -= dt;
@@ -128,11 +128,20 @@ const Bosses = {
       for (let j = 0; j < n; j++) Enemies.lineBomb(e.x, e.y, g0 + j / n * 6.283, 1100, 58, 1.15, e, 1.3, '#ff3d81');
     } else if (k.k === 'quake') {  // tres anillos que van saliendo del jefe: hay que meterse entre uno y otro
       [[0, 140, 0.9], [140, 280, 1.45], [280, 420, 2.0]].forEach(([r0, r1, d]) => Enemies.bomb(e.x, e.y, r1, d, e, 1.2, '#ffd23f', r0));
-    } else if (k.k === 'summon') {
-      const ti = Math.max(0, Math.max(...P.map(q => q.stage | 0)) - 1);
-      for (let j = 0; j < k.c; j++) {
-        spawn(ti); const m = en[en.length - 1], g = j / k.c * 6.283;
-        const sp = World.freeSpot(e.x + Math.cos(g) * (e.r + 30), e.y + Math.sin(g) * (e.r + 30), m); m.x = sp[0]; m.y = sp[1];
+    } else if (k.k === 'wall') {   // muralla: una fila de balas que avanza hacia el jugador, con un hueco para pasar
+      const n = 15, gap = 4 + ((Math.random() * (n - 8)) | 0), px = -Math.sin(a), py = Math.cos(a);
+      for (let j = 0; j < n; j++) { if (j === gap || j === gap + 1) continue; const o = (j - (n - 1) / 2) * 42;
+        eb.push({ x: e.x + px * o, y: e.y + py * o, vx: Math.cos(a) * 170, vy: Math.sin(a) * 170, l: 5, el: e.el, dm: e.dm, r: 10 }); }
+    } else if (k.k === 'homing') { // orbes que te persiguen unos segundos (hm = segundos que siguen apuntando)
+      const n = 4 + Math.min(4, e.cyc * 2);
+      for (let j = 0; j < n; j++) { const g = j / n * 6.283; eb.push({ x: e.x, y: e.y, vx: Math.cos(g) * 160, vy: Math.sin(g) * 160, l: 6, el: e.el, dm: e.dm, r: 11, hm: 3.2 }); }
+    } else if (k.k === 'summon') {   // refuerzos del jefe: Digimon del plantel marcados (aro violeta, mn), como mucho 6 vivos a la vez
+      const ti = Math.max(0, Math.max(...P.map(q => q.stage | 0)) - 1), n = Math.min(k.c, 6 - en.filter(x => x.mn).length);
+      if (n > 0) this.banner(B.name + ' invoca refuerzos');
+      for (let j = 0; j < n; j++) {
+        const i = Enemies.choose(ti); if (i == null) break;
+        const g = j / n * 6.283, m = Enemies.make(i, ti, e.x + Math.cos(g) * (e.r + 40), e.y + Math.sin(g) * (e.r + 40)); m.mn = 1;
+        ef.push({ k: 'ring', x: m.x, y: m.y, R: 46, col: '#c05bff', l: 0.6, m: 0.6 });
       }
     }
   },

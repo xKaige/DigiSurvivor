@@ -41,7 +41,7 @@ const EVO_LEVELS = FAST ? [2,3,4,5] : [5,10,15,20];  // etapas 1,2,3,4 (cada 5 n
 const LINE_LEVEL = FAST ? 6 : 25;                    // elección de la evolución final (rama)
 const REQ_FACTOR = FAST ? 0.4 : 1;                   // en modo FAST los requisitos de stats de las ramas se achican
 // Experiencia para el próximo nivel: need = need × XP_GROW + XP_ADD (más bajo = se sigue subiendo en el late game)
-let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7, XP_GAIN = 0.65;   // XP_GAIN: multiplicador de toda la XP que juntás
+let XP_GROW = 1.13, XP_ADD = 6, XP_START = 7, XP_GAIN = 0.75;   // XP_GAIN: multiplicador de toda la XP que juntás
 // XP para pasar del nivel L al L+1. Con XP_PACE (abajo) la forma final llega cerca del minuto 25 en una partida de 30
 // (lo pidió el usuario: antes se llegaba a los 7'). XP_GROW/XP_ADD/XP_START ya no se usan.
 const xpNeed = L => Math.round(4 * Math.pow(L, 1.65) + 4);
@@ -898,7 +898,7 @@ function drawBuddy(q,s,x,y,f,a){
  let row = 0, col = 0;
  if(q.dead){
   row = 2; col = 0;
- }else if(q.atkT > q.rate - 0.25 || q.skT > 0){
+ }else if(!q.moving && (q.atkT > q.rate - 0.25 || q.skT > 0)){   // pose de ataque solo quieto (caminando con la pose fija parecía que patinaba)
   row = 5; col = 0;
  }else if(q.moving){
   row = 1; col = Math.floor(t * 6) % 2;
@@ -928,9 +928,9 @@ function drawBuddy(q,s,x,y,f,a){
  }
 
  if(f < 0) cx.scale(-1, 1);
- cx.drawImage(cv, col * fw, row * fh, fw, fh, -ox, 48 - B.y1 * k, fw * k, fh * k);
+ cx.drawImage(cv, col * fw, row * fh + 1, fw, fh - 2, -ox, 48 - B.y1 * k + k, fw * k, (fh - 2) * k);   // 1 px menos arriba y abajo: con zoom no entero se colaba la fila vecina de la hoja (líneas)
  // X-Antibody sin forma X propia: "glitch" violeta intermitente
- if(q.xa && !xs && !q.dead && Math.floor(t * 10) % 3 === 0){cx.globalAlpha=a*.45;cx.filter='hue-rotate(260deg) saturate(3)';cx.drawImage(cv, col * fw, row * fh, fw, fh, -ox + (Math.random() * 6 - 3), 48 - B.y1 * k, fw * k, fh * k);cx.filter='none'}
+ if(q.xa && !xs && !q.dead && Math.floor(t * 10) % 3 === 0){cx.globalAlpha=a*.45;cx.filter='hue-rotate(260deg) saturate(3)';cx.drawImage(cv, col * fw, row * fh + 1, fw, fh - 2, -ox + (Math.random() * 6 - 3), 48 - B.y1 * k + k, fw * k, (fh - 2) * k);cx.filter='none'}
  cx.restore();
 }
 
@@ -953,12 +953,13 @@ function drawEnemy(e){
  const th=e.bo!=null?h*.68:dd?Math.max(enMin()*(e.kd==='swarm'?.9:1),ENEMY_H[Math.min(5,dd.tier)]*(e.kd==='tank'?1.25:e.kd==='swarm'?.9:1)):h*.62;
  const kk=th/Math.max(B.y1-B.y0,(B.x1-B.x0)*.75),w=(B.x1-B.x0)*kk*1.35;
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
+ if(e.mn){cx.save();cx.strokeStyle='#c05bff';cx.lineWidth=2.5;cx.globalAlpha=.8;cx.beginPath();cx.ellipse(e.x,e.y+h/2-2,e.r*1.3,6,0,0,6.283);cx.stroke();cx.restore()}   // refuerzo del jefe: aro violeta
  if(e.bo!=null&&e.p2){cx.save();cx.globalAlpha=.22+.1*Math.sin(t*8);cx.fillStyle='#ff2d2d';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.55,th*.6,0,0,6.283);cx.fill();cx.restore()}   // jefe enfurecido (fase 2): aura roja
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
  cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
  if(Math.cos(e.ang)<0)cx.scale(-1,1);
- cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh,fw,fh,-(B.x0+B.x1)/2*kk,h/2-2-B.y1*kk,fw*kk,fh*kk);   // golpeado: silueta blanca
+ cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh+1,fw,fh-2,-(B.x0+B.x1)/2*kk,h/2-2-B.y1*kk+kk,fw*kk,(fh-2)*kk);   // golpeado: silueta blanca
  cx.restore();return true}
 
 function startEvo(s){evo={t:0,s,done:0};Sound.play('evo');const v=$('evt');v.style.display='block';v.textContent='¡Tu compañero está digievolucionando!'}
@@ -1273,7 +1274,8 @@ function update(dt){
   else{if(dd>=230){e.x+=Math.cos(a)*e.sp*dt;e.y+=Math.sin(a)*e.sp*dt}e.cd-=dt;if(e.cd<=0&&dd<520){e.cd=2.2+Math.random();const n=e.ti>=3?5:e.ti>=2?3:1,vb=230+25*e.ti;for(let j=0;j<n;j++){const aa=a+(j-(n-1)/2)*.28;eb.push({x:e.x,y:e.y,vx:Math.cos(aa)*vb,vy:Math.sin(aa)*vb,l:3,el:e.el,dm:e.dm})}}}   // aparición vieja (spawnOld)
   e.fl-=dt;
   for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4){Stats.lastTouch=e;hurt(q,e.bo!=null?12*e.dm:Enemies.touch(e),e.el);Stats.lastTouch=null}}
- for(const b of eb){b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el,'b');b.l=0}}eb=eb.filter(b=>b.l>0);
+ for(const b of eb){if(b.hm>0){b.hm-=dt;let tq=null,td=1e9;for(const q of al){const d=Math.hypot(q.x-b.x,q.y-b.y);if(d<td){td=d;tq=q}}if(tq){const sp=Math.hypot(b.vx,b.vy),cur=Math.atan2(b.vy,b.vx),want=Math.atan2(tq.y-b.y,tq.x-b.x);let da=want-cur;da=Math.atan2(Math.sin(da),Math.cos(da));const na=cur+Math.max(-2.2*dt,Math.min(2.2*dt,da));b.vx=Math.cos(na)*sp;b.vy=Math.sin(na)*sp}}   // orbes teledirigidos de los jefes (giran de a poco)
+  b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el,'b');b.l=0}}eb=eb.filter(b=>b.l>0);
  buildEG();
  for(const a of en){if(a.st===2)continue;const R=a.r*1.6;enNear(a.x,a.y,R,b=>{if(b._i<=a._i||b.st===2)return;const d=Math.hypot(a.x-b.x,a.y-b.y);
   if(d>0&&d<R){const k=(R-d)/2/d,px=(a.x-b.x)*k,py=(a.y-b.y)*k;World.move(a,px,py);World.move(b,-px,-py)}})}   // empuje entre enemigos (solo vecinos de la grilla)

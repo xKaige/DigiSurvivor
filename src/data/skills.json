@@ -182,6 +182,1236 @@
       "w": 60,
       "h": 49,
       "n": 6
+    },
+    "fire01": {
+      "file": "fire01.png",
+      "w": 16,
+      "h": 16,
+      "n": 3
+    },
+    "fire02": {
+      "file": "fire02.png",
+      "w": 16,
+      "h": 16,
+      "n": 3
+    },
+    "fire03": {
+      "file": "fire03.png",
+      "w": 16,
+      "h": 16,
+      "n": 3
+    },
+    "fire04": {
+      "file": "fire04.png",
+      "w": 16,
+      "h": 16,
+      "n": 3
+    },
+    "fire05": {
+      "file": "fire05.png",
+      "w": 16,
+      "h": 16,
+      "n": 3
+    },
+    "fire07": {
+      "file": "fire07.png",
+      "w": 22,
+      "h": 21,
+      "n": 4
+    },
+    "fire09": {
+      "file": "fire09.png",
+      "w": 32,
+      "h": 33,
+      "n": 3
+    },
+    "fire10": {
+      "file": "fire10.png",
+      "w": 83,
+      "h": 39,
+      "n": 4
+    },
+    "fire11": {
+      "file": "fire11.png",
+      "w": 68,
+      "h": 43,
+      "n": 3
+    },
+    "fire12": {
+      "file": "fire12.png",
+      "w": 77,
+      "h": 69,
+      "n": 4
+    },
+    "fire13": {
+      "file": "fire13.png",
+      "w": 35,
+      "h": 16,
+      "n": 4
+    },
+    "fire14": {
+      "file": "fire14.png",
+      "w": 102,
+      "h": 37,
+      "n": 4
+    },
+    "fire15": {
+      "file": "fire15.png",
+      "w": 24,
+      "h": 24,
+      "n": 4
+    },
+    "fire16": {
+      "file": "fire16.png",
+      "w": 68,
+      "h": 43,
+      "n": 3
+    },
+    "fire17": {
+      "file": "fire17.png",
+      "w": 44,
+      "h": 12,
+      "n": 4
+    },
+    "ball02": {
+      "file": "ball02.png",
+      "w": 16,
+      "h": 16,
+      "n": 4
+    },
+    "ball03": {
+      "file": "ball03.png",
+      "w": 16,
+      "h": 16,
+      "n": 4
+    },
+    "ball04": {
+      "file": "ball04.png",
+      "w": 16,
+      "h": 16,
+      "n": 4
+    },
+    "ball05": {
+      "file": "ball05.png",
+      "w": 24,
+      "h": 24,
+      "n": 8
+    },
+    "ball06": {
+      "file": "ball06.png",
+      "w": 33,
+      "h": 16,
+      "n": 4
+    },
+    "ball07": {
+      "file": "ball07.png",
+      "w": 10,
+      "h": 10,
+      "n": 1
+    },
+    "ball09": {
+      "file": "ball09.png",
+      "w": 24,
+      "h": 24,
+      "n": 4
+    },
+    "ball10": {
+      "file": "ball10.png",
+      "w": 16,
+      "h": 16,
+      "n": 4
+    },
+    "ball11": {
+      "file": "ball11.png",
+      "w": 12,
+      "h": 8,
+      "n": 1
+    },
+    "ball12": {
+      "file": "ball12.png",
+      "w": 22,
+      "h": 22,
+      "n": 3
+    },
+    "ball13": {
+      "file": "ball13.png",
+      "w": 32,
+      "h": 32,
+      "n": 1
+    },
+    "ball14": {
+      "file": "ball14.png",
+      "w": 22,
+      "h": 20,
+      "n": 4
+    },
+    "ball15": {
+      "file": "ball15.png",
+      "w": 21,
+      "h": 17,
+      "n": 4
+    },
+    "ball16": {
+      "file": "ball16.png",
+      "w": 29,
+      "h": 19,
+      "n": 6
+    },
+    "ball17": {
+      "file": "ball17.png",
+      "w": 21,
+      "h": 17,
+      "n": 4
+    },
+    "ball18": {
+      "file": "ball18.png",
+      "w": 23,
+      "h": 11,
+      "n": 3
+    },
+    "ball19": {
+      "file": "ball19.png",
+      "w": 10,
+      "h": 16,
+      "n": 1
+    },
+    "ball20": {
+      "file": "ball20.png",
+      "w": 10,
+      "h": 9,
+      "n": 1
+    },
+    "ball21": {
+      "file": "ball21.png",
+      "w": 26,
+      "h": 26,
+      "n": 4
+    },
+    "ball22": {
+      "file": "ball22.png",
+      "w": 14,
+      "h": 15,
+      "n": 3
+    },
+    "ball23": {
+      "file": "ball23.png",
+      "w": 36,
+      "h": 36,
+      "n": 3
+    },
+    "ball24": {
+      "file": "ball24.png",
+      "w": 36,
+      "h": 36,
+      "n": 3
+    },
+    "ball25": {
+      "file": "ball25.png",
+      "w": 63,
+      "h": 54,
+      "n": 3
+    },
+    "ball26": {
+      "file": "ball26.png",
+      "w": 60,
+      "h": 50,
+      "n": 5
+    },
+    "ball27": {
+      "file": "ball27.png",
+      "w": 24,
+      "h": 24,
+      "n": 6
+    },
+    "ball28": {
+      "file": "ball28.png",
+      "w": 30,
+      "h": 31,
+      "n": 4
+    },
+    "ball29": {
+      "file": "ball29.png",
+      "w": 16,
+      "h": 16,
+      "n": 1
+    },
+    "ball30": {
+      "file": "ball30.png",
+      "w": 32,
+      "h": 32,
+      "n": 8
+    },
+    "ball31": {
+      "file": "ball31.png",
+      "w": 45,
+      "h": 22,
+      "n": 2
+    },
+    "ball32": {
+      "file": "ball32.png",
+      "w": 46,
+      "h": 34,
+      "n": 1
+    },
+    "ball33": {
+      "file": "ball33.png",
+      "w": 90,
+      "h": 86,
+      "n": 4
+    },
+    "ball34": {
+      "file": "ball34.png",
+      "w": 20,
+      "h": 24,
+      "n": 1
+    },
+    "ball35": {
+      "file": "ball35.png",
+      "w": 51,
+      "h": 48,
+      "n": 9
+    },
+    "ball36": {
+      "file": "ball36.png",
+      "w": 68,
+      "h": 72,
+      "n": 3
+    },
+    "ball37": {
+      "file": "ball37.png",
+      "w": 32,
+      "h": 33,
+      "n": 4
+    },
+    "ball38": {
+      "file": "ball38.png",
+      "w": 32,
+      "h": 32,
+      "n": 6
+    },
+    "bullet02": {
+      "file": "bullet02.png",
+      "w": 24,
+      "h": 24,
+      "n": 4
+    },
+    "bullet04": {
+      "file": "bullet04.png",
+      "w": 13,
+      "h": 13,
+      "n": 4
+    },
+    "bullet05": {
+      "file": "bullet05.png",
+      "w": 23,
+      "h": 16,
+      "n": 6
+    },
+    "bullet07": {
+      "file": "bullet07.png",
+      "w": 34,
+      "h": 10,
+      "n": 4
+    },
+    "bullet08": {
+      "file": "bullet08.png",
+      "w": 23,
+      "h": 16,
+      "n": 3
+    },
+    "bullet09": {
+      "file": "bullet09.png",
+      "w": 16,
+      "h": 24,
+      "n": 2
+    },
+    "bullet10": {
+      "file": "bullet10.png",
+      "w": 16,
+      "h": 17,
+      "n": 4
+    },
+    "bullet11": {
+      "file": "bullet11.png",
+      "w": 34,
+      "h": 10,
+      "n": 4
+    },
+    "bullet12": {
+      "file": "bullet12.png",
+      "w": 25,
+      "h": 29,
+      "n": 2
+    },
+    "bullet15": {
+      "file": "bullet15.png",
+      "w": 34,
+      "h": 10,
+      "n": 4
+    },
+    "bullet16": {
+      "file": "bullet16.png",
+      "w": 40,
+      "h": 15,
+      "n": 3
+    },
+    "bullet17": {
+      "file": "bullet17.png",
+      "w": 55,
+      "h": 19,
+      "n": 4
+    },
+    "bullet19": {
+      "file": "bullet19.png",
+      "w": 34,
+      "h": 13,
+      "n": 4
+    },
+    "bullet20": {
+      "file": "bullet20.png",
+      "w": 16,
+      "h": 8,
+      "n": 1
+    },
+    "bullet21": {
+      "file": "bullet21.png",
+      "w": 28,
+      "h": 16,
+      "n": 3
+    },
+    "bullet22": {
+      "file": "bullet22.png",
+      "w": 34,
+      "h": 13,
+      "n": 4
+    },
+    "bullet23": {
+      "file": "bullet23.png",
+      "w": 33,
+      "h": 13,
+      "n": 4
+    },
+    "bullet24": {
+      "file": "bullet24.png",
+      "w": 64,
+      "h": 57,
+      "n": 3
+    },
+    "bullet25": {
+      "file": "bullet25.png",
+      "w": 17,
+      "h": 11,
+      "n": 1
+    },
+    "bullet26": {
+      "file": "bullet26.png",
+      "w": 43,
+      "h": 9,
+      "n": 1
+    },
+    "bullet28": {
+      "file": "bullet28.png",
+      "w": 38,
+      "h": 16,
+      "n": 3
+    },
+    "bullet29": {
+      "file": "bullet29.png",
+      "w": 19,
+      "h": 19,
+      "n": 4
+    },
+    "bullet30": {
+      "file": "bullet30.png",
+      "w": 58,
+      "h": 30,
+      "n": 6
+    },
+    "bullet31": {
+      "file": "bullet31.png",
+      "w": 49,
+      "h": 32,
+      "n": 3
+    },
+    "bullet32": {
+      "file": "bullet32.png",
+      "w": 45,
+      "h": 35,
+      "n": 3
+    },
+    "bullet33": {
+      "file": "bullet33.png",
+      "w": 33,
+      "h": 22,
+      "n": 3
+    },
+    "bullet34": {
+      "file": "bullet34.png",
+      "w": 34,
+      "h": 34,
+      "n": 8
+    },
+    "bullet35": {
+      "file": "bullet35.png",
+      "w": 49,
+      "h": 20,
+      "n": 4
+    },
+    "bullet36": {
+      "file": "bullet36.png",
+      "w": 92,
+      "h": 65,
+      "n": 4
+    },
+    "bullet37": {
+      "file": "bullet37.png",
+      "w": 24,
+      "h": 16,
+      "n": 3
+    },
+    "bullet38": {
+      "file": "bullet38.png",
+      "w": 47,
+      "h": 27,
+      "n": 3
+    },
+    "bullet39": {
+      "file": "bullet39.png",
+      "w": 36,
+      "h": 17,
+      "n": 3
+    },
+    "bullet40": {
+      "file": "bullet40.png",
+      "w": 34,
+      "h": 13,
+      "n": 4
+    },
+    "bullet41": {
+      "file": "bullet41.png",
+      "w": 30,
+      "h": 15,
+      "n": 3
+    },
+    "bullet42": {
+      "file": "bullet42.png",
+      "w": 28,
+      "h": 15,
+      "n": 1
+    },
+    "bullet43": {
+      "file": "bullet43.png",
+      "w": 25,
+      "h": 17,
+      "n": 4
+    },
+    "bullet44": {
+      "file": "bullet44.png",
+      "w": 28,
+      "h": 8,
+      "n": 1
+    },
+    "bullet45": {
+      "file": "bullet45.png",
+      "w": 15,
+      "h": 12,
+      "n": 1
+    },
+    "bullet46": {
+      "file": "bullet46.png",
+      "w": 30,
+      "h": 10,
+      "n": 3
+    },
+    "bullet47": {
+      "file": "bullet47.png",
+      "w": 42,
+      "h": 14,
+      "n": 3
+    },
+    "arrow01": {
+      "file": "arrow01.png",
+      "w": 22,
+      "h": 21,
+      "n": 3
+    },
+    "arrow03": {
+      "file": "arrow03.png",
+      "w": 30,
+      "h": 27,
+      "n": 2
+    },
+    "arrow05": {
+      "file": "arrow05.png",
+      "w": 62,
+      "h": 14,
+      "n": 3
+    },
+    "arrow06": {
+      "file": "arrow06.png",
+      "w": 47,
+      "h": 11,
+      "n": 1
+    },
+    "arrow07": {
+      "file": "arrow07.png",
+      "w": 64,
+      "h": 21,
+      "n": 2
+    },
+    "arrow08": {
+      "file": "arrow08.png",
+      "w": 70,
+      "h": 15,
+      "n": 1
+    },
+    "arrow10": {
+      "file": "arrow10.png",
+      "w": 16,
+      "h": 24,
+      "n": 3
+    },
+    "arrow12": {
+      "file": "arrow12.png",
+      "w": 42,
+      "h": 26,
+      "n": 3
+    },
+    "arrow13": {
+      "file": "arrow13.png",
+      "w": 128,
+      "h": 41,
+      "n": 5
+    },
+    "arrow14": {
+      "file": "arrow14.png",
+      "w": 58,
+      "h": 34,
+      "n": 1
+    },
+    "arrow15": {
+      "file": "arrow15.png",
+      "w": 50,
+      "h": 19,
+      "n": 1
+    },
+    "arrow16": {
+      "file": "arrow16.png",
+      "w": 61,
+      "h": 15,
+      "n": 1
+    },
+    "arrow19": {
+      "file": "arrow19.png",
+      "w": 11,
+      "h": 53,
+      "n": 1
+    },
+    "arrow20": {
+      "file": "arrow20.png",
+      "w": 20,
+      "h": 11,
+      "n": 1
+    },
+    "arrow22": {
+      "file": "arrow22.png",
+      "w": 43,
+      "h": 15,
+      "n": 2
+    },
+    "power01": {
+      "file": "power01.png",
+      "w": 16,
+      "h": 27,
+      "n": 3
+    },
+    "power02": {
+      "file": "power02.png",
+      "w": 32,
+      "h": 32,
+      "n": 4
+    },
+    "power03": {
+      "file": "power03.png",
+      "w": 34,
+      "h": 21,
+      "n": 4
+    },
+    "power04": {
+      "file": "power04.png",
+      "w": 31,
+      "h": 13,
+      "n": 2
+    },
+    "power05": {
+      "file": "power05.png",
+      "w": 33,
+      "h": 43,
+      "n": 4
+    },
+    "power06": {
+      "file": "power06.png",
+      "w": 45,
+      "h": 14,
+      "n": 4
+    },
+    "power07": {
+      "file": "power07.png",
+      "w": 32,
+      "h": 32,
+      "n": 4
+    },
+    "power08": {
+      "file": "power08.png",
+      "w": 16,
+      "h": 27,
+      "n": 3
+    },
+    "power09": {
+      "file": "power09.png",
+      "w": 44,
+      "h": 25,
+      "n": 2
+    },
+    "power10": {
+      "file": "power10.png",
+      "w": 23,
+      "h": 35,
+      "n": 5
+    },
+    "power11": {
+      "file": "power11.png",
+      "w": 16,
+      "h": 36,
+      "n": 4
+    },
+    "power12": {
+      "file": "power12.png",
+      "w": 45,
+      "h": 33,
+      "n": 4
+    },
+    "power13": {
+      "file": "power13.png",
+      "w": 47,
+      "h": 28,
+      "n": 2
+    },
+    "power14": {
+      "file": "power14.png",
+      "w": 44,
+      "h": 25,
+      "n": 2
+    },
+    "power15": {
+      "file": "power15.png",
+      "w": 22,
+      "h": 24,
+      "n": 6
+    },
+    "power16": {
+      "file": "power16.png",
+      "w": 31,
+      "h": 22,
+      "n": 8
+    },
+    "power17": {
+      "file": "power17.png",
+      "w": 48,
+      "h": 68,
+      "n": 2
+    },
+    "power18": {
+      "file": "power18.png",
+      "w": 85,
+      "h": 27,
+      "n": 2
+    },
+    "power19": {
+      "file": "power19.png",
+      "w": 26,
+      "h": 18,
+      "n": 4
+    },
+    "power20": {
+      "file": "power20.png",
+      "w": 22,
+      "h": 14,
+      "n": 3
+    },
+    "power21": {
+      "file": "power21.png",
+      "w": 60,
+      "h": 36,
+      "n": 8
+    },
+    "power22": {
+      "file": "power22.png",
+      "w": 64,
+      "h": 54,
+      "n": 6
+    },
+    "power23": {
+      "file": "power23.png",
+      "w": 40,
+      "h": 38,
+      "n": 4
+    },
+    "power24": {
+      "file": "power24.png",
+      "w": 49,
+      "h": 24,
+      "n": 4
+    },
+    "power26": {
+      "file": "power26.png",
+      "w": 32,
+      "h": 23,
+      "n": 3
+    },
+    "power27": {
+      "file": "power27.png",
+      "w": 49,
+      "h": 50,
+      "n": 4
+    },
+    "power28": {
+      "file": "power28.png",
+      "w": 65,
+      "h": 65,
+      "n": 6
+    },
+    "power29": {
+      "file": "power29.png",
+      "w": 34,
+      "h": 41,
+      "n": 8
+    },
+    "power30": {
+      "file": "power30.png",
+      "w": 76,
+      "h": 35,
+      "n": 2
+    },
+    "power31": {
+      "file": "power31.png",
+      "w": 46,
+      "h": 30,
+      "n": 5
+    },
+    "power32": {
+      "file": "power32.png",
+      "w": 14,
+      "h": 12,
+      "n": 1
+    },
+    "power33": {
+      "file": "power33.png",
+      "w": 32,
+      "h": 32,
+      "n": 4
+    },
+    "power34": {
+      "file": "power34.png",
+      "w": 117,
+      "h": 60,
+      "n": 3
+    },
+    "wind01": {
+      "file": "wind01.png",
+      "w": 34,
+      "h": 31,
+      "n": 4
+    },
+    "shock01": {
+      "file": "shock01.png",
+      "w": 32,
+      "h": 10,
+      "n": 4
+    },
+    "shock02": {
+      "file": "shock02.png",
+      "w": 16,
+      "h": 15,
+      "n": 3
+    },
+    "shock03": {
+      "file": "shock03.png",
+      "w": 32,
+      "h": 31,
+      "n": 4
+    },
+    "shock04": {
+      "file": "shock04.png",
+      "w": 32,
+      "h": 31,
+      "n": 4
+    },
+    "shock05": {
+      "file": "shock05.png",
+      "w": 44,
+      "h": 46,
+      "n": 4
+    },
+    "shock06": {
+      "file": "shock06.png",
+      "w": 24,
+      "h": 24,
+      "n": 3
+    },
+    "shock07": {
+      "file": "shock07.png",
+      "w": 96,
+      "h": 21,
+      "n": 5
+    },
+    "shock09": {
+      "file": "shock09.png",
+      "w": 33,
+      "h": 23,
+      "n": 4
+    },
+    "shock10": {
+      "file": "shock10.png",
+      "w": 61,
+      "h": 64,
+      "n": 4
+    },
+    "exp02": {
+      "file": "exp02.png",
+      "w": 32,
+      "h": 32,
+      "n": 4
+    },
+    "exp03": {
+      "file": "exp03.png",
+      "w": 32,
+      "h": 32,
+      "n": 4
+    },
+    "exp07": {
+      "file": "exp07.png",
+      "w": 21,
+      "h": 19,
+      "n": 4
+    },
+    "exp08": {
+      "file": "exp08.png",
+      "w": 17,
+      "h": 15,
+      "n": 4
+    },
+    "exp09": {
+      "file": "exp09.png",
+      "w": 32,
+      "h": 32,
+      "n": 4
+    },
+    "exp10": {
+      "file": "exp10.png",
+      "w": 43,
+      "h": 38,
+      "n": 4
+    },
+    "exp15": {
+      "file": "exp15.png",
+      "w": 45,
+      "h": 44,
+      "n": 4
+    },
+    "exp16": {
+      "file": "exp16.png",
+      "w": 27,
+      "h": 27,
+      "n": 4
+    },
+    "exp17": {
+      "file": "exp17.png",
+      "w": 27,
+      "h": 27,
+      "n": 4
+    },
+    "exp18": {
+      "file": "exp18.png",
+      "w": 45,
+      "h": 40,
+      "n": 3
+    },
+    "exp19": {
+      "file": "exp19.png",
+      "w": 25,
+      "h": 28,
+      "n": 4
+    },
+    "exp20": {
+      "file": "exp20.png",
+      "w": 32,
+      "h": 31,
+      "n": 7
+    },
+    "exp21": {
+      "file": "exp21.png",
+      "w": 94,
+      "h": 68,
+      "n": 5
+    },
+    "exp23": {
+      "file": "exp23.png",
+      "w": 32,
+      "h": 28,
+      "n": 7
+    },
+    "exp25": {
+      "file": "exp25.png",
+      "w": 94,
+      "h": 68,
+      "n": 5
+    },
+    "exp27": {
+      "file": "exp27.png",
+      "w": 170,
+      "h": 138,
+      "n": 6
+    },
+    "exp28": {
+      "file": "exp28.png",
+      "w": 79,
+      "h": 69,
+      "n": 6
+    },
+    "exp29": {
+      "file": "exp29.png",
+      "w": 61,
+      "h": 32,
+      "n": 2
+    },
+    "exp31": {
+      "file": "exp31.png",
+      "w": 32,
+      "h": 32,
+      "n": 7
+    },
+    "spexp01": {
+      "file": "spexp01.png",
+      "w": 55,
+      "h": 82,
+      "n": 5
+    },
+    "spexp03": {
+      "file": "spexp03.png",
+      "w": 41,
+      "h": 26,
+      "n": 13
+    },
+    "pillar01": {
+      "file": "pillar01.png",
+      "w": 92,
+      "h": 107,
+      "n": 19
+    },
+    "pillar02": {
+      "file": "pillar02.png",
+      "w": 92,
+      "h": 107,
+      "n": 19
+    },
+    "pillar03": {
+      "file": "pillar03.png",
+      "w": 68,
+      "h": 125,
+      "n": 15
+    },
+    "pillar04": {
+      "file": "pillar04.png",
+      "w": 67,
+      "h": 91,
+      "n": 15
+    },
+    "pillar05": {
+      "file": "pillar05.png",
+      "w": 179,
+      "h": 119,
+      "n": 19
+    },
+    "pillar06": {
+      "file": "pillar06.png",
+      "w": 48,
+      "h": 100,
+      "n": 13
+    },
+    "pillar07": {
+      "file": "pillar07.png",
+      "w": 72,
+      "h": 69,
+      "n": 11
+    },
+    "pillar08": {
+      "file": "pillar08.png",
+      "w": 75,
+      "h": 117,
+      "n": 12
+    },
+    "pillar10": {
+      "file": "pillar10.png",
+      "w": 34,
+      "h": 36,
+      "n": 9
+    },
+    "pillar12": {
+      "file": "pillar12.png",
+      "w": 43,
+      "h": 16,
+      "n": 11
+    },
+    "pillar13": {
+      "file": "pillar13.png",
+      "w": 63,
+      "h": 56,
+      "n": 9
+    },
+    "pillar16": {
+      "file": "pillar16.png",
+      "w": 124,
+      "h": 95,
+      "n": 8
+    },
+    "pillar17": {
+      "file": "pillar17.png",
+      "w": 48,
+      "h": 128,
+      "n": 7
+    },
+    "pillar18": {
+      "file": "pillar18.png",
+      "w": 171,
+      "h": 144,
+      "n": 13
+    },
+    "pillar19": {
+      "file": "pillar19.png",
+      "w": 39,
+      "h": 38,
+      "n": 8
+    },
+    "pillar21": {
+      "file": "pillar21.png",
+      "w": 235,
+      "h": 259,
+      "n": 10
+    },
+    "pillar22": {
+      "file": "pillar22.png",
+      "w": 112,
+      "h": 232,
+      "n": 6
+    },
+    "pillar24": {
+      "file": "pillar24.png",
+      "w": 165,
+      "h": 141,
+      "n": 10
+    },
+    "pillar25": {
+      "file": "pillar25.png",
+      "w": 67,
+      "h": 65,
+      "n": 6
+    },
+    "pillar26": {
+      "file": "pillar26.png",
+      "w": 122,
+      "h": 145,
+      "n": 11
+    },
+    "pillar29": {
+      "file": "pillar29.png",
+      "w": 99,
+      "h": 128,
+      "n": 19
+    },
+    "pillar30": {
+      "file": "pillar30.png",
+      "w": 100,
+      "h": 100,
+      "n": 24
+    },
+    "pillar31": {
+      "file": "pillar31.png",
+      "w": 74,
+      "h": 48,
+      "n": 11
+    },
+    "pillar32": {
+      "file": "pillar32.png",
+      "w": 32,
+      "h": 96,
+      "n": 11
+    },
+    "pillar34": {
+      "file": "pillar34.png",
+      "w": 229,
+      "h": 118,
+      "n": 7
+    },
+    "pillar35": {
+      "file": "pillar35.png",
+      "w": 76,
+      "h": 138,
+      "n": 9
+    },
+    "pillar37": {
+      "file": "pillar37.png",
+      "w": 108,
+      "h": 214,
+      "n": 7
+    },
+    "pillar38": {
+      "file": "pillar38.png",
+      "w": 58,
+      "h": 50,
+      "n": 8
+    },
+    "barrage01": {
+      "file": "barrage01.png",
+      "w": 37,
+      "h": 44,
+      "n": 9
+    },
+    "barrage02": {
+      "file": "barrage02.png",
+      "w": 37,
+      "h": 44,
+      "n": 9
+    },
+    "barrage03": {
+      "file": "barrage03.png",
+      "w": 50,
+      "h": 64,
+      "n": 16
+    },
+    "barrage04": {
+      "file": "barrage04.png",
+      "w": 31,
+      "h": 30,
+      "n": 10
+    },
+    "barrage06": {
+      "file": "barrage06.png",
+      "w": 33,
+      "h": 17,
+      "n": 6
+    },
+    "barrage07": {
+      "file": "barrage07.png",
+      "w": 32,
+      "h": 29,
+      "n": 7
+    },
+    "barrage08": {
+      "file": "barrage08.png",
+      "w": 56,
+      "h": 52,
+      "n": 7
     }
   },
   "fx": {
@@ -5654,6 +6884,2198 @@
       "width": 36,
       "desc": "Dispara un rayo de agua que atraviesa todo en línea recta",
       "final": true
+    }
+  },
+  "fxSkill": {
+    "hot_bite": {
+      "pr": "bullet20",
+      "hit": "exp14",
+      "nv": "pillar19"
+    },
+    "rock_breaker": {
+      "pr": "bullet26",
+      "hit": "exp26",
+      "nv": "pillar37"
+    },
+    "fireball": {
+      "pr": "bullet35",
+      "hit": "power27",
+      "nv": "pillar22"
+    },
+    "grow_claw": {
+      "pr": "bullet40",
+      "hit": "exp23",
+      "nv": "pillar24"
+    },
+    "plasma_blade": {
+      "pr": "ball31",
+      "hit": "power01",
+      "nv": "pillar03"
+    },
+    "exhaust_flame": {
+      "pr": "fire12",
+      "hit": "power16",
+      "nv": "pillar19"
+    },
+    "hammer_edge": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "pillar16"
+    },
+    "double_edge": {
+      "pr": "fire02",
+      "hit": "exp18",
+      "nv": "barrage03"
+    },
+    "atomic_blaster": {
+      "pr": "fire13",
+      "hit": "exp11",
+      "nv": "pillar01"
+    },
+    "royal_slash": {
+      "pr": "ball30",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "royal_saber": {
+      "pr": "arrow05",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "final_elysion": {
+      "pr": "ball01",
+      "hit": "exp23",
+      "nv": "power34"
+    },
+    "dynas": {
+      "pr": "arrow22",
+      "hit": "exp13",
+      "nv": "pillar35"
+    },
+    "final_crest": {
+      "pr": "ball10",
+      "hit": "exp18",
+      "nv": "pillar18"
+    },
+    "rage_of_wyvern": {
+      "pr": "bullet25",
+      "hit": "exp08",
+      "nv": "pillar35"
+    },
+    "demons_disaster": {
+      "pr": "ball04",
+      "hit": "power10",
+      "nv": "pillar13"
+    },
+    "judecca_prison": {
+      "pr": "ball15",
+      "hit": "power25",
+      "nv": "pillar15"
+    },
+    "waking_dead": {
+      "pr": "bullet37",
+      "hit": "power33",
+      "nv": "barrage07"
+    },
+    "sozan": {
+      "pr": "ball36",
+      "hit": "power17",
+      "nv": "pillar18"
+    },
+    "koyosetsu": {
+      "pr": "bullet25",
+      "hit": "exp13",
+      "nv": "pillar18"
+    },
+    "headbutt": {
+      "pr": "ball01",
+      "hit": "exp24",
+      "nv": "pillar16"
+    },
+    "koshugeki": {
+      "pr": "bullet20",
+      "hit": "power19",
+      "nv": "pillar21"
+    },
+    "koenryu": {
+      "pr": "fire13",
+      "hit": "exp01",
+      "nv": "pillar21"
+    },
+    "knifehand_strike": {
+      "pr": "arrow05",
+      "hit": "exp16",
+      "nv": "pillar24"
+    },
+    "kofusatsu": {
+      "pr": "bullet22",
+      "hit": "power33",
+      "nv": "barrage04"
+    },
+    "bonhitsusen": {
+      "pr": "ball33",
+      "hit": "power25",
+      "nv": "pillar15"
+    },
+    "swing": {
+      "pr": "wind01",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "ura_izuna": {
+      "pr": "ball33",
+      "hit": "exp05",
+      "nv": "pillar13"
+    },
+    "taizoukai_mandara": {
+      "pr": "arrow05",
+      "hit": "power18",
+      "nv": "pillar16"
+    },
+    "jouenkobu": {
+      "pr": "ball35",
+      "hit": "spexp01",
+      "nv": "pillar01"
+    },
+    "izuna": {
+      "pr": "bullet22",
+      "hit": "power28",
+      "nv": "pillar15"
+    },
+    "kongoukai_mandara": {
+      "pr": "wind01",
+      "hit": "power18",
+      "nv": "pillar24"
+    },
+    "blazing_fire": {
+      "pr": "bullet02",
+      "hit": "power13",
+      "nv": "pillar22"
+    },
+    "petit_twister": {
+      "pr": "fire14",
+      "hit": "power17",
+      "nv": "pillar34"
+    },
+    "crush": {
+      "pr": "wind01",
+      "hit": "power18",
+      "nv": "pillar24"
+    },
+    "dumdum_upper": {
+      "pr": "arrow05",
+      "hit": "power18",
+      "nv": "pillar16"
+    },
+    "gatling_arm": {
+      "pr": "ball17",
+      "hit": "exp17",
+      "nv": "barrage06"
+    },
+    "kick": {
+      "pr": "ball01",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "rapid_fire": {
+      "pr": "arrow14",
+      "hit": "power31",
+      "nv": "barrage06"
+    },
+    "golden_triangle": {
+      "pr": "bullet40",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "saint_kick": {
+      "pr": "ball01",
+      "hit": "exp07",
+      "nv": "pillar16"
+    },
+    "burst_shot": {
+      "pr": "ball11",
+      "hit": "power23",
+      "nv": "barrage06"
+    },
+    "giant_missile": {
+      "pr": "bullet45",
+      "hit": "shock06",
+      "nv": "barrage06"
+    },
+    "summon": {
+      "pr": "ball35",
+      "hit": "power27",
+      "nv": "barrage01"
+    },
+    "night_of_fire": {
+      "pr": "ball33",
+      "hit": "spexp03",
+      "nv": "barrage07"
+    },
+    "cane_strike": {
+      "pr": "ball30",
+      "hit": "exp12",
+      "nv": "power34"
+    },
+    "thunder_cloud": {
+      "pr": "ball03",
+      "hit": "exp04",
+      "nv": "pillar03"
+    },
+    "magic_game": {
+      "pr": "ball15",
+      "hit": "exp31",
+      "nv": "pillar15"
+    },
+    "guiltish": {
+      "pr": "arrow05",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "leak_information": {
+      "pr": "ball33",
+      "hit": "power33",
+      "nv": "barrage07"
+    },
+    "kamiuchi": {
+      "pr": "ball22",
+      "hit": "shock07",
+      "nv": "pillar03"
+    },
+    "darkness_claw": {
+      "pr": "ball24",
+      "hit": "spexp03",
+      "nv": "pillar13"
+    },
+    "double_impact": {
+      "pr": "ball07",
+      "hit": "shock06",
+      "nv": "barrage06"
+    },
+    "heartbreak_shot": {
+      "pr": "bullet33",
+      "hit": "shock09",
+      "nv": "pillar04"
+    },
+    "double_impact_blast": {
+      "pr": "bullet04",
+      "hit": "shock09",
+      "nv": "pillar04"
+    },
+    "death_slinger": {
+      "pr": "ball33",
+      "hit": "exp05",
+      "nv": "pillar13"
+    },
+    "chaos_flare": {
+      "pr": "fire05",
+      "hit": "exp05",
+      "nv": "barrage07"
+    },
+    "double_impact_sdx": {
+      "pr": "bullet04",
+      "hit": "shock09",
+      "nv": "barrage06"
+    },
+    "death_the_cannon": {
+      "pr": "ball33",
+      "hit": "power33",
+      "nv": "barrage07"
+    },
+    "bunbun_punch": {
+      "pr": "wind01",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "veemon_head": {
+      "pr": "wind01",
+      "hit": "exp23",
+      "nv": "pillar24"
+    },
+    "rapid_attack": {
+      "pr": "ball30",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "hammer_punch": {
+      "pr": "bullet29",
+      "hit": "power23",
+      "nv": "pillar04"
+    },
+    "v_breath_arrow": {
+      "pr": "ball01",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "magnum_crash": {
+      "pr": "arrow05",
+      "hit": "exp16",
+      "nv": "pillar24"
+    },
+    "dragon_impulse": {
+      "pr": "ball36",
+      "hit": "power12",
+      "nv": "barrage03"
+    },
+    "v_wing_blade": {
+      "pr": "bullet23",
+      "hit": "exp08",
+      "nv": "pillar35"
+    },
+    "ulforce_saber": {
+      "pr": "arrow05",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "shining_v_force": {
+      "pr": "wind01",
+      "hit": "exp07",
+      "nv": "pillar16"
+    },
+    "dragon_impulse_x": {
+      "pr": "bullet23",
+      "hit": "exp02",
+      "nv": "pillar32"
+    },
+    "splendor_blade": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "pillar24"
+    },
+    "positron_laser": {
+      "pr": "ball01",
+      "hit": "power18",
+      "nv": "power34"
+    },
+    "mega_death": {
+      "pr": "ball18",
+      "hit": "power10",
+      "nv": "pillar15"
+    },
+    "giga_death": {
+      "pr": "bullet37",
+      "hit": "exp05",
+      "nv": "pillar13"
+    },
+    "horn_attack": {
+      "pr": "ball30",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "breaclaw": {
+      "pr": "ball04",
+      "hit": "power28",
+      "nv": "barrage04"
+    },
+    "sorblow": {
+      "pr": "bullet17",
+      "hit": "power20",
+      "nv": "pillar19"
+    },
+    "sorshot": {
+      "pr": "fire01",
+      "hit": "power16",
+      "nv": "pillar21"
+    },
+    "sedna": {
+      "pr": "ball13",
+      "hit": "power23",
+      "nv": "pillar04"
+    },
+    "albion": {
+      "pr": "bullet11",
+      "hit": "power32",
+      "nv": "barrage06"
+    },
+    "gallia_fissure": {
+      "pr": "ball30",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "dragonia": {
+      "pr": "bullet40",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "meteor_lux": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "elec_rush": {
+      "pr": "ball21",
+      "hit": "power03",
+      "nv": "pillar20"
+    },
+    "petit_impulse": {
+      "pr": "bullet24",
+      "hit": "power06",
+      "nv": "pillar20"
+    },
+    "electrical_fist": {
+      "pr": "ball37",
+      "hit": "shock01",
+      "nv": "pillar20"
+    },
+    "thunder_dread": {
+      "pr": "bullet10",
+      "hit": "power29",
+      "nv": "pillar02"
+    },
+    "raigekishou": {
+      "pr": "ball37",
+      "hit": "power01",
+      "nv": "pillar02"
+    },
+    "budenhadan": {
+      "pr": "wind01",
+      "hit": "power18",
+      "nv": "pillar24"
+    },
+    "jinrai_kaitengeki": {
+      "pr": "bullet42",
+      "hit": "exp21",
+      "nv": "pillar20"
+    },
+    "nitou_seirai": {
+      "pr": "arrow08",
+      "hit": "exp21",
+      "nv": "pillar03"
+    },
+    "shidou_ittetsu": {
+      "pr": "ball03",
+      "hit": "power29",
+      "nv": "pillar03"
+    },
+    "shinden_shouraikou": {
+      "pr": "bullet10",
+      "hit": "power03",
+      "nv": "pillar20"
+    },
+    "shukyoku_senjin": {
+      "pr": "fire10",
+      "hit": "spexp01",
+      "nv": "pillar26"
+    },
+    "zetsugoku_buto": {
+      "pr": "ball32",
+      "hit": "exp21",
+      "nv": "pillar20"
+    },
+    "dash_metal": {
+      "pr": "bullet29",
+      "hit": "power23",
+      "nv": "pillar04"
+    },
+    "metal_cannon": {
+      "pr": "bullet29",
+      "hit": "power23",
+      "nv": "barrage06"
+    },
+    "power_metal": {
+      "pr": "ball20",
+      "hit": "power32",
+      "nv": "barrage06"
+    },
+    "cannonball": {
+      "pr": "bullet45",
+      "hit": "shock06",
+      "nv": "barrage06"
+    },
+    "metal_meteor": {
+      "pr": "bullet45",
+      "hit": "shock06",
+      "nv": "barrage06"
+    },
+    "bloody_tower": {
+      "pr": "wind01",
+      "hit": "exp12",
+      "nv": "pillar24"
+    },
+    "brave_metal": {
+      "pr": "bullet45",
+      "hit": "power21",
+      "nv": "pillar04"
+    },
+    "doru_din": {
+      "pr": "bullet08",
+      "hit": "shock06",
+      "nv": "pillar04"
+    },
+    "seiken_gradalpha": {
+      "pr": "ball01",
+      "hit": "exp07",
+      "nv": "pillar24"
+    },
+    "digitalize_of_soul": {
+      "pr": "ball30",
+      "hit": "power18",
+      "nv": "pillar24"
+    },
+    "alpha_inforce": {
+      "pr": "ball01",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "ouryuken": {
+      "pr": "ball01",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "kabutogaeshi": {
+      "pr": "wind01",
+      "hit": "exp12",
+      "nv": "power34"
+    },
+    "iaijin": {
+      "pr": "arrow14",
+      "hit": "power23",
+      "nv": "barrage06"
+    },
+    "tekkoujin": {
+      "pr": "bullet09",
+      "hit": "power23",
+      "nv": "pillar04"
+    },
+    "boujinha": {
+      "pr": "wind01",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "seiryujin": {
+      "pr": "ball10",
+      "hit": "exp02",
+      "nv": "pillar38"
+    },
+    "tenryu_suishoukyu": {
+      "pr": "ball30",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "eiseiryuoujin": {
+      "pr": "ball36",
+      "hit": "power12",
+      "nv": "pillar18"
+    },
+    "ougai": {
+      "pr": "arrow15",
+      "hit": "exp22",
+      "nv": "pillar37"
+    },
+    "nebaneba_net": {
+      "pr": "arrow05",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "silk_thread": {
+      "pr": "ball01",
+      "hit": "exp23",
+      "nv": "power34"
+    },
+    "spiking_finish": {
+      "pr": "wind01",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "moon_shooter": {
+      "pr": "ball30",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "hell_masquerade": {
+      "pr": "bullet40",
+      "hit": "exp23",
+      "nv": "power34"
+    },
+    "irritant_buzz": {
+      "pr": "bullet05",
+      "hit": "exp13",
+      "nv": "pillar18"
+    },
+    "omega_blade": {
+      "pr": "ball01",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "twenty_dive": {
+      "pr": "ball30",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "twenty_scratch": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "pillar24"
+    },
+    "road_two_decade": {
+      "pr": "bullet40",
+      "hit": "power18",
+      "nv": "power34"
+    },
+    "vingtieme": {
+      "pr": "ball17",
+      "hit": "shock06",
+      "nv": "barrage06"
+    },
+    "grasslash": {
+      "pr": "bullet33",
+      "hit": "power31",
+      "nv": "barrage06"
+    },
+    "blindead": {
+      "pr": "bullet40",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "zwanglanze": {
+      "pr": "bullet45",
+      "hit": "power23",
+      "nv": "pillar04"
+    },
+    "thron_messer": {
+      "pr": "bullet44",
+      "hit": "shock06",
+      "nv": "pillar04"
+    },
+    "bibi_thunder": {
+      "pr": "bullet24",
+      "hit": "shock01",
+      "nv": "pillar03"
+    },
+    "volt_knuckle": {
+      "pr": "fire04",
+      "hit": "shock08",
+      "nv": "pillar02"
+    },
+    "physalist": {
+      "pr": "ball37",
+      "hit": "shock08",
+      "nv": "pillar02"
+    },
+    "punischone": {
+      "pr": "ball37",
+      "hit": "shock02",
+      "nv": "pillar20"
+    },
+    "vorsprite": {
+      "pr": "fire04",
+      "hit": "exp21",
+      "nv": "pillar20"
+    },
+    "biri_smasher": {
+      "pr": "ball03",
+      "hit": "exp19",
+      "nv": "pillar02"
+    },
+    "hammer_thunder": {
+      "pr": "ball32",
+      "hit": "shock02",
+      "nv": "pillar03"
+    },
+    "great_maelstrom": {
+      "pr": "arrow03",
+      "hit": "power05",
+      "nv": "pillar25"
+    },
+    "crystal_billow": {
+      "pr": "ball14",
+      "hit": "power05",
+      "nv": "pillar12"
+    },
+    "ocean_love": {
+      "pr": "arrow13",
+      "hit": "exp29",
+      "nv": "barrage08"
+    },
+    "marine_squadron": {
+      "pr": "bullet18",
+      "hit": "shock03",
+      "nv": "pillar07"
+    },
+    "extra_smile": {
+      "pr": "arrow05",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "howling_fire": {
+      "pr": "fire09",
+      "hit": "exp11",
+      "nv": "pillar19"
+    },
+    "spiral_bite": {
+      "pr": "fire05",
+      "hit": "power33",
+      "nv": "barrage04"
+    },
+    "howling_burner": {
+      "pr": "fire07",
+      "hit": "power16",
+      "nv": "pillar19"
+    },
+    "flame_blow": {
+      "pr": "ball19",
+      "hit": "exp11",
+      "nv": "barrage01"
+    },
+    "howling_burst": {
+      "pr": "ball23",
+      "hit": "exp09",
+      "nv": "pillar26"
+    },
+    "inferno_claw": {
+      "pr": "bullet07",
+      "hit": "exp27",
+      "nv": "pillar26"
+    },
+    "hati_embrace": {
+      "pr": "fire09",
+      "hit": "power09",
+      "nv": "pillar22"
+    },
+    "ragnarok_howling": {
+      "pr": "fire13",
+      "hit": "power15",
+      "nv": "pillar26"
+    },
+    "jotunheimr_gale": {
+      "pr": "bullet47",
+      "hit": "power20",
+      "nv": "pillar01"
+    },
+    "lightning_fur": {
+      "pr": "ball37",
+      "hit": "exp19",
+      "nv": "pillar20"
+    },
+    "kenzan_dive": {
+      "pr": "bullet40",
+      "hit": "power18",
+      "nv": "pillar16"
+    },
+    "lightning_stinger": {
+      "pr": "arrow08",
+      "hit": "shock04",
+      "nv": "pillar03"
+    },
+    "crimson_slash": {
+      "pr": "arrow05",
+      "hit": "exp23",
+      "nv": "pillar24"
+    },
+    "giga_crimson_dive": {
+      "pr": "arrow05",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "vermilion_vortex": {
+      "pr": "fire05",
+      "hit": "power22",
+      "nv": "pillar15"
+    },
+    "gyro_smash": {
+      "pr": "bullet19",
+      "hit": "exp06",
+      "nv": "pillar04"
+    },
+    "qualialise_blast": {
+      "pr": "bullet25",
+      "hit": "power17",
+      "nv": "pillar35"
+    },
+    "spiral_vanish": {
+      "pr": "bullet04",
+      "hit": "exp06",
+      "nv": "barrage06"
+    },
+    "desperate_vortex": {
+      "pr": "ball04",
+      "hit": "spexp03",
+      "nv": "pillar15"
+    },
+    "predators_bite": {
+      "pr": "bullet37",
+      "hit": "power22",
+      "nv": "barrage07"
+    },
+    "spiral_hell": {
+      "pr": "bullet08",
+      "hit": "power21",
+      "nv": "pillar04"
+    },
+    "dangan_senpu": {
+      "pr": "ball01",
+      "hit": "exp07",
+      "nv": "pillar16"
+    },
+    "zekkou_shou": {
+      "pr": "ball01",
+      "hit": "exp12",
+      "nv": "pillar24"
+    },
+    "kurukuru_rekkuzan": {
+      "pr": "bullet25",
+      "hit": "power02",
+      "nv": "pillar32"
+    },
+    "shinku_kamaitachi": {
+      "pr": "fire14",
+      "hit": "exp08",
+      "nv": "barrage03"
+    },
+    "blade_twister": {
+      "pr": "ball12",
+      "hit": "exp28",
+      "nv": "pillar38"
+    },
+    "sanrensei": {
+      "pr": "ball30",
+      "hit": "exp24",
+      "nv": "pillar16"
+    },
+    "ryoute_no_kama": {
+      "pr": "ball13",
+      "hit": "shock09",
+      "nv": "pillar04"
+    },
+    "elekugel": {
+      "pr": "bullet42",
+      "hit": "exp19",
+      "nv": "pillar02"
+    },
+    "blitz_arm": {
+      "pr": "ball32",
+      "hit": "exp19",
+      "nv": "pillar02"
+    },
+    "bark_storm": {
+      "pr": "bullet10",
+      "hit": "shock07",
+      "nv": "pillar03"
+    },
+    "gouenrin": {
+      "pr": "fire07",
+      "hit": "power27",
+      "nv": "pillar06"
+    },
+    "kaijinraidou": {
+      "pr": "fire04",
+      "hit": "shock01",
+      "nv": "pillar03"
+    },
+    "kirlian_brand": {
+      "pr": "ball31",
+      "hit": "power06",
+      "nv": "pillar02"
+    },
+    "rising_sun": {
+      "pr": "arrow12",
+      "hit": "exp27",
+      "nv": "pillar22"
+    },
+    "discharge_bomb": {
+      "pr": "ball03",
+      "hit": "shock04",
+      "nv": "pillar20"
+    },
+    "m16_assassin": {
+      "pr": "bullet08",
+      "hit": "power32",
+      "nv": "pillar04"
+    },
+    "dcd_bomb": {
+      "pr": "fire06",
+      "hit": "power09",
+      "nv": "barrage01"
+    },
+    "death_behind": {
+      "pr": "bullet37",
+      "hit": "power25",
+      "nv": "barrage04"
+    },
+    "scouter_monoeye": {
+      "pr": "ball15",
+      "hit": "power33",
+      "nv": "pillar15"
+    },
+    "striver_cannon": {
+      "pr": "bullet33",
+      "hit": "exp06",
+      "nv": "pillar04"
+    },
+    "blast_gatling": {
+      "pr": "bullet29",
+      "hit": "power31",
+      "nv": "barrage06"
+    },
+    "dark_roar": {
+      "pr": "ball33",
+      "hit": "exp05",
+      "nv": "barrage04"
+    },
+    "gigastick_lance": {
+      "pr": "ball15",
+      "hit": "power25",
+      "nv": "barrage04"
+    },
+    "demon_stab": {
+      "pr": "bullet22",
+      "hit": "exp31",
+      "nv": "pillar13"
+    },
+    "genocide_rain": {
+      "pr": "ball13",
+      "hit": "power23",
+      "nv": "barrage06"
+    },
+    "exa_destroyer": {
+      "pr": "bullet36",
+      "hit": "exp17",
+      "nv": "pillar04"
+    },
+    "bubble_blow": {
+      "pr": "ball27",
+      "hit": "power30",
+      "nv": "barrage05"
+    },
+    "tackle": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "pepper_breath": {
+      "pr": "fire07",
+      "hit": "exp14",
+      "nv": "pillar22"
+    },
+    "spirit_fire": {
+      "pr": "bullet17",
+      "hit": "exp11",
+      "nv": "pillar19"
+    },
+    "mega_flame": {
+      "pr": "ball16",
+      "hit": "exp14",
+      "nv": "pillar06"
+    },
+    "great_horns_attack": {
+      "pr": "bullet40",
+      "hit": "exp23",
+      "nv": "pillar24"
+    },
+    "grey_tooth": {
+      "pr": "ball01",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "trident_arm": {
+      "pr": "ball01",
+      "hit": "power18",
+      "nv": "power34"
+    },
+    "giga_destroyer": {
+      "pr": "bullet44",
+      "hit": "exp06",
+      "nv": "barrage06"
+    },
+    "giga_storm": {
+      "pr": "ball05",
+      "hit": "exp18",
+      "nv": "pillar38"
+    },
+    "terra_force": {
+      "pr": "bullet12",
+      "hit": "power26",
+      "nv": "pillar08"
+    },
+    "terra_tornado": {
+      "pr": "bullet23",
+      "hit": "exp02",
+      "nv": "barrage02"
+    },
+    "dramon_killer": {
+      "pr": "ball28",
+      "hit": "shock03",
+      "nv": "barrage05"
+    },
+    "plasma_stake": {
+      "pr": "ball37",
+      "hit": "power01",
+      "nv": "pillar02"
+    },
+    "thunder_vernier": {
+      "pr": "arrow08",
+      "hit": "power29",
+      "nv": "pillar02"
+    },
+    "elec_guard": {
+      "pr": "ball31",
+      "hit": "power06",
+      "nv": "pillar02"
+    },
+    "dark_terra_force": {
+      "pr": "bullet37",
+      "hit": "exp05",
+      "nv": "barrage04"
+    },
+    "terra_destroyer": {
+      "pr": "bullet31",
+      "hit": "exp26",
+      "nv": "pillar08"
+    },
+    "great_tornado": {
+      "pr": "bullet23",
+      "hit": "exp08",
+      "nv": "pillar18"
+    },
+    "blue_blaster": {
+      "pr": "arrow20",
+      "hit": "exp01",
+      "nv": "pillar06"
+    },
+    "little_horn": {
+      "pr": "fire03",
+      "hit": "spexp02",
+      "nv": "pillar17"
+    },
+    "fox_fire": {
+      "pr": "bullet47",
+      "hit": "power27",
+      "nv": "pillar21"
+    },
+    "tai_atari": {
+      "pr": "bullet40",
+      "hit": "exp12",
+      "nv": "power34"
+    },
+    "garuru_thrust": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "wolf_claw": {
+      "pr": "arrow16",
+      "hit": "exp25",
+      "nv": "barrage05"
+    },
+    "baldy_blow": {
+      "pr": "wind01",
+      "hit": "exp16",
+      "nv": "pillar16"
+    },
+    "garuru_kick": {
+      "pr": "ball30",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "freezing_breath": {
+      "pr": "ball38",
+      "hit": "power30",
+      "nv": "pillar12"
+    },
+    "garuru_tomahawk": {
+      "pr": "arrow10",
+      "hit": "exp25",
+      "nv": "pillar17"
+    },
+    "ice_wolf_claw": {
+      "pr": "arrow10",
+      "hit": "exp29",
+      "nv": "pillar33"
+    },
+    "yellow_beast_crescent_blade": {
+      "pr": "ball30",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "beast_cyclone": {
+      "pr": "ball10",
+      "hit": "exp28",
+      "nv": "pillar32"
+    },
+    "fury_ice_moon_fang": {
+      "pr": "ball02",
+      "hit": "exp15",
+      "nv": "pillar33"
+    },
+    "super_shocker": {
+      "pr": "ball03",
+      "hit": "power06",
+      "nv": "pillar02"
+    },
+    "double_punch": {
+      "pr": "ball01",
+      "hit": "exp23",
+      "nv": "power34"
+    },
+    "electro_shocker": {
+      "pr": "ball03",
+      "hit": "exp19",
+      "nv": "pillar02"
+    },
+    "beetle_horn_attack": {
+      "pr": "wind01",
+      "hit": "exp16",
+      "nv": "pillar24"
+    },
+    "quick_thrust": {
+      "pr": "bullet05",
+      "hit": "exp08",
+      "nv": "pillar35"
+    },
+    "horn_buster": {
+      "pr": "bullet30",
+      "hit": "power32",
+      "nv": "pillar04"
+    },
+    "mega_blaster": {
+      "pr": "bullet18",
+      "hit": "power04",
+      "nv": "pillar17"
+    },
+    "wild_scratcher": {
+      "pr": "ball09",
+      "hit": "exp15",
+      "nv": "barrage05"
+    },
+    "giga_blaster": {
+      "pr": "bullet36",
+      "hit": "shock06",
+      "nv": "barrage06"
+    },
+    "mega_electro_shocker": {
+      "pr": "fire04",
+      "hit": "exp19",
+      "nv": "pillar03"
+    },
+    "horn_buster_ii": {
+      "pr": "bullet09",
+      "hit": "power31",
+      "nv": "pillar04"
+    },
+    "shine_of_bee": {
+      "pr": "ball01",
+      "hit": "power18",
+      "nv": "power34"
+    },
+    "bee_cyclone": {
+      "pr": "bullet05",
+      "hit": "exp02",
+      "nv": "pillar38"
+    },
+    "insect_cannon": {
+      "pr": "bullet30",
+      "hit": "power21",
+      "nv": "barrage06"
+    },
+    "spiral_twister": {
+      "pr": "bullet17",
+      "hit": "exp11",
+      "nv": "pillar26"
+    },
+    "violin_attack": {
+      "pr": "arrow03",
+      "hit": "power14",
+      "nv": "pillar12"
+    },
+    "meteor_wing": {
+      "pr": "bullet39",
+      "hit": "exp27",
+      "nv": "pillar21"
+    },
+    "fire_flap": {
+      "pr": "fire09",
+      "hit": "spexp01",
+      "nv": "pillar21"
+    },
+    "mach_grinder": {
+      "pr": "bullet13",
+      "hit": "power12",
+      "nv": "pillar35"
+    },
+    "shadow_wing": {
+      "pr": "ball33",
+      "hit": "spexp03",
+      "nv": "barrage07"
+    },
+    "eagle_claw": {
+      "pr": "bullet05",
+      "hit": "exp08",
+      "nv": "pillar35"
+    },
+    "phoenix_claw": {
+      "pr": "bullet35",
+      "hit": "power15",
+      "nv": "pillar05"
+    },
+    "starlight_explosion": {
+      "pr": "arrow05",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "crimson_flare": {
+      "pr": "ball23",
+      "hit": "exp14",
+      "nv": "pillar05"
+    },
+    "flaming_wing": {
+      "pr": "fire14",
+      "hit": "exp02",
+      "nv": "barrage02"
+    },
+    "spiral_raven_claw": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "pillar16"
+    },
+    "blast_wing": {
+      "pr": "ball05",
+      "hit": "power17",
+      "nv": "pillar35"
+    },
+    "raven_king_sword": {
+      "pr": "ball30",
+      "hit": "exp24",
+      "nv": "pillar16"
+    },
+    "final_excalibur": {
+      "pr": "ball30",
+      "hit": "exp12",
+      "nv": "pillar24"
+    },
+    "zero_heavens": {
+      "pr": "bullet40",
+      "hit": "power18",
+      "nv": "power34"
+    },
+    "scratch_beat": {
+      "pr": "ball01",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "diamond_shell": {
+      "pr": "fire05",
+      "hit": "power22",
+      "nv": "pillar13"
+    },
+    "megaton_press": {
+      "pr": "bullet13",
+      "hit": "exp02",
+      "nv": "pillar32"
+    },
+    "tail_hammer": {
+      "pr": "bullet40",
+      "hit": "power18",
+      "nv": "pillar24"
+    },
+    "armored_stampede": {
+      "pr": "arrow05",
+      "hit": "exp12",
+      "nv": "pillar24"
+    },
+    "bombs": {
+      "pr": "arrow05",
+      "hit": "exp23",
+      "nv": "pillar24"
+    },
+    "disaster_blaster": {
+      "pr": "ball20",
+      "hit": "shock06",
+      "nv": "barrage06"
+    },
+    "arctic_blizzard": {
+      "pr": "ball28",
+      "hit": "exp20",
+      "nv": "pillar25"
+    },
+    "viking_axe": {
+      "pr": "arrow03",
+      "hit": "spexp02",
+      "nv": "barrage08"
+    },
+    "viking_flare": {
+      "pr": "bullet39",
+      "hit": "power27",
+      "nv": "pillar19"
+    },
+    "briona_strike": {
+      "pr": "ball37",
+      "hit": "shock04",
+      "nv": "pillar20"
+    },
+    "air_shot": {
+      "pr": "ball10",
+      "hit": "power02",
+      "nv": "pillar35"
+    },
+    "wing_slap": {
+      "pr": "bullet13",
+      "hit": "exp18",
+      "nv": "pillar35"
+    },
+    "heaven_s_knuckle": {
+      "pr": "bullet40",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "holy_rod": {
+      "pr": "bullet40",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "angel_typhoon": {
+      "pr": "wind01",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "heaven_s_gate": {
+      "pr": "bullet40",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "excalibur": {
+      "pr": "ball01",
+      "hit": "power18",
+      "nv": "pillar16"
+    },
+    "hp_recovery": {
+      "pr": "wind01",
+      "hit": "exp12",
+      "nv": "power34"
+    },
+    "testament": {
+      "pr": "ball01",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "hallowed_ascension": {
+      "pr": "fire04",
+      "hit": "exp21",
+      "nv": "pillar20"
+    },
+    "hallowed_knuckle": {
+      "pr": "ball37",
+      "hit": "power01",
+      "nv": "pillar02"
+    },
+    "spiral_masquerade": {
+      "pr": "arrow05",
+      "hit": "power18",
+      "nv": "power34"
+    },
+    "baby_breath": {
+      "pr": "ball01",
+      "hit": "power18",
+      "nv": "power34"
+    },
+    "tail_smash": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "pillar16"
+    },
+    "blue_flare_breath": {
+      "pr": "ball35",
+      "hit": "power27",
+      "nv": "pillar26"
+    },
+    "g_shurunen_ii": {
+      "pr": "ball34",
+      "hit": "exp27",
+      "nv": "pillar01"
+    },
+    "blaze_sonic_breath": {
+      "pr": "ball34",
+      "hit": "power20",
+      "nv": "pillar26"
+    },
+    "exploding_sonic_breath": {
+      "pr": "ball01",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "tenryu_slash": {
+      "pr": "ball30",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "shoryu_slash": {
+      "pr": "arrow05",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "avalon_s_gate": {
+      "pr": "fire05",
+      "hit": "exp31",
+      "nv": "pillar15"
+    },
+    "pendragon_s_glory": {
+      "pr": "ball30",
+      "hit": "power18",
+      "nv": "pillar24"
+    },
+    "dragonic_impact": {
+      "pr": "ball03",
+      "hit": "exp19",
+      "nv": "pillar20"
+    },
+    "destroyed_rush": {
+      "pr": "bullet05",
+      "hit": "exp08",
+      "nv": "pillar38"
+    },
+    "infinity_bowling": {
+      "pr": "fire01",
+      "hit": "power15",
+      "nv": "pillar05"
+    },
+    "baby_burner": {
+      "pr": "ball23",
+      "hit": "exp09",
+      "nv": "pillar22"
+    },
+    "mega_burst": {
+      "pr": "fire15",
+      "hit": "power15",
+      "nv": "pillar01"
+    },
+    "horn_impulse": {
+      "pr": "bullet36",
+      "hit": "power31",
+      "nv": "barrage06"
+    },
+    "trident_revolver": {
+      "pr": "fire12",
+      "hit": "power20",
+      "nv": "pillar05"
+    },
+    "rising_destroyer": {
+      "pr": "fire09",
+      "hit": "exp09",
+      "nv": "pillar19"
+    },
+    "solid_strike": {
+      "pr": "ball13",
+      "hit": "power23",
+      "nv": "pillar04"
+    },
+    "glorious_burst": {
+      "pr": "ball23",
+      "hit": "exp27",
+      "nv": "pillar01"
+    },
+    "shining_blast": {
+      "pr": "wind01",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "geogrey_sword": {
+      "pr": "bullet12",
+      "hit": "exp26",
+      "nv": "pillar37"
+    },
+    "corona_blaze_sword": {
+      "pr": "bullet47",
+      "hit": "power20",
+      "nv": "barrage01"
+    },
+    "final_shining_burst": {
+      "pr": "wind01",
+      "hit": "exp23",
+      "nv": "pillar24"
+    },
+    "torrid_weiss": {
+      "pr": "fire11",
+      "hit": "power27",
+      "nv": "pillar19"
+    },
+    "rolling_upper": {
+      "pr": "arrow05",
+      "hit": "exp16",
+      "nv": "pillar16"
+    },
+    "double_backhand": {
+      "pr": "bullet05",
+      "hit": "exp18",
+      "nv": "pillar34"
+    },
+    "dash_double_claw": {
+      "pr": "arrow05",
+      "hit": "power18",
+      "nv": "pillar16"
+    },
+    "gaoga_hound": {
+      "pr": "ball30",
+      "hit": "exp07",
+      "nv": "pillar24"
+    },
+    "spiral_blow": {
+      "pr": "bullet25",
+      "hit": "power12",
+      "nv": "pillar32"
+    },
+    "gaoga_tornado": {
+      "pr": "fire02",
+      "hit": "exp13",
+      "nv": "pillar18"
+    },
+    "winning_knuckle": {
+      "pr": "bullet40",
+      "hit": "power18",
+      "nv": "pillar24"
+    },
+    "howling_cannon": {
+      "pr": "ball29",
+      "hit": "exp17",
+      "nv": "pillar04"
+    },
+    "double_crescent_mirage": {
+      "pr": "ball22",
+      "hit": "shock01",
+      "nv": "pillar03"
+    },
+    "full_moon_blaster": {
+      "pr": "ball30",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "gale_claw": {
+      "pr": "ball36",
+      "hit": "exp18",
+      "nv": "pillar32"
+    },
+    "full_moon_meteor_impact": {
+      "pr": "fire01",
+      "hit": "exp09",
+      "nv": "pillar06"
+    },
+    "final_mirage_burst": {
+      "pr": "bullet17",
+      "hit": "power20",
+      "nv": "pillar22"
+    },
+    "seed_blast": {
+      "pr": "ball30",
+      "hit": "exp12",
+      "nv": "power34"
+    },
+    "lala_screw": {
+      "pr": "bullet40",
+      "hit": "exp12",
+      "nv": "pillar24"
+    },
+    "sunshine_beam": {
+      "pr": "fire12",
+      "hit": "power09",
+      "nv": "pillar06"
+    },
+    "smiley_slap": {
+      "pr": "ball01",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "cactus_tail": {
+      "pr": "arrow19",
+      "hit": "exp15",
+      "nv": "pillar29"
+    },
+    "lila_shower": {
+      "pr": "bullet20",
+      "hit": "exp09",
+      "nv": "pillar01"
+    },
+    "beauty_slap": {
+      "pr": "bullet28",
+      "hit": "power11",
+      "nv": "pillar29"
+    },
+    "pollen_spray": {
+      "pr": "ball01",
+      "hit": "exp16",
+      "nv": "pillar16"
+    },
+    "thorn_whip": {
+      "pr": "bullet10",
+      "hit": "power03",
+      "nv": "pillar03"
+    },
+    "roses_rapier": {
+      "pr": "ball37",
+      "hit": "exp19",
+      "nv": "pillar02"
+    },
+    "forbidden_temptation": {
+      "pr": "arrow05",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "absolute_territory": {
+      "pr": "bullet40",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "nightmare_assemble": {
+      "pr": "ball24",
+      "hit": "power25",
+      "nv": "barrage07"
+    },
+    "scratch_smash": {
+      "pr": "bullet05",
+      "hit": "exp08",
+      "nv": "pillar32"
+    },
+    "ninja_blade": {
+      "pr": "arrow22",
+      "hit": "exp08",
+      "nv": "barrage03"
+    },
+    "spiral_claw": {
+      "pr": "bullet23",
+      "hit": "exp08",
+      "nv": "barrage02"
+    },
+    "kunai_wing": {
+      "pr": "fire14",
+      "hit": "exp08",
+      "nv": "pillar31"
+    },
+    "thousand_beaks": {
+      "pr": "bullet31",
+      "hit": "exp22",
+      "nv": "pillar30"
+    },
+    "savage_emperor": {
+      "pr": "bullet16",
+      "hit": "power16",
+      "nv": "pillar21"
+    },
+    "haguro": {
+      "pr": "wind01",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "fire_jewels": {
+      "pr": "bullet39",
+      "hit": "power13",
+      "nv": "pillar26"
+    },
+    "crimson_formation": {
+      "pr": "ball33",
+      "hit": "power22",
+      "nv": "barrage04"
+    },
+    "mourning_dance": {
+      "pr": "wind01",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "corona_flame": {
+      "pr": "bullet16",
+      "hit": "exp09",
+      "nv": "pillar06"
+    },
+    "corona_knuckle": {
+      "pr": "bullet17",
+      "hit": "exp27",
+      "nv": "pillar22"
+    },
+    "flame_dive": {
+      "pr": "fire09",
+      "hit": "power15",
+      "nv": "pillar26"
+    },
+    "fira_claw": {
+      "pr": "bullet02",
+      "hit": "exp09",
+      "nv": "pillar01"
+    },
+    "crimson_lion_dance": {
+      "pr": "bullet40",
+      "hit": "exp16",
+      "nv": "pillar16"
+    },
+    "sol_blaster": {
+      "pr": "arrow20",
+      "hit": "power27",
+      "nv": "pillar19"
+    },
+    "phoebus_blow": {
+      "pr": "ball01",
+      "hit": "exp07",
+      "nv": "pillar24"
+    },
+    "barrage_sweeper": {
+      "pr": "arrow05",
+      "hit": "exp07",
+      "nv": "pillar24"
+    },
+    "resting_burner": {
+      "pr": "bullet39",
+      "hit": "power27",
+      "nv": "barrage01"
+    },
+    "luna_claw": {
+      "pr": "ball18",
+      "hit": "power33",
+      "nv": "barrage04"
+    },
+    "tearing_shot": {
+      "pr": "ball25",
+      "hit": "exp01",
+      "nv": "pillar05"
+    },
+    "moon_night_kick": {
+      "pr": "arrow05",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "tear_arrow": {
+      "pr": "ball19",
+      "hit": "power19",
+      "nv": "pillar06"
+    },
+    "lunatic_dance": {
+      "pr": "bullet40",
+      "hit": "exp23",
+      "nv": "pillar24"
+    },
+    "ice_archery": {
+      "pr": "ball06",
+      "hit": "shock05",
+      "nv": "pillar33"
+    },
+    "crescent_harken": {
+      "pr": "arrow05",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "arrow_of_artemis": {
+      "pr": "bullet07",
+      "hit": "power13",
+      "nv": "pillar26"
+    },
+    "eye_of_nightmares": {
+      "pr": "ball26",
+      "hit": "power10",
+      "nv": "pillar13"
+    },
+    "undead_fang": {
+      "pr": "ball04",
+      "hit": "exp31",
+      "nv": "barrage07"
+    },
+    "sticker_blade": {
+      "pr": "bullet43",
+      "hit": "power26",
+      "nv": "pillar30"
+    },
+    "black_mind": {
+      "pr": "ball33",
+      "hit": "power10",
+      "nv": "barrage07"
+    },
+    "drain_slash": {
+      "pr": "ball14",
+      "hit": "exp20",
+      "nv": "pillar33"
+    },
+    "thousand_arrows": {
+      "pr": "bullet34",
+      "hit": "exp22",
+      "nv": "pillar37"
+    },
+    "bulldog": {
+      "pr": "ball24",
+      "hit": "power28",
+      "nv": "barrage04"
+    },
+    "crystal_revolution": {
+      "pr": "ball28",
+      "hit": "spexp02",
+      "nv": "pillar10"
+    },
+    "eye_of_the_gorgon": {
+      "pr": "bullet22",
+      "hit": "power22",
+      "nv": "barrage07"
+    },
+    "death_scream": {
+      "pr": "ball33",
+      "hit": "power28",
+      "nv": "pillar13"
+    },
+    "haggard_cluster": {
+      "pr": "bullet22",
+      "hit": "power25",
+      "nv": "barrage04"
+    },
+    "chaos_lights": {
+      "pr": "ball01",
+      "hit": "exp12",
+      "nv": "pillar24"
+    },
+    "trump_sword": {
+      "pr": "bullet39",
+      "hit": "exp14",
+      "nv": "pillar01"
+    },
+    "clown_s_trick": {
+      "pr": "ball33",
+      "hit": "exp31",
+      "nv": "barrage07"
+    },
+    "masks_square": {
+      "pr": "ball04",
+      "hit": "power10",
+      "nv": "barrage07"
+    },
+    "bear_fist": {
+      "pr": "ball30",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "bear_roll": {
+      "pr": "arrow05",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "maul_attack": {
+      "pr": "bullet40",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "crescent_dawn": {
+      "pr": "ball30",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "the_king_of_fists": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "power34"
+    },
+    "cyclonic_kick": {
+      "pr": "wind01",
+      "hit": "exp12",
+      "nv": "power34"
+    },
+    "corona_sanctions": {
+      "pr": "fire09",
+      "hit": "exp14",
+      "nv": "pillar06"
+    },
+    "mugenhadou": {
+      "pr": "ball28",
+      "hit": "exp15",
+      "nv": "pillar25"
+    },
+    "gear_stinger": {
+      "pr": "ball16",
+      "hit": "power15",
+      "nv": "pillar21"
+    },
+    "buzz_buzz_call": {
+      "pr": "fire05",
+      "hit": "power22",
+      "nv": "barrage07"
+    },
+    "turbo_stinger": {
+      "pr": "bullet04",
+      "hit": "power32",
+      "nv": "barrage06"
+    },
+    "bear_buster": {
+      "pr": "bullet33",
+      "hit": "shock06",
+      "nv": "pillar04"
+    },
+    "nitro_stinger": {
+      "pr": "arrow20",
+      "hit": "exp09",
+      "nv": "pillar21"
+    },
+    "mach_stinger_v": {
+      "pr": "bullet37",
+      "hit": "power28",
+      "nv": "pillar15"
+    },
+    "royal_meister": {
+      "pr": "ball04",
+      "hit": "power10",
+      "nv": "barrage07"
+    },
+    "mini_scissor_claw": {
+      "pr": "ball14",
+      "hit": "power08",
+      "nv": "barrage08"
+    },
+    "assemble_work": {
+      "pr": "ball02",
+      "hit": "shock03",
+      "nv": "barrage05"
+    },
+    "thunder_ball": {
+      "pr": "arrow08",
+      "hit": "power24",
+      "nv": "pillar03"
+    },
+    "thunder_bomber": {
+      "pr": "arrow07",
+      "hit": "power06",
+      "nv": "pillar20"
+    },
+    "intercepting_bomb": {
+      "pr": "ball30",
+      "hit": "exp23",
+      "nv": "power34"
+    },
+    "homing_laser": {
+      "pr": "bullet29",
+      "hit": "power31",
+      "nv": "barrage06"
+    },
+    "gran_killer": {
+      "pr": "ball30",
+      "hit": "exp24",
+      "nv": "pillar24"
+    },
+    "grandis_scissor": {
+      "pr": "wind02",
+      "hit": "shock03",
+      "nv": "pillar10"
+    },
+    "calamity_thunder": {
+      "pr": "ball32",
+      "hit": "exp19",
+      "nv": "pillar20"
+    },
+    "grit_nail": {
+      "pr": "ball24",
+      "hit": "spexp03",
+      "nv": "pillar15"
+    },
+    "crimson_curse": {
+      "pr": "bullet22",
+      "hit": "power10",
+      "nv": "pillar15"
+    },
+    "golem_punch": {
+      "pr": "ball18",
+      "hit": "power10",
+      "nv": "pillar15"
+    },
+    "guardian_bomb": {
+      "pr": "bullet37",
+      "hit": "power10",
+      "nv": "pillar15"
+    },
+    "giant_grater": {
+      "pr": "ball06",
+      "hit": "exp29",
+      "nv": "barrage05"
+    },
+    "curse_reflection": {
+      "pr": "bullet22",
+      "hit": "power10",
+      "nv": "barrage07"
+    },
+    "dark_blast": {
+      "pr": "bullet22",
+      "hit": "power10",
+      "nv": "barrage07"
+    },
+    "necromist": {
+      "pr": "bullet22",
+      "hit": "exp31",
+      "nv": "pillar13"
+    },
+    "tut_ankh_lyl": {
+      "pr": "ball36",
+      "hit": "exp08",
+      "nv": "barrage03"
+    },
+    "cursed_staff": {
+      "pr": "ball18",
+      "hit": "exp31",
+      "nv": "pillar13"
+    },
+    "diamond_machine_gun": {
+      "pr": "bullet44",
+      "hit": "power31",
+      "nv": "pillar04"
+    },
+    "diamond_hedgehog": {
+      "pr": "ball04",
+      "hit": "power28",
+      "nv": "pillar13"
+    },
+    "crystal_breath": {
+      "pr": "ball14",
+      "hit": "power08",
+      "nv": "pillar12"
+    },
+    "refuge_mist": {
+      "pr": "bullet37",
+      "hit": "power33",
+      "nv": "pillar13"
+    },
+    "aqua_blaster": {
+      "pr": "fire08",
+      "hit": "power30",
+      "nv": "pillar33"
+    },
+    "drill_shell": {
+      "pr": "ball24",
+      "hit": "power25",
+      "nv": "pillar13"
+    },
+    "spin_shatter": {
+      "pr": "ball15",
+      "hit": "power25",
+      "nv": "barrage04"
+    },
+    "forbidden_trident": {
+      "pr": "arrow05",
+      "hit": "exp24",
+      "nv": "power34"
+    },
+    "tentacle_flapping": {
+      "pr": "ball01",
+      "hit": "power18",
+      "nv": "pillar16"
+    },
+    "thousand_whips": {
+      "pr": "bullet12",
+      "hit": "exp22",
+      "nv": "pillar30"
+    },
+    "vortex_penetration": {
+      "pr": "ball01",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "wave_of_depth": {
+      "pr": "bullet18",
+      "hit": "exp15",
+      "nv": "pillar07"
+    },
+    "gate_of_atlantis": {
+      "pr": "fire08",
+      "hit": "exp29",
+      "nv": "barrage05"
+    },
+    "sorrow_blue": {
+      "pr": "bullet15",
+      "hit": "power05",
+      "nv": "barrage08"
+    },
+    "shaking_pulse": {
+      "pr": "fire13",
+      "hit": "exp14",
+      "nv": "pillar21"
+    },
+    "fin_attack": {
+      "pr": "bullet40",
+      "hit": "exp07",
+      "nv": "pillar24"
+    },
+    "frisbicker": {
+      "pr": "ball30",
+      "hit": "exp12",
+      "nv": "pillar16"
+    },
+    "assault_claw": {
+      "pr": "bullet40",
+      "hit": "exp12",
+      "nv": "pillar24"
+    },
+    "lightning_buster": {
+      "pr": "arrow07",
+      "hit": "power01",
+      "nv": "pillar02"
+    },
+    "rocket_messer": {
+      "pr": "arrow15",
+      "hit": "power26",
+      "nv": "pillar30"
+    },
+    "crimson_storm": {
+      "pr": "fire14",
+      "hit": "exp08",
+      "nv": "pillar34"
+    },
+    "blast_smash": {
+      "pr": "ball35",
+      "hit": "power27",
+      "nv": "pillar05"
+    },
+    "lio_claw": {
+      "pr": "arrow05",
+      "hit": "exp16",
+      "nv": "power34"
+    },
+    "thunder_of_king": {
+      "pr": "bullet42",
+      "hit": "power01",
+      "nv": "pillar02"
+    },
+    "bowling_storm": {
+      "pr": "bullet05",
+      "hit": "power12",
+      "nv": "pillar32"
+    },
+    "loader_morning_star": {
+      "pr": "bullet40",
+      "hit": "exp12",
+      "nv": "pillar24"
+    },
+    "ground_fang": {
+      "pr": "bullet46",
+      "hit": "exp26",
+      "nv": "pillar30"
+    },
+    "baby_hail": {
+      "pr": "arrow16",
+      "hit": "power04",
+      "nv": "pillar10"
+    },
+    "meteor_hail": {
+      "pr": "bullet02",
+      "hit": "spexp01",
+      "nv": "barrage01"
+    },
+    "frozen_claw": {
+      "pr": "wind02",
+      "hit": "power11",
+      "nv": "pillar33"
+    },
+    "callous_dimension": {
+      "pr": "fire08",
+      "hit": "spexp02",
+      "nv": "pillar29"
+    },
+    "summon_frost": {
+      "pr": "fire03",
+      "hit": "spexp02",
+      "nv": "pillar17"
+    },
+    "absolute_blast": {
+      "pr": "ball30",
+      "hit": "exp23",
+      "nv": "pillar16"
+    },
+    "hecto_edge_blizzard": {
+      "pr": "arrow03",
+      "hit": "power07",
+      "nv": "pillar12"
+    },
+    "innocence_blizzard": {
+      "pr": "fire03",
+      "hit": "power30",
+      "nv": "pillar25"
+    },
+    "freezing_ray": {
+      "pr": "bullet15",
+      "hit": "exp20",
+      "nv": "pillar25"
     }
   }
 }

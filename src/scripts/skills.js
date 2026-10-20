@@ -23,15 +23,31 @@ const SkillSys = {
     const r = await fetch('src/data/skills.json');
     if (!r.ok) throw new Error('No se encontró src/data/skills.json (' + r.status + ')');
     this.cat = await r.json();
-    await Promise.all(Object.entries(this.cat.fxSprites || {}).map(([k, m]) => new Promise(res => {
+    // los efectos por elemento se cargan ya; los de cada skill (son más de 200), la primera vez que se usan (get)
+    const base = new Set(); for (const el in this.cat.fx || {}) for (const u in this.cat.fx[el]) base.add(this.cat.fx[el][u]);
+    await Promise.all([...base].map(k => this.get(k, true)));
+  },
+  // sprite de efecto por nombre; si todavía no está, lo pide y devuelve null (se ve desde el próximo cuadro)
+  loadingFx: {},
+  get(k, wait) {
+    if (!k || this.img[k]) return wait ? Promise.resolve() : this.img[k] || null;
+    const m = this.cat && this.cat.fxSprites && this.cat.fxSprites[k]; if (!m) return wait ? Promise.resolve() : null;
+    if (!this.loadingFx[k]) this.loadingFx[k] = new Promise(res => {
       const i = new Image();
       i.onload = () => { this.img[k] = Object.assign({ i }, m); res(); };
       i.onerror = () => { console.error('No se pudo cargar el efecto:', m.file); res(); };
       i.src = 'assets/sprites/fx/' + m.file;
-    })));
+    });
+    return wait ? this.loadingFx[k] : null;
   },
-  // sprite de efecto de un elemento (kind: 'pr' | 'hit' | 'nv'); si el elemento no tiene, usa el neutral
-  fxOf(el, kind) { const f = this.cat && this.cat.fx && (this.cat.fx[el] || this.cat.fx.neutral); return f ? this.img[f[kind]] : null; },
+  // efecto (kind: 'pr' | 'hit' | 'nv') de una skill (fxSkill: cada skill tiene el suyo, tools/fx/export_fx.py) o de un
+  // elemento; si la skill no tiene de ese tipo, usa el de su elemento, y si el elemento no tiene, el neutral
+  fxOf(key, kind) {
+    const c = this.cat; if (!c || !c.fx) return null;
+    const own = c.fxSkill && c.fxSkill[key], el = own ? ((c.skills[key] && c.skills[key].element) || 'neutral') : key;
+    return this.get((own && own[kind]) || (c.fx[el] || c.fx.neutral)[kind]);
+  },
+  fxKey(k, d) { return this.cat.fxSkill && this.cat.fxSkill[k] ? k : d.element; },   // clave de efecto de la skill k
   // dibuja el cuadro f de una tira, centrado, con alto h (respeta la proporción)
   spr(S, f, x, y, h, rot) {
     const w = S.w * h / S.h;
@@ -165,7 +181,7 @@ const SkillSys = {
     const b = this.near(q, R + 120); if (!b) { this.idle(q, k); return; }
     const a0 = Math.atan2(b.y - q.y, b.x - q.x), n = 1 + S.cnt;
     for (let i = 0; i < n; i++) this.sweep(q, a0 + i * 6.283 / n, R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'arc');   // +1 tajo: otro corte alrededor
-    this.impact(b.x, b.y, d.element, 46 * this.vis(q) * S.size);
+    this.impact(b.x, b.y, this.fxKey(k, d), 46 * this.vis(q) * S.size);
     this.fired(q, k, cd);
   },
 
@@ -175,7 +191,7 @@ const SkillSys = {
     const a0 = Math.atan2(b.y - q.y, b.x - q.x);
     for (let i = 0; i <= S.cnt; i++) { const off = i ? Math.ceil(i / 2) * (i % 2 ? 1 : -1) * d.arc * 0.9 : 0;   // +1 abanico: otro a un costado
       this.sweep(q, a0 + off, R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'cone'); }
-    this.impact(b.x, b.y, d.element, 54 * this.vis(q) * S.size);
+    this.impact(b.x, b.y, this.fxKey(k, d), 54 * this.vis(q) * S.size);
     this.fired(q, k, cd);
   },
 
@@ -188,7 +204,7 @@ const SkillSys = {
       const a = a0 + (n > 1 ? -sp / 2 + sp * i / (n - 1) : 0);
       sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed,
         l: (d.life || 1.2) * (q.dur || 1), pi: (d.pierce || 0) + S.pierce, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el, q: q.id,
-        ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 * S.size, fx: d.element, sz: 34 * this.vis(q) * S.size });
+        ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 * S.size, fx: this.fxKey(k, d), sz: 34 * this.vis(q) * S.size });
     }
     this.fired(q, k, cd);
   },
@@ -201,7 +217,7 @@ const SkillSys = {
     for (let i = 0; i <= S.cnt; i++) {   // +1 onda: otro anillo, más grande
       const Ri = R * (1 + 0.35 * i);
       ef.push({ k: 'ring', x: q.x, y: q.y, R: Ri, col: this.col(d), l: .35 + .08 * i, m: .35 + .08 * i });
-      if (!i && this.fxOf(d.element, 'nv')) ef.push({ k: 'nova', fx: d.element, x: q.x, y: q.y, R, l: .45, m: .45 });
+      if (!i && this.fxOf(this.fxKey(k, d), 'nv')) ef.push({ k: 'nova', fx: this.fxKey(k, d), x: q.x, y: q.y, R, l: .45, m: .45 });
       for (const e of en) if (Math.hypot(e.x - q.x, e.y - q.y) < Ri + e.r) hit(e, dm * (i ? 0.6 : 1), q.el, q);
     }
     if (d.guard) q.inv = Math.max(q.inv || 0, d.guard * (q.dur || 1));
@@ -230,7 +246,7 @@ const SkillSys = {
         if (al > 0 && al < Lg && Math.abs(-px * sa + py * ca) < e.r + W / 2) hit(e, dm, q.el, q);
       }
     }
-    this.impact(b.x, b.y, d.element, 50 * this.vis(q) * S.size);
+    this.impact(b.x, b.y, this.fxKey(k, d), 50 * this.vis(q) * S.size);
     this.fired(q, k, cd);
   },
 
@@ -262,7 +278,7 @@ const SkillSys = {
     for (const k in q.wp) {
       const d = this.def(k); if (!d || d.type !== 'orbit' || !(q.wp[k] | 0)) continue;
       const S = this.perks(d, q.wp[k]), n = (d.count || 3) + S.cnt, R = (d.radius || 64) * S.area * (q.area || 1);
-      const P = this.fxOf(d.element, 'pr');
+      const P = this.fxOf(this.fxKey(k, d), 'pr');
       cx.fillStyle = this.col(d); cx.strokeStyle = '#fff'; cx.lineWidth = 2;
       for (let i = 0; i < n; i++) {
         const a = q.oa + i * 6.283 / n, ox = q.x + Math.cos(a) * R, oy = q.y + Math.sin(a) * R;

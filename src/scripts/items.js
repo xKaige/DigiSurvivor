@@ -1,18 +1,18 @@
 // Ítems canon que caen al piso. Se carga ANTES que game.js y usa sus globals en tiempo de ejecución
 // (P, gems, fx, t, cx, xp, need, burst, Bosses, Challenge).
 //
-// - Los virus comunes sueltan un ítem con probabilidad DROP (sorteo por peso `w`); los jefes, una Recovery Floppy
+// - Los Digimon comunes sueltan un ítem con probabilidad DROP (sorteo por peso `w`); los jefes, una Recovery Floppy
 //   y a veces un X-Antibody. Se levantan pasando por encima. Duran LIFE segundos en el piso.
 // - Solo el anfitrión (o el juego local) decide caídas y efectos; el cliente online los ve por el `sync` (`it`).
 // - Sprites en assets/sprites/items/ (de Digital Tamers).
 const Items = {
-  DROP: 0.018,
+  DROP: 0.025,      // (antes 0,018: pedían más curas)
   LIFE: 30,
   defs: {
     meat:      { n: 'Carne',           w: 60, col: '#ff9a6b', d: 'Cura un 25% de la vida' },
     digicore:  { n: 'Digicore',        w: 14, col: '#ffe14d', d: 'Da un 40% de la experiencia del nivel' },
     magnet:    { n: 'Imán de datos',   w: 10, col: '#5cf2ff', d: 'Atrae toda la experiencia del mapa' },
-    floppy:    { n: 'Recovery Floppy', w: 4,  col: '#ff7ad9', d: 'Cura toda la vida y da 2 s de invulnerabilidad' },
+    floppy:    { n: 'Recovery Floppy', w: 8,  col: '#ff7ad9', d: 'Cura toda la vida y da 2 s de invulnerabilidad' },
     xantibody: { n: 'X-Antibody',      w: 0,  col: '#c05bff', d: 'Despierta el X-Antibody: +25% de daño y +10% de velocidad' }
   },
   img: {},
@@ -33,8 +33,10 @@ const Items = {
   },
   drop(x, y) {
     const luck = Math.max(0, ...P.map(q => q.luck || 0));   // suerte (stats.js): más ítems
-    const ch = this.DROP * (1 + luck) * (typeof Challenge !== 'undefined' && Challenge.has('items') ? 3 : 1);
-    if (Math.random() < ch) this.on.push({ x, y, k: this.roll(), l: this.LIFE });
+    // si alguno está bajo el 40% de vida, el doble de chance y casi siempre carne (que no te quedes sin cómo curarte)
+    const low = P.some(q => !q.dead && q.hp < q.max * 0.4);
+    const ch = this.DROP * (1 + luck) * (low ? 2 : 1) * (typeof Challenge !== 'undefined' && Challenge.has('items') ? 3 : 1);
+    if (this.on.length < 30 && Math.random() < ch) this.on.push({ x, y, k: low && Math.random() < 0.6 ? 'meat' : this.roll(), l: this.LIFE });
   },
   bossDrop(x, y) {
     // bien separados (±150) para no agarrar los dos sin querer (el X-Antibody puede no convenir); en la arena, adentro de la plataforma
