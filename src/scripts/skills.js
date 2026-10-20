@@ -76,11 +76,13 @@ const SkillSys = {
     cone:       ['dmg', 'area', 'cnt', 'dmg', 'area', 'cnt', 'cd', 'area', 'big'],
     beam:       ['dmg', 'area', 'cnt', 'dmg', 'cd', 'cnt', 'area', 'dmg', 'big'],
     nova:       ['dmg', 'area', 'cd', 'cnt', 'area', 'dmg', 'cnt', 'area', 'big'],
-    orbit:      ['dmg', 'cnt', 'area', 'dmg', 'cnt', 'area', 'dmg', 'cnt', 'big']
+    orbit:      ['dmg', 'cnt', 'area', 'dmg', 'cnt', 'area', 'dmg', 'cnt', 'big'],
+    heal:       ['dmg', 'area', 'cd', 'dmg', 'area', 'cd', 'dmg', 'area', 'big']
   },
-  UNIT: { projectile: 'proyectil', melee_arc: 'tajo', cone: 'abanico', beam: 'rayo', nova: 'onda', orbit: 'orbe' },
+  UNIT: { projectile: 'proyectil', melee_arc: 'tajo', cone: 'abanico', beam: 'rayo', nova: 'onda', orbit: 'orbe', heal: 'cura' },
   perkText(d, lv) {
     const k = (this.PERKS[d.type] || [])[lv - 2], u = this.UNIT[d.type] || 'golpe';
+    if (d.type === 'heal') return { dmg: '+17% de curación' + (d.dmg ? ' y +30% de daño' : ''), area: '+20% de área', cd: '-12% de recarga', big: 'MÁXIMO PODER: cura más y en más área' }[k] || '+17% de curación';
     return { dmg: '+30% de daño', area: '+20% de área', cd: '-12% de recarga', cnt: '+1 ' + u, pierce: 'Atraviesa 1 enemigo más',
       big: 'MÁXIMO PODER: +40% de daño, +25% de área y +1 ' + u }[k] || '+30% de daño';
   },
@@ -147,6 +149,8 @@ const SkillSys = {
       const lv = q.wp[k] | 0; if (!lv) continue;
       const d = this.def(k); if (!d) continue;
       const S = this.perks(d, lv);
+      // poder extra por la rareza de las cartas (game.js: q.wm): más daño y un poco más grande (que se note)
+      const Wm = q.wm && q.wm[k]; if (Wm && Wm !== 1) { S.dmg *= Wm; const g = 1 + (Wm - 1) * 0.4; S.area *= g; S.size *= g; }
       // stats del jugador (stats.js): área, recarga y duración
       if (q.area) { S.area *= q.area; S.size *= q.area; }   // el tamaño crece igual que el área (antes la mitad: no se notaba)
       if (d.type === 'orbit') { this.orbit(q, k, d, S, dt); continue; }
@@ -166,8 +170,8 @@ const SkillSys = {
   // tamaño visual de los efectos según lo grande que se dibuja el Digimon (q.dh lo guarda drawBuddy)
   vis(q) { return Math.min(2.2, Math.max(1.2, ((q && q.dh) || 96) / 80)); },
 
-  sweep(q, a, R, arc, dm, col, kind) {
-    ef.push({ k: kind, x: q.x, y: q.y, a, R, s: arc, col, l: .25, m: .25 });
+  sweep(q, a, R, arc, dm, col, kind, fx) {
+    ef.push({ k: kind, x: q.x, y: q.y, a, R, s: arc, col, fx, l: kind === 'arc' ? .28 : .3, m: kind === 'arc' ? .28 : .3 });
     for (const e of en) {
       const dx = e.x - q.x, dy = e.y - q.y, dist = Math.hypot(dx, dy);
       if (dist > R + e.r) continue;
@@ -180,7 +184,7 @@ const SkillSys = {
     const R = d.range * S.area;
     const b = this.near(q, R + 120); if (!b) { this.idle(q, k); return; }
     const a0 = Math.atan2(b.y - q.y, b.x - q.x), n = 1 + S.cnt;
-    for (let i = 0; i < n; i++) this.sweep(q, a0 + i * 6.283 / n, R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'arc');   // +1 tajo: otro corte alrededor
+    for (let i = 0; i < n; i++) this.sweep(q, a0 + i * 6.283 / n, R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'arc', this.fxKey(k, d));   // +1 tajo: otro corte alrededor
     this.impact(b.x, b.y, this.fxKey(k, d), 46 * this.vis(q) * S.size);
     this.fired(q, k, cd);
   },
@@ -190,7 +194,7 @@ const SkillSys = {
     const b = this.near(q, R + 60); if (!b) { this.idle(q, k); return; }
     const a0 = Math.atan2(b.y - q.y, b.x - q.x);
     for (let i = 0; i <= S.cnt; i++) { const off = i ? Math.ceil(i / 2) * (i % 2 ? 1 : -1) * d.arc * 0.9 : 0;   // +1 abanico: otro a un costado
-      this.sweep(q, a0 + off, R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'cone'); }
+      this.sweep(q, a0 + off, R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'cone', this.fxKey(k, d)); }
     this.impact(b.x, b.y, this.fxKey(k, d), 54 * this.vis(q) * S.size);
     this.fired(q, k, cd);
   },
@@ -221,6 +225,25 @@ const SkillSys = {
       for (const e of en) if (Math.hypot(e.x - q.x, e.y - q.y) < Ri + e.r) hit(e, dm * (i ? 0.6 : 1), q.el, q);
     }
     if (d.guard) q.inv = Math.max(q.inv || 0, d.guard * (q.dur || 1));
+    this.fired(q, k, cd);
+  },
+
+  // Curación en área (0.7; solo técnicas que curan según Wikimon): cura a los aliados cercanos (vos incluido) un % de su
+  // vida máxima (heal; cada mejora de daño la sube un 17%) y, si la técnica tiene daño, golpea a los enemigos del área.
+  // Solo se usa si alguien está herido o, con daño, si hay enemigos cerca.
+  heal(q, k, d, S, cd) {
+    const R = d.radius * S.area, al = P.filter(o => !o.dead && Math.hypot(o.x - q.x, o.y - q.y) < R + 30);
+    const need = al.some(o => o.hp < o.max * 0.97), foe = d.dmg && this.near(q, R + 40);
+    if (!need && !foe) { this.idle(q, k); return; }
+    const pc = d.heal * Math.pow(S.dmg, 0.6);
+    ef.push({ k: 'ring', x: q.x, y: q.y, R, col: '#5dff9a', l: .55, m: .55 });
+    ef.push({ k: 'ring', x: q.x, y: q.y, R: R * .6, col: '#c8ffd8', l: .4, m: .4 });
+    for (const o of al) {
+      const v = Math.min(o.max - o.hp, o.max * pc); if (v <= 0) continue;
+      o.hp += v; dmgNum(o.x, o.y - 44, v, '#5dff9a', 20, '+' + Math.max(1, Math.round(v)));
+      for (let j = 0; j < 8; j++) burst(o.x, o.y, j % 2 ? '#5dff9a' : '#fff');
+    }
+    if (d.dmg) { const dm = d.dmg * q.dmg * S.dmg; for (const e of en) if (Math.hypot(e.x - q.x, e.y - q.y) < R + e.r) hit(e, dm, q.el, q); }
     this.fired(q, k, cd);
   },
 
@@ -300,21 +323,51 @@ const SkillSys = {
       cx.globalAlpha = Math.max(0, o.l / o.m); cx.lineWidth = o.w || 14; cx.beginPath(); cx.moveTo(o.x, o.y); cx.lineTo(x2, y2); cx.stroke();
       cx.strokeStyle = '#fff'; cx.lineWidth = Math.max(2, (o.w || 14) * .35); cx.beginPath(); cx.moveTo(o.x, o.y); cx.lineTo(x2, y2); cx.stroke();
       cx.lineCap = 'butt';
-    } else if (o.k === 'wline' || o.k === 'wcirc' || o.k === 'pool') {
+    } else if (o.k === 'bolt') {
+      Weather.drawBolt(o);   // rayo de la tormenta (weather.js)
+    } else if (o.k === 'wline' || o.k === 'wcirc' || o.k === 'pool' || o.k === 'rbeam') {
       Enemies.drawWarn(o);   // aviso de ataque enemigo (enemies.js)
     } else if (o.k === 'hit' || o.k === 'nova') {
       const S = this.fxOf(o.fx, o.k === 'hit' ? 'hit' : 'nv');
       if (S) { cx.globalAlpha = Math.min(1, o.l / o.m * 3); this.spr(S, k * S.n, o.x, o.y, o.k === 'hit' ? o.R : o.R * 2); }
-    } else if (o.k === 'arc') {
-      cx.strokeStyle = col; cx.lineWidth = 10; cx.lineCap = 'round';
-      cx.beginPath(); cx.arc(o.x, o.y, o.R * .8, o.a - o.s / 2, o.a - o.s / 2 + o.s * Math.min(1, k * 2)); cx.stroke();
-      cx.lineCap = 'butt';
-    } else if (o.k === 'cone') {
-      cx.globalAlpha = Math.max(0, o.l / o.m) * .55; cx.fillStyle = col;
-      cx.beginPath(); cx.moveTo(o.x, o.y); cx.arc(o.x, o.y, o.R * (.4 + .6 * k), o.a - o.s / 2, o.a + o.s / 2);
-      cx.closePath(); cx.fill();
+    } else if (o.k === 'arc') {   // tajo (0.7): media luna del color de la skill con filo blanco que barre, y su efecto en la punta
+      const p = Math.min(1, k * 2.4), a1 = o.a - o.s / 2, a2 = a1 + o.s * p, R = o.R * .9, th = Math.max(9, R * .3), fd = Math.max(0, o.l / o.m), N = 14;
+      cx.globalAlpha = fd * .35; cx.fillStyle = col; this.crescent(o.x, o.y, R + 6, th + 10, a1, a2, N); cx.fill();
+      cx.globalAlpha = fd * .9; this.crescent(o.x, o.y, R, th, a1, a2, N); cx.fill();
+      cx.globalAlpha = fd; cx.strokeStyle = '#fff'; cx.lineWidth = 2.5; cx.beginPath(); cx.arc(o.x, o.y, R, a1 + (a2 - a1) * .15, a2); cx.stroke();
+      const S = o.fx && this.fxOf(o.fx, 'hit');
+      if (S && p < 1) { cx.globalAlpha = fd; this.spr(S, Math.floor(p * (S.n - 1)), o.x + Math.cos(a2) * R, o.y + Math.sin(a2) * R, th * 2.6); }
+    } else if (o.k === 'cone') {  // abanico (0.7): onda del color de la skill que sale, con estelas blancas y su efecto adelante
+      const fd = Math.max(0, o.l / o.m), Rk = o.R * (.35 + .65 * Math.min(1, k * 1.6)), a1 = o.a - o.s / 2, a2 = o.a + o.s / 2;
+      const g = cx.createRadialGradient(o.x, o.y, Rk * .15, o.x, o.y, Rk); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.7, col); g.addColorStop(1, '#fff');
+      cx.globalAlpha = fd * .6; cx.fillStyle = g; cx.beginPath(); cx.moveTo(o.x, o.y); cx.arc(o.x, o.y, Rk, a1, a2); cx.closePath(); cx.fill();
+      cx.globalAlpha = fd * .8; cx.strokeStyle = '#fff'; cx.lineWidth = 2; cx.beginPath();
+      for (let j = 0; j < 5; j++) { const a = a1 + o.s * (j + .5) / 5; cx.moveTo(o.x + Math.cos(a) * Rk * .55, o.y + Math.sin(a) * Rk * .55); cx.lineTo(o.x + Math.cos(a) * Rk * .95, o.y + Math.sin(a) * Rk * .95); }
+      cx.stroke();
+      const S = o.fx && this.fxOf(o.fx, 'hit');
+      if (S) { cx.globalAlpha = fd; this.spr(S, Math.min(S.n - 1, Math.floor(k * S.n)), o.x + Math.cos(o.a) * Rk * .8, o.y + Math.sin(o.a) * Rk * .8, Rk * .7); }
     }
     cx.globalAlpha = 1;
+  },
+
+  // media luna (para los tajos): grosor th que se afina en las puntas, de a1 a a2 sobre el radio R
+  crescent(x, y, R, th, a1, a2, N) {
+    cx.beginPath();
+    for (let i = 0; i <= N; i++) { const a = a1 + (a2 - a1) * i / N; cx.lineTo(x + Math.cos(a) * R, y + Math.sin(a) * R); }
+    for (let i = N; i >= 0; i--) { const a = a1 + (a2 - a1) * i / N, w = th * Math.sin(Math.PI * i / N); cx.lineTo(x + Math.cos(a) * (R - w), y + Math.sin(a) * (R - w)); }
+    cx.closePath();
+  },
+  // efecto de las balas de un enemigo: cada especie (o jefe) tiene el suyo, sacado de los efectos de proyectil de las skills
+  prList() { if (!this._pr) { const s = new Set(); for (const k in (this.cat && this.cat.fxSkill) || {}) if (this.cat.fxSkill[k].pr) s.add(this.cat.fxSkill[k].pr); this._pr = [...s].sort(); } return this._pr; },
+  bfx(e) { const L = this.prList(); if (!L.length || !e) return 0; const id = e.bo != null ? 'b' + e.bo : 'e' + (e.et != null ? e.et : e.sk || 0); let h = 7; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 9973; return 1 + h % L.length; },
+  // dibuja una bala enemiga con su efecto (bf = índice + 1 en prList); devuelve false si no tiene o todavía no cargó
+  drawEB(b) {
+    const k = b.bf && this.prList()[b.bf - 1], S = k && this.get(k); if (!S) return false;
+    const r = b.r || 6;
+    cx.globalAlpha = .55; cx.fillStyle = '#ff2d55'; cx.beginPath(); cx.arc(b.x, b.y, r + 3, 0, 6.283); cx.fill(); cx.globalAlpha = 1;   // halo rojo: se lee como peligro
+    cx.save(); cx.translate(b.x, b.y); cx.rotate(Math.atan2(b.vy || 0, b.vx || 1));
+    this.spr(S, Math.floor(t * 12) % S.n, 0, 0, r * 3.4); cx.restore();
+    return true;
   },
 
   // ---------- Barra fija de skills (abajo, al centro) ----------

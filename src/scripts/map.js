@@ -298,18 +298,21 @@ const World = {
   // centro para hacer aparecer enemigos: un jugador vivo al azar (online cada uno tiene su cámara, así le llegan a todos)
   spawnCenter() { const al = P.filter(q => !q.dead); const q = al[(Math.random() * al.length) | 0]; return q ? [q.x, q.y] : [cam.x, cam.y]; },
   // lugar de aparición fuera de pantalla, libre y CONECTADO con el jugador (el mapa tiene niveles separados por barrancos)
+  offAll(x, y) { return !P.some(q => !q.dead && Math.abs(q.x - x) < W / 2 + 90 && Math.abs(q.y - y) < H / 2 + 150); },   // fuera de la vista de todos (con el alto del dibujo)
   spawnPos(e) {
     if (this.arena) { const A = this.AR; return this.freeSpot((Math.random() - 0.5) * A.w * 0.8, (Math.random() - 0.5) * A.h * 0.8, e); }
     // justo fuera de la pantalla (antes, como mínimo a 900 px: tardaban en llegar y había pocos a la vista); online, un poco más
     const dist = Math.max(Math.hypot(W, H) / 2, isOnline && P.length > 1 ? 750 : 0) + 60, [ccx, ccy] = this.spawnCenter();
-    let best = null;
-    for (let k = 0; k < 14; k++) {
+    // 0.7: el lugar final (freeSpot puede correrlo) tiene que quedar fuera de la pantalla de TODOS (online, otro jugador
+    // podía estar cerca y le aparecían de la nada)
+    let best = null, any = null;
+    for (let k = 0; k < 18; k++) {
       const a = Math.random() * 6.283, sp = this.freeSpot(ccx + Math.cos(a) * dist, ccy + Math.sin(a) * dist, e);
-      const v = this.reach(sp[0], sp[1] + this.foot(e));
-      if (v !== 65535) return sp;   // con camino (o fuera del mapa de distancias: se acerca en línea recta)
-      best = best || sp;
+      const v = this.reach(sp[0], sp[1] + this.foot(e)), off = this.offAll(sp[0], sp[1]);
+      if (v !== 65535 && off) return sp;   // con camino (o fuera del mapa de distancias: se acerca en línea recta)
+      if (off) best = best || sp; any = any || sp;
     }
-    return best;
+    return best || any;
   },
   // cada tanto, los enemigos que quedaron encerrados (sin camino al jugador) se mudan a un lugar conectado
   relocT: 0,

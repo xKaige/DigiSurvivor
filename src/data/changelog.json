@@ -1,5 +1,17 @@
 [
   {
+    "v": "0.7",
+    "items": [
+      "Clima: ahora puede llover o caer una tormenta eléctrica, con rayos marcados que dañan a todos los que estén adentro.",
+      "Jefes con más mecánicas: escudo inmune con una cruz de rayos que gira (¡hay que rodearlo!), varias embestidas seguidas y persiguen al que más daño les hace.",
+      "Rareza en las cartas: blancas, verdes, azules, violetas y naranjas épicas ★. Cuanto más evolucionado, más chances de las mejores.",
+      "Dash con 2 cargas (Espacio o Shift; en celular, botón DASH): te deja esquivar sin recibir daño.",
+      "Skills de curación en área para los Digimon que las tienen según Wikimon (HolyAngemon, Seraphimon, MarinAngemon).",
+      "Reroll de cartas con la tecla R, tajos y abanicos nuevos, balas enemigas con efectos propios e imán que junta todo el mapa.",
+      "Arreglos: los Digimon enemigos ya no se enciman ni aparecen de la nada en pantalla."
+    ]
+  },
+  {
     "v": "0.6",
     "items": [
       "Cada Digimon tiene sus propios stats (Fuerza, Inteligencia, Velocidad y Vitalidad) y un rasgo único: Guilmon pega más con poca vida, Renamon esquiva, Terriermon rebota sus disparos…",

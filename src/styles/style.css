@@ -639,3 +639,25 @@ body.finale #snd{display:none!important}
 @keyframes rppulse{50%{box-shadow:0 0 18px 4px #ff2d2d;transform:scale(1.08)}}
 @media (prefers-reduced-motion:reduce){#rp-btn .rp-ic{animation:none}}
 @media (max-width:560px){#ov-corner{position:relative;left:auto;bottom:auto;align-self:center;flex-wrap:wrap;justify-content:center}}
+
+/* ---------- Rareza de las cartas (0.7): el borde y el brillo dicen qué tan buena es ---------- */
+#up .card.lv[class*=" rar"]{border-color:var(--rar);box-shadow:0 0 14px color-mix(in srgb,var(--rar) 55%,transparent),inset 0 0 18px color-mix(in srgb,var(--rar) 18%,transparent)}
+#up .card.lv .rlab{font:700 11px 'Chakra Petch',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--rar)}
+#up .card.lv.rar0{--rar:#e8eef5}#up .card.lv.rar1{--rar:#4dff7a}#up .card.lv.rar2{--rar:#3fa8ff}#up .card.lv.rar3{--rar:#b35cff}
+#up .card.lv.rar4{--rar:#ff9a2e;animation:rarepic 1.6s ease-in-out infinite}
+@keyframes rarepic{50%{box-shadow:0 0 26px #ff9a2e,inset 0 0 24px rgba(255,154,46,.35)}}
+#up .card.lv .rstar{position:absolute;top:-12px;left:-12px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#1a1000;background:radial-gradient(circle,#ffe066,#ff9a2e);border-radius:50%;box-shadow:0 0 12px #ff9a2e;z-index:2}
+/* Reroll: cartelito abajo de las cartas (tecla R) */
+#cards .rr-btn{flex-basis:100%;max-width:220px;margin:6px auto 0;padding:7px 16px;font:700 14px 'Chakra Petch',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#cfe8ff;background:rgba(4,16,34,.85);border:1px solid #1b6fa8;border-radius:3px;cursor:pointer}
+#cards .rr-btn b{display:inline-block;margin-right:6px;padding:0 6px;color:#05101e;background:#ffd23f;border-radius:3px}
+#cards .rr-btn small{color:#9fc0d6;text-transform:none;letter-spacing:0}
+#cards .rr-btn:hover{border-color:#3fd0ff;color:#fff}
+@media (prefers-reduced-motion:reduce){#up .card.lv.rar4{animation:none}}
+@media (max-width:700px){#up .card.lv .rstar{top:-8px;left:-8px;width:22px;height:22px;font-size:14px}#cards .rr-btn{align-self:center}}
+
+/* Dash en celular (0.7): botón redondo abajo a la derecha, solo en partida y con pantalla táctil */
+#dbtn{display:none;position:fixed;z-index:4;right:18px;bottom:calc(env(safe-area-inset-bottom) + 96px);width:68px;height:68px;border-radius:50%;padding:0;font:900 12px 'Orbitron',sans-serif;letter-spacing:.06em;color:#f2fbff;background:rgba(4,16,34,.7);border:2px solid #3fd0ff;box-shadow:0 0 12px rgba(63,208,255,.4);touch-action:none;user-select:none}
+body.ingame.touch #dbtn{display:block}
+@media (max-width:700px),(any-pointer:coarse){body.ingame #dbtn{display:block}}   /* como la pausa: en algunos celulares no se detecta el táctil */
+body.finale #dbtn{display:none}
+#dbtn:active{background:rgba(63,208,255,.35)}

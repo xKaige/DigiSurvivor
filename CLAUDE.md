@@ -3,7 +3,7 @@
 Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero que ataca solo, juntás XP de los virus que matás, subís de nivel, elegís mejoras y skills, y tu compañero digievoluciona. Hay 1 jugador y online de 2 a 4 jugadores (PeerJS, invitando amigos). **El modo 2 jugadores local se sacó** (a pedido): el código de `mode>1` local queda pero no hay botón.
 
 ## Estado actual (última sesión: 18/10/2026)
-- **Versión publicada: 0.6** (17/10/2026 22:42; `RESET_BEFORE` reinició todo el progreso anterior): motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo de 99 nodos + árbol de Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores.
+- **Versión en el código: 0.7** (ver abajo). **Versión publicada: 0.6** (17/10/2026 22:42; `RESET_BEFORE` reinició todo el progreso anterior): motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo de 99 nodos + árbol de Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores.
 - **Subido después de la 0.6** (sin versión nueva):
   - Online: el host sigue simulando con la ventana minimizada (Worker), sync compacto a 15/s con interpolación y mensajes partidos (PeerJS JSON no manda más de 16 KB: era lo que cortaba las partidas), números de daño para el invitado, reconexión de 20 s si se corta, carta automática si estás caído, cámara propia y flechas hacia los compañeros (nick y metros).
   - **Digital Gate** (`gate.js`): los jefes se pelean en una arena estilo MT Infinity a la que se entra por una fisura; al ganar, recompensas, nivel obligatorio, cuenta 5→0 y vuelta.
@@ -15,6 +15,17 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - Reglas de Firestore pendientes de revisar: `challenges/{día}/scores/{uid}`, el campo `prog` y los campos de la 0.6 en `users/{uid}` (`ac`, `rc`, `tr`, `bond`, `v`).
 - Después: **mapas** (más zonas, selector, lava que daña en Magma Mountain), 3–4 jugadores en el menú y en el online (las bases ya están).
 - En la raíz hay dos archivos del usuario sin subir: `ost.mp3` y `free_pixel_16_woods.png` (el tileset original; el juego usa `assets/maps/woods_tiles.png`).
+
+## Versión 0.7 (20/10/2026, sin publicar todavía)
+- **Clima** (`weather.js`, `Weather`, se carga después de finale.js): 0 despejado, 1 lluvia, 2 tormenta; cambia cada 50–90 s (empieza despejado ~1 min). No hay clima en la arena ni en el final. Lluvia: enemigos −8% de velocidad (`Weather.slow()` en `Enemies.move`). Tormenta: rayos marcados (`Enemies.bomb` amarillo, 1,3 s, daño ~ al de los enemigos del minuto, sin atributo: `el: NaN`) que también dañan a los enemigos (60% de su vida); efecto `bolt` (`Weather.drawBolt`), relámpagos y sonido `thunder`. Online: `wx` en el sync.
+- **Jefes** (bosses.js): **Cruz giratoria** (`shieldx`): va al centro de la arena, escudo `e.shd` (`SX_DUR` 7,5 s, INMUNE: `hit` no hace nada) y 4 rayos (`ef` `rbeam`, los dibuja `Enemies.drawWarn`) que giran en sentido horario tras 1,4 s de aviso; daño `22 × e.dm`. Reemplaza a la vieja Cruz. **Embestidas** (`mdash`): 3 (4 en furia) seguidas, reapuntando (`e.mc`). **Aggro**: `hit` suma el daño de cada jugador en `e.dmg` (se olvida a la mitad cada ~4 s) y el jefe persigue al que más le pegó (`e.ag`, mira roja sobre él con 2+ jugadores). Sync del jefe: `shd`, `ag` (a[19], a[20]).
+- **Rareza de cartas** (game.js, `RAR`, `RAR_W` por etapa, `rollRar`, `rarMul`): común (blanca) / estándar (verde) / rara (azul) / excelente (violeta) / épica (naranja, ★). De bebé no sale naranja; en la forma final es más probable. Multiplica: skill nueva (`RAR_NEW`, guarda `q.wm[k]`), mejora de skill (`RAR_UP`, multiplica `q.wm[k]`) y carta de stat (`RAR_ST` → `Stats.card(q, op, mul)`); la naranja además escala con la etapa. `q.wm` sube daño y algo de área/tamaño en `SkillSys.update`. Online: `rm` en el payload y `applyCardOp`.
+- **Reroll**: ya no es carta; cartelito `.rr-btn` abajo de las cartas y tecla **R** (`reroll()`, usa `p.rr`).
+- **Dash** (game.js: `DASH_N` 2 cargas, `DASH_CD` 2,6 s c/u, `DASH_T` 0,17 s invulnerable): Espacio/Shift, en celular `#dbtn` (se ve con `.touch` o ≤700 px). `dash(q)`/`myDash()`; el invitado lo hace local y manda `{type:'dash'}`. Estela `q.gh` y rayitas de carga bajo tus pies.
+- **Curación en área** (tipo `heal` en skills.js; `heal` = % de vida máxima, `radius`, `dmg` opcional): solo técnicas que curan según Wikimon: HolyAngemon `hp_recovery`, Seraphimon `full_hp_cure` (nueva), MarinAngemon `ocean_love`. Andiramon y Panjyamon también curan en Wikimon pero son alternativas VB (no tienen skills propias).
+- **Melee**: tajos = media luna con filo blanco y el efecto `hit` de la skill en la punta (`SkillSys.crescent`); abanicos = onda con degradé y estelas. **Balas enemigas** con sprite propio por especie/jefe (`SkillSys.bfx`/`drawEB`, `bf` en la bala y en el sync) y halo rojo.
+- **Imán**: sin círculo de alcance; el ítem marca todas las gemas (`g.mg`) y siguen hasta que las juntás.
+- **Arreglos visuales**: el empuje entre enemigos usa el radio de los dos (antes se encimaban y se tapaban), los que quedan en el mismo punto se separan, se dibujan ordenados por `y` y `World.spawnPos` exige quedar fuera de la vista de TODOS los jugadores (`World.offAll`).
 
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
@@ -51,6 +62,7 @@ src/scripts/challenge.js        # Challenge: desafío diario (reglas del día, r
 src/scripts/news.js             # News: botón "v0.x · Novedades" en la esquina del menú (lee changelog.json)
 src/scripts/map.js              # World: mapa del Digimundo con relieve (fondo en espejo, paredes, mapa de distancias)
 src/scripts/gate.js             # Gate: Digital Gate (fisura en el mapa) y arena del jefe estilo MT Infinity (antes que game.js)
+src/scripts/weather.js          # Weather: clima (lluvia y tormenta eléctrica con rayos), 0.7
 src/scripts/finale.js           # Finale: final de la partida a los 30 min (con ?finale, al minuto): Yggdrasill baja y la termina
 src/data/creatures/<id>.json    # definición de cada línea evolutiva
 src/data/skills.json            # catálogo de skills, elementos, maxLevel/maxLevelFinal, maxActive, fx y fxSprites
@@ -74,7 +86,7 @@ assets/sprites/items/           # ítems (Digital Tamers, spr_food y cuadros de 
 ```
 El `README.md` está desactualizado (habla de la estructura vieja, sin `src/`); si lo tocás, que refleje esta. Hay copias viejas `game.js.bak*` y `style.css.bak3` en `src/`: no se usan.
 
-Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `finale.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
+Orden de carga en `index.html`: `loader.js` → `skills.js` → `stats.js` → `bosses.js` → `items.js` → `enemies.js` → `map.js` → `gate.js` → `finale.js` → `weather.js` → `game.js` → `trees.js` → `missions.js` → `progress.js` → `challenge.js` → `news.js` → `firebase.js` (módulo, que importa `firebase-config.js` y `social.js`). Los scripts clásicos y los módulos se comunican solo por globals en `window` (ver abajo).
 
 ## Arquitectura de game.js
 

@@ -172,7 +172,7 @@ const Enemies = {
   lineBomb(x, y, a, Lg, w, dur, e, mult, col) { this.warnLine(x, y, a, Lg, w, dur, col); this.bombs.push({ x, y, a, Lg, w, line: 1, t: dur, dm: 9 * (mult || 1) * e.dm, el: e.el }); },
   // charco tóxico: aviso verde y después un charco que daña de a poco (lo dibuja drawWarn como 'pool')
   pool(x, y, R, dur, e) { this.warnCirc(x, y, R, dur, '#5dff7a'); this.bombs.push({ x, y, R, t: dur, pool: 4.5, dm: 2.2 * e.dm, el: e.el }); },
-  move(e, a, sp, dt) { sp *= Stats.slowOf(e); World.move(e, Math.cos(a) * sp * dt, Math.sin(a) * sp * dt); },   // con choque contra las paredes (y ralentizado: stats.js)
+  move(e, a, sp, dt) { sp *= Stats.slowOf(e) * Weather.slow(); World.move(e, Math.cos(a) * sp * dt, Math.sin(a) * sp * dt); },   // con choque contra las paredes (y ralentizado: stats.js)
 
   act(e, dt, tg, dd, a) {
     const K = this.K(e);
@@ -239,15 +239,15 @@ const Enemies = {
     if (e.kd === 'leaper') { e.st = 2; e.dur = e.stT = 0.45; return; }
     if (e.kd === 'shooter' && e.sub === 'fan') {
       const n = 3 + Math.min(2, e.ti >> 1);
-      for (let j = 0; j < n; j++) { const aa = e.la + (j - (n - 1) / 2) * 0.24; eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 240, vy: Math.sin(aa) * 240, l: 3, el: e.el, dm: e.dm, r: 7 }); }
+      for (let j = 0; j < n; j++) { const aa = e.la + (j - (n - 1) / 2) * 0.24; eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 240, vy: Math.sin(aa) * 240, l: 3, el: e.el, bf: SkillSys.bfx(e), dm: e.dm, r: 7 }); }
     } else if (e.kd === 'shooter' && e.sub === 'ring') {
       const n = 6 + Math.min(4, e.ti), off = Math.random() * 6.283;
-      for (let j = 0; j < n; j++) { const aa = off + j / n * 6.283; eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 200, vy: Math.sin(aa) * 200, l: 3, el: e.el, dm: e.dm, r: 7 }); }
+      for (let j = 0; j < n; j++) { const aa = off + j / n * 6.283; eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 200, vy: Math.sin(aa) * 200, l: 3, el: e.el, bf: SkillSys.bfx(e), dm: e.dm, r: 7 }); }
     } else if (e.kd === 'shooter') {
       const n = e.ti >= 3 ? 3 : 1;
       for (let j = 0; j < n; j++) {
         const aa = e.la + (j - (n - 1) / 2) * 0.16;
-        eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 380, vy: Math.sin(aa) * 380, l: 2.2, el: e.el, dm: e.dm, r: 8 });
+        eb.push({ x: e.x, y: e.y, vx: Math.cos(aa) * 380, vy: Math.sin(aa) * 380, l: 2.2, el: e.el, bf: SkillSys.bfx(e), dm: e.dm, r: 8 });
       }
     }
     e.st = 0; e.ac = K.cd * (0.8 + Math.random() * 0.4);
@@ -281,7 +281,17 @@ const Enemies = {
   drawWarn(o) {
     const f = 1 - Math.max(0, o.l) / o.m;   // progreso 0..1 hasta el golpe
     cx.save();
-    if (o.k === 'wline') {
+    if (o.k === 'rbeam') {   // Cruz giratoria del jefe: 4 rayos; m = 0 aviso (finito), 1 quema
+      cx.translate(o.x, o.y); cx.rotate(o.a);
+      for (let j = 0; j < 4; j++) {
+        if (o.m) {
+          cx.globalAlpha = 0.35 + 0.1 * Math.sin(t * 30); cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2 - 6, o.Lg, o.w + 12);
+          cx.globalAlpha = 0.85; cx.fillRect(0, -o.w / 2, o.Lg, o.w);
+          cx.globalAlpha = 1; cx.fillStyle = '#fff'; cx.fillRect(0, -o.w / 6, o.Lg, o.w / 3);
+        } else { cx.globalAlpha = 0.5; cx.strokeStyle = o.col; cx.lineWidth = 2; cx.setLineDash([12, 8]); cx.strokeRect(0, -o.w / 2, o.Lg, o.w); cx.setLineDash([]); cx.globalAlpha = 0.1; cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2, o.Lg, o.w); }
+        cx.rotate(Math.PI / 2);
+      }
+    } else if (o.k === 'wline') {
       cx.translate(o.x, o.y); cx.rotate(o.a);
       // más transparentes que antes (con muchos enemigos se superponían y tapaban todo)
       cx.globalAlpha = 0.08; cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2, o.Lg, o.w);

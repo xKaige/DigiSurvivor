@@ -385,6 +385,8 @@ function setupConn(c) {
       lobbyChanged();
     } else if (data.type === 'input') {
       rk[c.pi || 1] = data.keys || {};
+    } else if (data.type === 'dash') {
+      if (isHost) dash(P[c.pi || 1]);
     } else if (data.type === 'start') {
       if (isHost) return;
       isOnline = true; myIdx = data.you | 0;
@@ -482,8 +484,8 @@ setInterval(() => {
 }, 1000);
 function applyCardOp(targetP, data) {
   if (data.c) targetP.st[data.c]++;
-  if (Stats.cardOf(data.op)) Stats.card(targetP, data.op);   // carta de stat (stats.js)
-  else if (data.op === 'wp' && data.wpKey) { SkillSys.forget(targetP, data.rep); if (SkillSys.canTake(targetP, data.wpKey)) targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; }
+  if (Stats.cardOf(data.op)) Stats.card(targetP, data.op, data.rm || 1);   // carta de stat (stats.js), con su rareza
+  else if (data.op === 'wp' && data.wpKey) { SkillSys.forget(targetP, data.rep); const fr = !(targetP.wp[data.wpKey] | 0); if (SkillSys.canTake(targetP, data.wpKey)) { targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; rarSkill(targetP, data.wpKey, fr, data.rm || 1); } }
   else if (data.op === 'line' && data.stage && data.stage < 5) { targetP.alt = targetP.alt || {}; targetP.alt[data.stage] = data.altId || null; }   // Campeón / Perfecto alternativo
   else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; targetP.dark = !!data.dark; }
 }
@@ -507,15 +509,15 @@ function hostSync(dt) {
   // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
   const E = en.map(e => { if (!e.id) e.id = ++enId;   // id para que el cliente pueda deslizar a cada uno
     const a = [e.id, r(e.x), r(e.y), r2(e.r), e.k, e.bo != null ? 0 : e.ti, e.bo != null ? null : e.sk, e.bo != null ? null : e.et, e.st | 0, e.el, r2(e.fl), r2(e.ang), e.gun ? 1 : 0];
-    if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at), e.p2 ? 1 : 0);
+    if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at), e.p2 ? 1 : 0, e.shd > 0 ? 1 : 0, e.ag == null ? -1 : e.ag);
     return a; });
   const G = gems.map(g => [r(g.x), r(g.y), r2(g.v)]);
   const S = sh.map(s => [r(s.x), r(s.y), r(s.vx), r(s.vy), s.c || 0, r2(s.r || 5), s.fx || 0, r(s.sz || 0)]);
-  const B = eb.map(b => [r(b.x), r(b.y), r(b.vx), r(b.vy), b.el, b.r || 0]);
+  const B = eb.map(b => [r(b.x), r(b.y), r(b.vx), r(b.vy), b.el, b.r || 0, b.bf || 0]);
   const F = ef.map(o => ({ k: o.k, x: o.x == null ? null : r(o.x), y: o.y == null ? null : r(o.y), R: o.R && r(o.R), R0: o.R0 && r(o.R0), l: r2(o.l), m: o.m, a: o.a && r2(o.a), Lg: o.Lg && r(o.Lg), s: o.s, w: o.w, col: o.col, fx: o.fx }));
   // números de daño y textos nuevos desde el sync anterior (se marcan una sola vez y se reparten por cercanía)
   const X = fx.filter(f => !f.s).slice(-40).map(f => { f.s = 1; return { x: r(f.x), y: r(f.y), txt: f.txt, col: f.col, sz: f.sz, l: r2(f.l) }; });
-  const common = { type: 'sync', P: pl, it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })), gt: Gate.sync(), fn: Finale.sync(),
+  const common = { type: 'sync', P: pl, it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })), gt: Gate.sync(), fn: Finale.sync(), wx: Weather.sync(),
     t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down, bf: Bosses.fast ? 1 : 0 };
   const al = P.filter(q => !q.dead);
   for (const g of cs) {
@@ -535,7 +537,7 @@ function hostSync(dt) {
 // enemigo que llegó como lista de números (ver el sync del anfitrión)
 function unpackEn(a) {
   const e = { id: a[0], x: a[1], y: a[2], r: a[3], k: a[4], ti: a[5], sk: a[6], et: a[7], st: a[8], el: a[9], fl: a[10], ang: a[11], gun: !!a[12] };
-  if (a.length > 13) { e.p2 = a[18]; e.bo = a[13]; e.cyc = a[14]; e.hp = a[15]; e.mh = a[16]; e.at = a[17]; }
+  if (a.length > 13) { e.p2 = a[18]; e.shd = a[19]; e.ag = a[20]; e.bo = a[13]; e.cyc = a[14]; e.hp = a[15]; e.mh = a[16]; e.at = a[17]; }
   return e;
 }
 function onlineSmooth(dt) {
@@ -573,13 +575,14 @@ function applyOnlineSync(data) {
       if (o && Math.hypot(o.x - se.x, o.y - se.y) < 200) { se.x = o.x; se.y = o.y; } return se; }); }
   if (data.gems) { const g = data.gems; gems = []; for (let i = 0; i < g.length; i += 3) gems.push({ x: g[i], y: g[i + 1], v: g[i + 2] }); }
   if (data.sh) sh = data.sh.map(a => ({ x: a[0], y: a[1], vx: a[2], vy: a[3], c: a[4] || undefined, r: a[5], fx: a[6] || undefined, sz: a[7] || undefined, a: Math.atan2(a[3], a[2]) }));
-  if (data.eb) eb = data.eb.map(a => ({ x: a[0], y: a[1], vx: a[2], vy: a[3], el: a[4], r: a[5] || undefined }));
+  if (data.eb) eb = data.eb.map(a => ({ x: a[0], y: a[1], vx: a[2], vy: a[3], el: a[4], r: a[5] || undefined, bf: a[6] || 0 }));
   if (data.ef) ef = data.ef;
   if (data.bd) Bosses.down = data.bd;
   if (data.bf) Bosses.fast = true;
   if (data.it) Items.on = data.it;
   if (data.gt) Gate.apply(data.gt);
   if ('fn' in data) Finale.apply(data.fn);
+  if (data.wx) Weather.apply(data.wx);
   if (data.fx) for (const f of data.fx) if (fx.length < MAX_FX) fx.push(f);
 }
 
@@ -591,18 +594,26 @@ addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('
  if(pickRes){if(pickKey(e.key))e.preventDefault();else if(e.key==='Escape'&&!isOnline)pickCancel();return}
  if(e.key==='Enter'&&!running&&!treeOpen&&!picking&&!isOnline&&!(typeof Progress!=='undefined'&&(Progress.isOpen()||Progress.hatching))&&!document.querySelector('#news[style*="flex"],#challenge[style*="flex"],#missions[style*="flex"]')){if(selected)beginLocal(lastMode);else openMenuPick()}
  if(e.key==='Escape'){if(treeOpen)$('tx').click();else if(running)togglePause()}
- if(paused&&!evo&&!menuPause&&/^[1-5]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1])});
+ if(paused&&!evo&&!menuPause&&/^[1-5]$/.test(e.key)&&cur[e.key-1]&&!cur[e.key-1].lock)choose(cur[e.key-1]);
+ if(paused&&!evo&&!menuPause&&e.key.toLowerCase()==='r'&&cardMode==='cards')reroll();
+ if((e.key===' '||e.key==='Shift')&&running&&!paused&&!e.repeat){e.preventDefault();myDash()}});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
 const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=matchMedia('(pointer:coarse)').matches?210:320;   // MAX_EN: enemigos a la vez con 1 jugador (+60 por cada jugador más; en celular menos). Con la grilla espacial (buildEG) aguanta
 function dmgNum(x,y,v,col,sz,txt){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:txt||String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
 // q: quién golpea (para el crítico, las pasivas y a quién se le cuenta la muerte; ver stats.js)
-function hit(e,d,el,q){const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.hp0=e.hp;
+function hit(e,d,el,q){if(e.shd>0){if(Math.random()<.12)dmgNum(e.x,e.y-e.r,0,'#9fe8ff',18,'INMUNE');return}const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.hp0=e.hp;
  if(q&&q.m){v=Stats.onHit(q,e,v);if(Math.random()<q.crit){v*=q.critD;cr=1}e.lh=q.id}
- e.hp-=v;e.fl=.1;dmgNum(e.x,e.y-e.r,v,cr?'#ffd23f':m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',cr?32:m>1?30:m<1?14:18,cr?String(Math.max(1,Math.round(v*10)))+'!':0);
+ e.hp-=v;if(e.bo!=null&&q){e.dmg=e.dmg||{};e.dmg[q.id]=(e.dmg[q.id]||0)+v}e.fl=.1;dmgNum(e.x,e.y-e.r,v,cr?'#ffd23f':m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',cr?32:m>1?30:m<1?14:18,cr?String(Math.max(1,Math.round(v*10)))+'!':0);
  if(q&&q.m)Stats.afterHit(q,e,v)}
-function hurt(q,d,el,src){if(q.dead)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;if(!isOnline||q.id===myIdx)Sound.play('hurt');burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
+// Dash (0.7): hasta DASH_N cargas, cada una se recarga en DASH_CD s; mientras dura (DASH_T) sos invulnerable.
+// Espacio o Shift (celular: botón #dbtn). El invitado online lo hace en su pantalla y le avisa al anfitrión (mensaje 'dash').
+const DASH_N=2,DASH_CD=2.6,DASH_T=.17,DASH_V=1000;
+function dash(q){if(!q||q.dead||!running||paused||evo||Finale.on)return;if(q.dc==null)q.dc=DASH_N;if(q.dc<1||q.dsT>0)return;q.dc--;
+ let [dx,dy]=inputOf(q);if(!dx&&!dy){dx=q.face||1;dy=0}const l=Math.hypot(dx,dy);q.ddx=dx/l;q.ddy=dy/l;q.dsT=DASH_T;q.gh=[];if(!isOnline||q.id===myIdx)Sound.play('dash');return 1}
+function myDash(){if(!running)return;if(isOnline){const q=P[myIdx];if(dash(q)&&!isHost&&conn)sendTo(conn,{type:'dash'})}else dash(P[0])}
+function hurt(q,d,el,src){if(q.dead||q.dsT>0)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;if(!isOnline||q.id===myIdx)Sound.play('hurt');burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
 function tot(q,k){return Stats.pts(q,k)}   // puntos de stat: especie + partida + árbol (stats.js)
 function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,alt:{},line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
 
@@ -614,7 +625,7 @@ async function start(m,ids,los){
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=xpNeed(1);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
-  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
+  menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Weather.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
   renderLegend();Sound.music(true);if(typeof Achievements!=='undefined')Achievements.onStart();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
@@ -821,7 +832,7 @@ function renderLegend() {
 // poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
 // a esa fecha vuelve a 0 una sola vez (monedas, árbol y misiones del día). Nick, amigos y Digimon elegido no se tocan.
 // Ej.: const RESET_BEFORE = Date.parse('2027-03-01T00:00:00-03:00');
-const GAME_VERSION = '0.6';
+const GAME_VERSION = '0.7';
 const RESET_BEFORE = Date.parse('2026-10-17T22:42:00-03:00');   // 0.6: todo el progreso anterior vuelve a cero
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
@@ -844,7 +855,8 @@ function togglePause(){if(menuPause){menuPause=false;$('pause').style.display='n
  $('pnote').textContent=isOnline?'Partida online: el juego sigue corriendo mientras estás acá':'El juego está en pausa';
  $('pause').style.display='flex';$('pcont').focus()}
 $('pcont').onclick=()=>{if(menuPause)togglePause()};
-$('pbtn').onclick=()=>{if(running)togglePause()};   // botón de pausa (celular: no hay Escape)
+$('pbtn').onclick=()=>{if(running)togglePause()};
+$('dbtn').addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();myDash()},{passive:false});$('dbtn').onclick=()=>myDash();   // dash en celular   // botón de pausa (celular: no hay Escape)
 $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
@@ -955,6 +967,7 @@ function drawEnemy(e){
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  if(e.mn){cx.save();cx.strokeStyle='#c05bff';cx.lineWidth=2.5;cx.globalAlpha=.8;cx.beginPath();cx.ellipse(e.x,e.y+h/2-2,e.r*1.3,6,0,0,6.283);cx.stroke();cx.restore()}   // refuerzo del jefe: aro violeta
  if(e.bo!=null&&e.p2){cx.save();cx.globalAlpha=.22+.1*Math.sin(t*8);cx.fillStyle='#ff2d2d';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.55,th*.6,0,0,6.283);cx.fill();cx.restore()}   // jefe enfurecido (fase 2): aura roja
+ if(e.bo!=null&&e.shd){cx.save();const R=th*.62,yy=e.y+h/2-th*.45;cx.globalAlpha=.18+.06*Math.sin(t*10);cx.fillStyle='#7fdcff';cx.beginPath();cx.arc(e.x,yy,R,0,6.283);cx.fill();cx.globalAlpha=.85;cx.strokeStyle='#bff0ff';cx.lineWidth=3;cx.setLineDash([14,8]);cx.lineDashOffset=-t*40;cx.stroke();cx.setLineDash([]);cx.restore()}   // escudo (Cruz giratoria): inmune
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
  cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
@@ -1082,19 +1095,33 @@ function startCards(){
 }
 
 // keep: volver a mostrar las mismas cartas (al cancelar un reemplazo de skill)
+// ---------- Rareza de las cartas (0.7) ----------
+// blanca (común) · verde (estándar) · azul (rara) · violeta (excelente) · naranja ★ (épica). La chance depende de la
+// etapa: de bebé no sale naranja y en la forma final es mucho más probable. La rareza multiplica lo que da la carta:
+// skill nueva (poder de la skill, q.wm), mejora de skill (poder extra) o carta de stat (efecto). La naranja además
+// escala con la etapa. El poder extra de una skill también la agranda (skills.js), así se nota.
+const RAR=[{n:'Común',c:'#e8eef5'},{n:'Estándar',c:'#4dff7a'},{n:'Rara',c:'#3fa8ff'},{n:'Excelente',c:'#b35cff'},{n:'Épica',c:'#ff9a2e'}];
+const RAR_W=[[50,38,12,0,0],[45,38,15,2,0],[35,38,20,6,1],[25,35,25,11,4],[15,30,30,17,8],[8,25,30,22,15]];
+const RAR_NEW=[.85,1,1.15,1.3,1.5],RAR_UP=[1,1.04,1.08,1.14,1.22],RAR_ST=[.8,1,1.3,1.6,2];
+function rollRar(q){const w=RAR_W[Math.min(5,q.stage|0)];let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let i=0;i<5;i++){r-=w[i];if(r<0)return i}return 1}
+function rarMul(u,q){const r=u.rar|0,s=q.stage|0;return u.op==='wp'?(u.fresh?RAR_NEW[r]*(r===4?1+.08*s:1):RAR_UP[r]*(r===4?1+.03*s:1)):RAR_ST[r]*(r===4?1+.1*s:1)}
+// aplica el poder extra de una carta de skill (fresh: skill nueva; si no, mejora)
+function rarSkill(q,k,fresh,m){if(!k||!m)return;q.wm=q.wm||{};q.wm[k]=fresh?m:(q.wm[k]||1)*m}
+const pct=m=>(m>=1?'+':'')+Math.round((m-1)*100)+'%';
 function showCards(keep){
   if(!keep)Sound.play('level');paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');
   $('up').querySelector('p').textContent=TOUCH?'Tocá la carta que quieras':'Elegí con el mouse o con las teclas 1 a '+nCards(p);
-  if(keep)cur=keep;else{const sk=SkillSys.cards(p).slice(0,2),st=Stats.CARDS.map(c=>({c:c.c,n:c.n,d:c.d,op:c.op,f:()=>{}})).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,nCards(p))}
+  if(keep)cur=keep;else{const sk=SkillSys.cards(p).slice(0,2),st=Stats.CARDS.map(c=>({c:c.c,n:c.n,d:c.d,op:c.op,f:()=>{}})).sort(()=>Math.random()-.5);cur=[...sk,...st].slice(0,nCards(p));for(const u of cur){u.rar=rollRar(p);u.rm=rarMul(u,p)}}
   const c=$('cards');c.innerHTML='';
   // tipo de carta: skill nueva / mejora de skill / mejora de stat (cada una con su etiqueta y color)
-  cur.forEach((u,i)=>{const b=document.createElement('button'),sk=u.op==='wp',nw=sk&&u.tag==='Skill NUEVA',sd=sk&&SkillSys.def(u.wpKey);
-   b.className='card lv '+(nw?'new':sk?'skup':'stat');if(sd)b.style.setProperty('--ac',SkillSys.col(sd));
-   b.innerHTML='<span class="kn">'+(i+1)+'</span><span class="kt">'+(nw?'Skill nueva':sk?'Mejora de skill':'Mejora')+'</span><b>'+u.n+'</b><span class="kd">'+u.d+'</span>'+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag&&!nw?'<em>'+u.tag+'</em>':nw&&u.full?'<em>Tenés las 4 ocupadas: elegís cuál reemplazar</em>':'');
+  cur.forEach((u,i)=>{const b=document.createElement('button'),sk=u.op==='wp',nw=sk&&u.tag==='Skill NUEVA',sd=sk&&SkillSys.def(u.wpKey),R=RAR[u.rar|0];
+   b.className='card lv '+(nw?'new':sk?'skup':'stat')+' rar'+(u.rar|0);if(sd)b.style.setProperty('--ac',SkillSys.col(sd));b.style.setProperty('--rar',R.c);
+   const bon=u.rm&&Math.abs(u.rm-1)>.005?(sk?pct(u.rm)+' de poder':'Efecto '+pct(u.rm)):'';
+   b.innerHTML=((u.rar|0)===4?'<span class="rstar">★</span>':'')+'<span class="kn">'+(i+1)+'</span><span class="kt">'+(nw?'Skill nueva':sk?'Mejora de skill':'Mejora')+'</span><span class="rlab">'+R.n+(bon?' · '+bon:'')+'</span><b>'+u.n+'</b><span class="kd">'+u.d+'</span>'+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag&&!nw?'<em>'+u.tag+'</em>':nw&&u.full?'<em>Tenés las 4 ocupadas: elegís cuál reemplazar</em>':'');
    b.onclick=()=>choose(u);c.appendChild(b)});
-  // Re-sortear (árbol de Tamer): cambia las cartas que salieron, unas pocas veces por partida
-  if(p.rr>0){const r=document.createElement('button');r.className='card lv stat reroll';r.innerHTML='<span class="kt">Re-sortear</span><b>Otras cartas</b><span class="kd">Te quedan '+p.rr+'</span>';
-   r.onclick=()=>{if(performance.now()-cardsAt<400||!(p.rr>0))return;p.rr--;showCards()};c.appendChild(r)}
+  // Reroll (árbol de Tamer): un cartelito abajo de las cartas (tecla R); cambia las cartas que salieron
+  if(p.rr>0){const r=document.createElement('button');r.className='rr-btn';r.innerHTML='<b>R</b> Reroll <small>· te quedan '+p.rr+'</small>';
+   r.onclick=()=>reroll();c.appendChild(r)}
   // online: si tu jugador está caído, se elige una carta de stat sola (así no frena a los demás)
   if(isOnline&&p.dead&&!keep){const me=p;$('up').querySelector('p').textContent='Estás caído: se elige una carta sola';
    setTimeout(()=>{if(pending[0]===me&&cardMode==='cards'){cardsAt=0;choose(cur.find(u=>u.c)||cur[0])}},900)}
@@ -1115,6 +1142,7 @@ function showReplace(u){
   showUp();
 }
 
+function reroll(){if(!paused||cardMode!=='cards'||!p||!(p.rr>0)||performance.now()-cardsAt<400||!pending.length)return;p.rr--;showCards()}
 function choose(u){
   if(performance.now() - cardsAt < 800) return;   // ignora clicks/teclas accidentales justo al aparecer
   if(!pending.length) return;                      // ya elegiste (esperando al otro jugador): ignora teclas repetidas
@@ -1122,10 +1150,10 @@ function choose(u){
   if(u.back){showCards(u.back);return}             // cancelar el reemplazo
   if(u.pickRep){const o=u.pickRep;o.rep=u.k;choose(o);return}   // eligió qué skill olvidar
   if(u.op==='wp'&&u.fresh&&u.full&&!u.rep&&!SkillSys.canTake(pending[0],u.wpKey)){showReplace(u);return}   // 4 ocupadas: preguntar cuál reemplazar
-  const q=pending[0],modo=cardMode;p=q;u.f();if(modo==='cards'&&u.c){q.st[u.c]++;Stats.card(q,u.op)}p=P[0];pending.shift();
+  const q=pending[0],modo=cardMode;p=q;const fr=u.op==='wp'&&!(q.wp[u.wpKey]|0);u.f();if(modo==='cards'&&u.c){q.st[u.c]++;Stats.card(q,u.op,u.rm||1)}else if(modo==='cards'&&u.op==='wp')rarSkill(q,u.wpKey,fr,u.rm||1);p=P[0];pending.shift();
 
   if (isOnline) {
-    const payload = { type: isHost ? 'host_choice' : 'client_choice', rnd: isHost ? rnd : gRnd, i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, stage: u.stage, altId: u.altId, weak: u.weak, dark: u.dark, rep: u.rep };
+    const payload = { type: isHost ? 'host_choice' : 'client_choice', rnd: isHost ? rnd : gRnd, i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, stage: u.stage, altId: u.altId, rm: u.rm, weak: u.weak, dark: u.dark, rep: u.rep };
     sendAll(payload);
     picked.add(myIdx);
     if (isHost ? !mustPick().every(i => picked.has(i)) : picked.size < P.filter(q => !q.gone).length) {
@@ -1223,9 +1251,11 @@ function update(dt){
 
  // final con Yggdrasill (finale.js): mientras dura, los jugadores quedan quietos y no corre el resto de la simulación
  if(!isOnline||isHost){if(Finale.tick(dt)){for(const o of pt){o.x+=o.vx*dt;o.y+=o.vy*dt;o.l-=dt}pt=pt.filter(o=>o.l>0);for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);hudBars();return}}
- else Finale.clientTick(dt);
+ else {Finale.clientTick(dt);Weather.clientTick(dt)}
  for(const q of P){
   if(q.dead||Finale.on)continue;
+  if(q.dc==null)q.dc=DASH_N;if(q.dc<DASH_N)q.dc=Math.min(DASH_N,q.dc+dt/DASH_CD);
+  if(q.dsT>0){q.dsT-=dt;q.gh.push({x:q.x,y:q.y,l:.22});World.move(q,q.ddx*DASH_V*dt,q.ddy*DASH_V*dt);if(q.ddx)q.face=Math.sign(q.ddx);q.moving=true;q.inv-=dt;continue}   // dash: va derecho, sin control
   const [dx,dy]=inputOf(q);
   q.moving = !!(dx || dy);
   if(dx||dy){const l=Math.hypot(dx,dy),v=Stats.speedOf(q);World.move(q,dx/l*v*dt,dy/l*v*dt);if(dx)q.face=dx;q.vx=dx/l*v;q.vy=dy/l*v}else{q.vx=0;q.vy=0}   // choca con las paredes (map.js); vx/vy: para los enemigos que interceptan
@@ -1258,7 +1288,7 @@ function update(dt){
  spawnT-=dt;const iv=Math.max(.15,.6-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
  if(!World.arena)Enemies.events(dt,Math.max(0,mt-1));
- Gate.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
+ Gate.tick(dt);Weather.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
    if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0,r:5+Math.min(9,Math.log2(Math.max(1,q.dmg))*2.2)})}q.atkT=q.rate}}}
@@ -1277,13 +1307,16 @@ function update(dt){
  for(const b of eb){if(b.hm>0){b.hm-=dt;let tq=null,td=1e9;for(const q of al){const d=Math.hypot(q.x-b.x,q.y-b.y);if(d<td){td=d;tq=q}}if(tq){const sp=Math.hypot(b.vx,b.vy),cur=Math.atan2(b.vy,b.vx),want=Math.atan2(tq.y-b.y,tq.x-b.x);let da=want-cur;da=Math.atan2(Math.sin(da),Math.cos(da));const na=cur+Math.max(-2.2*dt,Math.min(2.2*dt,da));b.vx=Math.cos(na)*sp;b.vy=Math.sin(na)*sp}}   // orbes teledirigidos de los jefes (giran de a poco)
   b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el,'b');b.l=0}}eb=eb.filter(b=>b.l>0);
  buildEG();
- for(const a of en){if(a.st===2)continue;const R=a.r*1.6;enNear(a.x,a.y,R,b=>{if(b._i<=a._i||b.st===2)return;const d=Math.hypot(a.x-b.x,a.y-b.y);
-  if(d>0&&d<R){const k=(R-d)/2/d,px=(a.x-b.x)*k,py=(a.y-b.y)*k;World.move(a,px,py);World.move(b,-px,-py)}})}   // empuje entre enemigos (solo vecinos de la grilla)
+ // empuje entre enemigos (solo vecinos de la grilla). 0.7: separa según el tamaño de los dos (antes 1,6× el radio de uno:
+ // los dibujos quedaban casi encimados y unos tapaban a otros) y si quedaron justo en el mismo punto los aparta al azar
+ for(const a of en){if(a.st===2)continue;enNear(a.x,a.y,a.r*2.8,b=>{if(b._i<=a._i||b.st===2)return;const R=(a.r+b.r)*1.25,d=Math.hypot(a.x-b.x,a.y-b.y);
+  if(d<.5){const g=Math.random()*6.283;World.move(a,Math.cos(g)*4,Math.sin(g)*4);return}
+  if(d<R){const k=(R-d)/4/d,px=(a.x-b.x)*k,py=(a.y-b.y)*k;World.move(a,px,py);World.move(b,-px,-py)}})}
  for(const e of en)if(e.hp<=0&&!e.nr){kills++;if(e.lh!=null)Stats.onKill(P[e.lh],e);if(e.bo!=null){Bosses.onDeath(e);bossReward(e)}else{dropGem(e.x,e.y,e.v);Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
-  if(tg){if(td<tg.mag||Items.magT>0){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN*xpMul();g.dead=1;Sound.play('gem')}}}
+  if(tg){if(td<tg.mag||Items.magT>0||g.mg){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0||g.mg?900:380;g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN*xpMul();g.dead=1;Sound.play('gem')}}}
  gems=gems.filter(g=>!g.dead);
  Items.update(dt);
  if(xp>=need)levelUp();
@@ -1311,16 +1344,15 @@ function draw(){
  World.draw();   // mapa del Digimundo (map.js)
  Gate.drawWorld();   // Digital Gate (gate.js)
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
- // alcance del imán de tus jugadores (solo si lo mejoraste): un círculo tenue, para que se note cuánto creció
- for(const q of mine())if(!q.dead&&q.mag>110){cx.save();cx.globalAlpha=.16;cx.strokeStyle='#5cf2ff';cx.lineWidth=2;cx.setLineDash([6,8]);cx.beginPath();cx.arc(q.x,q.y,q.mag,0,6.283);cx.stroke();cx.restore()}
  for(const g of gems){cx.fillStyle=g.v>5?'#ffd23f':'#5cf2ff';const s=g.v>5?7:4;cx.beginPath();cx.arc(g.x,g.y,s,0,6.283);cx.fill()}
  Items.draw();
  const vx0=cam.x-W/2-160,vx1=cam.x+W/2+160,vy0=cam.y-H/2-200,vy1=cam.y+H/2+200;
  const ents=[];   // lo que puede quedar detrás de un árbol (World.drawTall)
- for(const e of en){if(e.bo==null&&(e.x<vx0||e.x>vx1||e.y<vy0||e.y>vy1))continue;   // fuera de pantalla: no se dibuja
+ const vis=en.filter(e=>e.bo!=null||!(e.x<vx0||e.x>vx1||e.y<vy0||e.y>vy1)).sort((a,b)=>a.y-b.y);   // fuera de pantalla no se dibuja; de atrás para adelante (el de más abajo queda delante)
+ for(const e of vis){
   dEn(e);const hw=Math.max(30,e.r*1.6);ents.push({e,x0:e.x-hw,x1:e.x+hw,y0:e.y-enTop(e),fy:e.y+World.foot(e)})}
  for(const s of sh){if(SkillSys.drawShot(s))continue;cx.fillStyle=s.c||'#ffd23f';cx.beginPath();cx.arc(s.x,s.y,s.r||5,0,6.283);cx.fill()}
- for(const b of eb){cx.fillStyle=ELC[b.el];cx.strokeStyle=b.r?'#ff9a2e':'#fff';cx.lineWidth=b.r?4:2;cx.beginPath();cx.arc(b.x,b.y,b.r||6,0,6.283);cx.fill();cx.stroke()}
+ for(const b of eb){if(SkillSys.drawEB(b))continue;cx.fillStyle=ELC[b.el];cx.strokeStyle=b.r?'#ff9a2e':'#fff';cx.lineWidth=b.r?4:2;cx.beginPath();cx.arc(b.x,b.y,b.r||6,0,6.283);cx.fill();cx.stroke()}
  for(const o of ef)SkillSys.drawFx(o);
  for(const q of P)if(!q.dead)SkillSys.drawOrbits(q);
  for(const q of P){dPl(q);if(!evo)ents.push({e:q,pl:!q.dead,x0:q.x-40,x1:q.x+40,y0:q.y+48-(q.dh||96),fy:q.y+48})}
@@ -1332,7 +1364,7 @@ function draw(){
    cx.strokeStyle='#ffd23f';cx.lineWidth=3;for(let i=0;i<3;i++){const r=(e0*1.2+i/3)%1;cx.globalAlpha=1-r;cx.beginPath();cx.arc(q.x,q.y,10+r*110,0,6.283);cx.stroke()}cx.globalAlpha=1}}
  cx.textAlign='center';cx.lineJoin='round';for(const f of fx){cx.globalAlpha=Math.min(1,f.l*2);cx.font='bold '+f.sz+'px Chakra Petch,system-ui,sans-serif';cx.lineWidth=4;cx.strokeStyle='#000';cx.strokeText(f.txt,f.x,f.y);cx.fillStyle=f.col;cx.fillText(f.txt,f.x,f.y)}cx.globalAlpha=1;
  cx.restore();
- if(running){if(!Finale.on)drawPointers();Gate.drawOverlay();Finale.draw()}
+ if(running){Weather.draw();if(!Finale.on)drawPointers();Gate.drawOverlay();Finale.draw()}
 }
 // Flechas en el borde de la pantalla hacia lo que no se ve: compañeros (nombre y distancia en metros; ✝ si están caídos)
 // y el Digital Gate. 1 metro = 40 px.
@@ -1359,6 +1391,11 @@ function dEn(e){
   if(e.gun){cx.strokeStyle='rgba(255,255,255,.75)';cx.lineWidth=2;cx.beginPath();cx.arc(e.x,e.y,e.r+5,0,6.283);cx.stroke()}}
 // dibuja un jugador (con su etiqueta y el anillo de revivir en 2J)
 function dPl(q){const s=q.stage|0,hh=96;
+  // dash: estela de imágenes que se apagan; y las cargas (dos rayitas bajo tus pies)
+  if(q.gh&&q.gh.length){for(const g of q.gh){g.l-=1/60;if(g.l>0){cx.globalAlpha=g.l*1.6;drawBuddy(q,s,g.x,g.y,q.face,1);cx.globalAlpha=1}}q.gh=q.gh.filter(g=>g.l>0)}
+  // aggro del jefe: mira roja sobre el jugador que persigue (solo con más de un jugador)
+  if(!q.dead&&P.length>1&&en.some(e=>e.bo!=null&&e.ag===q.id)){const y=q.y+48-(q.dh||96)-26,s=7+Math.sin(t*8);cx.strokeStyle='#ff3d3d';cx.lineWidth=2.5;cx.beginPath();cx.arc(q.x,y,s,0,6.283);cx.moveTo(q.x-s-5,y);cx.lineTo(q.x+s+5,y);cx.moveTo(q.x,y-s-5);cx.lineTo(q.x,y+s+5);cx.stroke()}
+  if(!q.dead&&(!isOnline||q.id===myIdx)&&q.dc!=null&&q.dc<DASH_N){for(let i=0;i<DASH_N;i++){const f=Math.max(0,Math.min(1,q.dc-i));cx.fillStyle='rgba(0,0,0,.5)';cx.fillRect(q.x-17+i*18,q.y+54,16,4);cx.fillStyle=f>=1?'#3fd0ff':'rgba(63,208,255,.45)';cx.fillRect(q.x-17+i*18,q.y+54,16*f,4)}}
   if(q.dead)drawBuddy(q,s,q.x,q.y,q.face,.25);
   else if(!evo&&(q.inv<=0||Math.floor(t*20)%2))drawBuddy(q,s,q.x,q.y,q.face,1);
   if(mode>1){cx.textAlign='center';cx.font='bold 13px Chakra Petch,system-ui,sans-serif';cx.fillStyle=PC[q.id];cx.fillText(q.dead?pname(q.id)+' ✝ (pararse encima para revivir)':pname(q.id),q.x,q.y+48-(q.dh||hh)-8)}

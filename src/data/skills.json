@@ -18,7 +18,8 @@
     "projectile": "Proyectil al enemigo más cercano (speed, life, explode, pierce; count + spread = abanico de varios)",
     "beam": "Rayo recto instantáneo que atraviesa todo (range, width)",
     "orbit": "Objetos que giran alrededor del jugador (radius, count)",
-    "nova": "Pulso circular alrededor del jugador (radius; guard = segundos de invulnerabilidad)"
+    "nova": "Pulso circular alrededor del jugador (radius; guard = segundos de invulnerabilidad)",
+    "heal": "Curación en área: cura a los aliados cercanos un % de su vida máxima (radius, heal; dmg opcional = también golpea)"
   },
   "fxSprites": {
     "barrage05": {
@@ -3178,15 +3179,15 @@
     },
     "ocean_love": {
       "name": "Ocean Love",
-      "desc": "Burbujas con forma de corazón que giran a su alrededor",
-      "type": "orbit",
+      "type": "heal",
       "element": "water",
-      "dmg": 1.6,
-      "cd": 1.0,
-      "radius": 80,
-      "count": 4,
+      "dmg": 1.4,
+      "heal": 0.05,
+      "cd": 5.0,
+      "radius": 170,
       "source": "canon:wikimon",
-      "final": true
+      "final": true,
+      "desc": "Burbujas de corazón que dañan a los enemigos y curan a los aliados cercanos"
     },
     "marine_squadron": {
       "name": "Marine Squadron",
@@ -4789,16 +4790,14 @@
     },
     "hp_recovery": {
       "name": "HP Recovery",
-      "type": "projectile",
-      "element": "neutral",
-      "dmg": 2.8,
-      "cd": 1.9,
+      "type": "heal",
+      "element": "light",
+      "dmg": 0,
+      "heal": 0.06,
+      "cd": 6.0,
+      "radius": 180,
       "source": "canon:wikimon",
-      "speed": 420,
-      "life": 1.2,
-      "count": 2,
-      "spread": 0.35,
-      "desc": "Lanza energía contra el Digimon más cercano"
+      "desc": "Cura las heridas propias y de los aliados cercanos"
     },
     "testament": {
       "name": "Testament",
@@ -6884,6 +6883,18 @@
       "width": 36,
       "desc": "Dispara un rayo de agua que atraviesa todo en línea recta",
       "final": true
+    },
+    "full_hp_cure": {
+      "name": "Full HP Cure",
+      "type": "heal",
+      "element": "light",
+      "dmg": 0,
+      "heal": 0.09,
+      "cd": 8.0,
+      "radius": 230,
+      "source": "canon:wikimon",
+      "final": true,
+      "desc": "Luz sagrada que cura mucho a todos los aliados cercanos"
     }
   },
   "fxSkill": {

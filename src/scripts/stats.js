@@ -118,9 +118,10 @@ const Stats = {
   ],
   cardOf(op) { return this.CARDS.find(c => c.op === op); },
   // aplica una carta de stat a q (suma el punto de su stat y su efecto)
-  card(q, op) {
+  card(q, op, mul) {   // mul: rareza de la carta (game.js: rarMul)
     const c = this.cardOf(op); if (!c || !q.m) return;
-    this.add(q.m, c.m); this.calc(q);
+    const m = {}; for (const k in c.m) m[k] = c.m[k] * (mul || 1);
+    this.add(q.m, m); this.calc(q);
   },
 
   // ---------- Evolución ----------

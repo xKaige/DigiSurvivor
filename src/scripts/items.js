@@ -65,7 +65,7 @@ const Items = {
     if (k === 'meat') q.hp = Math.min(q.max, q.hp + q.max * 0.25 * heal);
     else if (k === 'floppy') { q.hp = q.max; q.inv = Math.max(q.inv, 2); }
     else if (k === 'digicore') xp += need * 0.4;
-    else if (k === 'magnet') this.magT = 1.5;
+    else if (k === 'magnet') { this.magT = 1.5; for (const g of gems) g.mg = 1; }   // todas las gemas del mapa vienen hasta que las juntás (antes se cortaba a mitad de camino)
     else if (k === 'xantibody') { q.xa = 1; Stats.calc(q); if (window.onXAntibody) window.onXAntibody(q); }   // +25% de daño y +10% de velocidad (Stats.calc)
     fx.push({ x: q.x, y: q.y - (q.dh || 96) + 30, txt: D.n, col: D.col, sz: 20, l: 1.2 });
     for (let i = 0; i < 12; i++) burst(q.x, q.y, D.col);

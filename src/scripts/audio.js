@@ -45,7 +45,7 @@ const Sound = {
   },
 
   // ---------- Efectos (sintetizados: no hay archivos) ----------
-  GAP: { hover: 0.04, click: 0.05, back: 0.05, gem: 0.06, hurt: 0.22, item: 0.1, level: 0.3, evo: 1, gate: 1, win: 1 },   // mínimo entre dos iguales (s)
+  GAP: { hover: 0.04, click: 0.05, back: 0.05, gem: 0.06, hurt: 0.22, item: 0.1, level: 0.3, dash: 0.1, thunder: 0.4, evo: 1, gate: 1, win: 1 },   // mínimo entre dos iguales (s)
   tone(f, d, type, vol, f2, at) {
     const x = this.ctx, t0 = x.currentTime + (at || 0), o = x.createOscillator(), g = x.createGain();
     o.type = type || 'square'; o.frequency.setValueAtTime(f, t0);
@@ -61,6 +61,8 @@ const Sound = {
       case 'click': this.tone(880, 0.05, 'square', 0.05); this.tone(1320, 0.08, 'square', 0.05, 0, 0.045); break;   // menú: elegir
       case 'back': this.tone(660, 0.05, 'square', 0.045); this.tone(440, 0.08, 'square', 0.045, 0, 0.045); break;   // menú: cerrar / volver
       case 'gem': this.tone(1100 + Math.random() * 300, 0.06, 'sine', 0.05); break;
+      case 'thunder': this.tone(110, 0.5, 'sawtooth', 0.12, 40); this.tone(70, 0.9, 'square', 0.07, 30, 0.08); break;
+      case 'dash': this.tone(520, 0.12, 'sawtooth', 0.05, 1400); break;
       case 'hurt': this.tone(190, 0.16, 'sawtooth', 0.1, 70); break;
       case 'item': this.tone(660, 0.09, 'square', 0.06); this.tone(990, 0.14, 'square', 0.06, 0, 0.08); break;
       case 'level': [523, 659, 784, 1047].forEach((f, i) => this.tone(f, 0.16, 'square', 0.06, 0, i * 0.07)); break;
