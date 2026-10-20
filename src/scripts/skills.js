@@ -279,7 +279,8 @@ const SkillSys = {
   // proyectil con sprite (lo llama el dibujo de disparos de game.js). Devuelve false si no tiene sprite.
   drawShot(s) {
     const S = s.fx && this.fxOf(s.fx, 'pr'); if (!S) return false;
-    this.spr(S, t * 12, s.x, s.y, s.sz || 34, s.a != null ? s.a : Math.atan2(s.vy, s.vx));
+    // tope: como mucho 3 veces su tamaño original (los sprites chiquitos agrandados de más se veían gigantes y pixelados)
+    this.spr(S, t * 12, s.x, s.y, Math.min(s.sz || 34, S.h * 3), s.a != null ? s.a : Math.atan2(s.vy, s.vx));
     return true;
   },
 

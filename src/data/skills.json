@@ -6969,7 +6969,6 @@
       "nv": "pillar18"
     },
     "rage_of_wyvern": {
-      "pr": "bullet25",
       "hit": "exp08",
       "nv": "pillar35"
     },
@@ -6994,9 +6993,9 @@
       "nv": "pillar18"
     },
     "koyosetsu": {
-      "pr": "bullet25",
       "hit": "exp13",
-      "nv": "pillar18"
+      "nv": "pillar18",
+      "pr": "bullet05"
     },
     "headbutt": {
       "pr": "ball01",
@@ -7329,7 +7328,6 @@
       "nv": "pillar20"
     },
     "thunder_dread": {
-      "pr": "bullet10",
       "hit": "power29",
       "nv": "pillar02"
     },
@@ -7359,7 +7357,6 @@
       "nv": "pillar03"
     },
     "shinden_shouraikou": {
-      "pr": "bullet10",
       "hit": "power03",
       "nv": "pillar20"
     },
@@ -7689,7 +7686,6 @@
       "nv": "pillar04"
     },
     "qualialise_blast": {
-      "pr": "bullet25",
       "hit": "power17",
       "nv": "pillar35"
     },
@@ -7724,7 +7720,6 @@
       "nv": "pillar24"
     },
     "kurukuru_rekkuzan": {
-      "pr": "bullet25",
       "hit": "power02",
       "nv": "pillar32"
     },
@@ -7759,7 +7754,6 @@
       "nv": "pillar02"
     },
     "bark_storm": {
-      "pr": "bullet10",
       "hit": "shock07",
       "nv": "pillar03"
     },
@@ -8419,9 +8413,9 @@
       "nv": "pillar24"
     },
     "spiral_blow": {
-      "pr": "bullet25",
       "hit": "power12",
-      "nv": "pillar32"
+      "nv": "pillar32",
+      "pr": "fire14"
     },
     "gaoga_tornado": {
       "pr": "fire02",
@@ -8504,7 +8498,6 @@
       "nv": "pillar16"
     },
     "thorn_whip": {
-      "pr": "bullet10",
       "hit": "power03",
       "nv": "pillar03"
     },
