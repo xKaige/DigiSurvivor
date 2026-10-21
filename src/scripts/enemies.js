@@ -306,16 +306,25 @@ const Enemies = {
   drawWarn(o) {
     const f = 1 - Math.max(0, o.l) / o.m;   // progreso 0..1 hasta el golpe
     cx.save();
-    if (o.k === 'rbeam') {   // Cruz giratoria del jefe: 4 rayos; m = 0 aviso (finito), 1 quema
-      cx.translate(o.x, o.y); cx.rotate(o.a);
+    if (o.k === 'rbeam') {   // Cruz giratoria del jefe: 4 rayos desde el borde del escudo (R0); m = 0 aviso (finito), 1 quema
+      cx.translate(o.x, o.y); cx.rotate(o.a); const r0 = o.R0 || 0; cx.translate(r0, 0); o = Object.assign({}, o, { Lg: o.Lg - r0 });
       for (let j = 0; j < 4; j++) {
         if (o.m) {
           cx.globalAlpha = 0.35 + 0.1 * Math.sin(t * 30); cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2 - 6, o.Lg, o.w + 12);
           cx.globalAlpha = 0.85; cx.fillRect(0, -o.w / 2, o.Lg, o.w);
           cx.globalAlpha = 1; cx.fillStyle = '#fff'; cx.fillRect(0, -o.w / 6, o.Lg, o.w / 3);
         } else { cx.globalAlpha = 0.5; cx.strokeStyle = o.col; cx.lineWidth = 2; cx.setLineDash([12, 8]); cx.strokeRect(0, -o.w / 2, o.Lg, o.w); cx.setLineDash([]); cx.globalAlpha = 0.1; cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2, o.Lg, o.w); }
-        cx.rotate(Math.PI / 2);
+        cx.translate(-r0, 0); cx.rotate(Math.PI / 2); cx.translate(r0, 0);
       }
+    } else if (o.k === 'pull') {   // Gravedad: anillos que se cierran hacia el jefe
+      const f = 1 - Math.max(0, o.l) / o.m; cx.strokeStyle = o.col; cx.lineWidth = 4;
+      for (let j = 0; j < 3; j++) { const r = o.R * (1 - ((f + j / 3) % 1)); cx.globalAlpha = 0.5 * (r / o.R); cx.beginPath(); cx.arc(o.x, o.y, r, 0, 6.283); cx.stroke(); }
+    } else if (o.k === 'danger') {   // Zonas seguras: toda la zona en rojo
+      cx.globalAlpha = 0.12 + 0.06 * Math.sin(t * 12); cx.fillStyle = o.col; cx.fillRect(o.x - o.R, o.y - o.R, o.R * 2, o.R * 2);
+    } else if (o.k === 'safe') {     // círculo verde: ahí no te pega
+      cx.globalAlpha = 0.3; cx.fillStyle = o.col; cx.beginPath(); cx.arc(o.x, o.y, o.R, 0, 6.283); cx.fill();
+      cx.globalAlpha = 0.95; cx.strokeStyle = '#eafff2'; cx.lineWidth = 3; cx.setLineDash([10, 6]); cx.lineDashOffset = -t * 30; cx.stroke(); cx.setLineDash([]);
+      cx.font = "bold 14px 'Chakra Petch',sans-serif"; cx.textAlign = 'center'; cx.fillStyle = '#eafff2'; cx.fillText('SEGURO', o.x, o.y + 5);
     } else if (o.k === 'wline') {
       cx.translate(o.x, o.y); cx.rotate(o.a);
       // más transparentes que antes (con muchos enemigos se superponían y tapaban todo)

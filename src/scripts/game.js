@@ -1423,6 +1423,7 @@ function draw(){
  Explore.draw();Items.draw();
  const vx0=cam.x-W/2-160,vx1=cam.x+W/2+160,vy0=cam.y-H/2-200,vy1=cam.y+H/2+200;
  const ents=[];   // lo que puede quedar detrás de un árbol (World.drawTall)
+ for(const o of ef)if(o.k==='rbeam'){cx.save();Enemies.drawWarn(o);cx.restore()}   // la cruz giratoria va debajo del jefe
  const vis=en.filter(e=>e.bo!=null||!(e.x<vx0||e.x>vx1||e.y<vy0||e.y>vy1)).sort((a,b)=>a.y-b.y);   // fuera de pantalla no se dibuja; de atrás para adelante (el de más abajo queda delante)
  for(const e of vis){
   dEn(e);const hw=Math.max(30,e.r*1.6);ents.push({e,x0:e.x-hw,x1:e.x+hw,y0:e.y-enTop(e),fy:e.y+World.foot(e)})}

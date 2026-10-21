@@ -327,7 +327,7 @@ const SkillSys = {
       cx.lineCap = 'butt';
     } else if (o.k === 'bolt') {
       Weather.drawBolt(o);   // rayo de la tormenta (weather.js)
-    } else if (o.k === 'wline' || o.k === 'wcirc' || o.k === 'pool' || o.k === 'rbeam') {
+    } else if (o.k === 'wline' || o.k === 'wcirc' || o.k === 'pool' || o.k === 'pull' || o.k === 'danger' || o.k === 'safe') {
       Enemies.drawWarn(o);   // aviso de ataque enemigo (enemies.js)
     } else if (o.k === 'hit' || o.k === 'nova') {
       const S = this.fxOf(o.fx, o.k === 'hit' ? 'hit' : 'nv');

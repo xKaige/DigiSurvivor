@@ -62,7 +62,7 @@ const Bosses = {
     this.n++;
     const a = Math.random() * 6.283, d = Math.hypot(W, H) / 2 + 60;
     // la vida escala con la etapa del más evolucionado (0,5× en Bebé … 1,75× en forma final), el ciclo y la cantidad de jugadores
-    const st = Math.max(...P.map(q => q.stage | 0)), hp = 1.6 * B.hp * (0.5 + 0.25 * st) * (1 + cyc * 1.5) * (1 + 1.1 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores (+110% c/u: en party morían antes de la furia) y, desde los 4 min, con el tiempo
+    const st = Math.max(...P.map(q => q.stage | 0)), hp = 2.4 * B.hp * (0.5 + 0.25 * st) * (1 + 0.035 * Math.max(0, lvl - 1)) * (1 + cyc * 1.5) * (1 + 1.1 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores (+110% c/u: en party morían antes de la furia) y, desde los 4 min, con el tiempo
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
       hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5) * (1 + Math.max(0, t - 240) / 600), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
       pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0, t0: t });
@@ -73,9 +73,11 @@ const Bosses = {
   // suman espiral de balas, lluvia de impactos y cruz de rayos, atacan más seguido y se mueven más rápido.
   // 0.7: Cruz giratoria (va al centro, escudo inmune y 4 rayos que giran como las agujas del reloj) y Embestidas (varias
   // seguidas, apuntando de nuevo cada vez). Además el jefe persigue al que más daño le hizo (aggro, e.ag).
-  P1: [{ n: 'Terremoto', k: 'quake' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Muralla', k: 'wall' }, { n: 'Cruz giratoria', k: 'shieldx' }],
-  P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz giratoria', k: 'shieldx' }, { n: 'Terremoto', k: 'quake' }, { n: 'Orbes', k: 'homing' }, { n: 'Embestidas', k: 'mdash' }],
+  P1: [{ n: 'Terremoto', k: 'quake' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Gravedad', k: 'grav' }, { n: 'Muralla', k: 'wall' }, { n: 'Campo minado', k: 'mines' }, { n: 'Cruz giratoria', k: 'shieldx' }],
+  P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz giratoria', k: 'shieldx' }, { n: 'Terremoto', k: 'quake' }, { n: 'Orbes', k: 'homing' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Zonas seguras', k: 'safe' }, { n: 'Sentencia', k: 'mark' }, { n: 'Gravedad', k: 'grav' }, { n: 'Campo minado', k: 'mines' }],
   SX_DUR: 7.5, SX_W: 54, SX_L: 1150,
+  cy(e) { return e.r * 1.26; },     // centro del cuerpo dibujado (el sprite va con los pies en y + h/2): ahí van la burbuja y la cruz
+  r0(e) { return e.r * 2.6; },      // radio del escudo dibujado: los rayos empiezan en su borde
   // aggro: daño recibido por jugador (game.js: hit), se va olvidando (mitad cada ~4 s); persigue al que más le pegó
   aggro(e, dt) {
     if (!e.dmg) return null; let b = null, bv = 0;
@@ -92,18 +94,18 @@ const Bosses = {
       if (d > 24 && e.sxW > 0) { const g = Math.atan2(Y - e.y, X - e.x); World.move(e, Math.cos(g) * Math.max(160, e.sp * 2.4) * dt, Math.sin(g) * Math.max(160, e.sp * 2.4) * dt); return; }
       e.sxW = 0; e.shd = this.SX_DUR; e.sxT = 0; e.sxA = Math.random() * 6.283;
       this.banner('¡' + B.name + ' levanta un escudo! Rodealo');
-      e.sxE = { k: 'rbeam', x: e.x, y: e.y, a: e.sxA, Lg: this.SX_L, w: this.SX_W, col: '#ff3d81', l: 1, m: 0 }; ef.push(e.sxE);
+      e.sxE = { k: 'rbeam', x: e.x, y: e.y + this.cy(e), a: e.sxA, Lg: this.SX_L, w: this.SX_W, R0: this.r0(e), col: '#ff3d81', l: 1, m: 0 }; ef.push(e.sxE);
     }
     if (e.shd > 0) {
       e.shd -= dt; e.sxT += dt; e.at = 0.3;
       const on = e.sxT > 1.4, o = e.sxE;   // 1,4 s de aviso (rayos finitos) y después queman
       if (on) e.sxA += (e.p2 ? 0.78 : 0.62) * dt;   // en pantalla, ángulo que crece = sentido de las agujas del reloj
-      if (o) { o.x = e.x; o.y = e.y; o.a = e.sxA; o.m = on ? 1 : 0; o.l = e.shd > 0 ? 1 : 0; }
+      if (o) { o.x = e.x; o.y = e.y + this.cy(e); o.R0 = this.r0(e); o.a = e.sxA; o.m = on ? 1 : 0; o.l = e.shd > 0 ? 1 : 0; }
       if (on) for (const q of P) {
         if (q.dead || q.inv > 0) continue;
-        const rx = q.x - e.x, ry = q.y - e.y;
+        const rx = q.x - e.x, ry = q.y - e.y - this.cy(e), r0 = this.r0(e) * 0.8;
         for (let j = 0; j < 4; j++) { const g = e.sxA + j * Math.PI / 2, c = Math.cos(g), s = Math.sin(g), pr = rx * c + ry * s;
-          if (pr > 0 && pr < this.SX_L && Math.abs(-rx * s + ry * c) < this.SX_W / 2 + q.r * 0.4) { hurt(q, e.dm * 22, e.el); break; } }
+          if (pr > r0 && pr < this.SX_L && Math.abs(-rx * s + ry * c) < this.SX_W / 2 + q.r * 0.4) { hurt(q, e.dm * 22, e.el); break; } }
       }
       if (e.shd <= 0) { e.pt = 1; this.banner('¡Se rompió el escudo!'); for (let j = 0; j < 24; j++) burst(e.x, e.y, j % 2 ? '#9fe8ff' : '#fff'); }
       return;
@@ -114,7 +116,31 @@ const Bosses = {
       this.banner('¡' + B.name + ' se enfurece!');
       for (let j = 0; j < 30; j++) burst(e.x, e.y, j % 2 ? '#ff3d3d' : '#ffd23f');
     }
-    // espiral en curso: dos brazos de balas que giran mientras camina despacio
+    // Gravedad: tira a todos hacia el jefe 2,2 s (hay que caminar o hacer dash en contra) y termina con un terremoto
+    if (e.gvT > 0) {
+      e.gvT -= dt; e.at = 0.3;
+      for (const q of P) { if (q.dead) continue; const dx = e.x - q.x, dy = e.y + this.cy(e) - q.y, d = Math.hypot(dx, dy) || 1; if (d > e.r * 2) World.move(q, dx / d * 175 * dt, dy / d * 175 * dt); }
+      if ((e.gvE = (e.gvE || 0) - dt) <= 0) { e.gvE = 0.35; ef.push({ k: 'pull', x: e.x, y: e.y + this.cy(e), R: 520, l: 0.6, m: 0.6, col: '#b35cff' }); }
+      if (e.gvT <= 0) [[0, 160, 0.5], [160, 320, 0.9]].forEach(([r0, r1, d]) => Enemies.bomb(e.x, e.y, r1, d, e, 1.4, '#b35cff', r0));
+      return;
+    }
+    // Zonas seguras: se marca toda la arena y unos círculos verdes; al terminar, daña a los que no estén adentro de uno
+    if (e.szT > 0) {
+      e.szT -= dt; e.at = 0.3;
+      if (e.szT <= 0) {
+        for (const q of P) if (!q.dead && q.inv <= 0 && !e.sz.some(z => Math.hypot(q.x - z[0], q.y + 30 - z[1]) < 95)) hurt(q, e.dm * 20, e.el);
+        for (const z of e.sz) for (let j = 0; j < 8; j++) burst(z[0], z[1], '#3dff9a');
+        ef.push({ k: 'ring', x: e.x, y: e.y, R: 900, col: '#ff3d3d', l: 0.5, m: 0.5 });
+      }
+      return;
+    }
+    // Sentencia: un círculo persigue al jugador marcado (el del aggro o el más cercano) y explota donde quedó
+    if (e.mkT > 0) {
+      e.mkT -= dt; const q = P[e.mkQ], o = e.mkE;
+      if (o && q && !q.dead && e.mkT > 0.7) { o.x = q.x; o.y = q.y + 30; }
+      if (e.mkT <= 0.7 && !e.mkL && o) { e.mkL = 1; o.l = 0; Enemies.bomb(o.x, o.y, 130, 0.7, e, 1.8, '#ff3d3d'); }
+      if (e.mkT <= 0) { e.mkE = null; e.mkL = 0; }
+    }
     if (e.spT > 0) {
       e.spT -= dt; e.spE = (e.spE || 0) - dt;
       while (e.spE <= 0) { e.spE += 0.07; e.spA += 0.33;
@@ -156,6 +182,29 @@ const Bosses = {
       Enemies.warnLine(e.x, e.y, a, e.sp * 3.6 * e.chDur + e.r, e.r * 2 + 10, 0.65);
     } else if (k.k === 'shieldx') {  // ver arriba (sxW: segundos como mucho para llegar al centro)
       e.sxW = 2.5;
+    } else if (k.k === 'grav') {     // Gravedad (ver arriba)
+      e.gvT = 2.2; e.gvE = 0; this.banner('¡' + this.def(e.bo).name + ' te atrae!');
+    } else if (k.k === 'mines') {    // Campo minado: círculos naranjas por todos lados que explotan juntos (hay que meterse entre ellos)
+      const n = 9 + 2 * e.cyc, A = World.arena ? World.AR : null, al = P.filter(q => !q.dead);
+      for (let j = 0; j < n; j++) {
+        let x, y;
+        for (let k2 = 0; k2 < 8; k2++) {
+          if (A) { x = (Math.random() - 0.5) * (A.w - 160); y = (Math.random() - 0.5) * (A.h - 160); }
+          else { const q = al[j % al.length] || e, g = Math.random() * 6.283, r = 80 + Math.random() * 380; x = q.x + Math.cos(g) * r; y = q.y + Math.sin(g) * r; }
+          if (!al.some(q => Math.hypot(q.x - x, q.y + 30 - y) < 70)) break;
+        }
+        Enemies.bomb(x, y, 85, 2.4 + (j % 3) * 0.25, e, 1.4, '#ff9a2e');
+      }
+    } else if (k.k === 'safe') {     // Zonas seguras (ver arriba): 3 círculos verdes lejos del jefe
+      const A = World.arena ? World.AR : { w: 1200, h: 900 }, ox = World.arena ? 0 : e.x, oy = World.arena ? 0 : e.y;
+      e.sz = []; for (let j = 0; j < 3; j++) { let x, y; for (let k2 = 0; k2 < 10; k2++) { x = ox + (Math.random() - 0.5) * (A.w - 220); y = oy + (Math.random() - 0.5) * (A.h - 220); if (Math.hypot(x - e.x, y - e.y) > 260 && !e.sz.some(z => Math.hypot(z[0] - x, z[1] - y) < 260)) break; } e.sz.push([x, y]); }
+      e.szT = 2.8; this.banner('¡Metete en una zona segura!');
+      ef.push({ k: 'danger', x: ox, y: oy, R: Math.max(A.w, A.h), l: 2.8, m: 2.8, col: '#ff3d3d' });
+      for (const z of e.sz) ef.push({ k: 'safe', x: z[0], y: z[1], R: 95, l: 2.8, m: 2.8, col: '#3dff9a' });
+    } else if (k.k === 'mark') {     // Sentencia (ver arriba)
+      const q = P[e.ag] && !P[e.ag].dead ? P[e.ag] : tg; e.mkQ = q.id; e.mkT = 2.6; e.mkL = 0;
+      e.mkE = { k: 'wcirc', x: q.x, y: q.y + 30, R: 130, l: 2.6, m: 2.6, col: '#ff3d3d' }; ef.push(e.mkE);
+      Bosses.banner(P.length > 1 ? '¡Sentencia sobre ' + pname(q.id) + '! Alejate de tus compañeros' : '¡Sentencia! Que no te alcance');
     } else if (k.k === 'spiral') {
       e.spT = 2.4; e.spA = Math.random() * 6.283; e.spE = 0;
     } else if (k.k === 'rain') {   // impactos marcados alrededor de los jugadores
