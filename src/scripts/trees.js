@@ -156,24 +156,26 @@ const Trees = {
   },
   drawTree() {
     const k = this.tab, T = this.tree(k), inn = $('tr-in'); if (!inn) return;
-    const xs = T.nodes.map(n => n.x), ys = T.nodes.map(n => n.y), pad = 80;
+    // TK: las posiciones del JSON se agrandan (Issue #5: el árbol se veía chico); los nodos también son más grandes (CSS)
+    const TK = 1.3, X = n => n.x * TK, Y = n => n.y * TK;
+    const xs = T.nodes.map(X), ys = T.nodes.map(Y), pad = 110;
     const x0 = Math.min(...xs) - pad, y0 = Math.min(...ys) - pad, w = Math.max(...xs) - x0 + pad, h = Math.max(...ys) - y0 + pad;
     this.box = { x0, y0, w, h };
     let svg = '<svg class="tr-lines" width="' + w + '" height="' + h + '" viewBox="' + x0 + ' ' + y0 + ' ' + w + ' ' + h + '">';
     for (const n of T.nodes) for (const id of n.link) {
       const o = T.nodes.find(z => z.id === id); if (!o) continue;
       const on = this.owned(k, n.id) && this.owned(k, o.id), half = this.owned(k, n.id) || this.owned(k, o.id);
-      svg += '<line x1="' + o.x + '" y1="' + o.y + '" x2="' + n.x + '" y2="' + n.y + '" class="' + (on ? 'on' : half ? 'half' : '') + '"/>';
+      svg += '<line x1="' + X(o) + '" y1="' + Y(o) + '" x2="' + X(n) + '" y2="' + Y(n) + '" class="' + (on ? 'on' : half ? 'half' : '') + '"/>';
     }
     svg += '</svg>';
     // etiquetas de las ramas
     // nombre de cada rama, en la punta (un poco más allá del último nodo)
     const lab = Object.entries(T.arms).map(([a, nm]) => { const d = { FUE: [0, -1], INT: [1, 0], VIT: [0, 1], VEL: [-1, 0] }[a];
-      const far = Math.max(...T.nodes.filter(n => n.arm === a).map(n => Math.abs(n.x) + Math.abs(n.y))) + 62;
+      const far = Math.max(...T.nodes.filter(n => n.arm === a).map(n => Math.abs(X(n)) + Math.abs(Y(n)))) + 90;
       return '<span class="tr-arm' + (a === T.fav ? ' fav' : '') + '" style="left:' + (d[0] * far - x0) + 'px;top:' + (d[1] * far - y0) + 'px">' + nm + (a === T.fav ? ' ★' : '') + '</span>'; }).join('');
     const nodes = T.nodes.map(n => {
       const st = this.state(k, n), lv = this.lv(k, n.id);
-      return '<button class="tr-n ' + n.t + (n.notable ? ' notable' : '') + ' ' + st + (lv ? ' own' : '') + (n.id === this.sel ? ' sel' : '') + '" data-id="' + n.id + '" style="left:' + (n.x - x0) + 'px;top:' + (n.y - y0) + 'px" title="' + n.n + '">' +
+      return '<button class="tr-n ' + n.t + (n.notable ? ' notable' : '') + ' ' + st + (lv ? ' own' : '') + (n.id === this.sel ? ' sel' : '') + '" data-id="' + n.id + '" style="left:' + (X(n) - x0) + 'px;top:' + (Y(n) - y0) + 'px" title="' + n.n + '">' +
         (n.t === 'major' ? '<i>★</i>' : n.t === 'start' ? '<i>◆</i>' : '<i>' + lv + '</i>') +
         (n.t === 'major' || n.t === 'start' ? '<span>' + n.n + '</span>' : '') + '</button>';
     }).join('');
@@ -212,7 +214,7 @@ const Trees = {
   paint() {
     const v = $('tr-view'), inn = $('tr-in'); if (!v || !inn || !this.box) return;
     // vista inicial: centrada en el Inicio, con todo el árbol si entra (y si no, sin achicar de más)
-    if (!this.view) { const s = Math.max(0.55, Math.min(1, Math.min(v.clientWidth / this.box.w, v.clientHeight / this.box.h) * 0.95)); this.view = { s, x: v.clientWidth / 2 + this.box.x0 * s, y: v.clientHeight / 2 + this.box.y0 * s }; }
+    if (!this.view) { const s = Math.max(0.8, Math.min(1, Math.min(v.clientWidth / this.box.w, v.clientHeight / this.box.h) * 0.95)); this.view = { s, x: v.clientWidth / 2 + this.box.x0 * s, y: v.clientHeight / 2 + this.box.y0 * s }; }
     inn.style.transform = 'translate(' + this.view.x + 'px,' + this.view.y + 'px) scale(' + this.view.s + ')';
   },
   zoom(f, cx_, cy_) {
@@ -235,24 +237,24 @@ const Trees = {
     if ($('tree-css')) return;
     const st = document.createElement('style'); st.id = 'tree-css';
     st.textContent = `
-#cols.tr-box{display:flex;flex-direction:column;gap:10px;width:100%;max-width:1240px}
+#cols.tr-box{display:flex;flex-direction:column;gap:10px;width:100%;max-width:1600px}
 .tr-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .tr-tab{display:flex;flex-direction:column;align-items:center;min-width:120px;padding:8px 16px;background:rgba(4,16,34,.85);border:2px solid var(--ac);color:#f2fbff;cursor:pointer;font:700 15px 'Chakra Petch',sans-serif;opacity:.65;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
 .tr-tab small{font-weight:500;color:var(--ac)}.tr-tab.on{opacity:1;box-shadow:0 0 14px var(--ac);background:linear-gradient(180deg,rgba(18,60,100,.6),rgba(4,16,34,.9))}
-.tr-main{display:flex;gap:12px;align-items:stretch;min-height:min(62vh,640px)}
-.tr-view{position:relative;flex:1;overflow:hidden;border:2px solid var(--cy);background:radial-gradient(circle at 50% 50%,rgba(18,60,100,.35),rgba(2,8,20,.92));touch-action:none;cursor:grab;min-height:420px}
+.tr-main{display:flex;gap:12px;align-items:stretch;min-height:min(76vh,880px)}
+.tr-view{position:relative;flex:1;overflow:hidden;border:2px solid var(--cy);background:radial-gradient(circle at 50% 50%,rgba(18,60,100,.35),rgba(2,8,20,.92));touch-action:none;cursor:grab;min-height:520px}
 .tr-view:active{cursor:grabbing}
 .tr-in{position:absolute;left:0;top:0;transform-origin:0 0}
-.tr-lines{position:absolute;left:0;top:0;overflow:visible}.tr-lines line{stroke:rgba(120,170,210,.28);stroke-width:4}
-.tr-lines line.half{stroke:rgba(255,210,63,.45);stroke-dasharray:6 6}.tr-lines line.on{stroke:var(--ac);stroke-width:6;filter:drop-shadow(0 0 4px var(--ac))}
-.tr-arm{position:absolute;transform:translate(-50%,-50%);font:700 11px 'Orbitron',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:rgba(200,230,255,.55);pointer-events:none;white-space:nowrap}
+.tr-lines{position:absolute;left:0;top:0;overflow:visible}.tr-lines line{stroke:rgba(120,170,210,.3);stroke-width:5}
+.tr-lines line.half{stroke:rgba(255,210,63,.45);stroke-dasharray:6 6}.tr-lines line.on{stroke:var(--ac);stroke-width:8;filter:drop-shadow(0 0 4px var(--ac))}
+.tr-arm{position:absolute;transform:translate(-50%,-50%);font:700 15px 'Orbitron',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:rgba(200,230,255,.6);pointer-events:none;white-space:nowrap}
 .tr-arm.fav{color:var(--ac)}
-.tr-n{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:3px solid #3a5a78;background:#081a30;color:#cfe8ff;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font:700 13px 'Chakra Petch',sans-serif}
+.tr-n{position:absolute;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;border:3px solid #3a5a78;background:#081a30;color:#cfe8ff;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font:700 17px 'Chakra Petch',sans-serif}
 .tr-n i{font-style:normal}
-.tr-n span{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:6px;white-space:nowrap;font:700 12px 'Chakra Petch',sans-serif;color:#f2fbff;text-shadow:0 0 4px #000,0 0 8px #000;pointer-events:none}
-.tr-n.attr{border-radius:4px;transform:translate(-50%,-50%) rotate(45deg);width:30px;height:30px}.tr-n.attr i{transform:rotate(-45deg)}
-.tr-n.major{width:52px;height:52px;font-size:22px;border-radius:12px}.tr-n.notable{width:40px;height:40px;font-size:16px;border-radius:50%}
-.tr-n.start{width:60px;height:60px;font-size:24px;border-color:var(--ac);color:var(--ac);box-shadow:0 0 16px var(--ac)}
+.tr-n span{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:8px;white-space:nowrap;font:700 15px 'Chakra Petch',sans-serif;color:#f2fbff;text-shadow:0 0 4px #000,0 0 8px #000;pointer-events:none}
+.tr-n.attr{border-radius:5px;transform:translate(-50%,-50%) rotate(45deg);width:40px;height:40px}.tr-n.attr i{transform:rotate(-45deg)}
+.tr-n.major{width:68px;height:68px;font-size:28px;border-radius:14px}.tr-n.notable{width:54px;height:54px;font-size:20px;border-radius:50%}
+.tr-n.start{width:80px;height:80px;font-size:30px;border-color:var(--ac);color:var(--ac);box-shadow:0 0 16px var(--ac)}
 .tr-n.lock{opacity:.4}
 .tr-n.buy{border-color:#ffd23f;box-shadow:0 0 12px rgba(255,210,63,.7);color:#ffd23f}
 .tr-n.poor{border-color:#c9a23a}
@@ -260,9 +262,9 @@ const Trees = {
 .tr-n.max.own{background:var(--ac);color:#04101f}
 .tr-n.sel{outline:3px solid #fff;outline-offset:3px}
 .tr-zoom{position:absolute;right:8px;bottom:8px;display:flex;gap:6px}
-.tr-zoom button{width:34px;height:34px;border:2px solid var(--cy);background:rgba(4,16,34,.9);color:#f2fbff;font:700 18px sans-serif;cursor:pointer}
-.tr-info{width:300px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;padding:14px;border:2px solid var(--ac);background:linear-gradient(180deg,rgba(18,60,100,.45),rgba(4,16,34,.92));font:500 14px/1.4 'Chakra Petch',sans-serif;color:var(--ink)}
-.tr-info h3{margin:0;font:700 20px 'Chakra Petch',sans-serif;color:#f2fbff;text-transform:uppercase}
+.tr-zoom button{width:42px;height:42px;border:2px solid var(--cy);background:rgba(4,16,34,.9);color:#f2fbff;font:700 18px sans-serif;cursor:pointer}
+.tr-info{width:330px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;padding:14px;border:2px solid var(--ac);background:linear-gradient(180deg,rgba(18,60,100,.45),rgba(4,16,34,.92));font:500 15px/1.45 'Chakra Petch',sans-serif;color:var(--ink)}
+.tr-info h3{margin:0;font:700 22px 'Chakra Petch',sans-serif;color:#f2fbff;text-transform:uppercase}
 .tr-info p{margin:0}.tr-d{color:#f2fbff}
 .tr-type{align-self:flex-start;padding:2px 8px;font:700 11px 'Orbitron',sans-serif;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.1);color:var(--ac)}
 .tr-type.major{background:var(--ac);color:#04101f}
