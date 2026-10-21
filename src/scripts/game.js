@@ -504,7 +504,7 @@ function hostSync(dt) {
   const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
   const pl = P.map(q => {
     const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, alt: q.alt, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp, bf: Explore.bfSync(q) };
-    if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs });
+    if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs, ds: rr(q.ds || {}) });
     return o;
   });
   // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
@@ -605,8 +605,13 @@ function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=matchMedia('(pointer:coarse)').matches?210:320;   // MAX_EN: enemigos a la vez con 1 jugador (+60 por cada jugador más; en celular menos). Con la grilla espacial (buildEG) aguanta
 function dmgNum(x,y,v,col,sz,txt){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:txt||String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
 // q: quién golpea (para el crítico, las pasivas y a quién se le cuenta la muerte; ver stats.js)
+// Estadísticas de daño (Issue #8): cada jugador suma en q.ds el daño hecho por fuente: la skill (DSRC, lo pone SkillSys
+// mientras la usa y los disparos guardan la suya en s.sk), 'basic' = ataque básico, 'pulse' = onda al subir de nivel.
+// Se cuenta el daño real (como mucho la vida que le quedaba). Se muestra en la pantalla final (showDmg).
+let DSRC=null;
 function hit(e,d,el,q){if(e.shd>0){if(Math.random()<.12)dmgNum(e.x,e.y-e.r,0,'#9fe8ff',18,'INMUNE');return}const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.hp0=e.hp;
  if(q&&q.m){v=Stats.onHit(q,e,v);if(Math.random()<q.crit){v*=q.critD;cr=1}e.lh=q.id}
+ if(q&&q.m){const k=DSRC||'basic';q.ds=q.ds||{};q.ds[k]=(q.ds[k]||0)+Math.min(v,Math.max(0,e.hp))}
  e.hp-=v;if(e.bo!=null&&q){e.dmg=e.dmg||{};e.dmg[q.id]=(e.dmg[q.id]||0)+v}e.fl=.1;dmgNum(e.x,e.y-e.r,v,cr?'#ffd23f':m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',cr?32:m>1?30:m<1?14:18,cr?String(Math.max(1,Math.round(v*10)))+'!':0);
  if(q&&q.m)Stats.afterHit(q,e,v)}
 // Dash (0.7): hasta DASH_N cargas, cada una se recarga en DASH_CD s; mientras dura (DASH_T) sos invulnerable.
@@ -882,7 +887,15 @@ function endRun(title){if(!running)return;
  if(typeof Achievements!=='undefined')Achievements.onRunEnd({kills,coins:c,online:isOnline,n:P.length,chal:typeof Challenge!=='undefined'&&!!Challenge.active,fin:title==='Yggdrasill reinició el Digimundo',fast:Bosses.fast,me:mine()[0]});
  if(typeof Ranking!=='undefined')Ranking.onRunEnd({q:mine()[0],kills,bosses:Bosses.down.length,secs:t,lvl,n:P.length,chal:typeof Challenge!=='undefined'&&!!Challenge.active});   // ranking.js (antes que Challenge.onRunEnd)
  if(typeof Challenge!=='undefined')$('m').textContent+=Challenge.onRunEnd({kills,secs:t,bosses:Bosses.down.length,cid:(mine()[0]||P[0]).cid});
+ showDmg(mine()[0]||P[0]);
  wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
+// gráfico de daño de la partida (Issue #8): barras por skill con su ícono, el total y el % del daño de tu jugador
+function showDmg(q){let b=$('dmgst');if(!b){b=document.createElement('div');b.id='dmgst';$('m').after(b)}
+ const ds=(q&&q.ds)||{},L=Object.entries(ds).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]),tot=L.reduce((a,x)=>a+x[1],0);
+ if(!L.length){b.style.display='none';return}b.style.display='';
+ const nm=k=>k==='basic'?'Ataque básico':k==='pulse'?'Onda de poder':SkillSys.def(k)?SkillSys.def(k).name:k,num=v=>Math.round(v*10).toLocaleString('es-AR');
+ b.innerHTML='<div class="dm-h">Daño por habilidad <span>'+num(tot)+' en total</span></div>'+L.slice(0,8).map(([k,v])=>{const d=SkillSys.def(k),col=d?SkillSys.col(d):k==='pulse'?'#ffe066':'#3fd0ff',lv=q.wp&&q.wp[k];
+  return '<div class="dm-r" style="--c:'+col+'"><img src="'+(d?SkillSys.iconOf(d):'assets/sprites/skills/el_neutral.webp')+'" alt=""><div class="dm-b"><div class="dm-t"><b>'+nm(k)+(lv?' <small>Nv '+lv+'</small>':'')+'</b><span>'+num(v)+' · '+Math.round(v/tot*100)+'%</span></div><i style="width:'+Math.max(2,v/L[0][1]*100)+'%"></i></div></div>'}).join('')}
 
 // Alto en pantalla del dibujo de un compañero según su etapa (Bebé, Bebé II, Novato, Campeón, Perfecto, forma final)
 const BUDDY_H=[34,42,62,82,98,114];
@@ -1103,7 +1116,7 @@ function chooseLine(){
 // al subir de nivel: una onda de poder alrededor de cada jugador que empuja a los enemigos cercanos y los daña un poco
 function powerPulse(){if(isOnline&&!isHost)return;for(const q of P){if(q.dead)continue;const R=200+12*(q.stage|0)*(q.area||1);
  ef.push({k:'ring',x:q.x,y:q.y,R,col:'#ffe066',l:.45,m:.45});for(let i=0;i<18;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');
- for(const e of en){if(e.bo!=null)continue;const dx=e.x-q.x,dy=e.y-q.y,d=Math.hypot(dx,dy);if(d<R&&d>0){World.move(e,dx/d*90,dy/d*90);hit(e,q.dmg*3,q.el,q)}}}}
+ for(const e of en){if(e.bo!=null)continue;const dx=e.x-q.x,dy=e.y-q.y,d=Math.hypot(dx,dy);if(d<R&&d>0){World.move(e,dx/d*90,dy/d*90);(DSRC='pulse',hit(e,q.dmg*3,q.el,q),DSRC=null)}}}}
 function levelUp(){
   xp-=need;lvl++;need=xpNeed(lvl);paused=true;powerPulse();for(const q of P)Stats.calc(q);   // el daño crece con el nivel (Stats.LV_DMG)
 
@@ -1346,7 +1359,7 @@ function update(dt){
    if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0,r:5+Math.min(9,Math.log2(Math.max(1,q.dmg))*2.2)})}q.atkT=q.rate}}}
  buildEG();
  for(const s of sh){s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=dt;const sr=(s.r||5)+1;
-  enNear(s.x,s.y,70,e=>{if(s.l<=0)return true;if(e.hp>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+sr){hit(e,s.d,s.el,P[s.q]);s.h.add(e);if(s.pi>0)s.pi--;else if(s.rb>0)bounce(s,e);else s.l=0;if(s.ex)SkillSys.explode(s,e);burst(s.x,s.y,'#ffd23f')}})}
+  enNear(s.x,s.y,70,e=>{if(s.l<=0)return true;if(e.hp>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+sr){DSRC=s.sk||null;hit(e,s.d,s.el,P[s.q]);s.h.add(e);if(s.pi>0)s.pi--;else if(s.rb>0)bounce(s,e);else s.l=0;if(s.ex)SkillSys.explode(s,e);DSRC=null;burst(s.x,s.y,'#ffd23f')}})}
  sh=sh.filter(s=>s.l>0);
  for(const q of al)SkillSys.update(q,dt);
  for(const e of en){let tg=null,dd=1e9;for(const q of al){if(q.dead)continue;const d=Math.hypot(q.x-e.x,q.y-e.y);if(d<dd){dd=d;tg=q}}

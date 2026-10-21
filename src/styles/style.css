@@ -694,3 +694,18 @@ body.finale #dbtn{display:none}
 .rk-row.open .rk-sk{display:flex}
 .rk-sk em{font-style:normal;font-size:12px;padding:3px 8px;background:rgba(4,16,34,.9);border:1px solid #1b6fa8;border-radius:3px}
 @media (max-width:700px){#ranking{padding:8px}.rk-row{grid-template-columns:26px 1.2fr 1.2fr .9fr .7fr .5fr;font-size:12px}.rk-row>span:nth-child(7),.rk-row>span:nth-child(8){display:none}}
+
+/* Daño por habilidad en la pantalla final (Issue #8) */
+#dmgst{width:min(460px,100%);margin:10px 0 4px;padding:10px 12px;background:rgba(4,16,34,.82);border:1px solid #1b6fa8;border-radius:10px 2px 10px 2px;font-family:'Chakra Petch',sans-serif;color:#f2fbff;text-align:left}
+#dmgst .dm-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;font:800 12px 'Orbitron',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#3fd0ff}
+#dmgst .dm-h span{font:600 12px 'Chakra Petch',sans-serif;letter-spacing:0;text-transform:none;color:#9fc0d6}
+#dmgst .dm-r{display:flex;align-items:center;gap:8px;margin:5px 0}
+#dmgst .dm-r img{flex:0 0 26px;width:26px;height:26px;object-fit:contain;image-rendering:pixelated;border:1px solid var(--c);border-radius:4px;background:#05101e}
+#dmgst .dm-b{flex:1;min-width:0}
+#dmgst .dm-t{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+#dmgst .dm-t b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#dmgst .dm-t small{color:#9fc0d6;font-weight:600}
+#dmgst .dm-t span{flex:0 0 auto;color:#cfe8ff}
+#dmgst .dm-b i{display:block;height:7px;margin-top:2px;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 45%,#fff));border-radius:2px;box-shadow:0 0 6px color-mix(in srgb,var(--c) 60%,transparent)}
+@media (max-width:700px){#dmgst{margin:6px auto}}
+/* con el gráfico de daño, el Digivice se achica para que entre todo */
+#ovl:has(#dmgst:not([style*="none"])) #dv{max-height:min(230px,30vh);width:auto}

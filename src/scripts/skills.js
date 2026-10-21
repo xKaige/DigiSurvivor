@@ -153,15 +153,16 @@ const SkillSys = {
       const Wm = q.wm && q.wm[k]; if (Wm && Wm !== 1) { S.dmg *= Wm; const g = 1 + (Wm - 1) * 0.4; S.area *= g; S.size *= g; }
       // stats del jugador (stats.js): área, recarga y duración
       if (q.area) { S.area *= q.area; S.size *= q.area; }   // el tamaño crece igual que el área (antes la mitad: no se notaba)
-      if (d.type === 'orbit') { this.orbit(q, k, d, S, dt); continue; }
+      if (d.type === 'orbit') { DSRC = k; this.orbit(q, k, d, S, dt); DSRC = null; continue; }   // DSRC: a qué skill se le cuenta el daño (game.js: hit)
       q.wt[k] = (q.wt[k] === undefined ? 0 : q.wt[k]) - dt * (q.moving && q.m && q.m.moveCdr ? 1 + q.m.moveCdr : 1);
       if (q.wt[k] > 0) continue;
       const fn = this[d.type]; if (!fn) continue;
       if (q.emp && this.near(q, 520)) Stats.useEmp(q, S);   // SP lleno: esta sale potenciada
       const cd = Math.max(.35, d.cd * S.cd * (q.cdr || 1)), c0 = q.casts | 0;
-      fn.call(this, q, k, d, S, cd);
+      DSRC = k; fn.call(this, q, k, d, S, cd);
       // Sobrecarga (árbol de Dato): cada 5 skills, la quinta sale dos veces
       if (q.m && q.m.overload && (q.casts | 0) > c0 && q.casts % 5 === 0) fn.call(this, q, k, d, S, cd);
+      DSRC = null;
     }
   },
 
@@ -206,7 +207,7 @@ const SkillSys = {
     const sp = n > 1 ? Math.min(1.5, (d.count > 1 ? (d.spread || .5) : 0.2) + 0.14 * S.cnt) : 0;
     for (let i = 0; i < n; i++) {
       const a = a0 + (n > 1 ? -sp / 2 + sp * i / (n - 1) : 0);
-      sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed,
+      sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed, sk: k,
         l: (d.life || 1.2) * (q.dur || 1), pi: (d.pierce || 0) + S.pierce, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el, q: q.id,
         ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 * S.size, fx: this.fxKey(k, d), sz: 34 * this.vis(q) * S.size });
     }
