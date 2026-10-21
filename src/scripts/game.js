@@ -890,6 +890,48 @@ const BUDDY_H=[34,42,62,82,98,114];
 function cbox(S){if(S.cb)return S.cb;const fw=Math.floor(S.canvas.width/S.cols),fh=Math.floor(S.canvas.height/S.rows);let x0=fw,y0=fh,x1=-1,y1=-1;
  try{const d=S.canvas.getContext('2d').getImageData(0,0,fw,fh).data;for(let y=0;y<fh;y++)for(let x=0;x<fw;x++)if(d[(y*fw+x)*4+3]>24){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}}catch(e){}
  if(x1<x0){x0=0;y0=0;x1=fw-1;y1=fh-1}return S.cb={x0,y0,x1:x1+1,y1:y1+1}}
+// zoom de la cámara durante la digievolución: se acerca hasta el cambio y vuelve despacio
+function evoZoom(){if(!evo)return 1;const e=evo.t<evo.sw?evo.t/evo.sw:Math.max(0,1-(evo.t-evo.sw)/(evo.D-evo.sw)*1.4),k=e*e*(3-2*e);return 1+(.18+.03*evo.s)*k}
+// digievolución, en el mundo: velo con lluvia de datos, columna de luz, silueta que alterna y la forma nueva
+function drawEvo(){const e0=evo.t,sw=e0>=evo.sw,s=evo.s,f=Math.min(1,e0/evo.sw),out=sw?Math.max(0,1-(e0-evo.sw)/.7):1;
+ // velo y lluvia de datos (en pantalla, por debajo de los Digimon que evolucionan)
+ cx.save();cx.setTransform(CK,0,0,CK,0,0);const dk=Math.min(.7,e0*1.4)*out;
+ if(dk>0){cx.fillStyle='rgba(2,6,18,'+dk+')';cx.fillRect(0,0,W,H);const col=s>=5?'#ffd23f':ELC[(mine()[0]||P[0]).el|0]||'#3fd0ff';
+  cx.font="bold 14px 'Chakra Petch',monospace";cx.textAlign='center';cx.fillStyle=col;
+  for(let c=0,n=Math.ceil(W/22);c<n;c++){const sp=90+(c*37)%80,y0=(e0*sp*2+c*131)%(H+160)-80;
+   for(let j=0;j<7;j++){cx.globalAlpha=dk*(1-j/7)*.8;cx.fillText((c*7+j+Math.floor(e0*8))%3?'1':'0',c*22+11,y0-j*18)}}
+  cx.globalAlpha=1}
+ cx.restore();
+ for(const q of P){const col=s>=5?'#ffd23f':ELC[q.el|0]||'#3fd0ff';
+  if(!sw){
+   // columna de luz (Perfecto y forma final) y aura
+   if(s>=4){const g=cx.createLinearGradient(0,q.y-700,0,q.y+48);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.7,col);g.addColorStop(1,'#fff');
+    const w=26+(s>=5?70:40)*f;cx.globalAlpha=.3+.3*f;cx.fillStyle=g;cx.fillRect(q.x-w/2,q.y-700,w,748);cx.globalAlpha=1}
+   cx.globalAlpha=.35+.25*Math.sin(e0*14);cx.fillStyle=col;cx.beginPath();cx.ellipse(q.x,q.y+10,46+30*f,60+30*f,0,0,6.283);cx.fill();cx.globalAlpha=1;
+   // silueta: alterna entre la forma vieja y la nueva cada vez más rápido
+   const per=Math.max(.045,.42*(1-f)),nw=f>.2&&Math.floor(e0/per)%2;
+   buddyWhite=1;drawBuddy(q,nw?s:s-1,q.x,q.y,q.face,1);buddyWhite=0;
+   // partículas que suben
+   cx.fillStyle=col;for(let i=0;i<18;i++){const x=q.x+Math.sin(i*12.9+i*i)*(36+20*f),y=q.y+46-((e0*(110+i*6)+i*41)%170);cx.globalAlpha=.85;cx.fillRect(x-2,y-2,4,4)}cx.globalAlpha=1;
+   // rayos (forma final)
+   if(s>=5&&Math.floor(e0*12)%3===0){cx.strokeStyle='#fffbd0';cx.lineWidth=2.5;for(let r=0;r<3;r++){let a=Math.random()*6.283,x=q.x,y=q.y-30;cx.beginPath();cx.moveTo(x,y);for(let j=0;j<5;j++){x+=Math.cos(a)*24+(Math.random()-.5)*20;y+=Math.sin(a)*24+(Math.random()-.5)*20;cx.lineTo(x,y)}cx.stroke()}}
+  }else{
+   const k=Math.min(1,(e0-evo.sw)*3);drawBuddy(q,s,q.x,q.y,q.face,1);
+   if(k<1){buddyWhite=1;cx.globalAlpha=1-k;drawBuddy(q,s,q.x,q.y,q.face,1-k);cx.globalAlpha=1;buddyWhite=0}   // sale de blanco a color
+   cx.strokeStyle=col;cx.lineWidth=4;for(let i=0;i<3;i++){const r=Math.min(1,(e0-evo.sw)*1.3-i*.18);if(r<=0)continue;cx.globalAlpha=1-r;cx.beginPath();cx.arc(q.x,q.y,20+r*(220+40*s),0,6.283);cx.stroke()}cx.globalAlpha=1}}}
+// digievolución, en pantalla: destello y cartel "VIEJA ▶ NUEVA" con la etapa
+function drawEvoScreen(){cx.save();
+ if(evo.fl>0){cx.fillStyle='rgba(255,255,255,'+Math.min(.9,evo.fl)+')';cx.fillRect(0,0,W,H)}
+ if(evo.to){const e=evo.t-evo.sw,a=Math.min(1,e*4)*Math.min(1,(evo.D-evo.t)*3),sl=(1-Math.min(1,e*4))*40,y=H*.2+sl,col=evo.s>=5?'#ffd23f':'#3fd0ff';
+  cx.globalAlpha=Math.max(0,a);const w=Math.min(W-24,560),h=evo.pf?104:84;
+  cx.fillStyle='rgba(4,16,34,.9)';cx.strokeStyle=col;cx.lineWidth=2;cx.beginPath();cx.moveTo(W/2-w/2+14,y-h/2);cx.lineTo(W/2+w/2,y-h/2);cx.lineTo(W/2+w/2,y+h/2-14);cx.lineTo(W/2+w/2-14,y+h/2);cx.lineTo(W/2-w/2,y+h/2);cx.lineTo(W/2-w/2,y-h/2+14);cx.closePath();cx.fill();cx.stroke();
+  cx.textAlign='center';cx.textBaseline='middle';cx.font="900 13px 'Orbitron',sans-serif";cx.fillStyle=col;
+  cx.fillText(evo.s>=5?'¡FORMA FINAL!':'DIGIEVOLUCIÓN · '+STAGE_NAMES_UP[evo.s].toUpperCase(),W/2,y-h/2+18);
+  const fs=w<420?18:24;cx.font="900 "+fs+"px 'Orbitron',sans-serif";cx.lineWidth=4;cx.strokeStyle='#000';
+  const txt=(evo.from||'').toUpperCase()+'  ▶  '+(evo.to||'').toUpperCase();cx.strokeText(txt,W/2,y+6);cx.fillStyle='#fff';cx.fillText(txt,W/2,y+6);
+  if(evo.pf){cx.font="900 13px 'Orbitron',sans-serif";cx.fillStyle='#ffd23f';cx.fillText('★ ¡EVOLUCIÓN PERFECTA! ★',W/2,y+h/2-16)}
+  if(evo.names&&evo.names.length>1){cx.font="700 12px 'Chakra Petch',sans-serif";cx.fillStyle='#9fc0d6';cx.fillText(evo.names.join(' · '),W/2,y+h/2+14)}}
+ cx.restore()}
 function drawBuddy(q,s,x,y,f,a){
  const C=CR(q);
  if(!C)return;
@@ -943,7 +985,7 @@ function drawBuddy(q,s,x,y,f,a){
  }
 
  if(f < 0) cx.scale(-1, 1);
- cx.drawImage(cv, col * fw, row * fh + 1, fw, fh - 2, -ox, 48 - B.y1 * k + k, fw * k, (fh - 2) * k);   // 1 px menos arriba y abajo: con zoom no entero se colaba la fila vecina de la hoja (líneas)
+ cx.drawImage(buddyWhite ? whiteOf(spriteInfo) : cv, col * fw, row * fh + 1, fw, fh - 2, -ox, 48 - B.y1 * k + k, fw * k, (fh - 2) * k);   // buddyWhite: silueta (digievolución). 1 px menos arriba y abajo: con zoom no entero se colaba la fila vecina de la hoja (líneas)
  // X-Antibody sin forma X propia: "glitch" violeta intermitente
  if(q.xa && !xs && !q.dead && Math.floor(t * 10) % 3 === 0){cx.globalAlpha=a*.45;cx.filter='hue-rotate(260deg) saturate(3)';cx.drawImage(cv, col * fw, row * fh + 1, fw, fh - 2, -ox + (Math.random() * 6 - 3), 48 - B.y1 * k + k, fw * k, (fh - 2) * k);cx.filter='none'}
  cx.restore();
@@ -978,9 +1020,15 @@ function drawEnemy(e){
  cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh+1,fw,fh-2,-(B.x0+B.x1)/2*kk,h/2-2-B.y1*kk+kk,fw*kk,(fh-2)*kk);   // golpeado: silueta blanca
  cx.restore();return true}
 
-function startEvo(s){evo={t:0,s,done:0};Sound.play('evo');const v=$('evt');v.style.display='block';v.textContent='¡Tu compañero está digievolucionando!'}
+// Digievolución (pedido 22/10/2026: más visual). Fases: pantalla oscura con lluvia de datos y la silueta blanca que alterna
+// entre la forma vieja y la nueva cada vez más rápido (zoom a tu Digimon) → destello, sacudida y onda → la forma nueva a
+// color con un cartel "VIEJA ▶ NUEVA" y su etapa. Más larga y vistosa cuanto más alta la etapa (columna de luz desde
+// Perfecto, rayos en la forma final). Se ve igual en el anfitrión y en los invitados (trigger_evo).
+const EVO_DUR=[0,2.4,2.6,3,3.4,4.2];let buddyWhite=0;
+function startEvo(s){const me=mine()[0]||P[0];evo={t:0,s,done:0,D:EVO_DUR[s]||3,sw:(EVO_DUR[s]||3)*.55,sk:0,fl:0,from:formName(me,s-1)};Sound.play('evo');$('evt').style.display='none'}
 function stepEvo(dt){evo.t+=dt;
- if(!evo.done&&evo.t>=1.3){evo.done=1;
+ evo.sk=Math.max(0,evo.sk-dt);evo.fl=Math.max(0,evo.fl-dt*1.8);
+ if(!evo.done&&evo.t>=evo.sw){evo.done=1;evo.sk=.45;evo.fl=1;Sound.play('evo2');
   for(const q of P){
    const s=q.stage=evo.s;q.r=[14,16,19,22,25,28][s] || 20;
    Stats.evolve(q,s);   // perfil de la especie, bono de etapa / rama ("bonus" en el JSON), familia nueva y evolución perfecta
@@ -989,11 +1037,12 @@ function stepEvo(dt){evo.t+=dt;
   mine().forEach(seeForm);   // Digimon Analyzer
   // nombre(s) de la nueva forma de cada jugador (sin repetir)
   const names=P.map(q=>formName(q,evo.s)).filter((n,i,a)=>n&&a.indexOf(n)===i);
-  $('evt').textContent='¡'+names.join(' y ')+'!'+(evo.s<5&&P.some(q=>q.perfect)?' · Evolución perfecta':'');
+  const me=mine()[0]||P[0];evo.to=formName(me,evo.s);evo.pf=evo.s<5&&!!me.perfect;evo.names=names;
+  powerPulse();   // onda que empuja a los enemigos (solo anfitrión / local)
  }
- if(evo.t>=2.8){
+ if(evo.t>=evo.D){
   const s=evo.s;evo=null;const v=$('evt');
-  v.textContent='¡Enemigos reforzados!';
+  v.style.display='block';v.textContent='¡Enemigos reforzados!';
   setTimeout(()=>{if(!evo)v.style.display='none'},2600);
   if (isOnline) {
     if (isHost) {
@@ -1343,7 +1392,9 @@ function draw(){
   for(let x=-((cam.x%64)+64)%64;x<W;x+=64){cx.moveTo(x,0);cx.lineTo(x,H)}
   for(let y=-((cam.y%64)+64)%64;y<H;y+=64){cx.moveTo(0,y);cx.lineTo(W,y)}
   cx.stroke()}
- cx.save();cx.translate(ox,oy);
+ cx.save();const ez=evoZoom();if(ez>1){cx.translate(W/2,H/2);cx.scale(ez,ez);cx.translate(-W/2,-H/2)}
+ if(evo&&evo.sk>0)cx.translate((Math.random()-.5)*22*evo.sk,(Math.random()-.5)*22*evo.sk);
+ cx.translate(ox,oy);
  World.draw();   // mapa del Digimundo (map.js)
  Gate.drawWorld();   // Digital Gate (gate.js)
  for(const q of pt){cx.globalAlpha=q.l*2.5;cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
@@ -1360,13 +1411,10 @@ function draw(){
  for(const q of P)if(!q.dead)SkillSys.drawOrbits(q);
  for(const q of P){dPl(q);if(!evo)ents.push({e:q,pl:!q.dead,x0:q.x-40,x1:q.x+40,y0:q.y+48-(q.dh||96),fy:q.y+48})}
  World.drawTall(ents,e=>e.cid?dPl(e):dEn(e));   // árboles por encima (map.js)
- if(evo){const e0=evo.t,sw=e0>=1.3,pul=Math.sin(e0*Math.PI/2.8);
-  for(const q of P){
-   drawBuddy(q,sw?evo.s:evo.s-1,q.x,q.y,q.face,sw?Math.min(1,(e0-1.3)*2):Math.max(0,1-e0*.9));
-   cx.fillStyle='rgba(255,255,255,'+(.25+pul*.7)+')';cx.beginPath();cx.arc(q.x,q.y,18+pul*34,0,6.283);cx.fill();
-   cx.strokeStyle='#ffd23f';cx.lineWidth=3;for(let i=0;i<3;i++){const r=(e0*1.2+i/3)%1;cx.globalAlpha=1-r;cx.beginPath();cx.arc(q.x,q.y,10+r*110,0,6.283);cx.stroke()}cx.globalAlpha=1}}
+ if(evo)drawEvo();
  cx.textAlign='center';cx.lineJoin='round';for(const f of fx){cx.globalAlpha=Math.min(1,f.l*2);cx.font='bold '+f.sz+'px Chakra Petch,system-ui,sans-serif';cx.lineWidth=4;cx.strokeStyle='#000';cx.strokeText(f.txt,f.x,f.y);cx.fillStyle=f.col;cx.fillText(f.txt,f.x,f.y)}cx.globalAlpha=1;
  cx.restore();
+ if(evo)drawEvoScreen();
  if(running){Weather.draw();if(!Finale.on)drawPointers();Gate.drawOverlay();Finale.draw()}
 }
 // Flechas en el borde de la pantalla hacia lo que no se ve: compañeros (nombre y distancia en metros; ✝ si están caídos)
