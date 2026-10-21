@@ -15,10 +15,10 @@
       "hp": 1.0,
       "sp": 1.0,
       "r": 13,
-      "touch": 7,
+      "touch": 12,
       "xp": 3,
       "w": 3,
-      "d": "Te persigue y golpea al tocarte"
+      "d": "Te persigue y golpea fuerte al tocarte"
     },
     "dasher": {
       "hp": 1.2,
@@ -64,7 +64,7 @@
       "hp": 3.5,
       "sp": 0.55,
       "r": 20,
-      "touch": 11,
+      "touch": 18,
       "xp": 9,
       "w": 0.8,
       "cd": 6.0,

@@ -6,7 +6,7 @@
 // - Solo el anfitrión (o el juego local) decide caídas y efectos; el cliente online los ve por el `sync` (`it`).
 // - Sprites en assets/sprites/items/ (de Digital Tamers).
 const Items = {
-  DROP: 0.025,      // (antes 0,018: pedían más curas)
+  DROP: 0.015,      // (0,025 → 0,015: ahora las curas vienen sobre todo de los campeones, Enemies.champDrop)
   LIFE: 30,
   defs: {
     meat:      { n: 'Carne',           w: 60, col: '#ff9a6b', d: 'Cura un 25% de la vida' },

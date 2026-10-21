@@ -40,6 +40,12 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - **Árbol de Tamer ampliado a 97 nodos** (gentrees.py: `TAMER_EXT` alarga cada rama a 12, `TAMER_NOTABLE` = ramitas laterales y `TAMER['links']` = conectores; costos con `cost(…, tamer=True)`, incluye `attr`). Los 17 nodos viejos no cambiaron.
 - **Ranking** (`ranking.js`, botón `#rkb`): tablas Solo y Party con la mejor partida de cada cuenta en `ranking_solo/{uid}` y `ranking_party/{uid}` (`window.rankCloud` en social.js: `submit` solo si supera su récord, `top` = 50 por `score`). Guarda nick, puntaje (eliminados + 150×jefes + 2×segundos), Digimon/forma, skills con nivel, eliminados, jefes, nivel, tiempo y jugadores. No entran partidas del desafío. **Requiere reglas de Firestore**: leer con sesión y escribir solo el documento propio.
 
+## Issue #7 (22/10/2026): lógica de ataque, atributos visibles y campeones
+- **Ícono de atributo** (Vacuna/Virus/Dato, `ATTR_IMG`) arriba de cada enemigo (`drawEnemy`).
+- **Campeones** (`Enemies.champ`, cada 25–35 s desde el minuto 1, como mucho 2 + jugadores a la vez): `e.cp`, ×8 de vida, ×2,5 de daño, ×6 de XP, dibujo ×1,45 con aura dorada, barra de vida y flecha en el borde (`drawPointers`). Al morir `Enemies.champDrop`: carne o potenciador (35% los dos). `Items.DROP` bajó a 0,015. Sync: el campo `gun` del enemigo lleva bits: 1 = gun, 2 = campeón, y desde el bit 2 el % de vida (`e.hf` en el cliente).
+- **Tiradores**: se quedan a 400–500 px (retroceden más rápido si te acercás) y disparan hasta 620–640 px.
+- **Cuerpo a cuerpo**: contacto de perseguidores 7 → 12 y de tanques 11 → 18 (enemies.json); los enjambres igual.
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.

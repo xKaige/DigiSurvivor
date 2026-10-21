@@ -137,6 +137,29 @@ const Enemies = {
     if (e.mv === 'orbit' && dd > 150) return a + e.fs * (dd > 380 ? 0.6 : 1.25);
     return a;
   },
+  // ---------- Campeones (Issue #7) ----------
+  // Cada 25–35 s (desde el minuto 1) aparece un Digimon campeón: más grande, aura dorada, barra de vida, ×8 de vida y
+  // ×2,5 de daño. Al caer suelta siempre botín (carne o potenciador, y a veces los dos) y mucha experiencia. Los comunes
+  // sueltan menos ítems (Items.DROP), así las curas vienen sobre todo de ellos.
+  chT: 60,
+  champ(dt, ti) {
+    if (!this.data || !this.roster.length || (this.chT -= dt) > 0) return;
+    this.chT = 25 + Math.random() * 10;
+    if (en.filter(e => e.cp).length >= 2 + P.length) return;
+    const lv = Math.min(5, ti + 1), i = this.choose(lv); if (i == null) return;
+    const d = this.data.list[i], K = this.data.kinds[d.kind];
+    const sp = World.spawnPos({ k: 0, r: K.r * 1.5 }); if (!sp) return;
+    const e = this.make(i, lv, sp[0], sp[1], 'direct');
+    e.cp = 1; e.hp *= 8; e.mh = e.hp; e.dm *= 2.5; e.r *= 1.25; e.sp *= 0.9; e.v *= 6; e.sub = e.sub || null;
+  },
+  champDrop(e) {
+    const bk = ['buff_pow', 'buff_frz', 'buff_spd', 'buff_arm'], two = Math.random() < 0.35;
+    const ks = [Math.random() < 0.5 ? 'meat' : bk[(Math.random() * 4) | 0]];
+    if (two) ks.push(ks[0] === 'meat' ? bk[(Math.random() * 4) | 0] : 'meat');
+    ks.forEach((k, j) => Items.on.push({ x: e.x + (j ? 40 : -20), y: e.y + 10, k, l: Items.LIFE }));
+    for (let j = 0; j < 20; j++) burst(e.x, e.y, j % 2 ? '#ffd23f' : '#fff');
+  },
+
   // ---------- Oleadas (pedido: más densidad y que te rodeen) ----------
   // cada 35–55 s desde el minuto 2: un cerco (te rodean desde todos lados) o una estampida (una fila que cruza la pantalla)
   evT: 100,
@@ -198,8 +221,9 @@ const Enemies = {
     // movimiento normal: su patrón (interceptar, flanquear, zigzag…) y, si hay paredes, el mapa de distancias
     const ma = this.steerPat(e, tg, dd, a);
     if (e.kd === 'shooter') {                                   // se mantiene a media distancia, de costado
-      const s = dd < 210 ? -1 : dd > 330 ? 1 : 0;
-      if (s) this.move(e, s > 0 ? ma : a, e.sp * s, dt); else this.move(e, a + Math.PI / 2 * (e.et % 2 ? 1 : -1), e.sp * 0.6, dt);
+      // Issue #7: se quedan lejos, cerca del borde de su alcance (~420–500 px), y retroceden rápido si te acercás
+      const s = dd < 400 ? -1 : dd > 500 ? 1 : 0;
+      if (s) this.move(e, s > 0 ? ma : a, e.sp * (s < 0 ? 1.25 : 1) * s, dt); else this.move(e, a + Math.PI / 2 * (e.et % 2 ? 1 : -1), e.sp * 0.6, dt);
     } else if (e.kd === 'bomber' && dd < 300) {
       this.move(e, a + Math.PI / 2, e.sp * 0.5, dt);            // da vueltas alrededor
     } else this.move(e, ma, e.sp, dt);
@@ -209,7 +233,7 @@ const Enemies = {
     // demasiados avisos en pantalla: espera (pedido: "llega un punto que solo ves marcas rojas")
     if (this.warns() > 10 || (e.kd === 'shooter' && eb.length > 70)) { e.ac = 0.4 + Math.random() * 0.6; return; }   // y no más de ~70 balas enemigas a la vez
     // tiradores sin línea: parpadean y sueltan un abanico lento o un anillo de balas
-    if (e.kd === 'shooter' && e.sub !== 'aim' && dd < 520) { e.la = a; e.st = 1; e.stT = 0.5; e.fl = 0.5; return; }
+    if (e.kd === 'shooter' && e.sub !== 'aim' && dd < 620) { e.la = a; e.st = 1; e.stT = 0.5; e.fl = 0.5; return; }
     // charco tóxico: marca verde donde estás y queda un charco que daña unos segundos
     if (e.kd === 'bomber' && e.sub === 'pool' && dd < 460) {
       e.st = 1; e.stT = 0.3; e.ac = K.cd * (0.8 + Math.random() * 0.4);
@@ -219,7 +243,7 @@ const Enemies = {
     if (e.kd === 'dasher' && dd < 430) {
       e.la = a; e.dl = Math.min(480, dd + 140); e.st = 1; e.stT = 0.8;
       this.warnLine(e.x, e.y, a, e.dl, e.r * 2 + 12, 0.8);
-    } else if (e.kd === 'shooter' && dd < 560) {
+    } else if (e.kd === 'shooter' && dd < 640) {
       e.la = a; e.st = 1; e.stT = 0.55;
       this.warnLine(e.x, e.y, a, Math.min(620, dd + 200), 5, 0.55);
     } else if (e.kd === 'bomber' && dd < 460) {

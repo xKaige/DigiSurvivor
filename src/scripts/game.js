@@ -509,7 +509,7 @@ function hostSync(dt) {
   });
   // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
   const E = en.map(e => { if (!e.id) e.id = ++enId;   // id para que el cliente pueda deslizar a cada uno
-    const a = [e.id, r(e.x), r(e.y), r2(e.r), e.k, e.bo != null ? 0 : e.ti, e.bo != null ? null : e.sk, e.bo != null ? null : e.et, e.st | 0, e.el, r2(e.fl), r2(e.ang), e.gun ? 1 : 0];
+    const a = [e.id, r(e.x), r(e.y), r2(e.r), e.k, e.bo != null ? 0 : e.ti, e.bo != null ? null : e.sk, e.bo != null ? null : e.et, e.st | 0, e.el, r2(e.fl), r2(e.ang), (e.gun ? 1 : 0) + (e.cp ? 2 + 4 * Math.round(Math.max(0, e.hp / e.mh) * 100) : 0)];
     if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at), e.p2 ? 1 : 0, e.shd > 0 ? 1 : 0, e.ag == null ? -1 : e.ag);
     return a; });
   const G = gems.map(g => [r(g.x), r(g.y), r2(g.v)]);
@@ -537,7 +537,8 @@ function hostSync(dt) {
 // Invitado: responde con su Digimon y arranca
 // enemigo que llegó como lista de números (ver el sync del anfitrión)
 function unpackEn(a) {
-  const e = { id: a[0], x: a[1], y: a[2], r: a[3], k: a[4], ti: a[5], sk: a[6], et: a[7], st: a[8], el: a[9], fl: a[10], ang: a[11], gun: !!a[12] };
+  const e = { id: a[0], x: a[1], y: a[2], r: a[3], k: a[4], ti: a[5], sk: a[6], et: a[7], st: a[8], el: a[9], fl: a[10], ang: a[11], gun: !!(a[12] & 1) };
+  if (a[12] & 2) { e.cp = 1; e.hf = (a[12] >> 2) / 100; }   // campeón (Issue #7) y su vida
   if (a.length > 13) { e.p2 = a[18]; e.shd = a[19]; e.ag = a[20]; e.bo = a[13]; e.cyc = a[14]; e.hp = a[15]; e.mh = a[16]; e.at = a[17]; }
   return e;
 }
@@ -815,6 +816,7 @@ async function openMenuPick() {
 // Triángulo de atributos: arriba el tuyo; cada flecha va del que gana al que pierde (x1,5 de daño)
 // íconos oficiales de los atributos (Wikimon: Vaccine_Icon, Virus_Icon, Data_Icon)
 const ATTR_ICON = ['vaccine', 'virus', 'data'].map(n => 'assets/sprites/attr/' + n + '.png');
+const ATTR_IMG = ATTR_ICON.map(s => { const i = new Image(); i.src = s; return i; });   // sobre cada enemigo (Issue #7)
 function renderLegend() {
   const e0 = P[0].el | 0, o = [e0, (e0 + 1) % 3, (e0 + 2) % 3];
   const pt = [[60, 22], [104, 98], [16, 98]];   // vértices: arriba, abajo-der, abajo-izq
@@ -1020,18 +1022,24 @@ function drawEnemy(e){
  // alto del dibujo real: enemigos según el nivel de su especie (ENEMY_H, tanques más grandes y enjambres más chicos),
  // jefes según su tamaño; los pies quedan donde siempre (abajo, en h/2), que es donde chocan con las paredes
  const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),B=cbox(S),dd=e.et!=null&&Enemies.def(e.et);
- const th=e.bo!=null?h*.68:dd?Math.max(enMin()*(e.kd==='swarm'?.9:1),ENEMY_H[Math.min(5,dd.tier)]*(e.kd==='tank'?1.25:e.kd==='swarm'?.9:1)):h*.62;
+ const th=e.bo!=null?h*.68:dd?Math.max(enMin()*(e.kd==='swarm'?.9:1),ENEMY_H[Math.min(5,dd.tier)]*(e.kd==='tank'?1.25:e.kd==='swarm'?.9:1))*(e.cp?1.45:1):h*.62;
  const kk=th/Math.max(B.y1-B.y0,(B.x1-B.x0)*.75),w=(B.x1-B.x0)*kk*1.35;
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  if(e.mn){cx.save();cx.strokeStyle='#c05bff';cx.lineWidth=2.5;cx.globalAlpha=.8;cx.beginPath();cx.ellipse(e.x,e.y+h/2-2,e.r*1.3,6,0,0,6.283);cx.stroke();cx.restore()}   // refuerzo del jefe: aro violeta
  if(e.bo!=null&&e.p2){cx.save();cx.globalAlpha=.22+.1*Math.sin(t*8);cx.fillStyle='#ff2d2d';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.55,th*.6,0,0,6.283);cx.fill();cx.restore()}   // jefe enfurecido (fase 2): aura roja
  if(e.bo!=null&&e.shd>0){cx.save();const R=th*.62,yy=e.y+h/2-th*.45;cx.globalAlpha=.18+.06*Math.sin(t*10);cx.fillStyle='#7fdcff';cx.beginPath();cx.arc(e.x,yy,R,0,6.283);cx.fill();cx.globalAlpha=.85;cx.strokeStyle='#bff0ff';cx.lineWidth=3;cx.setLineDash([14,8]);cx.lineDashOffset=-t*40;cx.stroke();cx.setLineDash([]);cx.restore()}   // escudo (Cruz giratoria): inmune
+ if(e.cp){cx.save();cx.globalAlpha=.25+.12*Math.sin(t*7);cx.fillStyle='#ffb02e';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.5,th*.58,0,0,6.283);cx.fill();cx.globalAlpha=.9;cx.strokeStyle='#ffd23f';cx.lineWidth=3;cx.beginPath();cx.ellipse(e.x,e.y+h/2-2,w*.42,9,0,0,6.283);cx.stroke();cx.restore()}   // campeón: aura dorada
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,h/2-2,w*.32,4,0,0,6.283);cx.fill();
  cx.strokeStyle=ELC[e.el];cx.lineWidth=e.bo!=null?5:2;cx.beginPath();cx.ellipse(0,h/2-2,w*.36,e.bo!=null?10:6,0,0,6.283);cx.stroke();
  if(Math.cos(e.ang)<0)cx.scale(-1,1);
  cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh+1,fw,fh-2,-(B.x0+B.x1)/2*kk,h/2-2-B.y1*kk+kk,fw*kk,(fh-2)*kk);   // golpeado: silueta blanca
- cx.restore();return true}
+ cx.restore();
+ // Issue #7: ícono de su atributo arriba (Vacuna / Virus / Dato) y, los campeones, barra de vida
+ if(e.bo==null){const top=e.y+h/2-2-th,ai=ATTR_IMG[e.el|0];let y=top-6;
+  if(e.cp){const bw=Math.max(46,w*.6),f=Math.max(0,Math.min(1,e.hf!=null?e.hf:e.hp/e.mh));y=top-10;cx.fillStyle='rgba(0,0,0,.7)';cx.fillRect(e.x-bw/2-1,y-1,bw+2,7);cx.fillStyle='#ffb02e';cx.fillRect(e.x-bw/2,y,bw*f,5);y-=4}
+  if(ai&&ai.complete&&ai.naturalWidth){const s=e.cp?18:13;cx.drawImage(ai,e.x-s/2,y-s,s,s)}}
+ return true}
 
 // Digievolución (pedido 22/10/2026: más visual). Fases: pantalla oscura con lluvia de datos y la silueta blanca que alterna
 // entre la forma vieja y la nueva cada vez más rápido (zoom a tu Digimon) → destello, sacudida y onda → la forma nueva a
@@ -1352,7 +1360,7 @@ function update(dt){
  // (más densidad, pedido: intervalo de 0,6 s que baja hasta 0,15 s y tandas +1 cada 90 s; además, oleadas: Enemies.events)
  spawnT-=dt;const iv=Math.max(.15,.6-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
- if(!World.arena)Enemies.events(dt,Math.max(0,mt-1));
+ if(!World.arena){Enemies.events(dt,Math.max(0,mt-1));Enemies.champ(dt,Math.max(0,mt-1))}
  Gate.tick(dt);Weather.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
@@ -1377,7 +1385,7 @@ function update(dt){
  for(const a of en){if(a.st===2)continue;enNear(a.x,a.y,a.r*2.8,b=>{if(b._i<=a._i||b.st===2)return;const R=(a.r+b.r)*1.25,d=Math.hypot(a.x-b.x,a.y-b.y);
   if(d<.5){const g=Math.random()*6.283;World.move(a,Math.cos(g)*4,Math.sin(g)*4);return}
   if(d<R){const k=(R-d)/4/d,px=(a.x-b.x)*k,py=(a.y-b.y)*k;World.move(a,px,py);World.move(b,-px,-py)}})}
- for(const e of en)if(e.hp<=0&&!e.nr){kills++;if(e.lh!=null)Stats.onKill(P[e.lh],e);if(e.bo!=null){Bosses.onDeath(e);bossReward(e)}else{dropGem(e.x,e.y,e.v);Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
+ for(const e of en)if(e.hp<=0&&!e.nr){kills++;if(e.lh!=null)Stats.onKill(P[e.lh],e);if(e.bo!=null){Bosses.onDeath(e);bossReward(e)}else{dropGem(e.x,e.y,e.v);if(e.cp)Enemies.champDrop(e);else Items.drop(e.x,e.y)}burst(e.x,e.y,ELC[e.el])}
  en=en.filter(e=>e.hp>0);
  const al2=P.filter(q=>!q.dead);
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
@@ -1438,7 +1446,8 @@ function drawPointers(){
  const me=isOnline?P[myIdx]:null,ox=me&&!me.dead?me.x:cam.x,oy=me&&!me.dead?me.y:cam.y,list=[];
  if(mode>1)P.forEach((q,i)=>{if(isOnline&&i===myIdx)return;list.push({x:q.x,y:q.y-30,col:PC[i],txt:(q.dead?'✝ ':'')+pname(i)})});
  if(Gate.g&&!World.arena)list.push({x:Gate.g[0],y:Gate.g[1]-60,col:'#3dff7a',txt:'Digital Gate'});
- list.push(...Explore.pointers(ox,oy));   // cofres y zonas de datos (explore.js)
+ list.push(...Explore.pointers(ox,oy));
+ if(!World.arena)for(const e of en)if(e.cp&&Math.hypot(e.x-ox,e.y-oy)<1500)list.push({x:e.x,y:e.y-50,col:'#ffb02e',txt:'Campeón'});   // campeones (Issue #7)   // cofres y zonas de datos (explore.js)
  for(const o of list){const sx=o.x-cam.x+W/2,sy=o.y-cam.y+H/2;if(sx>20&&sx<W-20&&sy>20&&sy<H-20)continue;
   const a=Math.atan2(sy-H/2,sx-W/2),mg=46,k=Math.min((W/2-mg)/Math.max(1e-6,Math.abs(Math.cos(a))),(H/2-mg)/Math.max(1e-6,Math.abs(Math.sin(a)))),px=W/2+Math.cos(a)*k,py=H/2+Math.sin(a)*k;
   const txt=o.txt+' · '+Math.round(Math.hypot(o.x-ox,o.y-oy)/40)+' m';
