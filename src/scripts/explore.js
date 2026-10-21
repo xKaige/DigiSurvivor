@@ -54,20 +54,34 @@ const Explore = {
     for (let i = 0; i < 16; i++) {
       const q = al[(Math.random() * al.length) | 0], a = Math.random() * 6.283, d = 500 + Math.random() * 800;
       const sp = World.freeSpot(q.x + Math.cos(a) * d, q.y + Math.sin(a) * d, null);
-      if (!sp || World.reach(sp[0], sp[1] + 40) === 65535) continue;
+      if (!sp || !this.ok(sp[0], sp[1])) continue;
+      if (k === 'zone' && !this.zoneOk(sp[0], sp[1])) continue;   // la zona entera tiene que quedar donde se puede caminar
       if (al.some(p => Math.hypot(p.x - sp[0], p.y - sp[1]) < 420) || this.o.some(o => Math.hypot(o.x - sp[0], o.y - sp[1]) < 300)) continue;
       const gold = k === 'chest' && Math.random() < 1 / 6;
       this.o.push({ k, x: sp[0], y: sp[1], l: k === 'chest' ? this.CHEST_LIFE : this.ZONE_LIFE, gold, p: 0 });
       return;
     }
   },
+  // Issue #6: nada en lugares a los que no se llega (paredes, mesetas sin subida)
+  ok(x, y) { if (!World.grid || !World.flow) return true; const v = World.reach(x, y + 40); return v !== 65535 && v !== -1 && World.free(x, y + 40, 12); },
+  zoneOk(x, y) {
+    for (const f of [0.45, 0.85]) for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; if (!this.ok(x + Math.cos(a) * this.ZONE_R * f, y + Math.sin(a) * this.ZONE_R * f)) return false; }
+    return true;
+  },
+  // lugar accesible cerca del cofre para lo que suelta (si no hay, al lado del cofre, que siempre es accesible)
+  near(o, a, r) {
+    for (const rr of [r, r * 0.6, r * 1.4]) for (const da of [0, 0.6, -0.6, 1.2, -1.2, 3.14]) {
+      const x = o.x + Math.cos(a + da) * rr, y = o.y + Math.sin(a + da) * rr; if (this.ok(x, y)) return [x, y];
+    }
+    return [o.x + Math.cos(a) * 8, o.y + Math.sin(a) * 8];
+  },
   open(o) {
     const n = o.gold ? 5 : 3, bk = Object.keys(this.BUFFS);
     for (let i = 0; i < n; i++) {
       const a = i / n * 6.283 + Math.random() * 0.4, k = (o.gold && !i) || Math.random() < 0.3 ? bk[(Math.random() * bk.length) | 0] : Items.roll();
-      Items.on.push({ x: o.x + Math.cos(a) * 46, y: o.y + Math.sin(a) * 46, k, l: Items.LIFE });
+      const [x, y] = this.near(o, a, 46); Items.on.push({ x, y, k, l: Items.LIFE });
     }
-    for (let i = 0; i < (o.gold ? 14 : 7); i++) { const a = Math.random() * 6.283, r = 10 + Math.random() * 40; gems.push({ x: o.x + Math.cos(a) * r, y: o.y + Math.sin(a) * r, v: 3 + t / 120 }); }
+    for (let i = 0; i < (o.gold ? 14 : 7); i++) { const [x, y] = this.near(o, Math.random() * 6.283, 10 + Math.random() * 40); gems.push({ x, y, v: 3 + t / 120 }); }
     for (let i = 0; i < 24; i++) burst(o.x, o.y, o.gold ? '#ffd23f' : '#c89a5a');
     fx.push({ x: o.x, y: o.y - 40, txt: o.gold ? '¡Cofre dorado!' : 'Cofre', col: '#ffd23f', sz: 22, l: 1.4 });
     Sound.play('item');
