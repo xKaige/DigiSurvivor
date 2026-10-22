@@ -731,3 +731,4 @@ body.ingame.boss2 #evt{top:calc(16% + 70px)}
 #proute .rt-f span{position:relative;padding:1px 6px 3px;font-size:12px;color:#cfe8ff;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
 #proute .rt-f span i{position:absolute;left:0;bottom:0;height:2px;background:#ffd23f}
 #pause #preb{color:#ffe9a0;border-color:#ffd23f}#pause #preb:disabled{opacity:.45;cursor:not-allowed}
+#proute .rt-note{margin:0 0 4px;font-size:11px;color:#9fc0d6}

@@ -875,11 +875,17 @@ function routePanel(){const q=mine()[0]||P[0],box=$('proute');if(!q||!box)return
  for(let s=Math.max(3,s0+1);s<=5;s++){const L=formOpts(q,s);if(s<5&&L.length<2)continue;
   rows.push('<div class="rt-st">'+(s>=5?'Formas finales':STAGE_NAMES_UP[s])+' <small>(nivel '+(s>=5?lineLevel():evoLevels()[s-1])+')</small></div>');
   for(const o of L){const R=o.xp?[]:[...Object.entries(o.req||{}).map(([k,v])=>[SN[k],q.st[k]|0,need(v)]),...Object.entries(o.vp||{}).map(([k,v])=>[Stats.VPN[k],Stats.vpVal(q,k),need(v)])],ok=R.every(r=>r[1]>=r[2]);
-   rows.push('<div class="rt-f'+(ok?' ok':'')+'"><b>'+(ok?'✓ ':'')+o.name+'</b>'+(o.xp?'<span>Solo experiencia</span>':R.map(r=>'<span>'+r[0]+' '+Math.min(r[1],r[2])+'/'+r[2]+'<i style="width:'+Math.min(100,r[1]/r[2]*100)+'%"></i></span>').join(''))+'</div>')}}
- box.innerHTML=rows.length?'<h3>Ruta evolutiva</h3>'+rows.join(''):'';
+   rows.push('<div class="rt-f'+(ok?' ok':'')+'"><b>'+(ok?'✓ ':'')+o.name+'</b>'+(o.xp?'<span>Solo experiencia</span>':R.map(r=>'<span>'+r[0]+' '+Math.min(r[1],r[2])+'/'+r[2]+(r[0]===Stats.VPN.nohit?' · racha actual '+Math.floor((q.vp&&q.vp.nh)||0)+' s':'')+'<i style="width:'+Math.min(100,r[1]/r[2]*100)+'%"></i></span>').join(''))+'</div>')}}
+ box.innerHTML=rows.length?'<h3>Ruta evolutiva</h3><p class="rt-note">Segundos sin daño: se reinicia con cualquier golpe (balas, contacto, charcos, rayos). Cuenta tu mejor racha.</p>'+rows.join(''):'';
  const rb=$('preb'),c=canRebirth(q);rb.style.display=!isOnline&&P.length===1&&(q.stage|0)>=2?'block':'none';rb.disabled=!c;
  rb.textContent=q.rbL!=null?'Renacer (ya lo usaste)':'Renacer · 1 Chip de Reformateo ('+((q.vp&&q.vp.rc)|0)+')';
  rb.title='Tu Digimon vuelve a ser Bebé y evoluciona cada 2 niveles: elegís otra ruta. Conservás nivel, skills y puntos. Una vez por partida.'}
+// aviso "¡Ya podés: X!" la primera vez que cumplís todos los requisitos de una forma que te queda por delante
+let rtT=0;function routeWatch(dt){if((rtT-=dt)>0||!running)return;rtT=1;const need=v=>Math.ceil(v*REQ_FACTOR);
+ for(const q of mine()){if(!q||q.dead||!q.vp||!q.st)continue;q.rtOk=q.rtOk||{};
+  for(let s=Math.max(3,(q.stage|0)+1);s<=5;s++)for(const o of formOpts(q,s)){if(o.xp||q.rtOk[o.key])continue;
+   const ok=Object.entries(o.req||{}).every(([k,v])=>(q.st[k]|0)>=need(v))&&Object.entries(o.vp||{}).every(([k,v])=>Stats.vpVal(q,k)>=need(v));
+   if(ok){q.rtOk[o.key]=1;Stats.flash(q,'¡Ya podés: '+o.name+'!','#4dffb8');Sound.play('item')}}}}
 // ---------- Renacer (Issue #14): con un Chip de Reformateo de ESTA partida, tu Digimon vuelve a Digitama y renace como Bebé ----------
 const canRebirth=q=>!!q&&!isOnline&&P.length===1&&running&&(q.stage|0)>=2&&q.rbL==null&&((q.vp&&q.vp.rc)|0)>0;
 function rebirth(q){q.vp.rc--;q.rbFrom=q.stage|0;q.maxSt=Math.max(q.maxSt|0,q.stage|0);q.rbL=lvl;q.stage=0;q.alt={};q.branchId=null;q.line=0;q.dark=false;q.r=14;q.inv=Math.max(q.inv,2);
@@ -1333,7 +1339,7 @@ function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)con
  for(let i=1;i<=MAX_PLAYERS;i++){const b=$('hp'+i+'box');if(!b)continue;b.style.display=i<=m?'':'none';const l=$('l'+i);if(l)l.textContent=m>1?pname(i-1):''};document.body.classList.toggle('p1',m===1);document.body.classList.toggle('p3',m===3);document.body.classList.toggle('p4',m===4)}
 function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),w=f*100+'%',n=i+1;$(i?'fill'+n:'fill').style.width=w;$('lag'+n).style.width=w;$('hpt'+n).textContent=Math.ceil(Math.max(0,q.hp))+' / '+Math.round(q.max);$('hp'+n+'box').classList.toggle('low',f>0&&f<.3);
  const sp=$('sp'+n),dp=$('dp'+n);if(sp){sp.style.width=(q.spv||0)+'%';sp.classList.toggle('full',!!q.emp)}if(dp){const nd=Stats.DP_NEED[q.stage|0];dp.style.width=nd&&q.vp?Math.min(100,q.vp.dp/nd*100)+'%':'0'}};
- P.forEach((q,i)=>hb(i,q));Gate.hud();
+ P.forEach((q,i)=>hb(i,q));Gate.hud();routeWatch(1/60);
  $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills;Bosses.hud()}
 
 function update(dt){

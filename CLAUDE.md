@@ -63,6 +63,7 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 ## Issue #14 (24/10/2026): Ruta evolutiva y Renacer
 - **Ruta evolutiva** en la pausa (`routePanel`, `#proute`): las formas que te quedan (alternativas de Campeón/Perfecto si hay y formas finales) con cada requisito y su progreso; en verde las que ya cumplís.
 - **Renacer** (`#preb`, `rebirth`, `canRebirth`): solo 1 jugador, desde Novato y una vez por partida; gasta 1 Chip de Reformateo juntado EN la partida (`q.vp.rc`). Vuelve a Bebé conservando nivel, skills y puntos (`q.rbL` = nivel, `q.rbFrom` = etapa que tenía, `q.maxSt`). `evoLevels()`/`lineLevel()`: evoluciona cada 2 niveles hasta la etapa que tenía y después lo de siempre. `Stats.evolve` no vuelve a sumar los bonos de etapas ya pasadas. Las misiones de huevos usan la etapa más alta alcanzada.
+- Requisitos revisados (24/10/2026, todos andan: Digimon eliminados, jefes, veces al borde, segundos sin daño y puntos de stat, probados con mecánicas reales): la Ruta muestra la **racha actual** sin daño (se reinicia con cualquier golpe) y `routeWatch` (desde `hudBars`, cada 1 s) avisa "¡Ya podés: X!" la primera vez que cumplís una forma (`q.rtOk`).
 - Huevos: la misión de Sunarizamon (sobrevivir 20 min, imposible con partidas de 15) pasó a "forma final con Lalamon". Simuladas las 34 misiones en orden: todas entregan su Digitama.
 
 ## Idioma y estilo
