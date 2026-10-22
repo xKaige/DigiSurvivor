@@ -114,6 +114,15 @@ const SkillSys = {
     return (b && b.skills) || [];
   },
 
+  // skills de las etapas anteriores (para llenar lugares libres: al evolucionar o fusionar se quedaba con una sola)
+  poolOld(q) {
+    const C = CR(q), meta = C && C.meta; if (!meta || meta.anySkill) return [];
+    const out = [];
+    for (let s = 0; s < Math.min(5, q.stage | 0); s++) for (const k of ((meta.stages[s] && meta.stages[s].skills) || [])) if (!out.includes(k)) out.push(k);
+    if ((q.stage | 0) >= 5) { const st = meta.stages[4]; for (const k of ((st && st.skills) || [])) if (!out.includes(k)) out.push(k); }
+    return out;
+  },
+
   // Cartas de skills: NUEVAS (de tu etapa) y MEJORAS (de las que ya tenés), mezcladas
   cards(q) {
     if (!this.cat) return [];
@@ -123,7 +132,9 @@ const SkillSys = {
     // maxeadas, que se fusionan (liberan un lugar). La nueva hereda la mitad de la rareza de las que consume.
     const maxed = Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) >= this.maxOf(k));
     const pickMax = (d, n) => maxed.slice().sort((a, b) => (this.def(b).element === d.element) - (this.def(a).element === d.element)).slice(0, n);
-    const fresh = this.pool(q).filter(k => this.def(k) && !(q.wp[k] | 0)).map(k => {
+    // con lugar libre también vuelven las de etapas anteriores (incluso las que evolucionaste); con las 4 ocupadas, solo las de tu etapa
+    const now = this.pool(q), cand = full ? now : now.concat(this.poolOld(q).filter(k => !now.includes(k)));
+    const fresh = cand.filter(k => this.def(k) && !(q.wp[k] | 0)).map(k => {
       const d = this.def(k), need = d.final ? 2 : full ? 1 : 0;
       if (maxed.length < need) return null;
       const rep = need ? pickMax(d, need) : null;
@@ -137,7 +148,8 @@ const SkillSys = {
       return { n: d.name, d: d.desc, op: 'wp', wpKey: k,
         tag: 'Nivel ' + nx + '/' + this.maxOf(k) + ' · ' + this.perkText(d, nx), f: () => { q.wp[k] = (q.wp[k] | 0) + 1; } };
     });
-    const a = this.shuffle(fresh), c = this.shuffle(ups), out = [];
+    const a = this.shuffle(fresh.filter(u => now.includes(u.wpKey))).concat(this.shuffle(fresh.filter(u => !now.includes(u.wpKey)))),   // primero las de tu etapa
+      c = this.shuffle(ups), out = [];
     for (let i = 0; i < Math.max(a.length, c.length); i++) { if (a[i]) out.push(a[i]); if (c[i]) out.push(c[i]); }
     return out;
   },
