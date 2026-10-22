@@ -129,6 +129,7 @@ const Explore = {
 
   // ---------- Dibujo ----------
   draw() {
+    if (World.arena) return;   // Issue #17: los cofres y zonas del mapa no se ven en la arena del jefe (comparten coordenadas)
     for (const o of this.o) {
       if (o.k === 'chest') this.drawChest(o);
       else this.drawZone(o);
