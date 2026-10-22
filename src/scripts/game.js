@@ -511,7 +511,7 @@ function hostSync(dt) {
   // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
   const E = en.map(e => { if (!e.id) e.id = ++enId;   // id para que el cliente pueda deslizar a cada uno
     const a = [e.id, r(e.x), r(e.y), r2(e.r), e.k, e.bo != null ? 0 : e.ti, e.bo != null ? null : e.sk, e.bo != null ? null : e.et, e.st | 0, e.el, r2(e.fl), r2(e.ang), (e.gun ? 1 : 0) + (e.cp ? 2 + 4 * Math.round(Math.max(0, e.hp / e.mh) * 100) : 0)];
-    if (e.bo != null) a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at), e.p2 ? 1 : 0, e.shd > 0 ? 1 : 0, e.ag == null ? -1 : e.ag);
+    if (e.bo != null) { const c = Bosses.castOf(e); a.push(e.bo, e.cyc, r(e.hp), r(e.mh), r2(e.at), e.p2 ? 1 : 0, e.shd > 0 ? 1 : 0, e.ag == null ? -1 : e.ag, c ? c[0] : -1, c ? r2(c[1]) : 0); }
     return a; });
   const G = gems.map(g => [r(g.x), r(g.y), r2(g.v)]);
   const S = sh.map(s => [r(s.x), r(s.y), r(s.vx), r(s.vy), s.c || 0, r2(s.r || 5), s.fx || 0, r(s.sz || 0)]);
@@ -540,7 +540,7 @@ function hostSync(dt) {
 function unpackEn(a) {
   const e = { id: a[0], x: a[1], y: a[2], r: a[3], k: a[4], ti: a[5], sk: a[6], et: a[7], st: a[8], el: a[9], fl: a[10], ang: a[11], gun: !!(a[12] & 1) };
   if (a[12] & 2) { e.cp = 1; e.hf = (a[12] >> 2) / 100; }   // campeón (Issue #7) y su vida
-  if (a.length > 13) { e.p2 = a[18]; e.shd = a[19]; e.ag = a[20]; e.bo = a[13]; e.cyc = a[14]; e.hp = a[15]; e.mh = a[16]; e.at = a[17]; }
+  if (a.length > 13) { e.p2 = a[18]; e.shd = a[19]; e.ag = a[20]; e.cI = a[21] == null ? -1 : a[21]; e.cF = a[22] || 0; e.bo = a[13]; e.cyc = a[14]; e.hp = a[15]; e.mh = a[16]; e.at = a[17]; }
   return e;
 }
 function onlineSmooth(dt) {
@@ -870,11 +870,13 @@ function togglePause(){if(menuPause){menuPause=false;$('pause').style.display='n
  $('pause').style.display='flex';$('pcont').focus();routePanel()}
 $('pcont').onclick=()=>{if(menuPause)togglePause()};
 $('preb').onclick=()=>{if(menuPause&&canRebirth(P[0])){rebirth(P[0]);togglePause()}};
+// puntos de un stat para los requisitos de evolución: los de la partida (cartas) + los del árbol (nodos de Entrenamiento)
+const reqPts=(q,k)=>((q.st&&q.st[k])|0)+((q.m&&q.m[k])|0);
 // ---------- Ruta evolutiva (Issue #14): en la pausa, qué pide cada forma que te queda por delante y cuánto llevás ----------
 function routePanel(){const q=mine()[0]||P[0],box=$('proute');if(!q||!box)return;const s0=q.stage|0,need=v=>Math.ceil(v*REQ_FACTOR),rows=[];
  for(let s=Math.max(3,s0+1);s<=5;s++){const L=formOpts(q,s);if(s<5&&L.length<2)continue;
   rows.push('<div class="rt-st">'+(s>=5?'Formas finales':STAGE_NAMES_UP[s])+' <small>(nivel '+(s>=5?lineLevel():evoLevels()[s-1])+')</small></div>');
-  for(const o of L){const R=o.xp?[]:[...Object.entries(o.req||{}).map(([k,v])=>[SN[k],q.st[k]|0,need(v)]),...Object.entries(o.vp||{}).map(([k,v])=>[Stats.VPN[k],Stats.vpVal(q,k),need(v)])],ok=R.every(r=>r[1]>=r[2]);
+  for(const o of L){const R=o.xp?[]:[...Object.entries(o.req||{}).map(([k,v])=>[SN[k],reqPts(q,k),need(v)]),...Object.entries(o.vp||{}).map(([k,v])=>[Stats.VPN[k],Stats.vpVal(q,k),need(v)])],ok=R.every(r=>r[1]>=r[2]);
    rows.push('<div class="rt-f'+(ok?' ok':'')+'"><b>'+(ok?'✓ ':'')+o.name+'</b>'+(o.xp?'<span>Solo experiencia</span>':R.map(r=>'<span>'+r[0]+' '+Math.min(r[1],r[2])+'/'+r[2]+(r[0]===Stats.VPN.nohit?' · racha actual '+Math.floor((q.vp&&q.vp.nh)||0)+' s':'')+'<i style="width:'+Math.min(100,r[1]/r[2]*100)+'%"></i></span>').join(''))+'</div>')}}
  box.innerHTML=rows.length?'<h3>Ruta evolutiva</h3><p class="rt-note">Segundos sin daño: se reinicia con cualquier golpe (balas, contacto, charcos, rayos). Cuenta tu mejor racha.</p>'+rows.join(''):'';
  const rb=$('preb'),c=canRebirth(q);rb.style.display=!isOnline&&P.length===1&&(q.stage|0)>=2?'block':'none';rb.disabled=!c;
@@ -884,7 +886,7 @@ function routePanel(){const q=mine()[0]||P[0],box=$('proute');if(!q||!box)return
 let rtT=0;function routeWatch(dt){if((rtT-=dt)>0||!running)return;rtT=1;const need=v=>Math.ceil(v*REQ_FACTOR);
  for(const q of mine()){if(!q||q.dead||!q.vp||!q.st)continue;q.rtOk=q.rtOk||{};
   for(let s=Math.max(3,(q.stage|0)+1);s<=5;s++)for(const o of formOpts(q,s)){if(o.xp||q.rtOk[o.key])continue;
-   const ok=Object.entries(o.req||{}).every(([k,v])=>(q.st[k]|0)>=need(v))&&Object.entries(o.vp||{}).every(([k,v])=>Stats.vpVal(q,k)>=need(v));
+   const ok=Object.entries(o.req||{}).every(([k,v])=>reqPts(q,k)>=need(v))&&Object.entries(o.vp||{}).every(([k,v])=>Stats.vpVal(q,k)>=need(v));
    if(ok){q.rtOk[o.key]=1;Stats.flash(q,'¡Ya podés: '+o.name+'!','#4dffb8');Sound.play('item')}}}}
 // ---------- Renacer (Issue #14): con un Chip de Reformateo de ESTA partida, tu Digimon vuelve a Digitama y renace como Bebé ----------
 const canRebirth=q=>!!q&&!isOnline&&P.length===1&&running&&(q.stage|0)>=2&&q.rbL==null&&((q.vp&&q.vp.rc)|0)>0;
@@ -900,7 +902,7 @@ function endRun(title){if(!running)return;
  running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();Sound.music(false);Gate.reset();Finale.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
- const bc=Math.round(Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.5+t/6+lvl*8)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
+ const bc=Math.round(0.5*Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.2+t/10+lvl*3)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
  $('t').textContent=title;
  const trTxt=Trees.onRunEnd(mine(),t);
  $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' Digimon. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.'+trTxt;
@@ -1127,11 +1129,11 @@ function chooseLine(){
   const s = lineStage;
   cardMode='line'; setHead(s >= 5 ? '¡Elegí tu evolución final!' : '¡Elegí tu evolución a ' + STAGE_NAMES_UP[s] + '!');
   const C = CR(p), need = v => Math.ceil(v * REQ_FACTOR);
-  const meets = o => o.xp || TEST || (Object.entries(o.req || {}).every(([k, v]) => (p.st[k] | 0) >= need(v)) && Object.entries(o.vp || {}).every(([k, v]) => Stats.vpVal(p, k) >= need(v)));
+  const meets = o => o.xp || TEST || (Object.entries(o.req || {}).every(([k, v]) => reqPts(p, k) >= need(v)) && Object.entries(o.vp || {}).every(([k, v]) => Stats.vpVal(p, k) >= need(v)));
   cur = formOpts(p, s).map(o => ({
     n: o.name, lock: !meets(o), weak: false, op: 'line', stage: s, lineIdx: o.idx, branchId: s >= 5 ? o.id : null, altId: s < 5 ? o.id : null, key: o.key, xp: o.xp,
     d: o.desc || '',
-    req: o.xp ? 'solo experiencia' + (s >= 5 ? ' (llegar al nivel ' + lineLevel() + ')' : '') : [...Object.entries(o.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(p.st[k] | 0, need(v))}/${need(v)}`),
+    req: o.xp ? 'solo experiencia' + (s >= 5 ? ' (llegar al nivel ' + lineLevel() + ')' : '') : [...Object.entries(o.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(reqPts(p, k), need(v))}/${need(v)}`),
       ...Object.entries(o.vp || {}).map(([k, v]) => `${Stats.VPN[k]} ${Math.min(Stats.vpVal(p, k), need(v))}/${need(v)}`)].join(' · '),
     f: s >= 5 ? () => { p.line = o.idx; p.branchId = o.id; p.weak = false; p.dark = false; } : () => { p.alt = p.alt || {}; p.alt[s] = o.id; }
   }));

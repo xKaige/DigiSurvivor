@@ -732,3 +732,8 @@ body.ingame.boss2 #evt{top:calc(16% + 70px)}
 #proute .rt-f span i{position:absolute;left:0;bottom:0;height:2px;background:#ffd23f}
 #pause #preb{color:#ffe9a0;border-color:#ffd23f}#pause #preb:disabled{opacity:.45;cursor:not-allowed}
 #proute .rt-note{margin:0 0 4px;font-size:11px;color:#9fc0d6}
+
+/* barra de casteo del jefe (habilidades que duran): cuánto falta */
+#bossbar .bb-cast{display:none;position:relative;height:16px;margin-top:3px;background:rgba(4,10,20,.85);border:1px solid #ffd23f;overflow:hidden}
+#bossbar .bb-cast u{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#ff9a2e,#ffd23f);opacity:.75}
+#bossbar .bb-cast em{position:relative;z-index:1;display:block;font:800 11px/16px 'Chakra Petch',sans-serif;font-style:normal;letter-spacing:.1em;text-transform:uppercase;text-align:center;color:#fff;text-shadow:0 0 3px #000}

@@ -94,6 +94,12 @@ const Bosses = {
   P1: [{ n: 'Terremoto', k: 'quake' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Gravedad', k: 'grav' }, { n: 'Muralla', k: 'wall' }, { n: 'Campo minado', k: 'mines' }, { n: 'Cruz giratoria', k: 'shieldx' }],
   P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz giratoria', k: 'shieldx' }, { n: 'Terremoto', k: 'quake' }, { n: 'Orbes', k: 'homing' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Zonas seguras', k: 'safe' }, { n: 'Sentencia', k: 'mark' }, { n: 'Gravedad', k: 'grav' }, { n: 'Campo minado', k: 'mines' }],
   SX_DUR: 7.5, SX_W: 54, SX_L: 1150,
+  // barra de casteo (pedido): habilidades que duran (cruz, zonas seguras, gravedad, espiral, sentencia) → [índice, 0..1 que queda]
+  CASTS: ['Cruz giratoria', 'Zonas seguras', 'Gravedad', 'Espiral', 'Sentencia'],
+  castOf(e) {
+    if (e.cI != null) return e.cI >= 0 ? [e.cI, e.cF] : null;   // invitado: llega en el sync
+    return e.shd > 0 ? [0, e.shd / this.SX_DUR] : e.szT > 0 ? [1, e.szT / 2.8] : e.gvT > 0 ? [2, e.gvT / 2.2] : e.spT > 0 ? [3, e.spT / 2.4] : e.mkT > 0 ? [4, e.mkT / 2.6] : null;
+  },
   cy(e) { return e.r * 1.26; },     // centro del cuerpo dibujado (el sprite va con los pies en y + h/2): ahí van la burbuja y la cruz
   r0(e) { return e.r * 2.6; },      // radio del escudo dibujado: los rayos empiezan en su borde
   // aggro: daño recibido por jugador (game.js: hit), se va olvidando (mitad cada ~4 s); persigue al que más le pegó
@@ -291,13 +297,15 @@ const Bosses = {
     document.body.classList.toggle('boss2', L.length > 1);   // con dos barras, el cartel de avisos baja (style.css)
     if (!L.length) { this.hideBar(); return; }
     const b = this.bar(); b.style.display = 'block';
-    if (b.children.length !== L.length) b.innerHTML = L.map(() => '<div class="bb-one"><div class="bb-top"><b></b><span></span></div><div class="bb-hp"><i></i></div></div>').join('');
+    if (b.children.length !== L.length) b.innerHTML = L.map(() => '<div class="bb-one"><div class="bb-top"><b></b><span></span></div><div class="bb-hp"><i></i></div><div class="bb-cast"><em></em><u></u></div></div>').join('');
     L.forEach((e, i) => {
       const B = this.def(e.bo), el = this.elOf(B), r = b.children[i];
       r.style.setProperty('--ac', ELC[el]);
       r.querySelector('b').textContent = B.name + (e.cyc ? ' +' + e.cyc : '');
       r.querySelector('span').textContent = B.level + ' · ' + ATTR[el];
       r.querySelector('i').style.width = Math.max(0, e.hp / e.mh * 100) + '%';
+      const c = this.castOf(e), cb = r.querySelector('.bb-cast'); cb.style.display = c ? 'block' : 'none';
+      if (c) { cb.querySelector('em').textContent = this.CASTS[c[0]]; cb.querySelector('u').style.width = Math.max(0, Math.min(1, c[1])) * 100 + '%'; }
     });
   }
 };

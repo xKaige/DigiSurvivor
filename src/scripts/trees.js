@@ -76,7 +76,7 @@ const Trees = {
   // suma los efectos de un árbol (fx × nivel) en una bolsa de modificadores
   sum(k, m) {
     const T = this.tree(k); if (!T) return m;
-    for (const n of T.nodes) { const lv = this.lv(k, n.id); if (lv) Stats.add(m, n.fx, lv); }
+    for (const n of T.nodes) { const lv = Math.min(this.lv(k, n.id), n.m || 1); if (lv) Stats.add(m, n.fx, lv); }   // tope: si un nodo bajó de niveles máximos
     return m;
   },
   loadout(cid) {
@@ -99,7 +99,7 @@ const Trees = {
     for (const q of list) {
       if (!q || !q.vp) continue;
       const el = q.el | 0, k = this.KEYS[el];
-      const ac = Math.floor((q.vp.k / 20 + secs / 40 + (q.stage | 0) * 2) * (1 + ((q.m && q.m.acoin) || 0)));
+      const ac = Math.floor((q.vp.k / 40 + secs / 60 + (q.stage | 0) * 2) * (1 + ((q.m && q.m.acoin) || 0)));
       save.ac[el] += ac;
       const b0 = this.bondLv(q.cid);
       save.bond[q.cid] = ((save.bond[q.cid]) | 0) + q.vp.k + Math.floor(secs / 5);
@@ -121,12 +121,14 @@ const Trees = {
     vs2: 'de daño contra Dato', healP: 'de curación de ítems', acoin: 'de datos de atributo', bulletRes: 'menos de daño de balas',
     rcChance: 'de chance de Chip de Reformateo', bossCoin: 'de monedas de jefes', revSpd: 'de velocidad al revivir', revHP: 'de vida al revivir',
     moveDmg: 'de daño al moverte', moveCdr: 'de recarga al moverte' },
+  STATN: { FUE: 'Fuerza', INT: 'Inteligencia', VEL: 'Velocidad', VIT: 'Vitalidad' },
   fmt(fx, lv) {
     const out = [];
     for (const k in fx) {
       const v = fx[k] * lv, r = x => Math.round(x * 1000) / 10;
       if (this.PCT[k]) out.push((v > 0 ? '+' : '') + String(r(v)).replace('.', ',') + '% ' + this.PCT[k]);
       else if (k === 'hp') out.push('+' + Math.round(v) + ' de vida');
+      else if (this.STATN[k]) out.push('+' + v + ' punto' + (v === 1 ? '' : 's') + ' de ' + this.STATN[k] + ' (cuenta para evolucionar)');
       else if (k === 'regen') out.push('+' + String(Math.round(v * 100) / 100).replace('.', ',') + ' de vida por segundo');
       else if (k === 'lowRegen') out.push('+' + v + ' de vida por segundo con poca vida');
     }

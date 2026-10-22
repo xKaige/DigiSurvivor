@@ -191,6 +191,11 @@ def build(T, tamer=False, key=None):
         dx, dy = DIRS[arm]; prev = 'start'; ids = []
         for i, nd in enumerate(lst, 1):
             nid = arm.lower() + str(i)
+            # 24/10/2026 (pedido: que el árbol ayude a cumplir los requisitos de evolución): el nodo 2 de cada rama de los
+            # árboles de atributo da puntos de su stat desde el comienzo de la partida (cuentan para evolucionar)
+            if not tamer and i == 2:
+                nd = {'t': 'minor', 'n': 'Entrenamiento: ' + ARMN[arm], 'fx': {arm: 1}, 'm': 3,
+                      'd': '+1 punto de ' + ARMN[arm] + ' por nivel desde que empieza la partida. Cuenta para los requisitos de evolución'}
             c = cost(nd['t'], i, tamer)
             n = {'id': nid, 't': nd['t'], 'n': nd['n'], 'x': dx * STEP * i, 'y': dy * STEP * i, 'm': nd['m'], 'fx': nd['fx'],
                  'link': [prev], 'c': c[0], 'cl': c[1], 'arm': arm}
@@ -239,5 +244,16 @@ def build(T, tamer=False, key=None):
 data = {'note': 'Generado por gentrees.py (sesión 0.6). c = costo base, cl = 1 si el costo se multiplica por el nivel.',
         'trees': {k: build(v, key=k) for k, v in TREES.items()}}
 data['trees']['tam'] = build(TAMER, True)
+# 24/10/2026 (pedido: bajar los % de todo): los efectos numéricos quedan al 60%. Solo en los nodos cuyos efectos son todos
+# números de este tipo (los de mecánicas especiales, como Escudo Sagrado o Último Bastión, quedan igual); a esos se les saca
+# la descripción con números (el panel muestra el efecto calculado).
+SCALE = {'dmgP', 'rateP', 'spP', 'hpP', 'arm', 'magP', 'xp', 'coin', 'crit', 'critD', 'cdr', 'area', 'dur', 'luck', 'leech', 'spg',
+         'dodge', 'vs0', 'vs1', 'vs2', 'healP', 'acoin', 'bulletRes', 'rcChance', 'bossCoin', 'revSpd', 'revHP', 'moveDmg', 'moveCdr',
+         'hp', 'regen', 'lowRegen'}
+for T in data['trees'].values():
+    for n in T['nodes']:
+        if n['fx'] and all(k in SCALE for k in n['fx']):
+            n['fx'] = {k: (round(v * 0.6, 1) if k == 'hp' else round(v * 0.6, 4)) for k, v in n['fx'].items()}
+            n.pop('d', None)
 json.dump(data, open(out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 for k, v in data['trees'].items(): print(k, len(v['nodes']), 'nodos')

@@ -66,6 +66,11 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - Requisitos revisados (24/10/2026, todos andan: Digimon eliminados, jefes, veces al borde, segundos sin daño y puntos de stat, probados con mecánicas reales): la Ruta muestra la **racha actual** sin daño (se reinicia con cualquier golpe) y `routeWatch` (desde `hudBars`, cada 1 s) avisa "¡Ya podés: X!" la primera vez que cumplís una forma (`q.rtOk`).
 - Huevos: la misión de Sunarizamon (sobrevivir 20 min, imposible con partidas de 15) pasó a "forma final con Lalamon". Simuladas las 34 misiones en orden: todas entregan su Digitama.
 
+## Árboles, economía y casteo de jefes (24/10/2026, pedido)
+- **Barra de casteo** del jefe bajo su vida (`Bosses.castOf`, `.bb-cast`): Cruz giratoria, Zonas seguras, Gravedad, Espiral y Sentencia con el tiempo que queda; online va en el sync del jefe (a[21], a[22] → `e.cI`, `e.cF`).
+- **Árboles**: en los de atributo, el nodo 2 de cada rama (`fue2/int2/vel2/vit2`) es "Entrenamiento: <stat>": +1 punto por nivel (máx. 3) desde que empieza la partida, que **cuenta para los requisitos de evolución** (`reqPts(q,k)` = cartas `q.st` + árbol `q.m`; lo usan la elección de forma, la Ruta y el aviso). Todos los efectos numéricos de los nodos quedaron al 60% (gentrees.py: `SCALE`; los de mecánicas especiales no cambian). `Trees.sum` topea el nivel al máximo del nodo.
+- **Menos monedas**: por partida (eliminados × 0,2 + segundos/10 + nivel × 3) × monedas, y las de jefes a la mitad; datos de atributo (eliminados/40 + segundos/60 + etapa × 2).
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.
