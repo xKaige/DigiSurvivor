@@ -118,12 +118,20 @@ const SkillSys = {
   cards(q) {
     if (!this.cat) return [];
     const full = this.activeCount(q) >= this.maxActive(q);
-    // nuevas: aunque tengas las 4 ocupadas (full); en ese caso game.js pregunta cuál reemplazar (u.rep)
+    // Issue #10: evolución de skills. Con lugar libre, las nuevas se aprenden como siempre. Con las 4 ocupadas, una nueva
+    // solo sale si tenés una skill MAXEADA, que evoluciona en ella (ocupa su lugar). Las de forma final piden siempre DOS
+    // maxeadas, que se fusionan (liberan un lugar). La nueva hereda la mitad de la rareza de las que consume.
+    const maxed = Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) >= this.maxOf(k));
+    const pickMax = (d, n) => maxed.slice().sort((a, b) => (this.def(b).element === d.element) - (this.def(a).element === d.element)).slice(0, n);
     const fresh = this.pool(q).filter(k => this.def(k) && !(q.wp[k] | 0)).map(k => {
-      const d = this.def(k), u = { n: d.name, d: d.desc, op: 'wp', wpKey: k, tag: 'Skill NUEVA', fresh: 1, full,
-        f: () => { this.forget(q, u.rep); if (this.canTake(q, k)) q.wp[k] = 1; } };
+      const d = this.def(k), need = d.final ? 2 : full ? 1 : 0;
+      if (maxed.length < need) return null;
+      const rep = need ? pickMax(d, need) : null;
+      const u = { n: d.name, d: d.desc, op: 'wp', wpKey: k, tag: 'Skill NUEVA', fresh: 1, rep,
+        evo: rep && rep.map(r => this.def(r).name).join(' + '), fuse: need === 2,
+        f: () => { if (u.rep) this.evolveInto(q, u.rep, k); else if (this.canTake(q, k)) q.wp[k] = 1; } };
       return u;
-    });
+    }).filter(Boolean);
     const ups = Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) >= 1 && q.wp[k] < this.maxOf(k)).map(k => {
       const d = this.def(k), nx = q.wp[k] + 1;
       return { n: d.name, d: d.desc, op: 'wp', wpKey: k,
@@ -134,8 +142,18 @@ const SkillSys = {
     return out;
   },
 
-  // olvida una skill (para hacer lugar a una nueva)
-  forget(q, k) { if (!k || !q.wp[k]) return; delete q.wp[k]; delete q.wt[k]; if (q.wc) delete q.wc[k]; },
+  // olvida una skill (o varias) para hacer lugar a una nueva
+  forget(q, k) { if (Array.isArray(k)) { k.forEach(x => this.forget(q, x)); return; } if (!k || !q.wp[k]) return; delete q.wp[k]; delete q.wt[k]; if (q.wc) delete q.wc[k]; if (q.wm) delete q.wm[k]; },
+  // evolución / fusión (Issue #10): consume las skills de rep y aprende k en nivel 1, con la mitad de su rareza (q._inh,
+  // lo usa rarSkill de game.js al aplicar la rareza de la carta)
+  evolveInto(q, rep, k) {
+    const L = (Array.isArray(rep) ? rep : [rep]).filter(r => q.wp[r]), wm = L.length ? L.reduce((a, r) => a + ((q.wm && q.wm[r]) || 1), 0) / L.length : 1;
+    this.forget(q, L);
+    if (!this.canTake(q, k)) return;
+    q.wp[k] = 1; (q._inh || (q._inh = {}))[k] = 1 + (wm - 1) * 0.5;
+    for (let i = 0; i < 18; i++) burst(q.x, q.y, i % 2 ? '#fff' : this.col(this.def(k)));
+    if (typeof Stats !== 'undefined') Stats.flash(q, L.length > 1 ? '¡Fusión!' : '¡Evolución!', '#ffd23f');
+  },
 
   near(q, max) {
     let b = null, bd = max;

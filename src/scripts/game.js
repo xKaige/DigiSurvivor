@@ -485,7 +485,7 @@ setInterval(() => {
 function applyCardOp(targetP, data) {
   if (data.c) targetP.st[data.c]++;
   if (Stats.cardOf(data.op)) Stats.card(targetP, data.op, data.rm || 1);   // carta de stat (stats.js), con su rareza
-  else if (data.op === 'wp' && data.wpKey) { SkillSys.forget(targetP, data.rep); const fr = !(targetP.wp[data.wpKey] | 0); if (SkillSys.canTake(targetP, data.wpKey)) { targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; rarSkill(targetP, data.wpKey, fr, data.rm || 1); } }
+  else if (data.op === 'wp' && data.wpKey) { const fr = !(targetP.wp[data.wpKey] | 0); if (data.rep && fr) { SkillSys.evolveInto(targetP, data.rep, data.wpKey); if (targetP.wp[data.wpKey]) rarSkill(targetP, data.wpKey, true, data.rm || 1); } else if (SkillSys.canTake(targetP, data.wpKey)) { targetP.wp[data.wpKey] = (targetP.wp[data.wpKey] | 0) + 1; rarSkill(targetP, data.wpKey, fr, data.rm || 1); } }
   else if (data.op === 'line' && data.stage && data.stage < 5) { targetP.alt = targetP.alt || {}; targetP.alt[data.stage] = data.altId || null; }   // Campeón / Perfecto alternativo
   else if (data.op === 'line') { targetP.line = data.lineIdx; targetP.branchId = data.branchId; targetP.weak = data.weak; targetP.dark = !!data.dark; }
 }
@@ -1178,7 +1178,7 @@ const RAR_NEW=[.85,1,1.15,1.3,1.5],RAR_UP=[1,1.04,1.08,1.14,1.22],RAR_ST=[.8,1,1
 function rollRar(q){const w=RAR_W[Math.min(5,q.stage|0)];let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let i=0;i<5;i++){r-=w[i];if(r<0)return i}return 1}
 function rarMul(u,q){const r=u.rar|0,s=q.stage|0;return u.op==='wp'?(u.fresh?RAR_NEW[r]*(r===4?1+.08*s:1):RAR_UP[r]*(r===4?1+.03*s:1)):RAR_ST[r]*(r===4?1+.1*s:1)}
 // aplica el poder extra de una carta de skill (fresh: skill nueva; si no, mejora)
-function rarSkill(q,k,fresh,m){if(!k||!m)return;q.wm=q.wm||{};q.wm[k]=Math.min(2,fresh?m:(q.wm[k]||1)*m)}   // tope ×2 (se acumula en cada mejora; con ×4 las finales se disparaban)
+function rarSkill(q,k,fresh,m){if(!k||!m)return;q.wm=q.wm||{};if(fresh&&q._inh&&q._inh[k]){m*=q._inh[k];delete q._inh[k]}q.wm[k]=Math.min(2,fresh?m:(q.wm[k]||1)*m)}   // tope ×2 (se acumula en cada mejora; con ×4 las finales se disparaban)
 const pct=m=>(m>=1?'+':'')+Math.round((m-1)*100)+'%';
 function showCards(keep){
   if(!keep)Sound.play('level');paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');
@@ -1189,7 +1189,7 @@ function showCards(keep){
   cur.forEach((u,i)=>{const b=document.createElement('button'),sk=u.op==='wp',nw=sk&&u.tag==='Skill NUEVA',sd=sk&&SkillSys.def(u.wpKey),R=RAR[u.rar|0];
    b.className='card lv '+(nw?'new':sk?'skup':'stat')+' rar'+(u.rar|0);if(sd)b.style.setProperty('--ac',SkillSys.col(sd));b.style.setProperty('--rar',R.c);
    const bon=u.rm&&Math.abs(u.rm-1)>.005?(sk?pct(u.rm)+' de poder':'Efecto '+pct(u.rm)):'';
-   b.innerHTML=((u.rar|0)===4?'<span class="rstar">★</span>':'')+'<span class="kn">'+(i+1)+'</span><span class="kt">'+(nw?'Skill nueva':sk?'Mejora de skill':'Mejora')+'</span>'+(bon?'<span class="rlab">'+bon+'</span>':'')+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span>'+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag&&!nw?'<em>'+u.tag+'</em>':nw&&u.full?'<em>Tenés las 4 ocupadas: elegís cuál reemplazar</em>':'');
+   b.innerHTML=((u.rar|0)===4?'<span class="rstar">★</span>':'')+'<span class="kn">'+(i+1)+'</span><span class="kt">'+(u.evo?(u.fuse?'Fusión':'Evolución'):nw?'Skill nueva':sk?'Mejora de skill':'Mejora')+'</span>'+(bon?'<span class="rlab">'+bon+'</span>':'')+'<b>'+u.n+'</b><span class="kd">'+u.d+'</span>'+(u.c?'<em>Suma a '+SN[u.c]+'</em>':u.tag&&!nw?'<em>'+u.tag+'</em>':u.evo?'<em class="kevo">'+(u.rep||[]).map(r=>'<img src="'+SkillSys.iconOf(SkillSys.def(r))+'" alt="">').join('')+'<span>'+u.evo+' (máx.) → '+u.n+'</span></em>':'');
    b.onclick=()=>choose(u);c.appendChild(b)});
   // Reroll (árbol de Tamer): un cartelito abajo de las cartas (tecla R); cambia las cartas que salieron
   if(p.rr>0){const r=document.createElement('button');r.className='rr-btn';r.innerHTML='<b>R</b> Reroll <small>· te quedan '+p.rr+'</small>';
