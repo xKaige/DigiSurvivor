@@ -1179,7 +1179,7 @@ const RAR_NEW=[.85,1,1.15,1.3,1.5],RAR_UP=[1,1.04,1.08,1.14,1.22],RAR_ST=[.8,1,1
 function rollRar(q){const w=RAR_W[Math.min(5,q.stage|0)];let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let i=0;i<5;i++){r-=w[i];if(r<0)return i}return 1}
 function rarMul(u,q){const r=u.rar|0,s=q.stage|0;return u.op==='wp'?(u.fresh?RAR_NEW[r]*(r===4?1+.08*s:1):RAR_UP[r]*(r===4?1+.03*s:1)):RAR_ST[r]*(r===4?1+.1*s:1)}
 // aplica el poder extra de una carta de skill (fresh: skill nueva; si no, mejora)
-function rarSkill(q,k,fresh,m){if(!k||!m)return;q.wm=q.wm||{};q.wm[k]=fresh?m:(q.wm[k]||1)*m}
+function rarSkill(q,k,fresh,m){if(!k||!m)return;q.wm=q.wm||{};q.wm[k]=Math.min(4,fresh?m:(q.wm[k]||1)*m)}   // tope ×4 (se acumula en cada mejora)
 const pct=m=>(m>=1?'+':'')+Math.round((m-1)*100)+'%';
 function showCards(keep){
   if(!keep)Sound.play('level');paused=true; p=pending[0]; cardMode='cards'; setHead('¡Subiste de nivel!');

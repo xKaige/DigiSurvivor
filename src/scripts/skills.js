@@ -70,6 +70,7 @@ const SkillSys = {
 
   // ---------- Mejoras por nivel ----------
   // PERKS[tipo][i] = mejora que da el nivel i+2 (nivel 2 … 10). Cada una cambia algo que se VE al usar la skill.
+  AREA_MAX: 2.6, SIZE_MAX: 2.2,   // tope de los multiplicadores de área y tamaño de una skill (Issue #9)
   PERKS: {
     projectile: ['dmg', 'cnt', 'pierce', 'cnt', 'area', 'cnt', 'dmg', 'cnt', 'big'],
     melee_arc:  ['dmg', 'area', 'cnt', 'dmg', 'area', 'cnt', 'cd', 'area', 'big'],
@@ -150,14 +151,17 @@ const SkillSys = {
       const d = this.def(k); if (!d) continue;
       const S = this.perks(d, lv);
       // poder extra por la rareza de las cartas (game.js: q.wm): más daño y un poco más grande (que se note)
-      const Wm = q.wm && q.wm[k]; if (Wm && Wm !== 1) { S.dmg *= Wm; const g = 1 + (Wm - 1) * 0.4; S.area *= g; S.size *= g; }
+      const Wm = q.wm && q.wm[k]; if (Wm && Wm !== 1) { S.dmg *= Wm; const g = Math.min(1.35, 1 + (Wm - 1) * 0.4); S.area *= g; S.size *= g; }
       // stats del jugador (stats.js): área, recarga y duración
       if (q.area) { S.area *= q.area; S.size *= q.area; }   // el tamaño crece igual que el área (antes la mitad: no se notaba)
+      // tope de área y tamaño (Issue #9: con mejoras, rareza, cartas y árbol, DORU Din llegaba a explosiones gigantes)
+      const capA = () => { S.area = Math.min(S.area, this.AREA_MAX); S.size = Math.min(S.size, this.SIZE_MAX); };
+      capA();
       if (d.type === 'orbit') { DSRC = k; this.orbit(q, k, d, S, dt); DSRC = null; continue; }   // DSRC: a qué skill se le cuenta el daño (game.js: hit)
       q.wt[k] = (q.wt[k] === undefined ? 0 : q.wt[k]) - dt * (q.moving && q.m && q.m.moveCdr ? 1 + q.m.moveCdr : 1);
       if (q.wt[k] > 0) continue;
       const fn = this[d.type]; if (!fn) continue;
-      if (q.emp && this.near(q, 520)) Stats.useEmp(q, S);   // SP lleno: esta sale potenciada
+      if (q.emp && this.near(q, 520)) { Stats.useEmp(q, S); capA(); }   // SP lleno: esta sale potenciada (con el mismo tope)
       const cd = Math.max(.35, d.cd * S.cd * (q.cdr || 1)), c0 = q.casts | 0;
       DSRC = k; fn.call(this, q, k, d, S, cd);
       // Sobrecarga (árbol de Dato): cada 5 skills, la quinta sale dos veces
