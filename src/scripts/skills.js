@@ -189,7 +189,7 @@ const SkillSys = {
     const R = d.range * S.area;
     const b = this.near(q, R + 120); if (!b) { this.idle(q, k); return; }
     const a0 = Math.atan2(b.y - q.y, b.x - q.x), n = 1 + S.cnt;
-    for (let i = 0; i < n; i++) this.sweep(q, a0 + i * 6.283 / n, R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'arc', this.fxKey(k, d));   // +1 tajo: otro corte alrededor
+    for (let i = 0; i < n; i++) this.sweep(q, a0 + i * 6.283 / n, R, d.arc, d.dmg * q.dmg * S.dmg * (i ? 0.6 : 1), this.col(d), 'arc', this.fxKey(k, d));   // +1 tajo: otro corte alrededor (los extra pegan 60%: en hordas el daño se disparaba)
     this.impact(b.x, b.y, this.fxKey(k, d), 46 * this.vis(q) * S.size);
     this.fired(q, k, cd);
   },

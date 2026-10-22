@@ -52,6 +52,10 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - **Vida según tu poder** (pedido 23/10/2026): `Bosses.dpsOf(q)` estima el daño por segundo contra un objetivo (básico + skills con nivel, rareza, recarga y críticos) y el jefe nace con al menos `FIGHT_T` (25) s × (suma de todos los jugadores) × (1 + 0,3 por ciclo). Con el bot, la estimación sale ~2,5× más alta que el daño real.
 - Mecánicas nuevas: **Gravedad** (`grav`, atrae 2,2 s y termina con anillos; efecto `pull`), **Campo minado** (`mines`, 9+ círculos que explotan casi juntos), **Zonas seguras** (`safe`, todo en rojo `danger` salvo 3 círculos `safe`; afuera daña 20× e.dm) y **Sentencia** (`mark`, un círculo sigue al jugador del aggro y explota donde quedó). Fase 1: + Gravedad y Campo minado; furia: las cuatro.
 
+## Balance de poder (23/10/2026, pedido: Brave Metal hacía el 76% del daño)
+- Skills de tajo (`melee_arc`) de forma final: arco máx. 1,8 rad y daño ×0,7; las demás de tajo, arco máx. 2,2. Los cortes extra (mejora +1 tajo) pegan 60%.
+- `Stats.LV_DMG` 0,05 → 0,03 por nivel; tope del multiplicador de rareza de una skill (`q.wm`) ×4 → ×2.
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.

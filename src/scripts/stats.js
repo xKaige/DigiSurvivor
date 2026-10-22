@@ -31,7 +31,7 @@ const Stats = {
   TRAIT_M: { kitsune: { dodge: 0.12 }, curioso: { xp: 0.12 }, filo: { crit: 0.1, critD: 0.25 }, arsenal: { multi: 1, rateP: 0.1 },
     kabuto: { shield: 12 }, puas: { thorns: 3 } },
   STAGE: { dmg: 1.5, hp: 30 },                       // cada evolución (etapas 1 a 4)
-  LV_DMG: 0.05,                                       // +5% de daño por cada nivel de la partida (pedido: al minuto 8 no alcanzaba para matar a los que se juntaban)
+  LV_DMG: 0.03,   // (0,05 → 0,03 el 23/10/2026: sin tope de nivel se iba de mambo)                                       // +5% de daño por cada nivel de la partida (pedido: al minuto 8 no alcanzaba para matar a los que se juntaban)
   DARK: { dmg: 7, multi: 1, spP: 0.08, hp: 40 },     // evolución oscura (si la línea no trae "bonus" en "dark")
   DP_NEED: [25, 60, 110, 170],                       // virus para una evolución perfecta (etapas 1 a 4)
 
