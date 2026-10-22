@@ -49,6 +49,7 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 ## Jefes (23/10/2026)
 - La Cruz giratoria sale del centro del cuerpo dibujado (`Bosses.cy(e)` = 1,26 r) desde el borde del escudo (`Bosses.r0(e)`), se dibuja debajo de los Digimon (game.js, antes de `vis`) y no daña adentro del escudo.
 - Vida ×2,4 (antes 1,6) y además ×(1 + 0,035 por nivel de la partida).
+- **Vida según tu poder** (pedido 23/10/2026): `Bosses.dpsOf(q)` estima el daño por segundo contra un objetivo (básico + skills con nivel, rareza, recarga y críticos) y el jefe nace con al menos `FIGHT_T` (25) s × (suma de todos los jugadores) × (1 + 0,3 por ciclo). Con el bot, la estimación sale ~2,5× más alta que el daño real.
 - Mecánicas nuevas: **Gravedad** (`grav`, atrae 2,2 s y termina con anillos; efecto `pull`), **Campo minado** (`mines`, 9+ círculos que explotan casi juntos), **Zonas seguras** (`safe`, todo en rojo `danger` salvo 3 círculos `safe`; afuera daña 20× e.dm) y **Sentencia** (`mark`, un círculo sigue al jugador del aggro y explota donde quedó). Fase 1: + Gravedad y Campo minado; furia: las cuatro.
 
 ## Idioma y estilo

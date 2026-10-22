@@ -57,12 +57,30 @@ const Bosses = {
     if (!c.length) c = L.map((_, i) => i).filter(i => rk(i) <= hi);
     const i = c[Math.random() * c.length | 0]; this.recent = [i, ...this.recent].slice(0, 4); return i;
   },
+  // Vida según tu poder (pedido: los jefes se quedaban muy atrás y explotaban): se estima el daño por segundo contra UN
+  // objetivo de cada jugador (ataque básico + cada skill con su nivel, rareza, recarga y críticos) y el jefe nace con vida
+  // para aguantar FIGHT_T segundos de ese daño (más en cada ciclo). Se usa si es mayor que la fórmula de siempre.
+  FIGHT_T: 25,   // la estimación es optimista (todo pega siempre al jefe): 25 s estimados ≈ 35–60 s reales
+  dpsOf(q) {
+    if (!q || q.dead) return 0;
+    const crit = 1 + Math.min(0.75, q.crit || 0) * ((q.critD || 1.5) - 1);
+    let d = q.dmg * (q.multi || 1) / Math.max(0.15, q.rate || 0.6);   // ataque básico
+    for (const k in q.wp || {}) {
+      const lv = q.wp[k] | 0, D = SkillSys.def(k); if (!lv || !D) continue;
+      const S = SkillSys.perks(D, lv), n = (D.count || 1) + S.cnt, per = (D.dmg || 0) * q.dmg * S.dmg * ((q.wm && q.wm[k]) || 1);
+      if (D.type === 'orbit') d += per * Math.min(n, 3) / 0.45;
+      else d += per * (1 + 0.5 * Math.max(0, n - 1)) / Math.max(0.35, (D.cd || 1) * S.cd * (q.cdr || 1));
+    }
+    return d * crit;
+  },
   spawn() {
     const L = this.data.list, i = this.pick(), cyc = Math.floor(this.n / 6), B = L[i];   // cyc: cada 6 jefes, más fuertes
     this.n++;
     const a = Math.random() * 6.283, d = Math.hypot(W, H) / 2 + 60;
     // la vida escala con la etapa del más evolucionado (0,5× en Bebé … 1,75× en forma final), el ciclo y la cantidad de jugadores
-    const st = Math.max(...P.map(q => q.stage | 0)), hp = 2.4 * B.hp * (0.5 + 0.25 * st) * (1 + 0.035 * Math.max(0, lvl - 1)) * (1 + cyc * 1.5) * (1 + 1.1 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores (+110% c/u: en party morían antes de la furia) y, desde los 4 min, con el tiempo
+    const st = Math.max(...P.map(q => q.stage | 0)); let hp = 2.4 * B.hp * (0.5 + 0.25 * st) * (1 + 0.035 * Math.max(0, lvl - 1)) * (1 + cyc * 1.5) * (1 + 1.1 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores (+110% c/u: en party morían antes de la furia) y, desde los 4 min, con el tiempo
+    const dps = P.reduce((s, q) => s + this.dpsOf(q), 0);
+    hp = Math.max(hp, dps * this.FIGHT_T * (1 + cyc * 0.3));
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
       hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5) * (1 + Math.max(0, t - 240) / 600), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
       pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0, t0: t });
