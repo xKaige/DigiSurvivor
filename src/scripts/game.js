@@ -1031,7 +1031,7 @@ function drawEnemy(e){
  const kk=th/Math.max(B.y1-B.y0,(B.x1-B.x0)*.75),w=(B.x1-B.x0)*kk*1.35;e.hr=Math.max(e.r,(B.x1-B.x0)*kk*.36);e.hcy=h/2-2-th/2;   // hitbox según el dibujo (ehy/ehr)
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  if(e.mn){cx.save();cx.strokeStyle='#c05bff';cx.lineWidth=2.5;cx.globalAlpha=.8;cx.beginPath();cx.ellipse(e.x,e.y+h/2-2,e.r*1.3,6,0,0,6.283);cx.stroke();cx.restore()}   // refuerzo del jefe: aro violeta
- if(e.bo!=null&&e.p2){cx.save();cx.globalAlpha=.22+.1*Math.sin(t*8);cx.fillStyle='#ff2d2d';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.55,th*.6,0,0,6.283);cx.fill();cx.restore()}   // jefe enfurecido (fase 2): aura roja
+ if(e.bo!=null&&e.p2){const rg=1-Math.max(0,e.hp)/e.mh;cx.save();cx.globalAlpha=.22+.12*rg+.1*Math.sin(t*(8+14*rg));cx.fillStyle='#ff2d2d';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.55,th*.6,0,0,6.283);cx.fill();cx.restore()}   // jefe enfurecido (fase 2): aura roja
  if(e.bo!=null&&e.shd>0){cx.save();const R=th*.62,yy=e.y+h/2-th*.45;cx.globalAlpha=.18+.06*Math.sin(t*10);cx.fillStyle='#7fdcff';cx.beginPath();cx.arc(e.x,yy,R,0,6.283);cx.fill();cx.globalAlpha=.85;cx.strokeStyle='#bff0ff';cx.lineWidth=3;cx.setLineDash([14,8]);cx.lineDashOffset=-t*40;cx.stroke();cx.setLineDash([]);cx.restore()}   // escudo (Cruz giratoria): inmune
  if(e.cp){cx.save();cx.globalAlpha=.25+.12*Math.sin(t*7);cx.fillStyle='#ffb02e';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.5,th*.58,0,0,6.283);cx.fill();cx.globalAlpha=.9;cx.strokeStyle='#ffd23f';cx.lineWidth=3;cx.beginPath();cx.ellipse(e.x,e.y+h/2-2,w*.42,9,0,0,6.283);cx.stroke();cx.restore()}   // campeón: aura dorada
  cx.save();cx.translate(e.x,e.y);cx.imageSmoothingEnabled=false;

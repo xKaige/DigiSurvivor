@@ -104,6 +104,9 @@ const Bosses = {
   },
   act(e, dt, tg, dd, a) {
     const B = this.def(e.bo); if (!B) return;
+    // Issue #13: cuanto menos vida, más rápido (pausa entre ataques, giro, espiral, balas y movimiento): F va de 1 a 1,9
+    const F = 1 + 0.9 * (1 - Math.max(0, e.hp) / e.mh); e.rg = F;
+    if (!e.p3 && e.hp < e.mh * 0.25) { e.p3 = 1; this.banner('¡' + B.name + ' está desesperado!'); }
     e.at -= dt;
     const ag = this.aggro(e, dt); if (ag) { tg = ag; dd = Math.hypot(tg.x - e.x, tg.y - e.y); a = Math.atan2(tg.y - e.y, tg.x - e.x); e.ang = a; }
     // Cruz giratoria: primero va al centro de la arena, después escudo (no recibe daño) y 4 rayos que giran
@@ -117,7 +120,7 @@ const Bosses = {
     if (e.shd > 0) {
       e.shd -= dt; e.sxT += dt; e.at = 0.3;
       const on = e.sxT > 1.4, o = e.sxE;   // 1,4 s de aviso (rayos finitos) y después queman
-      if (on) e.sxA += (e.p2 ? 0.78 : 0.62) * dt;   // en pantalla, ángulo que crece = sentido de las agujas del reloj
+      if (on) e.sxA += (e.p2 ? 0.78 : 0.62) * Math.min(1.5, F) * dt;   // en pantalla, ángulo que crece = sentido de las agujas del reloj
       if (o) { o.x = e.x; o.y = e.y + this.cy(e); o.R0 = this.r0(e); o.a = e.sxA; o.m = on ? 1 : 0; o.l = e.shd > 0 ? 1 : 0; }
       if (on) for (const q of P) {
         if (q.dead || q.inv > 0) continue;
@@ -161,7 +164,7 @@ const Bosses = {
     }
     if (e.spT > 0) {
       e.spT -= dt; e.spE = (e.spE || 0) - dt;
-      while (e.spE <= 0) { e.spE += 0.07; e.spA += 0.33;
+      while (e.spE <= 0) { e.spE += 0.07 / F; e.spA += 0.33;
         for (let j = 0; j < 2; j++) { const g = e.spA + j * Math.PI; eb.push({ x: e.x, y: e.y, vx: Math.cos(g) * 200, vy: Math.sin(g) * 200, l: 4, el: e.el, bf: SkillSys.bfx(e), dm: e.dm, r: 9 }); } }
       const m = World.steer(e, a); World.move(e, Math.cos(m) * e.sp * 0.35 * dt, Math.sin(m) * e.sp * 0.35 * dt);
       return;
@@ -178,14 +181,14 @@ const Bosses = {
       if (e.ch <= 0 && e.mc > 0) { e.mc--; e.wd = 0.45; e.chDur = 0.55; e.ca = a; Enemies.warnLine(e.x, e.y, a, e.sp * 3.6 * e.chDur + e.r, e.r * 2 + 10, 0.45); }
       return;
     }
-    const ma = World.steer(e, a); World.move(e, Math.cos(ma) * e.sp * dt, Math.sin(ma) * e.sp * dt);   // rodea las paredes
+    const ma = World.steer(e, a), vs = e.sp * (1 + 0.4 * (F - 1)); World.move(e, Math.cos(ma) * vs * dt, Math.sin(ma) * vs * dt);   // rodea las paredes
     e.pt -= dt;
     if (e.pt > 0 || dd > 720) return;
     const L = e.p2 ? B.atk.concat(this.P2) : B.atk.concat(this.P1);
     const k = e.p2 ? L[(Math.random() * L.length) | 0] : L[e.ai++ % L.length];
-    e.pt = e.p2 ? Math.max(1.0, 1.9 - e.cyc * 0.25) : Math.max(1.4, 2.6 - e.cyc * 0.3); e.at = 0.6;
+    e.pt = Math.max(0.55, (e.p2 ? Math.max(1.0, 1.9 - e.cyc * 0.25) : Math.max(1.4, 2.6 - e.cyc * 0.3)) / F); e.at = 0.6;
     fx.push({ x: e.x, y: e.y - this.h(e) / 2 - 14, txt: k.n, col: '#ffd23f', sz: 22, l: 1.4 });
-    const shot = (ang, sp) => eb.push({ x: e.x, y: e.y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, l: 4, el: e.el, bf: SkillSys.bfx(e), dm: e.dm, r: 9 });
+    const shot = (ang, sp) => eb.push({ x: e.x, y: e.y, vx: Math.cos(ang) * sp * (1 + 0.3 * (F - 1)), vy: Math.sin(ang) * sp * (1 + 0.3 * (F - 1)), l: 4, el: e.el, bf: SkillSys.bfx(e), dm: e.dm, r: 9 });
     if (k.k === 'ring') {
       const off = Math.random() * 6.283;
       for (let j = 0; j < k.c; j++) shot(off + j / k.c * 6.283, k.sp || 210);
