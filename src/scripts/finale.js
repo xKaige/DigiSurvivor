@@ -18,7 +18,7 @@ const Finale = {
   // se llama al principio de update: devuelve true mientras la secuencia está en curso (el resto de la simulación no corre)
   tick(dt) {
     if (!this.on) {
-      if (t < FINALE_T || World.arena || paused || evo) return false;   // espera a salir de la arena o de las cartas
+      if (gclk() < FINALE_T || World.arena || paused || evo) return false;   // espera a salir de la arena o de las cartas
       this.start();
     }
     this.k += dt;

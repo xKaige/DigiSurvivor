@@ -49,7 +49,9 @@ const xpNeed = L => Math.round(4 * Math.pow(L, 1.5) + 4);
 // Si vas adelantado la XP rinde menos (×0,6 por cada nivel de ventaja, como mucho ×0,25); si vas atrasado, más (+80% por nivel, hasta ×8).
 const XP_PACE = [[1, 0], [8, 90], [16, 200], [24, 330], [32, 470], [40, 630], [50, 870]];   // los dos últimos, un minuto antes: medido con bots, la llegada real se atrasa ~1 min
 function paceLvl(s) { for (let i = 1; i < XP_PACE.length; i++) { const [l0, t0] = XP_PACE[i - 1], [l1, t1] = XP_PACE[i]; if (s <= t1) return l0 + (l1 - l0) * (s - t0) / (t1 - t0); } return 50 + (s - 870) / 40; }   // sin tope de nivel (Issue #11): después del 50, uno cada 40 s
-function xpMul() { const d = lvl + xp / Math.max(1, need) - paceLvl(t); return d > 0 ? Math.max(0.25, Math.pow(0.6, d)) : Math.min(8, 1 - d * 0.8); }   // adelantado: como mucho ×0,25 (antes llegaba a casi 0 y parecía que las gemas no daban XP, Issue #11)
+// reloj de la partida (Issue #12): no corre mientras peleás en la arena del Digital Gate (arT = segundos en la arena)
+let arT = 0; const gclk = () => Math.max(0, t - arT);
+function xpMul() { const d = lvl + xp / Math.max(1, need) - paceLvl(gclk()); return d > 0 ? Math.max(0.25, Math.pow(0.6, d)) : Math.min(8, 1 - d * 0.8); }   // adelantado: como mucho ×0,25 (antes llegaba a casi 0 y parecía que las gemas no daban XP, Issue #11)
 
 async function initGame(ids) {
   await SkillSys.load();
@@ -518,7 +520,7 @@ function hostSync(dt) {
   // números de daño y textos nuevos desde el sync anterior (se marcan una sola vez y se reparten por cercanía)
   const X = fx.filter(f => !f.s).slice(-40).map(f => { f.s = 1; return { x: r(f.x), y: r(f.y), txt: f.txt, col: f.col, sz: f.sz, l: r2(f.l) }; });
   const common = { type: 'sync', P: pl, it: Items.on.map(i => ({ x: r(i.x), y: r(i.y), k: i.k, l: r2(i.l) })), gt: Gate.sync(), fn: Finale.sync(), wx: Weather.sync(), xo: Explore.sync(),
-    t: r2(t), kills, lvl, need, xp: r2(xp), bd: Bosses.down, bf: Bosses.fast ? 1 : 0 };
+    t: r2(t), ar: r2(arT), kills, lvl, need, xp: r2(xp), bd: Bosses.down, bf: Bosses.fast ? 1 : 0 };
   const al = P.filter(q => !q.dead);
   for (const g of cs) {
     const q = P[g.i], c0 = q && !q.dead ? q : al[0] || q; if (!c0) continue;   // caído: lo que ve la cámara (un compañero vivo)
@@ -565,7 +567,7 @@ function joinOnline(ids) {
 // destino (tx, ty) y onlineSmooth las va acercando en cada cuadro (si algo saltó muy lejos, se pone directo).
 function applyOnlineSync(data) {
   if (isHost) return;
-  t = data.t; kills = data.kills; lvl = data.lvl; need = data.need; xp = data.xp;
+  t = data.t; if (data.ar != null) arT = data.ar; kills = data.kills; lvl = data.lvl; need = data.need; xp = data.xp;
   if (data.P && P.length === data.P.length) {
     data.P.forEach((sq, i) => { const q = P[i]; if (!q) return;
       const { x, y, ...rest } = sq; Object.assign(q, rest); q.tx = x; q.ty = y;
@@ -635,7 +637,7 @@ async function start(m,ids,los){
   await initGame(ids);
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
-  p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;need=xpNeed(1);for(const q of P)Stats.calc(q);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
+  p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;arT=0;need=xpNeed(1);for(const q of P)Stats.calc(q);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Weather.reset();Explore.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
@@ -1316,7 +1318,7 @@ function hudBars(){const hb=(i,q)=>{if(!q)return;const f=Math.max(0,q.hp/q.max),
  $('xpf').style.width=Math.min(100,xp/need*100)+'%';$('xpl').textContent='NV '+lvl;$('xpt').textContent=Math.floor(xp)+' / '+need+' XP';$('info').textContent=kills;Bosses.hud()}
 
 function update(dt){
- t+=dt;SkillSys.renderBar(isOnline?mine():P);if(typeof Achievements!=='undefined')Achievements.tick();
+ t+=dt;if(World.arena&&(!isOnline||isHost))arT+=dt;SkillSys.renderBar(isOnline?mine():P);if(typeof Achievements!=='undefined')Achievements.tick();
  if (isOnline) {
    if (!isHost && conn) {
      // teclas: solo cuando cambian (y cada 0,25 s por las dudas)
@@ -1348,7 +1350,7 @@ function update(dt){
 
  if (isOnline && !isHost) {
    onlineSmooth(dt);
-   hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+   hudBars();$('tm').textContent=Math.floor(gclk()/60)+':'+String(Math.floor(gclk()%60)).padStart(2,'0');
    return;
  }
 
@@ -1399,7 +1401,7 @@ function update(dt){
  for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);if(ef.length>MAX_EF){const wn=ef.filter(o=>o.k==='wline'||o.k==='wcirc'||o.k==='pool'),vi=ef.filter(o=>o.k!=='wline'&&o.k!=='wcirc'&&o.k!=='pool');ef=wn.concat(vi.slice(Math.max(0,vi.length-(MAX_EF-wn.length))))}   // tope de efectos (los avisos de ataque nunca se descartan)
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);
  if(P.every(q=>q.dead))endRun('Fuiste borrado');
- hudBars();$('tm').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+ hudBars();$('tm').textContent=Math.floor(gclk()/60)+':'+String(Math.floor(gclk()%60)).padStart(2,'0');
  $('pst').textContent=(isOnline?mine():P).map(q=>(mode>1&&!isOnline?pname(q.id)+' · ':'')+'FUE '+tot(q,'FUE')+' VEL '+tot(q,'VEL')+' INT '+tot(q,'INT')+' VIT '+tot(q,'VIT')).join('\n');
 }
 
