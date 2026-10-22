@@ -33,7 +33,7 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - Flechas en el borde (`Explore.pointers` dentro de `drawPointers`) hacia lo que está a menos de 1800 px. Online: `xo` en el sync y `bf` en cada jugador (el invitado no simula los potenciadores).
 
 ## Cambios del 22/10/2026 (pedido)
-- **Partida de 15 min** (`FINALE_T` 900), **Digital Gate cada 90 s** (`every` en bosses.json) y **nivel máximo 50** (`MAX_LVL`): evoluciones en los niveles 8, 16, 24 y 32 (`EVO_LEVELS`), forma final en el 40 (`LINE_LEVEL`). `xpNeed(L)` = 4·L^1,5 + 4 y `XP_PACE` nuevo. Medido con bot (15 min): nivel 40 ~11', 50 al final, 6 Gates. En el nivel máximo la barra dice "NV 50 MÁX" y la XP no sube más. Además, el daño sube 5% por nivel (`Stats.LV_DMG`).
+- **Partida de 15 min** (`FINALE_T` 900), **Digital Gate cada 90 s** (`every` en bosses.json) y **sin nivel máximo** (antes 50; Issue #11: después del 50 el ritmo espera uno cada 40 s y, si vas adelantado, la XP rinde como mínimo ×0,25): evoluciones en los niveles 8, 16, 24 y 32 (`EVO_LEVELS`), forma final en el 40 (`LINE_LEVEL`). `xpNeed(L)` = 4·L^1,5 + 4 y `XP_PACE` nuevo. Medido con bot (15 min): nivel 40 ~11', 50 al final, 6 Gates. Además, el daño sube 5% por nivel (`Stats.LV_DMG`).
 - **Vida por jugadores**: enemigos ×(1 + 0,6 por cada jugador extra) (`Enemies.make`); jefes ×(1 + 1,1 por cada jugador extra) (`Bosses.spawn`).
 - **Dos jefes en el Gate**: chance (t − 180)/1200, tope 50% (`Gate.enter`); cada uno con 80% de la vida y aviso "¡DOS JEFES!". La barra del HUD muestra uno.
 - El escudo de la Cruz giratoria se dibuja solo con `e.shd > 0` (antes quedaba la burbuja con el valor negativo).
