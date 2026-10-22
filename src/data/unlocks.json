@@ -1,307 +1,308 @@
 {
- "types": {
-  "reach_stage": "Mejor etapa alcanzada en una partida (3 Campeón, 4 Perfecto, 5 evolución final)",
-  "survive": "Mejor tiempo sobrevivido en una partida (segundos)",
-  "kills_total": "Digimon eliminados sumando todas las partidas",
-  "runs_total": "Partidas terminadas en total",
-  "kills_with": "Digimon eliminados en total jugando con el Digimon 'with'",
-  "stage_with": "Mejor etapa alcanzada con el Digimon 'with'",
-  "boss": "Veces que derrotaste al jefe 'boss'",
-  "analyzer": "Datos registrados en el Digimon Analyzer (formas + jefes)",
-  "_rules": "Las misiones van en orden: solo cuentan las 'active' (3) primeras sin cumplir, y por partida se gana como mucho 'perRun' (1) Digitama. Las de récord (reach_stage, survive, stage_with) se cumplen en UNA partida jugada con la misión activa; las que suman (kills_total, runs_total, kills_with, boss) cuentan desde que se activan; analyzer cuenta el total.",
-  "boss_any": "Jefes del Digital Gate derrotados (cualquiera; el jefe sale al azar)"
- },
- "eggs": {
-  "001_guilmon": "egg_02",
-  "002_renamon": "egg_08",
-  "003_terriermon": "egg_03",
-  "005_veemon": "egg_07",
-  "006_gammamon": "egg_12",
-  "007_pulsemon": "egg_16",
-  "008_dorumon": "egg_09",
-  "009_ryudamon": "egg_06",
-  "010_wormmon": "egg_04",
-  "011_zubamon": "egg_10",
-  "012_jellymon": "egg_13",
-  "013_loogamon": "egg_11",
-  "014_herissmon": "egg_14",
-  "015_kudamon": "egg_05",
-  "016_commandramon": "egg_01",
-  "017_agumon": "egg_01",
-  "018_gabumon": "egg_08",
-  "019_tentomon": "egg_15",
-  "020_biyomon": "egg_05",
-  "021_armadillomon": "egg_12",
-  "022_patamon": "egg_02",
-  "023_dracomon": "egg_09",
-  "024_agumon_savers": "egg_16",
-  "025_gaomon": "egg_06",
-  "026_lalamon": "egg_13",
-  "027_falcomon": "egg_03",
-  "028_coronamon": "egg_10",
-  "029_lunamon": "egg_17",
-  "030_dracmon": "egg_07",
-  "031_bearmon": "egg_14",
-  "032_fanbeemon": "egg_04",
-  "033_kokuwamon": "egg_11",
-  "034_sunarizamon": "egg_01",
-  "035_sangomon": "egg_08",
-  "036_ludomon": "egg_15",
-  "037_liollmon": "egg_05",
-  "038_blucomon": "egg_12"
- },
- "unlocks": [
-  {
-   "cid": "005_veemon",
-   "type": "reach_stage",
-   "goal": 3,
-   "name": "Digimental del Valor",
-   "desc": "Llegá a Campeón en una partida"
+  "types": {
+    "reach_stage": "Mejor etapa alcanzada en una partida (3 Campeón, 4 Perfecto, 5 evolución final)",
+    "survive": "Mejor tiempo sobrevivido en una partida (segundos)",
+    "kills_total": "Digimon eliminados sumando todas las partidas",
+    "runs_total": "Partidas terminadas en total",
+    "kills_with": "Digimon eliminados en total jugando con el Digimon 'with'",
+    "stage_with": "Mejor etapa alcanzada con el Digimon 'with'",
+    "boss": "Veces que derrotaste al jefe 'boss'",
+    "analyzer": "Datos registrados en el Digimon Analyzer (formas + jefes)",
+    "_rules": "Las misiones van en orden: solo cuentan las 'active' (3) primeras sin cumplir, y por partida se gana como mucho 'perRun' (1) Digitama. Las de récord (reach_stage, survive, stage_with) se cumplen en UNA partida jugada con la misión activa; las que suman (kills_total, runs_total, kills_with, boss) cuentan desde que se activan; analyzer cuenta el total.",
+    "boss_any": "Jefes del Digital Gate derrotados (cualquiera; el jefe sale al azar)"
   },
-  {
-   "cid": "006_gammamon",
-   "type": "survive",
-   "goal": 360,
-   "name": "Señal persistente",
-   "desc": "Sobreviví 6 minutos en una partida"
+  "eggs": {
+    "001_guilmon": "egg_02",
+    "002_renamon": "egg_08",
+    "003_terriermon": "egg_03",
+    "005_veemon": "egg_07",
+    "006_gammamon": "egg_12",
+    "007_pulsemon": "egg_16",
+    "008_dorumon": "egg_09",
+    "009_ryudamon": "egg_06",
+    "010_wormmon": "egg_04",
+    "011_zubamon": "egg_10",
+    "012_jellymon": "egg_13",
+    "013_loogamon": "egg_11",
+    "014_herissmon": "egg_14",
+    "015_kudamon": "egg_05",
+    "016_commandramon": "egg_01",
+    "017_agumon": "egg_01",
+    "018_gabumon": "egg_08",
+    "019_tentomon": "egg_15",
+    "020_biyomon": "egg_05",
+    "021_armadillomon": "egg_12",
+    "022_patamon": "egg_02",
+    "023_dracomon": "egg_09",
+    "024_agumon_savers": "egg_16",
+    "025_gaomon": "egg_06",
+    "026_lalamon": "egg_13",
+    "027_falcomon": "egg_03",
+    "028_coronamon": "egg_10",
+    "029_lunamon": "egg_17",
+    "030_dracmon": "egg_07",
+    "031_bearmon": "egg_14",
+    "032_fanbeemon": "egg_04",
+    "033_kokuwamon": "egg_11",
+    "034_sunarizamon": "egg_01",
+    "035_sangomon": "egg_08",
+    "036_ludomon": "egg_15",
+    "037_liollmon": "egg_05",
+    "038_blucomon": "egg_12"
   },
-  {
-   "cid": "010_wormmon",
-   "type": "kills_with",
-   "goal": 600,
-   "with": "005_veemon",
-   "name": "Compañero de Veemon",
-   "desc": "Eliminá 600 Digimon jugando con Veemon"
-  },
-  {
-   "cid": "007_pulsemon",
-   "type": "kills_total",
-   "goal": 2500,
-   "name": "Pulso de datos",
-   "desc": "Eliminá 2500 Digimon"
-  },
-  {
-   "cid": "008_dorumon",
-   "type": "boss_any",
-   "goal": 1,
-   "name": "El rey cae",
-   "desc": "Derrotá a un jefe del Digital Gate"
-  },
-  {
-   "cid": "014_herissmon",
-   "type": "runs_total",
-   "goal": 15,
-   "name": "Tamer constante",
-   "desc": "Terminá 15 partidas"
-  },
-  {
-   "cid": "012_jellymon",
-   "type": "stage_with",
-   "goal": 4,
-   "with": "003_terriermon",
-   "name": "Tormenta de Terriermon",
-   "desc": "Llegá a Perfecto con Terriermon en una partida"
-  },
-  {
-   "cid": "009_ryudamon",
-   "type": "reach_stage",
-   "goal": 5,
-   "name": "Forma definitiva",
-   "desc": "Llegá a una forma final en una partida"
-  },
-  {
-   "cid": "011_zubamon",
-   "type": "analyzer",
-   "goal": 40,
-   "name": "Base de datos",
-   "desc": "Registrá 40 datos en el Digimon Analyzer"
-  },
-  {
-   "cid": "013_loogamon",
-   "type": "boss_any",
-   "goal": 3,
-   "name": "Juguetería rota",
-   "desc": "Derrotá 3 jefes del Digital Gate"
-  },
-  {
-   "cid": "017_agumon",
-   "type": "stage_with",
-   "goal": 5,
-   "with": "005_veemon",
-   "name": "Emblema del Valor",
-   "desc": "Llegá a una forma final con Veemon en una partida"
-  },
-  {
-   "cid": "015_kudamon",
-   "type": "stage_with",
-   "goal": 5,
-   "with": "002_renamon",
-   "name": "Zorro sagrado",
-   "desc": "Llegá a una forma final con Renamon en una partida"
-  },
-  {
-   "cid": "018_gabumon",
-   "type": "kills_with",
-   "goal": 1200,
-   "with": "017_agumon",
-   "name": "Emblema de la Amistad",
-   "desc": "Eliminá 1200 Digimon jugando con Agumon"
-  },
-  {
-   "cid": "020_biyomon",
-   "type": "survive",
-   "goal": 600,
-   "name": "Emblema del Amor",
-   "desc": "Sobreviví 10 minutos en una partida"
-  },
-  {
-   "cid": "022_patamon",
-   "type": "boss_any",
-   "goal": 6,
-   "name": "Emblema de la Esperanza",
-   "desc": "Derrotá 6 jefes del Digital Gate"
-  },
-  {
-   "cid": "023_dracomon",
-   "type": "stage_with",
-   "goal": 5,
-   "with": "001_guilmon",
-   "name": "Escama de dragón",
-   "desc": "Llegá a una forma final con Guilmon en una partida"
-  },
-  {
-   "cid": "021_armadillomon",
-   "type": "kills_with",
-   "goal": 1500,
-   "with": "010_wormmon",
-   "name": "Digimental de la Sinceridad",
-   "desc": "Eliminá 1500 Digimon jugando con Wormmon"
-  },
-  {
-   "cid": "019_tentomon",
-   "type": "analyzer",
-   "goal": 80,
-   "name": "Emblema del Conocimiento",
-   "desc": "Registrá 80 datos en el Digimon Analyzer"
-  },
-  {
-   "cid": "024_agumon_savers",
-   "type": "stage_with",
-   "goal": 5,
-   "with": "017_agumon",
-   "name": "Puño de DATS",
-   "desc": "Llegá a una forma final con Agumon en una partida"
-  },
-  {
-   "cid": "025_gaomon",
-   "type": "runs_total",
-   "goal": 40,
-   "name": "Guante de campeón",
-   "desc": "Terminá 40 partidas"
-  },
-  {
-   "cid": "026_lalamon",
-   "type": "survive",
-   "goal": 900,
-   "name": "Semilla de luz",
-   "desc": "Sobreviví 15 minutos en una partida"
-  },
-  {
-   "cid": "027_falcomon",
-   "type": "boss_any",
-   "goal": 10,
-   "name": "Pluma ninja",
-   "desc": "Derrotá 10 jefes del Digital Gate"
-  },
-  {
-   "cid": "028_coronamon",
-   "type": "stage_with",
-   "goal": 5,
-   "with": "020_biyomon",
-   "name": "Corona solar",
-   "desc": "Llegá a una forma final con Piyomon en una partida"
-  },
-  {
-   "cid": "029_lunamon",
-   "type": "stage_with",
-   "goal": 5,
-   "with": "028_coronamon",
-   "name": "Fragmento lunar",
-   "desc": "Llegá a una forma final con Coronamon en una partida"
-  },
-  {
-   "cid": "016_commandramon",
-   "type": "boss_any",
-   "goal": 15,
-   "name": "Caída del Dark Master",
-   "desc": "Derrotá 15 jefes del Digital Gate"
-  },
-  {
-   "cid": "030_dracmon",
-   "type": "boss_any",
-   "goal": 20,
-   "name": "Colmillo nocturno",
-   "desc": "Derrotá 20 jefes del Digital Gate"
-  },
-  {
-   "cid": "031_bearmon",
-   "type": "kills_total",
-   "goal": 25000,
-   "name": "Garra de oso",
-   "desc": "Eliminá 25000 Digimon"
-  },
-  {
-   "cid": "032_fanbeemon",
-   "type": "kills_with",
-   "goal": 2500,
-   "with": "019_tentomon",
-   "name": "Panal digital",
-   "desc": "Eliminá 2500 Digimon jugando con Tentomon"
-  },
-  {
-   "cid": "033_kokuwamon",
-   "type": "analyzer",
-   "goal": 140,
-   "name": "Chip de escarabajo",
-   "desc": "Registrá 140 datos en el Digimon Analyzer"
-  },
-  {
-   "cid": "035_sangomon",
-   "type": "stage_with",
-   "goal": 5,
-   "with": "018_gabumon",
-   "name": "Coral del abismo",
-   "desc": "Llegá a una forma final con Gabumon en una partida"
-  },
-  {
-   "cid": "034_sunarizamon",
-   "type": "survive",
-   "goal": 1200,
-   "name": "Arena del desierto",
-   "desc": "Sobreviví 20 minutos en una partida"
-  },
-  {
-   "cid": "036_ludomon",
-   "type": "boss_any",
-   "goal": 30,
-   "name": "Cristal antiguo",
-   "desc": "Derrotá 30 jefes del Digital Gate"
-  },
-  {
-   "cid": "037_liollmon",
-   "type": "runs_total",
-   "goal": 100,
-   "name": "Melena de león",
-   "desc": "Terminá 100 partidas"
-  },
-  {
-   "cid": "038_blucomon",
-   "type": "boss_any",
-   "goal": 40,
-   "name": "Hielo eterno",
-   "desc": "Derrotá 40 jefes del Digital Gate"
-  }
- ],
- "active": 3,
- "perRun": 1
+  "unlocks": [
+    {
+      "cid": "005_veemon",
+      "type": "reach_stage",
+      "goal": 3,
+      "name": "Digimental del Valor",
+      "desc": "Llegá a Campeón en una partida"
+    },
+    {
+      "cid": "006_gammamon",
+      "type": "survive",
+      "goal": 360,
+      "name": "Señal persistente",
+      "desc": "Sobreviví 6 minutos en una partida"
+    },
+    {
+      "cid": "010_wormmon",
+      "type": "kills_with",
+      "goal": 600,
+      "with": "005_veemon",
+      "name": "Compañero de Veemon",
+      "desc": "Eliminá 600 Digimon jugando con Veemon"
+    },
+    {
+      "cid": "007_pulsemon",
+      "type": "kills_total",
+      "goal": 2500,
+      "name": "Pulso de datos",
+      "desc": "Eliminá 2500 Digimon"
+    },
+    {
+      "cid": "008_dorumon",
+      "type": "boss_any",
+      "goal": 1,
+      "name": "El rey cae",
+      "desc": "Derrotá a un jefe del Digital Gate"
+    },
+    {
+      "cid": "014_herissmon",
+      "type": "runs_total",
+      "goal": 15,
+      "name": "Tamer constante",
+      "desc": "Terminá 15 partidas"
+    },
+    {
+      "cid": "012_jellymon",
+      "type": "stage_with",
+      "goal": 4,
+      "with": "003_terriermon",
+      "name": "Tormenta de Terriermon",
+      "desc": "Llegá a Perfecto con Terriermon en una partida"
+    },
+    {
+      "cid": "009_ryudamon",
+      "type": "reach_stage",
+      "goal": 5,
+      "name": "Forma definitiva",
+      "desc": "Llegá a una forma final en una partida"
+    },
+    {
+      "cid": "011_zubamon",
+      "type": "analyzer",
+      "goal": 40,
+      "name": "Base de datos",
+      "desc": "Registrá 40 datos en el Digimon Analyzer"
+    },
+    {
+      "cid": "013_loogamon",
+      "type": "boss_any",
+      "goal": 3,
+      "name": "Juguetería rota",
+      "desc": "Derrotá 3 jefes del Digital Gate"
+    },
+    {
+      "cid": "017_agumon",
+      "type": "stage_with",
+      "goal": 5,
+      "with": "005_veemon",
+      "name": "Emblema del Valor",
+      "desc": "Llegá a una forma final con Veemon en una partida"
+    },
+    {
+      "cid": "015_kudamon",
+      "type": "stage_with",
+      "goal": 5,
+      "with": "002_renamon",
+      "name": "Zorro sagrado",
+      "desc": "Llegá a una forma final con Renamon en una partida"
+    },
+    {
+      "cid": "018_gabumon",
+      "type": "kills_with",
+      "goal": 1200,
+      "with": "017_agumon",
+      "name": "Emblema de la Amistad",
+      "desc": "Eliminá 1200 Digimon jugando con Agumon"
+    },
+    {
+      "cid": "020_biyomon",
+      "type": "survive",
+      "goal": 600,
+      "name": "Emblema del Amor",
+      "desc": "Sobreviví 10 minutos en una partida"
+    },
+    {
+      "cid": "022_patamon",
+      "type": "boss_any",
+      "goal": 6,
+      "name": "Emblema de la Esperanza",
+      "desc": "Derrotá 6 jefes del Digital Gate"
+    },
+    {
+      "cid": "023_dracomon",
+      "type": "stage_with",
+      "goal": 5,
+      "with": "001_guilmon",
+      "name": "Escama de dragón",
+      "desc": "Llegá a una forma final con Guilmon en una partida"
+    },
+    {
+      "cid": "021_armadillomon",
+      "type": "kills_with",
+      "goal": 1500,
+      "with": "010_wormmon",
+      "name": "Digimental de la Sinceridad",
+      "desc": "Eliminá 1500 Digimon jugando con Wormmon"
+    },
+    {
+      "cid": "019_tentomon",
+      "type": "analyzer",
+      "goal": 80,
+      "name": "Emblema del Conocimiento",
+      "desc": "Registrá 80 datos en el Digimon Analyzer"
+    },
+    {
+      "cid": "024_agumon_savers",
+      "type": "stage_with",
+      "goal": 5,
+      "with": "017_agumon",
+      "name": "Puño de DATS",
+      "desc": "Llegá a una forma final con Agumon en una partida"
+    },
+    {
+      "cid": "025_gaomon",
+      "type": "runs_total",
+      "goal": 40,
+      "name": "Guante de campeón",
+      "desc": "Terminá 40 partidas"
+    },
+    {
+      "cid": "026_lalamon",
+      "type": "survive",
+      "goal": 900,
+      "name": "Semilla de luz",
+      "desc": "Sobreviví 15 minutos en una partida"
+    },
+    {
+      "cid": "027_falcomon",
+      "type": "boss_any",
+      "goal": 10,
+      "name": "Pluma ninja",
+      "desc": "Derrotá 10 jefes del Digital Gate"
+    },
+    {
+      "cid": "028_coronamon",
+      "type": "stage_with",
+      "goal": 5,
+      "with": "020_biyomon",
+      "name": "Corona solar",
+      "desc": "Llegá a una forma final con Piyomon en una partida"
+    },
+    {
+      "cid": "029_lunamon",
+      "type": "stage_with",
+      "goal": 5,
+      "with": "028_coronamon",
+      "name": "Fragmento lunar",
+      "desc": "Llegá a una forma final con Coronamon en una partida"
+    },
+    {
+      "cid": "016_commandramon",
+      "type": "boss_any",
+      "goal": 15,
+      "name": "Caída del Dark Master",
+      "desc": "Derrotá 15 jefes del Digital Gate"
+    },
+    {
+      "cid": "030_dracmon",
+      "type": "boss_any",
+      "goal": 20,
+      "name": "Colmillo nocturno",
+      "desc": "Derrotá 20 jefes del Digital Gate"
+    },
+    {
+      "cid": "031_bearmon",
+      "type": "kills_total",
+      "goal": 25000,
+      "name": "Garra de oso",
+      "desc": "Eliminá 25000 Digimon"
+    },
+    {
+      "cid": "032_fanbeemon",
+      "type": "kills_with",
+      "goal": 2500,
+      "with": "019_tentomon",
+      "name": "Panal digital",
+      "desc": "Eliminá 2500 Digimon jugando con Tentomon"
+    },
+    {
+      "cid": "033_kokuwamon",
+      "type": "analyzer",
+      "goal": 140,
+      "name": "Chip de escarabajo",
+      "desc": "Registrá 140 datos en el Digimon Analyzer"
+    },
+    {
+      "cid": "035_sangomon",
+      "type": "stage_with",
+      "goal": 5,
+      "with": "018_gabumon",
+      "name": "Coral del abismo",
+      "desc": "Llegá a una forma final con Gabumon en una partida"
+    },
+    {
+      "cid": "034_sunarizamon",
+      "type": "stage_with",
+      "goal": 5,
+      "name": "Arena del desierto",
+      "desc": "Llegá a una forma final con Lalamon en una partida",
+      "with": "026_lalamon"
+    },
+    {
+      "cid": "036_ludomon",
+      "type": "boss_any",
+      "goal": 30,
+      "name": "Cristal antiguo",
+      "desc": "Derrotá 30 jefes del Digital Gate"
+    },
+    {
+      "cid": "037_liollmon",
+      "type": "runs_total",
+      "goal": 100,
+      "name": "Melena de león",
+      "desc": "Terminá 100 partidas"
+    },
+    {
+      "cid": "038_blucomon",
+      "type": "boss_any",
+      "goal": 40,
+      "name": "Hielo eterno",
+      "desc": "Derrotá 40 jefes del Digital Gate"
+    }
+  ],
+  "active": 3,
+  "perRun": 1
 }

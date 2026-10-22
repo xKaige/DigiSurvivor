@@ -60,6 +60,11 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 ## Hitbox (23/10/2026)
 - Los golpes usan el cuerpo **dibujado** (game.js: `ehy(e)`, `ehr(e)`, `pcy(q)`). Enemigos: `drawEnemy` guarda `e.hcy` (centro del dibujo respecto de e.y) y `e.hr` (36% del ancho del dibujo, mínimo `e.r`); antes el radio era 10–20 px con dibujos de 40–100 px. Jugador: centro = q.y + 48 − alto/2 (de Bebé el dibujo estaba 31 px por debajo de la hitbox). Se usan en disparos, tajos, rayos, áreas, órbitas, explosiones, balas y contacto enemigo y bombas; los disparos salen de `pcy(q)` y apuntan a `ehy(b)`. Enemigos fuera de pantalla (no dibujados) usan `e.r`.
 
+## Issue #14 (24/10/2026): Ruta evolutiva y Renacer
+- **Ruta evolutiva** en la pausa (`routePanel`, `#proute`): las formas que te quedan (alternativas de Campeón/Perfecto si hay y formas finales) con cada requisito y su progreso; en verde las que ya cumplís.
+- **Renacer** (`#preb`, `rebirth`, `canRebirth`): solo 1 jugador, desde Novato y una vez por partida; gasta 1 Chip de Reformateo juntado EN la partida (`q.vp.rc`). Vuelve a Bebé conservando nivel, skills y puntos (`q.rbL` = nivel, `q.rbFrom` = etapa que tenía, `q.maxSt`). `evoLevels()`/`lineLevel()`: evoluciona cada 2 niveles hasta la etapa que tenía y después lo de siempre. `Stats.evolve` no vuelve a sumar los bonos de etapas ya pasadas. Las misiones de huevos usan la etapa más alta alcanzada.
+- Huevos: la misión de Sunarizamon (sobrevivir 20 min, imposible con partidas de 15) pasó a "forma final con Lalamon". Simuladas las 34 misiones en orden: todas entregan su Digitama.
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.

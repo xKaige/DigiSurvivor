@@ -129,9 +129,9 @@ const Stats = {
   // s = etapa nueva. Crece el perfil de la especie (la mitad de sus puntos, redondeando para arriba) y suma el bono.
   evolve(q, s) {
     const C = CR(q), M = C && C.meta; if (!q.m) return;
+    const again = q.rbFrom != null && s <= q.rbFrom;   // Renacer (game.js): estas etapas ya las habías pasado
     if (s < 5) {
-      this.add(q.m, this.STAGE);
-      for (const k of this.KEYS) q.bs[k] += Math.ceil((q.prof[k] | 0) / 2);
+      if (!again) { this.add(q.m, this.STAGE); for (const k of this.KEYS) q.bs[k] += Math.ceil((q.prof[k] | 0) / 2); }
       const st = M && M.stages[s]; if (st && st.family) q.fam = st.family;
       // evolución alternativa (Vital Bracelet): su bonus y, si tiene, su familia
       const al = st && q.alt && q.alt[s] && (st.alts || []).find(a => a.id === q.alt[s]);
@@ -139,7 +139,7 @@ const Stats = {
       // evolución perfecta (V-Pet): juntaste suficientes virus desde la anterior → +2 en su mejor stat
       const need = this.DP_NEED[s - 1] || 999;
       q.perfect = q.vp.dp >= need ? 1 : 0; if (q.perfect) q.pfc = (q.pfc | 0) + 1;   // pfc: evoluciones perfectas en la partida (logro Perfección)
-      if (q.perfect) { const top = this.KEYS.slice().sort((a, b) => q.prof[b] - q.prof[a])[0]; q.bs[top] += 2; }
+      if (q.perfect && !again) { const top = this.KEYS.slice().sort((a, b) => q.prof[b] - q.prof[a])[0]; q.bs[top] += 2; }
       q.vp.dp = 0;
     } else if (q.dark) {
       this.add(q.m, (M && M.dark && M.dark.bonus) || this.DARK);
@@ -147,7 +147,7 @@ const Stats = {
     } else {
       const b = M && (M.branches.find(x => x.id === q.branchId) || M.branches[q.line || 0]);
       if (b) {
-        const B = b.bonus || {};
+        const B = again ? {} : b.bonus || {};
         this.add(q.m, { dmg: B.dmg || 0, hp: B.hp || 0, pierce: B.pierce || 0, multi: B.multi || 0, spP: B.spP || 0 });
         if (b.family) q.fam = b.family;
       }

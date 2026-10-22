@@ -718,3 +718,16 @@ body.ingame.boss2 #evt{top:calc(16% + 70px)}
 #up .card.lv em.kevo img{width:20px;height:20px;object-fit:contain;image-rendering:pixelated;border:1px solid #ffd23f;border-radius:3px;background:#05101e}
 /* tipo de skill en la carta (proyectil, cuerpo a cuerpo, área…) */
 #up .card.lv .ktype{align-self:flex-start;padding:1px 7px;font:800 11px 'Chakra Petch',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#05101e;background:var(--ac,#3fd0ff);border-radius:3px}
+
+/* Ruta evolutiva en la pausa (Issue #14) */
+#pause .pbox:has(#proute:not(:empty)){width:min(560px,100%)}
+#proute{max-height:34vh;overflow-y:auto;text-align:left;font-family:'Chakra Petch',sans-serif}
+#proute h3{margin:4px 0 6px;font:800 14px 'Orbitron',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--or)}
+#proute .rt-st{margin:8px 0 4px;font:800 12px 'Orbitron',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--cy)}
+#proute .rt-st small{font:600 11px 'Chakra Petch',sans-serif;color:#9fc0d6;text-transform:none}
+#proute .rt-f{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:6px 8px;margin-bottom:4px;background:rgba(4,16,34,.75);border:1px solid #1b6fa8;border-radius:4px}
+#proute .rt-f.ok{border-color:#4dffb8}
+#proute .rt-f b{flex-basis:100%;font-size:14px;color:#f2fbff}#proute .rt-f.ok b{color:#4dffb8}
+#proute .rt-f span{position:relative;padding:1px 6px 3px;font-size:12px;color:#cfe8ff;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+#proute .rt-f span i{position:absolute;left:0;bottom:0;height:2px;background:#ffd23f}
+#pause #preb{color:#ffe9a0;border-color:#ffd23f}#pause #preb:disabled{opacity:.45;cursor:not-allowed}

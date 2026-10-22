@@ -867,8 +867,24 @@ function togglePause(){if(menuPause){menuPause=false;$('pause').style.display='n
  if(paused||evo||pickRes)return;   // con cartas o digievolución en pantalla, Escape no hace nada
  menuPause=true;if(!isOnline)paused=true;
  $('pnote').textContent=isOnline?'Partida online: el juego sigue corriendo mientras estás acá':'El juego está en pausa';
- $('pause').style.display='flex';$('pcont').focus()}
+ $('pause').style.display='flex';$('pcont').focus();routePanel()}
 $('pcont').onclick=()=>{if(menuPause)togglePause()};
+$('preb').onclick=()=>{if(menuPause&&canRebirth(P[0])){rebirth(P[0]);togglePause()}};
+// ---------- Ruta evolutiva (Issue #14): en la pausa, qué pide cada forma que te queda por delante y cuánto llevás ----------
+function routePanel(){const q=mine()[0]||P[0],box=$('proute');if(!q||!box)return;const s0=q.stage|0,need=v=>Math.ceil(v*REQ_FACTOR),rows=[];
+ for(let s=Math.max(3,s0+1);s<=5;s++){const L=formOpts(q,s);if(s<5&&L.length<2)continue;
+  rows.push('<div class="rt-st">'+(s>=5?'Formas finales':STAGE_NAMES_UP[s])+' <small>(nivel '+(s>=5?lineLevel():evoLevels()[s-1])+')</small></div>');
+  for(const o of L){const R=o.xp?[]:[...Object.entries(o.req||{}).map(([k,v])=>[SN[k],q.st[k]|0,need(v)]),...Object.entries(o.vp||{}).map(([k,v])=>[Stats.VPN[k],Stats.vpVal(q,k),need(v)])],ok=R.every(r=>r[1]>=r[2]);
+   rows.push('<div class="rt-f'+(ok?' ok':'')+'"><b>'+(ok?'✓ ':'')+o.name+'</b>'+(o.xp?'<span>Solo experiencia</span>':R.map(r=>'<span>'+r[0]+' '+Math.min(r[1],r[2])+'/'+r[2]+'<i style="width:'+Math.min(100,r[1]/r[2]*100)+'%"></i></span>').join(''))+'</div>')}}
+ box.innerHTML=rows.length?'<h3>Ruta evolutiva</h3>'+rows.join(''):'';
+ const rb=$('preb'),c=canRebirth(q);rb.style.display=!isOnline&&P.length===1&&(q.stage|0)>=2?'block':'none';rb.disabled=!c;
+ rb.textContent=q.rbL!=null?'Renacer (ya lo usaste)':'Renacer · 1 Chip de Reformateo ('+((q.vp&&q.vp.rc)|0)+')';
+ rb.title='Tu Digimon vuelve a ser Bebé y evoluciona cada 2 niveles: elegís otra ruta. Conservás nivel, skills y puntos. Una vez por partida.'}
+// ---------- Renacer (Issue #14): con un Chip de Reformateo de ESTA partida, tu Digimon vuelve a Digitama y renace como Bebé ----------
+const canRebirth=q=>!!q&&!isOnline&&P.length===1&&running&&(q.stage|0)>=2&&q.rbL==null&&((q.vp&&q.vp.rc)|0)>0;
+function rebirth(q){q.vp.rc--;q.rbFrom=q.stage|0;q.maxSt=Math.max(q.maxSt|0,q.stage|0);q.rbL=lvl;q.stage=0;q.alt={};q.branchId=null;q.line=0;q.dark=false;q.r=14;q.inv=Math.max(q.inv,2);
+ for(let i=0;i<36;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');ef.push({k:'ring',x:q.x,y:pcy(q),R:260,col:'#ffd23f',l:.7,m:.7});Sound.play('evo');seeForm(q);
+ Bosses.banner('¡Renaciste como '+formName(q,0)+'! Evolucionás cada 2 niveles')}
 $('pbtn').onclick=()=>{if(running)togglePause()};
 $('dbtn').addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();myDash()},{passive:false});$('dbtn').onclick=()=>myDash();   // dash en celular   // botón de pausa (celular: no hay Escape)
 $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
@@ -886,7 +902,7 @@ function endRun(title){if(!running)return;
  if(typeof Missions!=='undefined'){const me=(isOnline&&P[myIdx])||P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode>1,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
  // progresión permanente (progress.js): Digitamas y desbloqueos
- if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:q.stage|0})),bosses:Bosses.down.slice()});
+ if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:Math.max(q.stage|0,q.maxSt|0)})),bosses:Bosses.down.slice()});
   if(r.eggs.length)$('m').textContent+=' ¡Conseguiste '+(r.eggs.length>1?r.eggs.length+' Digitamas':'un Digitama')+' ('+r.eggs.map(u=>u.name).join(', ')+')! '+(r.eggs.length>1?'Hacelos':'Hacelo')+' eclosionar en el Digimon Analyzer.';
   $('m').textContent+=' +'+r.txp+' XP de Tamer'+(r.rankUp?'. ¡Subiste a '+r.rankUp+'! (+'+r.reward+' monedas)':'')+'.';
   if(r.hatched.length)setTimeout(()=>Progress.showHatch(),700)}
@@ -1109,7 +1125,7 @@ function chooseLine(){
   cur = formOpts(p, s).map(o => ({
     n: o.name, lock: !meets(o), weak: false, op: 'line', stage: s, lineIdx: o.idx, branchId: s >= 5 ? o.id : null, altId: s < 5 ? o.id : null, key: o.key, xp: o.xp,
     d: o.desc || '',
-    req: o.xp ? 'solo experiencia' + (s >= 5 ? ' (llegar al nivel ' + LINE_LEVEL + ')' : '') : [...Object.entries(o.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(p.st[k] | 0, need(v))}/${need(v)}`),
+    req: o.xp ? 'solo experiencia' + (s >= 5 ? ' (llegar al nivel ' + lineLevel() + ')' : '') : [...Object.entries(o.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(p.st[k] | 0, need(v))}/${need(v)}`),
       ...Object.entries(o.vp || {}).map(([k, v]) => `${Stats.VPN[k]} ${Math.min(Stats.vpVal(p, k), need(v))}/${need(v)}`)].join(' · '),
     f: s >= 5 ? () => { p.line = o.idx; p.branchId = o.id; p.weak = false; p.dark = false; } : () => { p.alt = p.alt || {}; p.alt[s] = o.id; }
   }));
@@ -1142,7 +1158,7 @@ function levelUp(){
     if (isOnline && isHost) sendAll({ type: 'trigger_evo', stage: nextStage });
     return;
   }
-  if(lvl===LINE_LEVEL){ lineStage = 5; openLine(); return; }
+  if(lvl===lineLevel()){ lineStage = 5; openLine(); return; }
   if (isOnline) {
     pending = [P[myIdx]];
     if (isHost) hostRound('trigger_levelup');
@@ -1306,7 +1322,10 @@ function bounce(s,e){let b=null,bd=320;for(const o of en){if(o===e||s.h.has(o)||
 // jefe derrotado: cuenta para las ramas (V-Pet) y puede soltar un Chip de Reformateo a cada jugador (sirve para reiniciar un árbol)
 function bossReward(e){for(const q of P){if(!q.vp)continue;q.vp.bo++;if(Math.random()<.35*(1+(q.luck||0)+((q.m&&q.m.rcChance)||0))){q.vp.rc++;Stats.flash(q,'Chip de Reformateo','#9dff6b')}}}
 // niveles de evolución de esta partida (Inicio rápido, del árbol de Tamer: la primera llega un nivel antes)
-function evoLevels(){return P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LEVELS.slice(1)]:EVO_LEVELS}
+function evoLevels(){const b=P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LEVELS.slice(1)]:EVO_LEVELS,q=P[0];
+ // Renacer (Issue #14): desde el nivel en que renaciste, evolucionás cada 2 niveles hasta la etapa que tenías; después, lo de siempre
+ return q&&q.rbL!=null?b.map((l,i)=>i+1<=q.rbFrom?q.rbL+2*(i+1):Math.max(l,q.rbL+2*(i+1))):b}
+function lineLevel(){const q=P[0];return q&&q.rbL!=null?(q.rbFrom>=5?q.rbL+10:Math.max(LINE_LEVEL,q.rbL+10)):LINE_LEVEL}
 // HUD: vida (con rastro del daño recibido), experiencia con el nivel y virus eliminados. Lo usan el host y el cliente online.
 // Cajas de vida: la 1 y la 2 están en index.html; la 3 y la 4 se crean copiando la 2 (mismos ids con otro número)
 function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)continue;const b=$('hp2box').cloneNode(true);b.id='hp'+i+'box';b.className='hpbox p'+i;
