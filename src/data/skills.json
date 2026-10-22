@@ -6978,14 +6978,14 @@
       "nv": "pillar13"
     },
     "judecca_prison": {
-      "pr": "ball15",
+      "pr": "power25",
       "hit": "power25",
       "nv": "pillar15"
     },
     "waking_dead": {
       "pr": "bullet37",
       "hit": "power33",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "sozan": {
       "pr": "ball36",
@@ -7120,7 +7120,7 @@
     "night_of_fire": {
       "pr": "ball33",
       "hit": "spexp03",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "cane_strike": {
       "pr": "ball30",
@@ -7133,7 +7133,7 @@
       "nv": "pillar03"
     },
     "magic_game": {
-      "pr": "ball15",
+      "pr": "power25",
       "hit": "exp31",
       "nv": "pillar15"
     },
@@ -7145,7 +7145,7 @@
     "leak_information": {
       "pr": "ball33",
       "hit": "power33",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "kamiuchi": {
       "pr": "ball22",
@@ -7180,7 +7180,7 @@
     "chaos_flare": {
       "pr": "fire05",
       "hit": "exp05",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "double_impact_sdx": {
       "pr": "bullet04",
@@ -7190,7 +7190,7 @@
     "death_the_cannon": {
       "pr": "ball33",
       "hit": "power33",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "bunbun_punch": {
       "pr": "wind01",
@@ -7702,7 +7702,7 @@
     "predators_bite": {
       "pr": "bullet37",
       "hit": "power22",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "spiral_hell": {
       "pr": "bullet08",
@@ -7798,7 +7798,7 @@
       "nv": "barrage04"
     },
     "scouter_monoeye": {
-      "pr": "ball15",
+      "pr": "power25",
       "hit": "power33",
       "nv": "pillar15"
     },
@@ -7818,7 +7818,7 @@
       "nv": "barrage04"
     },
     "gigastick_lance": {
-      "pr": "ball15",
+      "pr": "power25",
       "hit": "power25",
       "nv": "barrage04"
     },
@@ -8100,7 +8100,7 @@
     "shadow_wing": {
       "pr": "ball33",
       "hit": "spexp03",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "eagle_claw": {
       "pr": "bullet05",
@@ -8519,7 +8519,7 @@
     "nightmare_assemble": {
       "pr": "ball24",
       "hit": "power25",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "scratch_smash": {
       "pr": "bullet05",
@@ -8664,7 +8664,7 @@
     "undead_fang": {
       "pr": "ball04",
       "hit": "exp31",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "sticker_blade": {
       "pr": "bullet43",
@@ -8674,7 +8674,7 @@
     "black_mind": {
       "pr": "ball33",
       "hit": "power10",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "drain_slash": {
       "pr": "ball14",
@@ -8699,7 +8699,7 @@
     "eye_of_the_gorgon": {
       "pr": "bullet22",
       "hit": "power22",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "death_scream": {
       "pr": "ball33",
@@ -8724,12 +8724,12 @@
     "clown_s_trick": {
       "pr": "ball33",
       "hit": "exp31",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "masks_square": {
       "pr": "ball04",
       "hit": "power10",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "bear_fist": {
       "pr": "ball30",
@@ -8779,7 +8779,7 @@
     "buzz_buzz_call": {
       "pr": "fire05",
       "hit": "power22",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "turbo_stinger": {
       "pr": "bullet04",
@@ -8804,7 +8804,7 @@
     "royal_meister": {
       "pr": "ball04",
       "hit": "power10",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "mini_scissor_claw": {
       "pr": "ball14",
@@ -8879,12 +8879,12 @@
     "curse_reflection": {
       "pr": "bullet22",
       "hit": "power10",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "dark_blast": {
       "pr": "bullet22",
       "hit": "power10",
-      "nv": "barrage07"
+      "nv": "pillar15"
     },
     "necromist": {
       "pr": "bullet22",
@@ -8932,7 +8932,7 @@
       "nv": "pillar13"
     },
     "spin_shatter": {
-      "pr": "ball15",
+      "pr": "power25",
       "hit": "power25",
       "nv": "barrage04"
     },

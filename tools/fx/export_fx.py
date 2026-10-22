@@ -58,9 +58,11 @@ pool = {}
 for k, v in made.items(): pool.setdefault((v['el'], v['use']), []).append(k)
 NEAR = {'neutral': ['light', 'metal'], 'earth': ['fire', 'metal'], 'metal': ['light', 'electric'], 'light': ['electric', 'metal'],
         'water': ['wind', 'light'], 'wind': ['water', 'light'], 'dark': ['fire', 'metal'], 'electric': ['light', 'fire'], 'fire': ['earth', 'electric']}
+# efectos que no se le asignan a ninguna skill: corazones (ball15, barrage07) y casquillos de bala (bullet10, bullet25)
+BAN = {'ball15', 'barrage07', 'bullet10', 'bullet25'}
 def choose(el, use, sid):
     for e in [el] + NEAR.get(el, []) + ['light']:
-        L = sorted(pool.get((e, use), []))
+        L = sorted(x for x in pool.get((e, use), []) if x not in BAN)
         if L: return L[int(hashlib.md5((sid + use).encode()).hexdigest(), 16) % len(L)]
     return None
 fxs = {}

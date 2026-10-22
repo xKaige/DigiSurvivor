@@ -716,3 +716,5 @@ body.ingame.boss2 #evt{top:calc(16% + 70px)}
 /* Evolución / fusión de skills (Issue #10): qué skill maxeada se consume */
 #up .card.lv em.kevo{display:flex;align-items:center;gap:5px;flex-wrap:wrap;color:#ffd23f;font-style:normal}
 #up .card.lv em.kevo img{width:20px;height:20px;object-fit:contain;image-rendering:pixelated;border:1px solid #ffd23f;border-radius:3px;background:#05101e}
+/* tipo de skill en la carta (proyectil, cuerpo a cuerpo, área…) */
+#up .card.lv .ktype{align-self:flex-start;padding:1px 7px;font:800 11px 'Chakra Petch',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#05101e;background:var(--ac,#3fd0ff);border-radius:3px}

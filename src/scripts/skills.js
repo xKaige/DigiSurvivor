@@ -70,6 +70,9 @@ const SkillSys = {
 
   // ---------- Mejoras por nivel ----------
   // PERKS[tipo][i] = mejora que da el nivel i+2 (nivel 2 … 10). Cada una cambia algo que se VE al usar la skill.
+  // tipo de cada skill para las cartas (pedido: que se sepa si es proyectil, cuerpo a cuerpo, área…)
+  TYPE_TXT: { projectile: 'Proyectil', melee_arc: 'Cuerpo a cuerpo', cone: 'Abanico corto', beam: 'Rayo', orbit: 'Órbita', nova: 'Área', heal: 'Curación' },
+  typeOf(d) { if (!d) return ''; const t = this.TYPE_TXT[d.type] || ''; return d.type === 'projectile' && d.explode ? t + ' explosivo' : d.type === 'projectile' && (d.count || 1) > 1 ? t + ' ×' + d.count : t; },
   AREA_MAX: 2.6, SIZE_MAX: 2.2,   // tope de los multiplicadores de área y tamaño de una skill (Issue #9)
   PERKS: {
     projectile: ['dmg', 'cnt', 'pierce', 'cnt', 'area', 'cnt', 'dmg', 'cnt', 'big'],
