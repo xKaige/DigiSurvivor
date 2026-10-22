@@ -286,18 +286,18 @@ const Enemies = {
       if (b.line) {
         ef.push({ k: 'ray', x: b.x, y: b.y, a: b.a, Lg: b.Lg, w: b.w, col: '#ff6a3d', l: 0.25, m: 0.25 });
         const ca = Math.cos(b.a), sa = Math.sin(b.a);
-        for (const q of P) { if (q.dead || q.inv > 0) continue; const px = q.x - b.x, py = q.y - b.y, al = px * ca + py * sa;
+        for (const q of P) { if (q.dead || q.inv > 0) continue; const px = q.x - b.x, py = pcy(q) - b.y, al = px * ca + py * sa;
           if (al > 0 && al < b.Lg && Math.abs(-px * sa + py * ca) < b.w / 2 + q.r * 0.5) hurt(q, b.dm, b.el); }
         continue;
       }
       ef.push({ k: 'ring', x: b.x, y: b.y, R: b.R, col: '#ff6a3d', l: 0.3, m: 0.3 });
       if (!b.R0 && SkillSys.fxOf('fire', 'hit')) ef.push({ k: 'hit', fx: 'fire', x: b.x, y: b.y, R: b.R * 1.3, l: 0.35, m: 0.35 });
-      for (const q of P) { if (q.dead || q.inv > 0) continue; const d = Math.hypot(q.x - b.x, q.y - b.y); if (d < b.R + q.r * 0.5 && d > (b.R0 || 0) - q.r * 0.5) hurt(q, b.dm, b.el); }
+      for (const q of P) { if (q.dead || q.inv > 0) continue; const d = Math.hypot(q.x - b.x, pcy(q) - b.y); if (d < b.R + q.r * 0.5 && d > (b.R0 || 0) - q.r * 0.5) hurt(q, b.dm, b.el); }
     }
     this.bombs = this.bombs.filter(b => b.t > 0);
     for (const o of this.pools) {   // charcos: dañan cada 0,5 s a quien esté adentro
       o.l -= dt; o.tk -= dt; if (o.tk > 0) continue; o.tk = 0.5;
-      for (const q of P) if (!q.dead && q.inv <= 0 && Math.hypot(q.x - o.x, q.y - o.y) < o.R) hurt(q, o.dm, o.el);
+      for (const q of P) if (!q.dead && q.inv <= 0 && Math.hypot(q.x - o.x, pcy(q) - o.y) < o.R) hurt(q, o.dm, o.el);
     }
     this.pools = this.pools.filter(o => o.l > 0);
   },

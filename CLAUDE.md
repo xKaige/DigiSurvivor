@@ -56,6 +56,9 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - Skills de tajo (`melee_arc`) de forma final: arco máx. 1,8 rad y daño ×0,7; las demás de tajo, arco máx. 2,2. Los cortes extra (mejora +1 tajo) pegan 60%.
 - `Stats.LV_DMG` 0,05 → 0,03 por nivel; tope del multiplicador de rareza de una skill (`q.wm`) ×4 → ×2.
 
+## Hitbox (23/10/2026)
+- Los golpes usan el cuerpo **dibujado** (game.js: `ehy(e)`, `ehr(e)`, `pcy(q)`). Enemigos: `drawEnemy` guarda `e.hcy` (centro del dibujo respecto de e.y) y `e.hr` (36% del ancho del dibujo, mínimo `e.r`); antes el radio era 10–20 px con dibujos de 40–100 px. Jugador: centro = q.y + 48 − alto/2 (de Bebé el dibujo estaba 31 px por debajo de la hitbox). Se usan en disparos, tajos, rayos, áreas, órbitas, explosiones, balas y contacto enemigo y bombas; los disparos salen de `pcy(q)` y apuntan a `ehy(b)`. Enemigos fuera de pantalla (no dibujados) usan `e.r`.
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.

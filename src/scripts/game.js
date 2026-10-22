@@ -600,6 +600,10 @@ addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.startsWith('
  if(paused&&!evo&&!menuPause&&e.key.toLowerCase()==='r'&&cardMode==='cards')reroll();
  if((e.key===' '||e.key==='Shift')&&running&&!paused&&!e.repeat){e.preventDefault();myDash()}});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+// Hitbox (pedido: "hay problemas de hitbox"): los golpes usan el cuerpo DIBUJADO. Enemigos: drawEnemy guarda e.hcy (centro
+// del dibujo respecto de e.y) y e.hr (radio ≈ 36% del ancho del dibujo, nunca menos que e.r). Jugador: el dibujo crece
+// hacia arriba desde los pies (q.y + 48), así que su centro es q.y + 48 − alto/2 (de Bebé, 31 px más abajo que q.y).
+const ehy=e=>e.y+(e.hcy||0),ehr=e=>e.hr||e.r,pcy=q=>q.y+48-(q.dh||BUDDY_H[Math.min(5,q.stage|0)])/2;
 function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
 const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=matchMedia('(pointer:coarse)').matches?210:320;   // MAX_EN: enemigos a la vez con 1 jugador (+60 por cada jugador más; en celular menos). Con la grilla espacial (buildEG) aguanta
@@ -1022,7 +1026,7 @@ function drawEnemy(e){
  // jefes según su tamaño; los pies quedan donde siempre (abajo, en h/2), que es donde chocan con las paredes
  const cv=S.canvas,fw=cv.width/S.cols,fh=cv.height/S.rows,h=enH(e),B=cbox(S),dd=e.et!=null&&Enemies.def(e.et);
  const th=e.bo!=null?h*.68:dd?Math.max(enMin()*(e.kd==='swarm'?.9:1),ENEMY_H[Math.min(5,dd.tier)]*(e.kd==='tank'?1.25:e.kd==='swarm'?.9:1))*(e.cp?1.45:1):h*.62;
- const kk=th/Math.max(B.y1-B.y0,(B.x1-B.x0)*.75),w=(B.x1-B.x0)*kk*1.35;
+ const kk=th/Math.max(B.y1-B.y0,(B.x1-B.x0)*.75),w=(B.x1-B.x0)*kk*1.35;e.hr=Math.max(e.r,(B.x1-B.x0)*kk*.36);e.hcy=h/2-2-th/2;   // hitbox según el dibujo (ehy/ehr)
  const stop=e.bo!=null?e.at>0:e.et!=null?e.st>0:e.gun&&e.cd>1.9,row=stop?5:1,col=Math.floor(t*(e.k===1?9:6)+e.x*.01)&1;
  if(e.mn){cx.save();cx.strokeStyle='#c05bff';cx.lineWidth=2.5;cx.globalAlpha=.8;cx.beginPath();cx.ellipse(e.x,e.y+h/2-2,e.r*1.3,6,0,0,6.283);cx.stroke();cx.restore()}   // refuerzo del jefe: aro violeta
  if(e.bo!=null&&e.p2){cx.save();cx.globalAlpha=.22+.1*Math.sin(t*8);cx.fillStyle='#ff2d2d';cx.beginPath();cx.ellipse(e.x,e.y+h/2-th*.45,th*.55,th*.6,0,0,6.283);cx.fill();cx.restore()}   // jefe enfurecido (fase 2): aura roja
@@ -1363,21 +1367,21 @@ function update(dt){
  Gate.tick(dt);Weather.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
-   if(b){const a0=Math.atan2(b.y-q.y,b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:q.y,vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0,r:5+Math.min(9,Math.log2(Math.max(1,q.dmg))*2.2)})}q.atkT=q.rate}}}
+   if(b){const a0=Math.atan2(ehy(b)-pcy(q),b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:pcy(q),vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0,r:5+Math.min(9,Math.log2(Math.max(1,q.dmg))*2.2)})}q.atkT=q.rate}}}
  buildEG();
  for(const s of sh){s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=dt;const sr=(s.r||5)+1;
-  enNear(s.x,s.y,70,e=>{if(s.l<=0)return true;if(e.hp>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+sr){DSRC=s.sk||null;hit(e,s.d,s.el,P[s.q]);s.h.add(e);if(s.pi>0)s.pi--;else if(s.rb>0)bounce(s,e);else s.l=0;if(s.ex)SkillSys.explode(s,e);DSRC=null;burst(s.x,s.y,'#ffd23f')}})}
+  enNear(s.x,s.y,110,e=>{if(s.l<=0)return true;if(e.hp>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,ehy(e)-s.y)<ehr(e)+sr){DSRC=s.sk||null;hit(e,s.d,s.el,P[s.q]);s.h.add(e);if(s.pi>0)s.pi--;else if(s.rb>0)bounce(s,e);else s.l=0;if(s.ex)SkillSys.explode(s,e);DSRC=null;burst(s.x,s.y,'#ffd23f')}})}
  sh=sh.filter(s=>s.l>0);
  for(const q of al)SkillSys.update(q,dt);
  for(const e of en){let tg=null,dd=1e9;for(const q of al){if(q.dead)continue;const d=Math.hypot(q.x-e.x,q.y-e.y);if(d<dd){dd=d;tg=q}}
-  if(!tg)break;const a=Math.atan2(tg.y-e.y,tg.x-e.x);e.ang=a;
+  if(!tg)break;const a=Math.atan2(pcy(tg)-ehy(e),tg.x-e.x);e.ang=a;
   if(e.bo!=null)Bosses.act(e,dt,tg,dd,a);   // jefes: su propio movimiento y ataques (bosses.js)
   else if(e.kd!=null||!e.gun)Enemies.act(e,dt,tg,dd,a);   // enemigos comunes: movimiento y ataques con aviso (enemies.js)
   else{if(dd>=230){e.x+=Math.cos(a)*e.sp*dt;e.y+=Math.sin(a)*e.sp*dt}e.cd-=dt;if(e.cd<=0&&dd<520){e.cd=2.2+Math.random();const n=e.ti>=3?5:e.ti>=2?3:1,vb=230+25*e.ti;for(let j=0;j<n;j++){const aa=a+(j-(n-1)/2)*.28;eb.push({x:e.x,y:e.y,vx:Math.cos(aa)*vb,vy:Math.sin(aa)*vb,l:3,el:e.el,dm:e.dm})}}}   // aparición vieja (spawnOld)
   e.fl-=dt;
-  for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,e.y-q.y)<e.r+q.r-4){Stats.lastTouch=e;hurt(q,e.bo!=null?12*e.dm:Enemies.touch(e),e.el);Stats.lastTouch=null}}
+  for(const q of al)if(!q.dead&&q.inv<=0&&Math.hypot(e.x-q.x,ehy(e)-pcy(q))<e.r+q.r-4){Stats.lastTouch=e;hurt(q,e.bo!=null?12*e.dm:Enemies.touch(e),e.el);Stats.lastTouch=null}}
  for(const b of eb){if(b.hm>0){b.hm-=dt;let tq=null,td=1e9;for(const q of al){const d=Math.hypot(q.x-b.x,q.y-b.y);if(d<td){td=d;tq=q}}if(tq){const sp=Math.hypot(b.vx,b.vy),cur=Math.atan2(b.vy,b.vx),want=Math.atan2(tq.y-b.y,tq.x-b.x);let da=want-cur;da=Math.atan2(Math.sin(da),Math.cos(da));const na=cur+Math.max(-2.2*dt,Math.min(2.2*dt,da));b.vx=Math.cos(na)*sp;b.vy=Math.sin(na)*sp}}   // orbes teledirigidos de los jefes (giran de a poco)
-  b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-q.y)<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el,'b');b.l=0}}eb=eb.filter(b=>b.l>0);
+  b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;for(const q of al)if(b.l>0&&!q.dead&&q.inv<=0&&Math.hypot(b.x-q.x,b.y-pcy(q))<q.r+(b.r||6)-2){hurt(q,6*b.dm,b.el,'b');b.l=0}}eb=eb.filter(b=>b.l>0);
  buildEG();
  // empuje entre enemigos (solo vecinos de la grilla). 0.7: separa según el tamaño de los dos (antes 1,6× el radio de uno:
  // los dibujos quedaban casi encimados y unos tapaban a otros) y si quedaron justo en el mismo punto los aparta al azar

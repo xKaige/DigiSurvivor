@@ -209,19 +209,20 @@ const SkillSys = {
   vis(q) { return Math.min(2.2, Math.max(1.2, ((q && q.dh) || 96) / 80)); },
 
   sweep(q, a, R, arc, dm, col, kind, fx) {
-    ef.push({ k: kind, x: q.x, y: q.y, a, R, s: arc, col, fx, l: kind === 'arc' ? .28 : .3, m: kind === 'arc' ? .28 : .3 });
+    const qy = pcy(q);
+    ef.push({ k: kind, x: q.x, y: qy, a, R, s: arc, col, fx, l: kind === 'arc' ? .28 : .3, m: kind === 'arc' ? .28 : .3 });
     for (const e of en) {
-      const dx = e.x - q.x, dy = e.y - q.y, dist = Math.hypot(dx, dy);
-      if (dist > R + e.r) continue;
+      const dx = e.x - q.x, dy = ehy(e) - qy, dist = Math.hypot(dx, dy), hr = ehr(e);
+      if (dist > R + hr) continue;
       let da = Math.abs(Math.atan2(dy, dx) - a); if (da > Math.PI) da = 2 * Math.PI - da;
-      if (da <= arc / 2 || dist < e.r + 12) hit(e, dm, q.el, q);
+      if (da <= arc / 2 + Math.atan2(hr, Math.max(1, dist)) || dist < hr + 12) hit(e, dm, q.el, q);
     }
   },
 
   melee_arc(q, k, d, S, cd) {
     const R = d.range * S.area;
     const b = this.near(q, R + 120); if (!b) { this.idle(q, k); return; }
-    const a0 = Math.atan2(b.y - q.y, b.x - q.x), n = 1 + S.cnt;
+    const a0 = Math.atan2(ehy(b) - pcy(q), b.x - q.x), n = 1 + S.cnt;
     for (let i = 0; i < n; i++) this.sweep(q, a0 + i * 6.283 / n, R, d.arc, d.dmg * q.dmg * S.dmg * (i ? 0.6 : 1), this.col(d), 'arc', this.fxKey(k, d));   // +1 tajo: otro corte alrededor (los extra pegan 60%: en hordas el daño se disparaba)
     this.impact(b.x, b.y, this.fxKey(k, d), 46 * this.vis(q) * S.size);
     this.fired(q, k, cd);
@@ -230,7 +231,7 @@ const SkillSys = {
   cone(q, k, d, S, cd) {
     const R = d.range * S.area;
     const b = this.near(q, R + 60); if (!b) { this.idle(q, k); return; }
-    const a0 = Math.atan2(b.y - q.y, b.x - q.x);
+    const a0 = Math.atan2(ehy(b) - pcy(q), b.x - q.x);
     for (let i = 0; i <= S.cnt; i++) { const off = i ? Math.ceil(i / 2) * (i % 2 ? 1 : -1) * d.arc * 0.9 : 0;   // +1 abanico: otro a un costado
       this.sweep(q, a0 + off, R, d.arc, d.dmg * q.dmg * S.dmg, this.col(d), 'cone', this.fxKey(k, d)); }
     this.impact(b.x, b.y, this.fxKey(k, d), 54 * this.vis(q) * S.size);
@@ -240,11 +241,11 @@ const SkillSys = {
   projectile(q, k, d, S, cd) {
     const b = this.near(q, 520); if (!b) { this.idle(q, k); return; }
     // count + spread: varios proyectiles repartidos en abanico (spread = ángulo total en radianes)
-    const a0 = Math.atan2(b.y - q.y, b.x - q.x), n = (d.count || 1) + S.cnt;   // +1 proyectil por mejora
+    const a0 = Math.atan2(ehy(b) - pcy(q), b.x - q.x), n = (d.count || 1) + S.cnt;   // +1 proyectil por mejora
     const sp = n > 1 ? Math.min(1.5, (d.count > 1 ? (d.spread || .5) : 0.2) + 0.14 * S.cnt) : 0;
     for (let i = 0; i < n; i++) {
       const a = a0 + (n > 1 ? -sp / 2 + sp * i / (n - 1) : 0);
-      sh.push({ x: q.x, y: q.y, vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed, sk: k,
+      sh.push({ x: q.x, y: pcy(q), vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed, sk: k,
         l: (d.life || 1.2) * (q.dur || 1), pi: (d.pierce || 0) + S.pierce, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el, q: q.id,
         ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 * S.size, fx: this.fxKey(k, d), sz: 34 * this.vis(q) * S.size });
     }
@@ -258,9 +259,9 @@ const SkillSys = {
     const dm = d.dmg * q.dmg * S.dmg;
     for (let i = 0; i <= S.cnt; i++) {   // +1 onda: otro anillo, más grande
       const Ri = R * (1 + 0.35 * i);
-      ef.push({ k: 'ring', x: q.x, y: q.y, R: Ri, col: this.col(d), l: .35 + .08 * i, m: .35 + .08 * i });
+      ef.push({ k: 'ring', x: q.x, y: pcy(q), R: Ri, col: this.col(d), l: .35 + .08 * i, m: .35 + .08 * i });
       if (!i && this.fxOf(this.fxKey(k, d), 'nv')) ef.push({ k: 'nova', fx: this.fxKey(k, d), x: q.x, y: q.y, R, l: .45, m: .45 });
-      for (const e of en) if (Math.hypot(e.x - q.x, e.y - q.y) < Ri + e.r) hit(e, dm * (i ? 0.6 : 1), q.el, q);
+      for (const e of en) if (Math.hypot(e.x - q.x, ehy(e) - pcy(q)) < Ri + ehr(e)) hit(e, dm * (i ? 0.6 : 1), q.el, q);
     }
     if (d.guard) q.inv = Math.max(q.inv || 0, d.guard * (q.dur || 1));
     this.fired(q, k, cd);
@@ -274,14 +275,14 @@ const SkillSys = {
     const need = al.some(o => o.hp < o.max * 0.97), foe = d.dmg && this.near(q, R + 40);
     if (!need && !foe) { this.idle(q, k); return; }
     const pc = d.heal * Math.pow(S.dmg, 0.6);
-    ef.push({ k: 'ring', x: q.x, y: q.y, R, col: '#5dff9a', l: .55, m: .55 });
-    ef.push({ k: 'ring', x: q.x, y: q.y, R: R * .6, col: '#c8ffd8', l: .4, m: .4 });
+    ef.push({ k: 'ring', x: q.x, y: pcy(q), R, col: '#5dff9a', l: .55, m: .55 });
+    ef.push({ k: 'ring', x: q.x, y: pcy(q), R: R * .6, col: '#c8ffd8', l: .4, m: .4 });
     for (const o of al) {
       const v = Math.min(o.max - o.hp, o.max * pc); if (v <= 0) continue;
       o.hp += v; dmgNum(o.x, o.y - 44, v, '#5dff9a', 20, '+' + Math.max(1, Math.round(v)));
       for (let j = 0; j < 8; j++) burst(o.x, o.y, j % 2 ? '#5dff9a' : '#fff');
     }
-    if (d.dmg) { const dm = d.dmg * q.dmg * S.dmg; for (const e of en) if (Math.hypot(e.x - q.x, e.y - q.y) < R + e.r) hit(e, dm, q.el, q); }
+    if (d.dmg) { const dm = d.dmg * q.dmg * S.dmg; for (const e of en) if (Math.hypot(e.x - q.x, ehy(e) - pcy(q)) < R + ehr(e)) hit(e, dm, q.el, q); }
     this.fired(q, k, cd);
   },
 
@@ -291,20 +292,20 @@ const SkillSys = {
     this.impact(s.x, s.y, s.fx, Math.max((s.sz || 34) * 1.5, s.ex * 1.6));
     for (const e of en) {
       if (e === first) continue;
-      if (Math.hypot(e.x - s.x, e.y - s.y) < s.ex + e.r) hit(e, s.d * .6, s.el, P[s.q]);
+      if (Math.hypot(e.x - s.x, ehy(e) - s.y) < s.ex + ehr(e)) hit(e, s.d * .6, s.el, P[s.q]);
     }
   },
 
   beam(q, k, d, S, cd) {
     const b = this.near(q, d.range * S.area + 100); if (!b) { this.idle(q, k); return; }
-    const a = Math.atan2(b.y - q.y, b.x - q.x), Lg = d.range * S.area, W = d.width * S.area;
+    const a = Math.atan2(ehy(b) - pcy(q), b.x - q.x), Lg = d.range * S.area, W = d.width * S.area;
     const dm = d.dmg * q.dmg * S.dmg;
     for (let i = 0; i <= S.cnt; i++) {   // +1 rayo: otro en abanico
       const ai = a + (i ? Math.ceil(i / 2) * (i % 2 ? 1 : -1) * 0.26 : 0), ca = Math.cos(ai), sa = Math.sin(ai);
-      ef.push({ k: 'ray', x: q.x, y: q.y, a: ai, Lg, w: W, col: this.col(d), l: .25, m: .25 });
+      ef.push({ k: 'ray', x: q.x, y: pcy(q), a: ai, Lg, w: W, col: this.col(d), l: .25, m: .25 });
       for (const e of en) {
-        const px = e.x - q.x, py = e.y - q.y, al = px * ca + py * sa;
-        if (al > 0 && al < Lg && Math.abs(-px * sa + py * ca) < e.r + W / 2) hit(e, dm, q.el, q);
+        const px = e.x - q.x, py = ehy(e) - pcy(q), al = px * ca + py * sa;
+        if (al > 0 && al < Lg && Math.abs(-px * sa + py * ca) < ehr(e) + W / 2) hit(e, dm, q.el, q);
       }
     }
     this.impact(b.x, b.y, this.fxKey(k, d), 50 * this.vis(q) * S.size);
@@ -326,9 +327,9 @@ const SkillSys = {
     q.oa += dt * 3.2;
     const n = (d.count || 3) + S.cnt, R = (d.radius || 64) * S.area, key = 'oh' + q.id + k;
     for (let i = 0; i < n; i++) {
-      const a = q.oa + i * 6.283 / n, ox = q.x + Math.cos(a) * R, oy = q.y + Math.sin(a) * R;
+      const a = q.oa + i * 6.283 / n, ox = q.x + Math.cos(a) * R, oy = pcy(q) + Math.sin(a) * R;
       for (const e of en) {
-        if (t - (e[key] || -9) > .45 && Math.hypot(e.x - ox, e.y - oy) < e.r + 9) {
+        if (t - (e[key] || -9) > .45 && Math.hypot(e.x - ox, ehy(e) - oy) < ehr(e) + 9) {
           e[key] = t; hit(e, d.dmg * q.dmg * S.dmg, q.el, q);
         }
       }
@@ -343,7 +344,7 @@ const SkillSys = {
       const P = this.fxOf(this.fxKey(k, d), 'pr');
       cx.fillStyle = this.col(d); cx.strokeStyle = '#fff'; cx.lineWidth = 2;
       for (let i = 0; i < n; i++) {
-        const a = q.oa + i * 6.283 / n, ox = q.x + Math.cos(a) * R, oy = q.y + Math.sin(a) * R;
+        const a = q.oa + i * 6.283 / n, ox = q.x + Math.cos(a) * R, oy = pcy(q) + Math.sin(a) * R;
         if (P) { this.spr(P, t * 12 + i, ox, oy, 28 * this.vis(q) * S.size, a + Math.PI / 2); continue; }
         cx.beginPath(); cx.arc(ox, oy, 9, 0, 6.283); cx.fill(); cx.stroke();
       }
