@@ -709,3 +709,6 @@ body.finale #dbtn{display:none}
 @media (max-width:700px){#dmgst{margin:6px auto}}
 /* con el gráfico de daño, el Digivice se achica para que entre todo */
 #ovl:has(#dmgst:not([style*="none"])) #dv{max-height:min(230px,30vh);width:auto}
+/* dos jefes: una barra por cada uno */
+#bossbar .bb-one+.bb-one{margin-top:8px}
+body.ingame.boss2 #evt{top:calc(16% + 70px)}

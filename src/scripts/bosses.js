@@ -39,7 +39,7 @@ const Bosses = {
   every() { return this.data ? (TEST ? this.data.testEvery : typeof Challenge !== 'undefined' && Challenge.has('boss60') ? 60 : this.data.every) : 1e9; },
 
   // al empezar cada partida
-  reset() { this.n = 0; this.recent = []; this.fast = false; this.down = []; this.shown = this.shownName = null; this.next = this.every(); this.hideBar(); },
+  reset() { this.n = 0; this.recent = []; this.fast = false; this.down = []; this.shown = this.shownNames = null; this.next = this.every(); this.hideBar(); },
 
   // monedas extra por los jefes derrotados en la partida
   coins() { return this.down.reduce((a, id) => { const b = this.data && this.data.list.find(x => x.id === id); return a + (b ? b.coins : 0); }, 0); },
@@ -270,27 +270,31 @@ const Bosses = {
   },
   bar() {
     let b = document.getElementById('bossbar');
-    if (!b) {
-      b = document.createElement('div'); b.id = 'bossbar';
-      b.innerHTML = '<div class="bb-top"><b id="bb-n"></b><span id="bb-l"></span></div><div class="bb-hp"><i id="bb-f"></i></div>';
-      document.body.appendChild(b);
-    }
+    if (!b) { b = document.createElement('div'); b.id = 'bossbar'; document.body.appendChild(b); }
     return b;
   },
   hideBar() { const b = document.getElementById('bossbar'); if (b) b.style.display = 'none'; },
+  // una barra por jefe (con dos en el Gate se veía solo la de uno)
   hud() {
-    const e = en.find(x => x.bo != null), B = e && this.def(e.bo);
-    const id = B ? B.id + ':' + e.cyc : null;
-    if (id !== this.shown) {             // apareció uno nuevo o cayó el que estaba
-      if (B) this.banner('¡Apareció ' + B.name + '!');
-      else if (this.shownName && running) { this.banner('¡Derrotaste a ' + this.shownName + '!'); Sound.play('win'); }
-      this.shown = id; this.shownName = B ? B.name : null;
+    const L = en.filter(x => x.bo != null && this.def(x.bo));
+    const id = L.map(e => e.bo + ':' + e.cyc).join(',') || null;
+    if (id !== this.shown) {             // apareció uno nuevo o cayó alguno
+      const names = L.map(e => this.def(e.bo).name), prev = this.shownNames || [];
+      const neu = names.filter(n => !prev.includes(n)), gone = prev.filter(n => !names.includes(n));
+      if (neu.length) this.banner('¡Apareció ' + neu.join(' y ') + '!');
+      else if (gone.length && running) { this.banner('¡Derrotaste a ' + gone.join(' y ') + '!'); Sound.play('win'); }
+      this.shown = id; this.shownNames = names;
     }
-    if (!B) { this.hideBar(); return; }
-    const b = this.bar(), el = this.elOf(B);
-    b.style.display = 'block'; b.style.setProperty('--ac', ELC[el]);
-    $('bb-n').textContent = B.name + (e.cyc ? ' +' + e.cyc : '');
-    $('bb-l').textContent = B.level + ' · ' + ATTR[el];
-    $('bb-f').style.width = Math.max(0, e.hp / e.mh * 100) + '%';
+    document.body.classList.toggle('boss2', L.length > 1);   // con dos barras, el cartel de avisos baja (style.css)
+    if (!L.length) { this.hideBar(); return; }
+    const b = this.bar(); b.style.display = 'block';
+    if (b.children.length !== L.length) b.innerHTML = L.map(() => '<div class="bb-one"><div class="bb-top"><b></b><span></span></div><div class="bb-hp"><i></i></div></div>').join('');
+    L.forEach((e, i) => {
+      const B = this.def(e.bo), el = this.elOf(B), r = b.children[i];
+      r.style.setProperty('--ac', ELC[el]);
+      r.querySelector('b').textContent = B.name + (e.cyc ? ' +' + e.cyc : '');
+      r.querySelector('span').textContent = B.level + ' · ' + ATTR[el];
+      r.querySelector('i').style.width = Math.max(0, e.hp / e.mh * 100) + '%';
+    });
   }
 };
