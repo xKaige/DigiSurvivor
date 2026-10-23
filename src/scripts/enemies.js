@@ -308,7 +308,7 @@ const Enemies = {
     cx.save();
     if (o.k === 'rbeam') {   // Cruz giratoria del jefe: 4 rayos desde el borde del escudo (R0); m = 0 aviso (finito), 1 quema
       cx.translate(o.x, o.y); cx.rotate(o.a); const r0 = o.R0 || 0; cx.translate(r0, 0); o = Object.assign({}, o, { Lg: o.Lg - r0 });
-      for (let j = 0; j < 4; j++) {
+      for (let j = 0; j < (o.s || 4); j++) {
         if (o.m) {
           cx.globalAlpha = 0.35 + 0.1 * Math.sin(t * 30); cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2 - 6, o.Lg, o.w + 12);
           cx.globalAlpha = 0.85; cx.fillRect(0, -o.w / 2, o.Lg, o.w);
@@ -316,6 +316,19 @@ const Enemies = {
         } else { cx.globalAlpha = 0.5; cx.strokeStyle = o.col; cx.lineWidth = 2; cx.setLineDash([12, 8]); cx.strokeRect(0, -o.w / 2, o.Lg, o.w); cx.setLineDash([]); cx.globalAlpha = 0.1; cx.fillStyle = o.col; cx.fillRect(0, -o.w / 2, o.Lg, o.w); }
         cx.translate(-r0, 0); cx.rotate(Math.PI / 2); cx.translate(r0, 0);
       }
+    } else if (o.k === 'shrink') {   // arena que se achica: todo rojo afuera del círculo
+      cx.globalAlpha = 0.28 + 0.08 * Math.sin(t * 10); cx.fillStyle = o.col; cx.beginPath();
+      cx.rect(o.x - o.Lg, o.y - o.w, o.Lg * 2, o.w * 2); cx.moveTo(o.x + Math.max(1, o.R), o.y); cx.arc(o.x, o.y, Math.max(1, o.R), Math.PI * 2, 0, true); cx.fill('evenodd');
+      cx.globalAlpha = 0.95; cx.strokeStyle = '#ffd23f'; cx.lineWidth = 4; cx.setLineDash([16, 8]); cx.lineDashOffset = -t * 60; cx.beginPath(); cx.arc(o.x, o.y, Math.max(1, o.R), 0, 6.283); cx.stroke(); cx.setLineDash([]);
+    } else if (o.k === 'grid') {     // cuadrícula: casilleros alternados (a = cuáles); s = 1 → explotan ahora
+      const C = o.R || 128, nx = Math.ceil(o.Lg / C), ny = Math.ceil(o.w / C), x0 = o.x - o.Lg / 2, y0 = o.y - o.w / 2, ph = o.a | 0;
+      cx.globalAlpha = o.s ? Math.max(0, o.l / o.m) * 0.8 : 0.12 + 0.3 * f; cx.fillStyle = o.s ? '#fff3d0' : o.col;
+      for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) if ((i + j) % 2 === ph) cx.fillRect(x0 + i * C + 3, y0 + j * C + 3, C - 6, C - 6);
+    } else if (o.k === 'wave') {     // ola: pared vertical con un hueco (a = centro del hueco, R = medio hueco)
+      const top = o.y - o.Lg / 2, bot = o.y + o.Lg / 2, g0 = o.a - o.R, g1 = o.a + o.R;
+      cx.globalAlpha = o.m ? 0.8 : 0.3 + 0.2 * Math.sin(t * 14); cx.fillStyle = o.col;
+      cx.fillRect(o.x - o.w / 2, top, o.w, Math.max(0, g0 - top)); cx.fillRect(o.x - o.w / 2, g1, o.w, Math.max(0, bot - g1));
+      cx.globalAlpha = 1; cx.fillStyle = '#eaffff'; cx.fillRect(o.x - 4, top, 8, Math.max(0, g0 - top)); cx.fillRect(o.x - 4, g1, 8, Math.max(0, bot - g1));
     } else if (o.k === 'pull') {   // Gravedad: anillos que se cierran hacia el jefe
       const f = 1 - Math.max(0, o.l) / o.m; cx.strokeStyle = o.col; cx.lineWidth = 4;
       for (let j = 0; j < 3; j++) { const r = o.R * (1 - ((f + j / 3) % 1)); cx.globalAlpha = 0.5 * (r / o.R); cx.beginPath(); cx.arc(o.x, o.y, r, 0, 6.283); cx.stroke(); }
@@ -336,7 +349,7 @@ const Enemies = {
       cx.globalAlpha = al; cx.fillStyle = '#3dff6a'; cx.beginPath(); cx.arc(o.x, o.y, o.R, 0, 6.283); cx.fill();
       cx.globalAlpha = Math.min(1, al * 1.6); cx.strokeStyle = '#9dffb0'; cx.lineWidth = 2; cx.stroke();
     } else if (o.R0) {             // anillo: el centro queda a salvo
-      cx.globalAlpha = 0.18; cx.fillStyle = o.col; cx.beginPath(); cx.arc(o.x, o.y, o.R, 0, 6.283); cx.arc(o.x, o.y, o.R0, 0, 6.283, true); cx.fill();
+      cx.globalAlpha = 0.18; cx.fillStyle = o.col; cx.beginPath(); cx.arc(o.x, o.y, o.R, 0, 6.283); cx.moveTo(o.x + o.R0, o.y); cx.arc(o.x, o.y, o.R0, Math.PI * 2, 0, true); cx.fill();
       cx.globalAlpha = 0.9; cx.strokeStyle = o.col; cx.lineWidth = 2.5; cx.setLineDash([10, 6]);
       cx.beginPath(); cx.arc(o.x, o.y, o.R * Math.max(f, o.R0 / o.R), 0, 6.283); cx.stroke(); cx.setLineDash([]);
     } else {

@@ -71,6 +71,12 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - **Árboles**: en los de atributo, el nodo 2 de cada rama (`fue2/int2/vel2/vit2`) es "Entrenamiento: <stat>": +1 punto por nivel (máx. 3) desde que empieza la partida, que **cuenta para los requisitos de evolución** (`reqPts(q,k)` = cartas `q.st` + árbol `q.m`; lo usan la elección de forma, la Ruta y el aviso). Todos los efectos numéricos de los nodos quedaron al 60% (gentrees.py: `SCALE`; los de mecánicas especiales no cambian). `Trees.sum` topea el nivel al máximo del nodo.
 - **Menos monedas**: por partida (eliminados × 0,2 + segundos/10 + nivel × 3) × monedas, y las de jefes a la mitad; datos de atributo (eliminados/40 + segundos/60 + etapa × 2).
 
+## Mecánicas de jefe del 24/10/2026 (pedido)
+- **Arena que se achica** (`shrink`, 6,5 s: el anillo rojo cierra hasta 190 px del centro, lo sostiene y se abre; afuera daña cada 0,5 s), **Cuadrícula** (`grid`: casilleros de 128 px alternados, explotan unos y al segundo los otros), **Láser barredor** (`sweep`: un rayo de 100 px que barre media vuelta; usa `rbeam` con `s` = cantidad de rayos), **Ola** (`wave`: pared que cruza la arena con un hueco que sube y baja) y **Agarre** (`grab`: marca al jugador del aggro; si sigue adentro lo atrapa `q.grab` 2 s; con 7 cambios de dirección se suelta, si no lo revolea con 22× e.dm; barrita "¡MOVETE!"; online `grab/gp` en el sync). Fase 1 suma Láser y Cuadrícula; furia, las demás.
+- **Ataque definitivo** (`Bosses.ultimate`, al 25% una vez): su técnica canon (la última de `atk`), corta lo que esté haciendo, todo oscuro y un solo refugio; afuera 35× e.dm.
+- Barra de casteo para todas (`CASTS`/`castOf`). `Bosses.area(e)` = plataforma de la arena.
+- Ojo con `arc(…, 0, 6.283, true)`: en sentido antihorario dibuja casi nada; para recortar un círculo usar `arc(x, y, R, Math.PI * 2, 0, true)` (se corrigió también el anillo del Terremoto, que se veía lleno).
+
 ## Idioma y estilo
 - **Todo el texto visible del juego y los comentarios del código están en español rioplatense (voseo):** "Elegí", "Sobreviví", "iniciás". Mantené ese tono.
 - Respondeme en español.

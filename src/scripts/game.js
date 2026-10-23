@@ -504,7 +504,7 @@ function hostSync(dt) {
   const r = v => Math.round(v), r2 = v => Math.round(v * 100) / 100;
   const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
   const pl = P.map(q => {
-    const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, alt: q.alt, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp, bf: Explore.bfSync(q) };
+    const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, alt: q.alt, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp, bf: Explore.bfSync(q), grab: q.grab > 0 ? 1 : 0, gp: q.gp | 0 };
     if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs, ds: rr(q.ds || {}) });
     return o;
   });
@@ -1359,6 +1359,13 @@ function update(dt){
  else {Finale.clientTick(dt);Weather.clientTick(dt)}
  for(const q of P){
   if(q.dead||Finale.on)continue;
+  // agarre de jefe (bosses.js): te sostiene adelante; cada cambio de dirección suma; con 7 te soltás. Si no, te revolea
+  if(q.grab>0&&q.grE&&q.grE.hp<=0)q.grab=0;   // el jefe cayó: te suelta
+  if(q.grab>0){const e=q.grE,[gx,gy]=inputOf(q),d=(gx||gy)?Math.round(Math.atan2(gy,gx)/0.785):null;if(d!=null&&d!==q.gpI){q.gpI=d;q.gp++;burst(q.x,q.y,'#c05bff')}
+   q.grab-=dt;if(e&&e.hp>0){q.x+=(e.x+Math.cos(e.ang||0)*(e.r*2.2)-q.x)*Math.min(1,dt*10);q.y+=(e.y+Math.sin(e.ang||0)*(e.r*2.2)-q.y)*Math.min(1,dt*10)}q.moving=true;
+   if(q.gp>=7&&(!isOnline||isHost)){q.grab=0;q.inv=Math.max(q.inv,1);Stats.flash(q,'¡Te soltaste!','#4dffb8')}
+   else if(q.grab<=0&&(!isOnline||isHost)){const a=(e&&e.ang)||0;World.move(q,Math.cos(a)*420,Math.sin(a)*420);q.inv=0;hurt(q,(e?e.dm:1)*22,e?e.el:0);q.inv=Math.max(q.inv,0.8)}
+   continue}
   if(q.dc==null)q.dc=DASH_N;if(q.dc<DASH_N)q.dc=Math.min(DASH_N,q.dc+dt/DASH_CD);
   if(q.dsT>0){q.dsT-=dt;q.gh.push({x:q.x,y:q.y,l:.22});World.move(q,q.ddx*DASH_V*dt,q.ddy*DASH_V*dt);if(q.ddx)q.face=Math.sign(q.ddx);q.moving=true;q.inv-=dt;continue}   // dash: va derecho, sin control
   const [dx,dy]=inputOf(q);
@@ -1502,6 +1509,7 @@ function dPl(q){const s=q.stage|0,hh=96;
   // dash: estela de imágenes que se apagan; y las cargas (dos rayitas bajo tus pies)
   if(q.gh&&q.gh.length){for(const g of q.gh){g.l-=1/60;if(g.l>0){cx.globalAlpha=g.l*1.6;drawBuddy(q,s,g.x,g.y,q.face,1);cx.globalAlpha=1}}q.gh=q.gh.filter(g=>g.l>0)}
   Explore.drawBuffs(q);   // potenciadores activos (explore.js)
+  if(q.grab>0){const f=Math.min(1,(q.gp|0)/7),y=q.y+48-(q.dh||96)-22;cx.fillStyle='rgba(0,0,0,.7)';cx.fillRect(q.x-30,y,60,7);cx.fillStyle='#c05bff';cx.fillRect(q.x-30,y,60*f,7);cx.font="bold 12px 'Chakra Petch',sans-serif";cx.textAlign='center';cx.fillStyle='#fff';cx.fillText('¡MOVETE!',q.x,y-4)}
   // aggro del jefe: mira roja sobre el jugador que persigue (solo con más de un jugador)
   if(!q.dead&&P.length>1&&en.some(e=>e.bo!=null&&e.ag===q.id)){const y=q.y+48-(q.dh||96)-26,s=7+Math.sin(t*8);cx.strokeStyle='#ff3d3d';cx.lineWidth=2.5;cx.beginPath();cx.arc(q.x,y,s,0,6.283);cx.moveTo(q.x-s-5,y);cx.lineTo(q.x+s+5,y);cx.moveTo(q.x,y-s-5);cx.lineTo(q.x,y+s+5);cx.stroke()}
   if(!q.dead&&(!isOnline||q.id===myIdx)&&q.dc!=null&&q.dc<DASH_N){for(let i=0;i<DASH_N;i++){const f=Math.max(0,Math.min(1,q.dc-i));cx.fillStyle='rgba(0,0,0,.5)';cx.fillRect(q.x-17+i*18,q.y+54,16,4);cx.fillStyle=f>=1?'#3fd0ff':'rgba(63,208,255,.45)';cx.fillRect(q.x-17+i*18,q.y+54,16*f,4)}}

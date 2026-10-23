@@ -91,16 +91,31 @@ const Bosses = {
   // suman espiral de balas, lluvia de impactos y cruz de rayos, atacan más seguido y se mueven más rápido.
   // 0.7: Cruz giratoria (va al centro, escudo inmune y 4 rayos que giran como las agujas del reloj) y Embestidas (varias
   // seguidas, apuntando de nuevo cada vez). Además el jefe persigue al que más daño le hizo (aggro, e.ag).
-  P1: [{ n: 'Terremoto', k: 'quake' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Gravedad', k: 'grav' }, { n: 'Muralla', k: 'wall' }, { n: 'Campo minado', k: 'mines' }, { n: 'Cruz giratoria', k: 'shieldx' }],
-  P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz giratoria', k: 'shieldx' }, { n: 'Terremoto', k: 'quake' }, { n: 'Orbes', k: 'homing' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Zonas seguras', k: 'safe' }, { n: 'Sentencia', k: 'mark' }, { n: 'Gravedad', k: 'grav' }, { n: 'Campo minado', k: 'mines' }],
+  P1: [{ n: 'Terremoto', k: 'quake' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Gravedad', k: 'grav' }, { n: 'Muralla', k: 'wall' }, { n: 'Campo minado', k: 'mines' }, { n: 'Cruz giratoria', k: 'shieldx' }, { n: 'Láser barredor', k: 'sweep' }, { n: 'Cuadrícula', k: 'grid' }],
+  P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz giratoria', k: 'shieldx' }, { n: 'Terremoto', k: 'quake' }, { n: 'Orbes', k: 'homing' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Zonas seguras', k: 'safe' }, { n: 'Sentencia', k: 'mark' }, { n: 'Gravedad', k: 'grav' }, { n: 'Campo minado', k: 'mines' }, { n: 'Arena que se achica', k: 'shrink' }, { n: 'Ola', k: 'wave' }, { n: 'Agarre', k: 'grab' }, { n: 'Láser barredor', k: 'sweep' }],
   SX_DUR: 7.5, SX_W: 54, SX_L: 1150,
   // barra de casteo (pedido): habilidades que duran (cruz, zonas seguras, gravedad, espiral, sentencia) → [índice, 0..1 que queda]
-  CASTS: ['Cruz giratoria', 'Zonas seguras', 'Gravedad', 'Espiral', 'Sentencia'],
+  CASTS: ['Cruz giratoria', 'Zonas seguras', 'Gravedad', 'Espiral', 'Sentencia', 'Arena que se achica', 'Cuadrícula', 'Láser barredor', 'Ola', 'Agarre', 'ATAQUE DEFINITIVO'],
   castOf(e) {
     if (e.cI != null) return e.cI >= 0 ? [e.cI, e.cF] : null;   // invitado: llega en el sync
-    return e.shd > 0 ? [0, e.shd / this.SX_DUR] : e.szT > 0 ? [1, e.szT / 2.8] : e.gvT > 0 ? [2, e.gvT / 2.2] : e.spT > 0 ? [3, e.spT / 2.4] : e.mkT > 0 ? [4, e.mkT / 2.6] : null;
+    return e.ulT > 0 ? [10, e.ulT / 3.4] : e.shd > 0 ? [0, e.shd / this.SX_DUR] : e.szT > 0 ? [1, e.szT / 2.8] : e.gvT > 0 ? [2, e.gvT / 2.2] : e.spT > 0 ? [3, e.spT / 2.4] : e.mkT > 0 ? [4, e.mkT / 2.6]
+      : e.srT > 0 ? [5, e.srT / 6.5] : e.gdT > 0 ? [6, e.gdT / 2.8] : e.swT > 0 ? [7, e.swT / 3.4] : e.wvT > 0 ? [8, e.wvT / 4] : e.grT > 0 ? [9, e.grT / 3.2] : null;
   },
-  cy(e) { return e.r * 1.26; },     // centro del cuerpo dibujado (el sprite va con los pies en y + h/2): ahí van la burbuja y la cruz
+  cy(e) { return e.r * 1.26; },
+  // zona de pelea: la plataforma de la arena (o alrededor del jefe si estuviera en el mapa)
+  area(e) { return World.arena ? { x: 0, y: 0, w: World.AR.w, h: World.AR.h } : { x: e.x, y: e.y, w: 1300, h: 950 }; },
+  // ataque definitivo: su técnica canon (la última de su lista), pantalla oscura y un solo refugio
+  ultimate(e, B) {
+    const A = this.area(e), nm = (B.atk && B.atk.length ? B.atk[B.atk.length - 1].n : 'Ataque final') || 'Ataque final';
+    let sx, sy; for (let i = 0; i < 12; i++) { sx = A.x + (Math.random() - 0.5) * (A.w - 300); sy = A.y + (Math.random() - 0.5) * (A.h - 300); if (Math.hypot(sx - e.x, sy - e.y) > 300) break; }
+    e.ulT = 3.4; e.ulS = [sx, sy];
+    // si estaba haciendo otra cosa, la corta
+    e.sxW = 0; e.shd = 0; e.szT = 0; e.gvT = 0; e.spT = 0; e.srT = 0; e.gdT = 0; e.swT = 0; e.wvT = 0; e.grT = 0; for (const o of [e.sxE, e.srE, e.swE, e.wvE]) if (o) o.l = 0;
+    ef.push({ k: 'danger', x: A.x, y: A.y, R: Math.max(A.w, A.h), l: 3.4, m: 3.4, col: '#2a0010' });
+    ef.push({ k: 'safe', x: sx, y: sy, R: 115, l: 3.4, m: 3.4, col: '#3dff9a' });
+    this.banner('¡' + B.name + ': ' + nm.toUpperCase() + '! Buscá el refugio');
+    Sound.play('gate');
+  },     // centro del cuerpo dibujado (el sprite va con los pies en y + h/2): ahí van la burbuja y la cruz
   r0(e) { return e.r * 2.6; },      // radio del escudo dibujado: los rayos empiezan en su borde
   // aggro: daño recibido por jugador (game.js: hit), se va olvidando (mitad cada ~4 s); persigue al que más le pegó
   aggro(e, dt) {
@@ -112,7 +127,7 @@ const Bosses = {
     const B = this.def(e.bo); if (!B) return;
     // Issue #13: cuanto menos vida, más rápido (pausa entre ataques, giro, espiral, balas y movimiento): F va de 1 a 1,9
     const F = 1 + 0.9 * (1 - Math.max(0, e.hp) / e.mh); e.rg = F;
-    if (!e.p3 && e.hp < e.mh * 0.25) { e.p3 = 1; this.banner('¡' + B.name + ' está desesperado!'); }
+    if (!e.p3 && e.hp < e.mh * 0.25) { e.p3 = 1; this.ultimate(e, B); }
     e.at -= dt;
     const ag = this.aggro(e, dt); if (ag) { tg = ag; dd = Math.hypot(tg.x - e.x, tg.y - e.y); a = Math.atan2(tg.y - e.y, tg.x - e.x); e.ang = a; }
     // Cruz giratoria: primero va al centro de la arena, después escudo (no recibe daño) y 4 rayos que giran
@@ -168,6 +183,59 @@ const Bosses = {
       if (e.mkT <= 0.7 && !e.mkL && o) { e.mkL = 1; o.l = 0; Enemies.bomb(o.x, o.y, 130, 0.7, e, 1.8, '#ff3d3d'); }
       if (e.mkT <= 0) { e.mkE = null; e.mkL = 0; }
     }
+    // ---- Mecánicas de jefe del 24/10/2026 (pedido) ----
+    const A = this.area(e), al = P.filter(q => !q.dead);
+    // ATAQUE DEFINITIVO (al 25%, una vez): su técnica canon; todo oscuro y un solo refugio. Afuera, golpe enorme
+    if (e.ulT > 0) {
+      e.ulT -= dt; e.at = 0.3;
+      if (e.ulT <= 0) { for (const q of al) if (q.inv <= 0 && Math.hypot(q.x - e.ulS[0], pcy(q) - e.ulS[1]) > 115) hurt(q, e.dm * 35, e.el);
+        ef.push({ k: 'ring', x: e.x, y: e.y, R: 1100, col: '#ffffff', l: 0.7, m: 0.7 }); for (let j = 0; j < 40; j++) burst(e.x, e.y, j % 2 ? '#fff' : '#ff3d3d'); }
+      return;
+    }
+    // Arena que se achica: un anillo rojo cierra la plataforma hasta un círculo chico, lo sostiene y se abre (afuera daña)
+    if (e.srT > 0) {
+      e.srT -= dt; e.at = 0.3; const p = 6.5 - e.srT, R0 = Math.max(A.w, A.h) * 0.75, Rm = 190;
+      const Rr = p < 1 ? R0 : p < 3 ? R0 + (Rm - R0) * (p - 1) / 2 : p < 5.5 ? Rm : Rm + (R0 - Rm) * (p - 5.5);
+      const o = e.srE; if (o) { o.R = Rr; o.l = e.srT > 0 ? 1 : 0; }
+      if ((e.srD = (e.srD || 0) - dt) <= 0 && p > 1) { e.srD = 0.5; for (const q of al) if (q.inv <= 0 && Math.hypot(q.x - A.x, pcy(q) - A.y) > Rr) hurt(q, e.dm * 7, e.el); }
+      return;
+    }
+    // Cuadrícula: casilleros alternados (tablero); primero explotan unos y al segundo los otros
+    if (e.gdT > 0) {
+      e.gdT -= dt; e.at = 0.3; const p = 2.8 - e.gdT, C = 128;
+      const boom = ph => { for (const q of al) { const cx0 = Math.floor((q.x - A.x + A.w / 2) / C), cy0 = Math.floor((pcy(q) - A.y + A.h / 2) / C); if (q.inv <= 0 && (cx0 + cy0) % 2 === ph) hurt(q, e.dm * 16, e.el); }
+        ef.push({ k: 'grid', x: A.x, y: A.y, R: C, Lg: A.w, w: A.h, a: ph, s: 1, l: 0.3, m: 0.3, col: '#ff3d3d' }); };
+      if (p >= 1.3 && !e.gd1) { e.gd1 = 1; boom(e.gdP); ef.push({ k: 'grid', x: A.x, y: A.y, R: C, Lg: A.w, w: A.h, a: 1 - e.gdP, l: 1.2, m: 1.2, col: '#ff9a2e' }); }
+      if (e.gdT <= 0) boom(1 - e.gdP);
+      return;
+    }
+    // Láser barredor: un rayo enorme que barre media vuelta desde el jefe (primero se marca dónde arranca)
+    if (e.swT > 0) {
+      e.swT -= dt; e.at = 0.3; const p = 3.4 - e.swT, on = p > 1.1, o = e.swE, cy = this.cy(e);
+      if (on) e.swA += e.swD * Math.PI / 2.3 * dt;
+      if (o) { o.x = e.x; o.y = e.y + cy; o.a = e.swA; o.m = on ? 1 : 0; o.l = e.swT > 0 ? 1 : 0; }
+      if (on) for (const q of al) { if (q.inv > 0) continue; const rx = q.x - e.x, ry = pcy(q) - e.y - cy, c = Math.cos(e.swA), s = Math.sin(e.swA), pr = rx * c + ry * s;
+        if (pr > this.r0(e) * 0.8 && pr < 1400 && Math.abs(-rx * s + ry * c) < 50 + q.r * 0.4) hurt(q, e.dm * 18, e.el); }
+      return;
+    }
+    // Ola: una pared de energía cruza la arena con un hueco que sube y baja
+    if (e.wvT > 0) {
+      e.wvT -= dt; e.at = 0.3; const p = Math.max(0, 4 - e.wvT - 0.9), x = A.x - e.wvS * (A.w / 2 + 40) + e.wvS * p * (A.w + 80) / 3.1, gy = A.y + Math.sin(p * 2.2 + e.wvF) * A.h * 0.32;
+      const o = e.wvE; if (o) { o.x = x; o.a = gy; o.m = p > 0 ? 1 : 0; o.l = e.wvT > 0 ? 1 : 0; }
+      if (p > 0) for (const q of al) if (q.inv <= 0 && Math.abs(q.x - x) < 26 + q.r * 0.4 && Math.abs(pcy(q) - gy) > 95) hurt(q, e.dm * 16, e.el);
+      return;
+    }
+    // Agarre: marca al jugador; si sigue adentro al terminar el aviso, lo atrapa (hay que moverse para soltarse; si no, lo revolea)
+    if (e.grT > 0) {
+      e.grT -= dt; e.at = 0.3; const q = P[e.grQ], o = e.grE;
+      if (!e.grH && q && !q.dead) { if (o && e.grT > 2.0) { o.x = q.x; o.y = pcy(q); }
+        if (e.grT <= 2.0 && !e.grL) { e.grL = 1; if (o) o.l = 0;
+          if (q.inv <= 0 && !(q.dsT > 0) && o && Math.hypot(q.x - o.x, pcy(q) - o.y) < 80) { e.grH = 1; q.grab = 2.0; q.grE = e; q.gp = 0; q.gpI = null; Bosses.banner('¡Atrapado! Movete para soltarte'); }
+          else for (let j = 0; j < 10; j++) burst(o ? o.x : e.x, o ? o.y : e.y, '#c05bff'); } }
+      if (e.grH && q && (q.dead || !(q.grab > 0))) { e.grT = 0; e.grH = 0; }
+      return;
+    }
+    // espiral en curso: dos brazos de balas que giran mientras camina despacio
     if (e.spT > 0) {
       e.spT -= dt; e.spE = (e.spE || 0) - dt;
       while (e.spE <= 0) { e.spE += 0.07 / F; e.spA += 0.33;
@@ -232,6 +300,22 @@ const Bosses = {
       const q = P[e.ag] && !P[e.ag].dead ? P[e.ag] : tg; e.mkQ = q.id; e.mkT = 2.6; e.mkL = 0;
       e.mkE = { k: 'wcirc', x: q.x, y: q.y + 30, R: 130, l: 2.6, m: 2.6, col: '#ff3d3d' }; ef.push(e.mkE);
       Bosses.banner(P.length > 1 ? '¡Sentencia sobre ' + pname(q.id) + '! Alejate de tus compañeros' : '¡Sentencia! Que no te alcance');
+    } else if (k.k === 'shrink') {   // Arena que se achica (ver arriba)
+      const A = this.area(e); e.srT = 6.5; e.srD = 0; e.srE = { k: 'shrink', x: A.x, y: A.y, R: Math.max(A.w, A.h) * 0.75, Lg: A.w, w: A.h, l: 1, m: 1, col: '#ff3d3d' }; ef.push(e.srE);
+      this.banner('¡La arena se achica! Acercate al centro');
+    } else if (k.k === 'grid') {     // Cuadrícula (ver arriba)
+      const A = this.area(e); e.gdT = 2.8; e.gd1 = 0; e.gdP = Math.random() < 0.5 ? 0 : 1;
+      ef.push({ k: 'grid', x: A.x, y: A.y, R: 128, Lg: A.w, w: A.h, a: e.gdP, l: 1.3, m: 1.3, col: '#ff3d3d' });
+    } else if (k.k === 'sweep') {    // Láser barredor (ver arriba): arranca de costado al jugador y barre hacia él
+      e.swT = 3.4; e.swD = Math.random() < 0.5 ? 1 : -1; e.swA = a - e.swD * Math.PI / 2;
+      e.swE = { k: 'rbeam', x: e.x, y: e.y + this.cy(e), a: e.swA, Lg: 1400, w: 100, R0: this.r0(e), s: 1, col: '#ff3d81', l: 1, m: 0 }; ef.push(e.swE);
+    } else if (k.k === 'wave') {     // Ola (ver arriba)
+      const A = this.area(e); e.wvT = 4; e.wvS = Math.random() < 0.5 ? 1 : -1; e.wvF = Math.random() * 6.283;
+      e.wvE = { k: 'wave', x: A.x - e.wvS * A.w / 2, y: A.y, a: A.y, w: 52, R: 95, Lg: A.h, l: 1, m: 0, col: '#3fd0ff' }; ef.push(e.wvE);
+      this.banner('¡Una ola! Pasá por el hueco');
+    } else if (k.k === 'grab') {     // Agarre (ver arriba)
+      const q = P[e.ag] && !P[e.ag].dead ? P[e.ag] : tg; e.grQ = q.id; e.grT = 3.2; e.grL = 0; e.grH = 0;
+      e.grE = { k: 'wcirc', x: q.x, y: pcy(q), R: 80, l: 1.2, m: 1.2, col: '#c05bff' }; ef.push(e.grE);
     } else if (k.k === 'spiral') {
       e.spT = 2.4; e.spA = Math.random() * 6.283; e.spE = 0;
     } else if (k.k === 'rain') {   // impactos marcados alrededor de los jugadores
