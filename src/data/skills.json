@@ -7078,7 +7078,7 @@
       "nv": "pillar16"
     },
     "gatling_arm": {
-      "pr": "ball17",
+      "pr": "bullet29",
       "hit": "exp17",
       "nv": "barrage06"
     },
@@ -7103,7 +7103,7 @@
       "nv": "pillar16"
     },
     "burst_shot": {
-      "pr": "ball11",
+      "pr": "bullet14",
       "hit": "power23",
       "nv": "barrage06"
     },
@@ -7521,7 +7521,7 @@
       "nv": "power34"
     },
     "vingtieme": {
-      "pr": "ball17",
+      "pr": "bullet14",
       "hit": "shock06",
       "nv": "barrage06"
     },
@@ -7621,7 +7621,7 @@
       "nv": "pillar19"
     },
     "flame_blow": {
-      "pr": "ball19",
+      "pr": "fire06",
       "hit": "exp11",
       "nv": "barrage01"
     },
@@ -8632,7 +8632,7 @@
       "nv": "pillar16"
     },
     "tear_arrow": {
-      "pr": "ball19",
+      "pr": "arrow16",
       "hit": "power19",
       "nv": "pillar06"
     },
