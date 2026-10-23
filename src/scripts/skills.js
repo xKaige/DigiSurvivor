@@ -126,6 +126,16 @@ const SkillSys = {
     return out;
   },
 
+  // tier de una skill = etapa en la que se aprende en la línea de q (0 Bebé … 4 Perfecto, 5 forma final); la primera en que aparece
+  tier(q, k) {
+    const C = CR(q), meta = C && C.meta, d = this.def(k);
+    if (meta && !meta.anySkill) {
+      for (let s = 0; s < 5; s++) if (((meta.stages[s] && meta.stages[s].skills) || []).includes(k)) return s;
+      if ((meta.branches || []).some(b => (b.skills || []).includes(k))) return 5;
+    }
+    return d && d.final ? 5 : 0;
+  },
+
   // Cartas de skills: NUEVAS (de tu etapa) y MEJORAS (de las que ya tenés), mezcladas
   cards(q) {
     if (!this.cat) return [];
@@ -134,13 +144,14 @@ const SkillSys = {
     // solo sale si tenés una skill MAXEADA, que evoluciona en ella (ocupa su lugar). Las de forma final piden siempre DOS
     // maxeadas, que se fusionan (liberan un lugar). La nueva hereda la mitad de la rareza de las que consume.
     const maxed = Object.keys(q.wp).filter(k => this.def(k) && (q.wp[k] | 0) >= this.maxOf(k));
-    const pickMax = (d, n) => maxed.slice().sort((a, b) => (this.def(b).element === d.element) - (this.def(a).element === d.element)).slice(0, n);
+    // Issue #19: solo evolucionan skills de un tier MÁS BAJO que la nueva (con el Renacer se podían gastar las de Mega en una de Bebé)
+    const pickMax = (d, n, k) => maxed.filter(r => this.tier(q, r) < this.tier(q, k)).sort((a, b) => (this.def(b).element === d.element) - (this.def(a).element === d.element)).slice(0, n);
     // con lugar libre también vuelven las de etapas anteriores (incluso las que evolucionaste); con las 4 ocupadas, solo las de tu etapa
     const now = this.pool(q), cand = full ? now : now.concat(this.poolOld(q).filter(k => !now.includes(k)));
     const fresh = cand.filter(k => this.def(k) && !(q.wp[k] | 0)).map(k => {
       const d = this.def(k), need = d.final ? 2 : full ? 1 : 0;
-      if (maxed.length < need) return null;
-      const rep = need ? pickMax(d, need) : null;
+      const rep = need ? pickMax(d, need, k) : null;
+      if (need && rep.length < need) return null;
       const u = { n: d.name, d: d.desc, op: 'wp', wpKey: k, tag: 'Skill NUEVA', fresh: 1, rep,
         evo: rep && rep.map(r => this.def(r).name).join(' + '), fuse: need === 2,
         f: () => { if (u.rep) this.evolveInto(q, u.rep, k); else if (this.canTake(q, k)) q.wp[k] = 1; } };
