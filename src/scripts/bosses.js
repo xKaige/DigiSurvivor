@@ -259,7 +259,14 @@ const Bosses = {
     e.pt -= dt;
     if (e.pt > 0 || dd > 720) return;
     const L = e.p2 ? B.atk.concat(this.P2) : B.atk.concat(this.P1);
-    const k = e.p2 ? L[(Math.random() * L.length) | 0] : L[e.ai++ % L.length];
+    // bolsa mezclada (pedido: en solo los jefes morían antes de llegar a las mecánicas nuevas, que estaban al final de una
+    // lista fija): primero las mecánicas en orden al azar, después sus técnicas canon; no repite hasta vaciarla. Al entrar en
+    // furia se arma una bolsa nueva con las de esa fase.
+    if (!e.bag || !e.bag.length || e.bagP !== !!e.p2) {
+      const mix = a => a.map(x => [Math.random(), x]).sort((u, v) => u[0] - v[0]).map(x => x[1]);
+      e.bag = mix(L.filter(x => B.atk.includes(x))).concat(mix(L.filter(x => !B.atk.includes(x)))); e.bagP = !!e.p2;
+    }
+    const k = e.bag.pop();
     e.pt = Math.max(0.55, (e.p2 ? Math.max(1.0, 1.9 - e.cyc * 0.25) : Math.max(1.4, 2.6 - e.cyc * 0.3)) / F); e.at = 0.6;
     fx.push({ x: e.x, y: e.y - this.h(e) / 2 - 14, txt: k.n, col: '#ffd23f', sz: 22, l: 1.4 });
     const shot = (ang, sp) => eb.push({ x: e.x, y: e.y, vx: Math.cos(ang) * sp * (1 + 0.3 * (F - 1)), vy: Math.sin(ang) * sp * (1 + 0.3 * (F - 1)), l: 4, el: e.el, bf: SkillSys.bfx(e), dm: e.dm, r: 9 });
