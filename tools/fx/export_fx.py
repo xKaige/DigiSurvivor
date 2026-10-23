@@ -59,7 +59,8 @@ for k, v in made.items(): pool.setdefault((v['el'], v['use']), []).append(k)
 NEAR = {'neutral': ['light', 'metal'], 'earth': ['fire', 'metal'], 'metal': ['light', 'electric'], 'light': ['electric', 'metal'],
         'water': ['wind', 'light'], 'wind': ['water', 'light'], 'dark': ['fire', 'metal'], 'electric': ['light', 'fire'], 'fire': ['earth', 'electric']}
 # efectos que no se le asignan a ninguna skill: corazones (ball15, barrage07, ball17), casquillos de bala (bullet10, bullet25), una cereza (ball19) y un gato (ball11)
-BAN = {'ball15', 'barrage07', 'bullet10', 'bullet25', 'ball17', 'ball19', 'ball11'}   # + corazón gris, cereza y gato
+BAN = {'ball15', 'barrage07', 'bullet10', 'bullet25', 'ball17', 'ball19', 'ball11',
+       'exp23', 'exp29', 'power13', 'power14', 'power19', 'power20', 'power23', 'power24', 'power30', 'power31', 'power32'}   # impactos: telaraña, pez, murciélagos, tiburones, pastillas, gatos, abejas, nube de rocas, pájaro   # + corazón gris, cereza y gato
 def choose(el, use, sid):
     for e in [el] + NEAR.get(el, []) + ['light']:
         L = sorted(x for x in pool.get((e, use), []) if x not in BAN)

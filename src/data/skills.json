@@ -6915,7 +6915,7 @@
     },
     "grow_claw": {
       "pr": "bullet40",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "plasma_blade": {
@@ -6955,7 +6955,7 @@
     },
     "final_elysion": {
       "pr": "ball01",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "power34"
     },
     "dynas": {
@@ -7004,7 +7004,7 @@
     },
     "koshugeki": {
       "pr": "bullet20",
-      "hit": "power19",
+      "hit": "exp01",
       "nv": "pillar21"
     },
     "koenryu": {
@@ -7059,7 +7059,7 @@
     },
     "blazing_fire": {
       "pr": "bullet02",
-      "hit": "power13",
+      "hit": "exp01",
       "nv": "pillar22"
     },
     "petit_twister": {
@@ -7089,7 +7089,7 @@
     },
     "rapid_fire": {
       "pr": "bullet12",
-      "hit": "power31",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "golden_triangle": {
@@ -7104,7 +7104,7 @@
     },
     "burst_shot": {
       "pr": "bullet14",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "giant_missile": {
@@ -7194,12 +7194,12 @@
     },
     "bunbun_punch": {
       "pr": "wind01",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "pillar16"
     },
     "veemon_head": {
       "pr": "wind01",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "rapid_attack": {
@@ -7209,7 +7209,7 @@
     },
     "hammer_punch": {
       "pr": "bullet29",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "v_breath_arrow": {
@@ -7279,7 +7279,7 @@
     },
     "sorblow": {
       "pr": "bullet17",
-      "hit": "power20",
+      "hit": "exp01",
       "nv": "pillar19"
     },
     "sorshot": {
@@ -7289,12 +7289,12 @@
     },
     "sedna": {
       "pr": "ball13",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "albion": {
       "pr": "bullet11",
-      "hit": "power32",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "gallia_fissure": {
@@ -7372,17 +7372,17 @@
     },
     "dash_metal": {
       "pr": "bullet29",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "metal_cannon": {
       "pr": "bullet29",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "power_metal": {
       "pr": "ball20",
-      "hit": "power32",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "cannonball": {
@@ -7437,12 +7437,12 @@
     },
     "iaijin": {
       "pr": "arrow14",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "tekkoujin": {
       "pr": "bullet09",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "boujinha": {
@@ -7477,12 +7477,12 @@
     },
     "silk_thread": {
       "pr": "ball01",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "power34"
     },
     "spiking_finish": {
       "pr": "wind01",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "pillar16"
     },
     "moon_shooter": {
@@ -7492,7 +7492,7 @@
     },
     "hell_masquerade": {
       "pr": "bullet40",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "power34"
     },
     "irritant_buzz": {
@@ -7527,17 +7527,17 @@
     },
     "grasslash": {
       "pr": "bullet33",
-      "hit": "power31",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "blindead": {
       "pr": "bullet40",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "zwanglanze": {
       "pr": "bullet45",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "thron_messer": {
@@ -7592,7 +7592,7 @@
     },
     "ocean_love": {
       "pr": "arrow13",
-      "hit": "exp29",
+      "hit": "exp13",
       "nv": "barrage08"
     },
     "marine_squadron": {
@@ -7647,7 +7647,7 @@
     },
     "jotunheimr_gale": {
       "pr": "bullet47",
-      "hit": "power20",
+      "hit": "exp01",
       "nv": "pillar01"
     },
     "lightning_fur": {
@@ -7667,7 +7667,7 @@
     },
     "crimson_slash": {
       "pr": "arrow05",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "giga_crimson_dive": {
@@ -7784,7 +7784,7 @@
     },
     "m16_assassin": {
       "pr": "bullet08",
-      "hit": "power32",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "dcd_bomb": {
@@ -7809,7 +7809,7 @@
     },
     "blast_gatling": {
       "pr": "bullet29",
-      "hit": "power31",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "dark_roar": {
@@ -7829,7 +7829,7 @@
     },
     "genocide_rain": {
       "pr": "ball13",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "exa_destroyer": {
@@ -7839,7 +7839,7 @@
     },
     "bubble_blow": {
       "pr": "ball27",
-      "hit": "power30",
+      "hit": "exp13",
       "nv": "barrage05"
     },
     "tackle": {
@@ -7864,7 +7864,7 @@
     },
     "great_horns_attack": {
       "pr": "bullet40",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar24"
     },
     "grey_tooth": {
@@ -7974,7 +7974,7 @@
     },
     "freezing_breath": {
       "pr": "ball38",
-      "hit": "power30",
+      "hit": "exp13",
       "nv": "pillar12"
     },
     "garuru_tomahawk": {
@@ -7984,7 +7984,7 @@
     },
     "ice_wolf_claw": {
       "pr": "arrow10",
-      "hit": "exp29",
+      "hit": "exp13",
       "nv": "pillar33"
     },
     "yellow_beast_crescent_blade": {
@@ -8009,7 +8009,7 @@
     },
     "double_punch": {
       "pr": "ball01",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "power34"
     },
     "electro_shocker": {
@@ -8029,7 +8029,7 @@
     },
     "horn_buster": {
       "pr": "bullet30",
-      "hit": "power32",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "mega_blaster": {
@@ -8054,7 +8054,7 @@
     },
     "horn_buster_ii": {
       "pr": "bullet09",
-      "hit": "power31",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "shine_of_bee": {
@@ -8079,7 +8079,7 @@
     },
     "violin_attack": {
       "pr": "arrow03",
-      "hit": "power14",
+      "hit": "exp13",
       "nv": "pillar12"
     },
     "meteor_wing": {
@@ -8179,7 +8179,7 @@
     },
     "bombs": {
       "pr": "arrow05",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar24"
     },
     "disaster_blaster": {
@@ -8289,7 +8289,7 @@
     },
     "blaze_sonic_breath": {
       "pr": "ball34",
-      "hit": "power20",
+      "hit": "exp01",
       "nv": "pillar26"
     },
     "exploding_sonic_breath": {
@@ -8344,12 +8344,12 @@
     },
     "horn_impulse": {
       "pr": "bullet36",
-      "hit": "power31",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "trident_revolver": {
       "pr": "fire12",
-      "hit": "power20",
+      "hit": "exp01",
       "nv": "pillar05"
     },
     "rising_destroyer": {
@@ -8359,7 +8359,7 @@
     },
     "solid_strike": {
       "pr": "ball13",
-      "hit": "power23",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "glorious_burst": {
@@ -8369,7 +8369,7 @@
     },
     "shining_blast": {
       "pr": "wind01",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "geogrey_sword": {
@@ -8379,12 +8379,12 @@
     },
     "corona_blaze_sword": {
       "pr": "bullet47",
-      "hit": "power20",
+      "hit": "exp01",
       "nv": "barrage01"
     },
     "final_shining_burst": {
       "pr": "wind01",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar24"
     },
     "torrid_weiss": {
@@ -8454,7 +8454,7 @@
     },
     "final_mirage_burst": {
       "pr": "bullet17",
-      "hit": "power20",
+      "hit": "exp01",
       "nv": "pillar22"
     },
     "seed_blast": {
@@ -8558,7 +8558,7 @@
     },
     "fire_jewels": {
       "pr": "bullet39",
-      "hit": "power13",
+      "hit": "exp01",
       "nv": "pillar26"
     },
     "crimson_formation": {
@@ -8568,7 +8568,7 @@
     },
     "mourning_dance": {
       "pr": "wind01",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "corona_flame": {
@@ -8628,17 +8628,17 @@
     },
     "moon_night_kick": {
       "pr": "arrow05",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "tear_arrow": {
       "pr": "arrow16",
-      "hit": "power19",
+      "hit": "exp01",
       "nv": "pillar06"
     },
     "lunatic_dance": {
       "pr": "bullet40",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "ice_archery": {
@@ -8648,12 +8648,12 @@
     },
     "crescent_harken": {
       "pr": "arrow05",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "arrow_of_artemis": {
       "pr": "bullet07",
-      "hit": "power13",
+      "hit": "exp01",
       "nv": "pillar26"
     },
     "eye_of_nightmares": {
@@ -8733,7 +8733,7 @@
     },
     "bear_fist": {
       "pr": "ball30",
-      "hit": "exp23",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "bear_roll": {
@@ -8783,7 +8783,7 @@
     },
     "turbo_stinger": {
       "pr": "bullet04",
-      "hit": "power32",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "bear_buster": {
@@ -8818,7 +8818,7 @@
     },
     "thunder_ball": {
       "pr": "arrow08",
-      "hit": "power24",
+      "hit": "exp04",
       "nv": "pillar03"
     },
     "thunder_bomber": {
@@ -8828,12 +8828,12 @@
     },
     "intercepting_bomb": {
       "pr": "ball30",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "power34"
     },
     "homing_laser": {
       "pr": "bullet29",
-      "hit": "power31",
+      "hit": "exp06",
       "nv": "barrage06"
     },
     "gran_killer": {
@@ -8873,7 +8873,7 @@
     },
     "giant_grater": {
       "pr": "ball06",
-      "hit": "exp29",
+      "hit": "exp13",
       "nv": "barrage05"
     },
     "curse_reflection": {
@@ -8903,7 +8903,7 @@
     },
     "diamond_machine_gun": {
       "pr": "bullet44",
-      "hit": "power31",
+      "hit": "exp06",
       "nv": "pillar04"
     },
     "diamond_hedgehog": {
@@ -8923,7 +8923,7 @@
     },
     "aqua_blaster": {
       "pr": "fire08",
-      "hit": "power30",
+      "hit": "exp13",
       "nv": "pillar33"
     },
     "drill_shell": {
@@ -8963,7 +8963,7 @@
     },
     "gate_of_atlantis": {
       "pr": "fire08",
-      "hit": "exp29",
+      "hit": "exp13",
       "nv": "barrage05"
     },
     "sorrow_blue": {
@@ -9063,7 +9063,7 @@
     },
     "absolute_blast": {
       "pr": "ball30",
-      "hit": "exp23",
+      "hit": "exp24",
       "nv": "pillar16"
     },
     "hecto_edge_blizzard": {
@@ -9073,7 +9073,7 @@
     },
     "innocence_blizzard": {
       "pr": "fire03",
-      "hit": "power30",
+      "hit": "exp13",
       "nv": "pillar25"
     },
     "freezing_ray": {
