@@ -6930,7 +6930,7 @@
     },
     "hammer_edge": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "pillar16"
     },
     "double_edge": {
@@ -7014,7 +7014,7 @@
     },
     "knifehand_strike": {
       "pr": "arrow05",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "kofusatsu": {
@@ -7084,7 +7084,7 @@
     },
     "kick": {
       "pr": "ball01",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "rapid_fire": {
@@ -7094,12 +7094,12 @@
     },
     "golden_triangle": {
       "pr": "bullet40",
-      "hit": "exp16",
+      "hit": "exp14",
       "nv": "power34"
     },
     "saint_kick": {
       "pr": "ball01",
-      "hit": "exp07",
+      "hit": "exp01",
       "nv": "pillar16"
     },
     "burst_shot": {
@@ -7139,7 +7139,7 @@
     },
     "guiltish": {
       "pr": "arrow05",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "leak_information": {
@@ -7204,7 +7204,7 @@
     },
     "rapid_attack": {
       "pr": "ball30",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "hammer_punch": {
@@ -7214,12 +7214,12 @@
     },
     "v_breath_arrow": {
       "pr": "ball01",
-      "hit": "exp16",
+      "hit": "exp14",
       "nv": "power34"
     },
     "magnum_crash": {
       "pr": "arrow05",
-      "hit": "exp16",
+      "hit": "exp14",
       "nv": "pillar24"
     },
     "dragon_impulse": {
@@ -7234,12 +7234,12 @@
     },
     "ulforce_saber": {
       "pr": "arrow05",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "shining_v_force": {
       "pr": "wind01",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "dragon_impulse_x": {
@@ -7249,7 +7249,7 @@
     },
     "splendor_blade": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "positron_laser": {
@@ -7299,7 +7299,7 @@
     },
     "gallia_fissure": {
       "pr": "ball30",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "power34"
     },
     "dragonia": {
@@ -7309,7 +7309,7 @@
     },
     "meteor_lux": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "power34"
     },
     "elec_rush": {
@@ -7412,7 +7412,7 @@
     },
     "seiken_gradalpha": {
       "pr": "ball01",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "pillar24"
     },
     "digitalize_of_soul": {
@@ -7422,7 +7422,7 @@
     },
     "alpha_inforce": {
       "pr": "ball01",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "ouryuken": {
@@ -7502,17 +7502,17 @@
     },
     "omega_blade": {
       "pr": "ball01",
-      "hit": "exp16",
+      "hit": "exp14",
       "nv": "power34"
     },
     "twenty_dive": {
       "pr": "ball30",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "twenty_scratch": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "road_two_decade": {
@@ -7711,7 +7711,7 @@
     },
     "dangan_senpu": {
       "pr": "ball01",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "pillar16"
     },
     "zekkou_shou": {
@@ -7844,7 +7844,7 @@
     },
     "tackle": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "power34"
     },
     "pepper_breath": {
@@ -7869,7 +7869,7 @@
     },
     "grey_tooth": {
       "pr": "ball01",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "power34"
     },
     "trident_arm": {
@@ -7954,7 +7954,7 @@
     },
     "garuru_thrust": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "power34"
     },
     "wolf_claw": {
@@ -7964,7 +7964,7 @@
     },
     "baldy_blow": {
       "pr": "wind01",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "pillar16"
     },
     "garuru_kick": {
@@ -7989,7 +7989,7 @@
     },
     "yellow_beast_crescent_blade": {
       "pr": "ball30",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "beast_cyclone": {
@@ -8019,7 +8019,7 @@
     },
     "beetle_horn_attack": {
       "pr": "wind01",
-      "hit": "exp16",
+      "hit": "exp14",
       "nv": "pillar24"
     },
     "quick_thrust": {
@@ -8129,7 +8129,7 @@
     },
     "spiral_raven_claw": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "blast_wing": {
@@ -8274,7 +8274,7 @@
     },
     "tail_smash": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "pillar16"
     },
     "blue_flare_breath": {
@@ -8299,12 +8299,12 @@
     },
     "tenryu_slash": {
       "pr": "ball30",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "power34"
     },
     "shoryu_slash": {
       "pr": "arrow05",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "avalon_s_gate": {
@@ -8394,7 +8394,7 @@
     },
     "rolling_upper": {
       "pr": "arrow05",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "pillar16"
     },
     "double_backhand": {
@@ -8409,7 +8409,7 @@
     },
     "gaoga_hound": {
       "pr": "ball30",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "spiral_blow": {
@@ -8494,7 +8494,7 @@
     },
     "pollen_spray": {
       "pr": "ball01",
-      "hit": "exp16",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "thorn_whip": {
@@ -8508,7 +8508,7 @@
     },
     "forbidden_temptation": {
       "pr": "arrow05",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "power34"
     },
     "absolute_territory": {
@@ -8593,7 +8593,7 @@
     },
     "crimson_lion_dance": {
       "pr": "bullet40",
-      "hit": "exp16",
+      "hit": "exp14",
       "nv": "pillar16"
     },
     "sol_blaster": {
@@ -8603,12 +8603,12 @@
     },
     "phoebus_blow": {
       "pr": "ball01",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "pillar24"
     },
     "barrage_sweeper": {
       "pr": "arrow05",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "pillar24"
     },
     "resting_burner": {
@@ -8748,12 +8748,12 @@
     },
     "crescent_dawn": {
       "pr": "ball30",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "power34"
     },
     "the_king_of_fists": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp14",
       "nv": "power34"
     },
     "cyclonic_kick": {
@@ -8953,7 +8953,7 @@
     },
     "vortex_penetration": {
       "pr": "ball01",
-      "hit": "exp16",
+      "hit": "exp24",
       "nv": "power34"
     },
     "wave_of_depth": {
@@ -8978,7 +8978,7 @@
     },
     "fin_attack": {
       "pr": "bullet40",
-      "hit": "exp07",
+      "hit": "exp24",
       "nv": "pillar24"
     },
     "frisbicker": {
@@ -9013,7 +9013,7 @@
     },
     "lio_claw": {
       "pr": "arrow05",
-      "hit": "exp16",
+      "hit": "exp14",
       "nv": "power34"
     },
     "thunder_of_king": {
