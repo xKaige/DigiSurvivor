@@ -1437,7 +1437,7 @@
       "nv": "pillar20"
     },
     "metal": {
-      "pr": "bullet14",
+      "pr": "ball07",
       "hit": "exp06",
       "nv": "exp26"
     },
@@ -7103,7 +7103,7 @@
       "nv": "pillar16"
     },
     "burst_shot": {
-      "pr": "bullet14",
+      "pr": "bullet46",
       "hit": "exp06",
       "nv": "barrage06"
     },
@@ -7376,23 +7376,23 @@
       "nv": "pillar04"
     },
     "metal_cannon": {
-      "pr": "bullet29",
+      "pr": "ball07",
       "hit": "exp06",
       "nv": "barrage06"
     },
     "power_metal": {
-      "pr": "ball20",
-      "hit": "exp06",
+      "pr": "ball13",
+      "hit": "exp11",
       "nv": "barrage06"
     },
     "cannonball": {
-      "pr": "bullet14",
-      "hit": "shock06",
+      "pr": "ball13",
+      "hit": "exp11",
       "nv": "barrage06"
     },
     "metal_meteor": {
-      "pr": "bullet14",
-      "hit": "shock06",
+      "pr": "ball13",
+      "hit": "exp27",
       "nv": "barrage06"
     },
     "bloody_tower": {
@@ -7401,13 +7401,13 @@
       "nv": "pillar24"
     },
     "brave_metal": {
-      "pr": "bullet14",
+      "pr": "ball07",
       "hit": "power21",
       "nv": "pillar04"
     },
     "doru_din": {
-      "pr": "bullet08",
-      "hit": "shock06",
+      "pr": "ball07",
+      "hit": "exp11",
       "nv": "pillar04"
     },
     "seiken_gradalpha": {
@@ -7521,7 +7521,7 @@
       "nv": "power34"
     },
     "vingtieme": {
-      "pr": "bullet14",
+      "pr": "ball07",
       "hit": "shock06",
       "nv": "barrage06"
     },
@@ -7536,7 +7536,7 @@
       "nv": "pillar16"
     },
     "zwanglanze": {
-      "pr": "bullet14",
+      "pr": "ball07",
       "hit": "exp06",
       "nv": "pillar04"
     },
