@@ -620,13 +620,13 @@ function hit(e,d,el,q){if(e.shd>0){if(Math.random()<.12)dmgNum(e.x,e.y-e.r,0,'#9
  if(q&&q.m){const k=DSRC||'basic';q.ds=q.ds||{};q.ds[k]=(q.ds[k]||0)+Math.min(v,Math.max(0,e.hp))}
  e.hp-=v;if(e.bo!=null&&q){e.dmg=e.dmg||{};e.dmg[q.id]=(e.dmg[q.id]||0)+v}e.fl=.1;dmgNum(e.x,e.y-e.r,v,cr?'#ffd23f':m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',cr?32:m>1?30:m<1?14:18,cr?String(Math.max(1,Math.round(v*10)))+'!':0);
  if(q&&q.m)Stats.afterHit(q,e,v)}
-// Dash (0.7): hasta DASH_N cargas, cada una se recarga en DASH_CD s; mientras dura (DASH_T) sos invulnerable.
+// Dash (0.7): hasta DASH_N cargas, cada una se recarga en DASH_CD s; sos inmune a todo daño mientras dura la animación (q.dsI: impulso + estela).
 // Espacio o Shift (celular: botón #dbtn). El invitado online lo hace en su pantalla y le avisa al anfitrión (mensaje 'dash').
 const DASH_N=2,DASH_CD=2.6,DASH_T=.17,DASH_V=1000;
 function dash(q){if(!q||q.dead||!running||paused||evo||Finale.on)return;if(q.dc==null)q.dc=DASH_N;if(q.dc<1||q.dsT>0)return;q.dc--;
- let [dx,dy]=inputOf(q);if(!dx&&!dy){dx=q.face||1;dy=0}const l=Math.hypot(dx,dy);q.ddx=dx/l;q.ddy=dy/l;q.dsT=DASH_T;q.gh=[];if(!isOnline||q.id===myIdx)Sound.play('dash');return 1}
+ let [dx,dy]=inputOf(q);if(!dx&&!dy){dx=q.face||1;dy=0}const l=Math.hypot(dx,dy);q.ddx=dx/l;q.ddy=dy/l;q.dsT=DASH_T;q.dsI=DASH_T+.22;q.gh=[];if(!isOnline||q.id===myIdx)Sound.play('dash');return 1}
 function myDash(){if(!running)return;if(isOnline){const q=P[myIdx];if(dash(q)&&!isHost&&conn)sendTo(conn,{type:'dash'})}else dash(P[0])}
-function hurt(q,d,el,src){if(q.dead||q.dsT>0)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;if(!isOnline||q.id===myIdx)Sound.play('hurt');burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
+function hurt(q,d,el,src){if(q.dead||q.dsT>0||q.dsI>0)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;if(!isOnline||q.id===myIdx)Sound.play('hurt');burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
 function tot(q,k){return Stats.pts(q,k)}   // puntos de stat: especie + partida + árbol (stats.js)
 function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,alt:{},line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
 
@@ -1366,6 +1366,7 @@ function update(dt){
    if(q.gp>=7&&(!isOnline||isHost)){q.grab=0;q.inv=Math.max(q.inv,1);Stats.flash(q,'¡Te soltaste!','#4dffb8')}
    else if(q.grab<=0&&(!isOnline||isHost)){const a=(e&&e.ang)||0;World.move(q,Math.cos(a)*420,Math.sin(a)*420);q.inv=0;hurt(q,(e?e.dm:1)*22,e?e.el:0);q.inv=Math.max(q.inv,0.8)}
    continue}
+  if(q.dsI>0)q.dsI-=dt;   // inmune mientras dura la animación del dash (impulso + estela)
   if(q.dc==null)q.dc=DASH_N;if(q.dc<DASH_N)q.dc=Math.min(DASH_N,q.dc+dt/DASH_CD);
   if(q.dsT>0){q.dsT-=dt;q.gh.push({x:q.x,y:q.y,l:.22});World.move(q,q.ddx*DASH_V*dt,q.ddy*DASH_V*dt);if(q.ddx)q.face=Math.sign(q.ddx);q.moving=true;q.inv-=dt;continue}   // dash: va derecho, sin control
   const [dx,dy]=inputOf(q);

@@ -230,7 +230,7 @@ const Bosses = {
       e.grT -= dt; e.at = 0.3; const q = P[e.grQ], o = e.grE;
       if (!e.grH && q && !q.dead) { if (o && e.grT > 2.0) { o.x = q.x; o.y = pcy(q); }
         if (e.grT <= 2.0 && !e.grL) { e.grL = 1; if (o) o.l = 0;
-          if (q.inv <= 0 && !(q.dsT > 0) && o && Math.hypot(q.x - o.x, pcy(q) - o.y) < 80) { e.grH = 1; q.grab = 2.0; q.grE = e; q.gp = 0; q.gpI = null; Bosses.banner('¡Atrapado! Movete para soltarte'); }
+          if (q.inv <= 0 && !(q.dsI > 0) && o && Math.hypot(q.x - o.x, pcy(q) - o.y) < 80) { e.grH = 1; q.grab = 2.0; q.grE = e; q.gp = 0; q.gpI = null; Bosses.banner('¡Atrapado! Movete para soltarte'); }
           else for (let j = 0; j < 10; j++) burst(o ? o.x : e.x, o ? o.y : e.y, '#c05bff'); } }
       if (e.grH && q && (q.dead || !(q.grab > 0))) { e.grT = 0; e.grH = 0; }
       return;
