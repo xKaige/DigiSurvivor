@@ -121,7 +121,7 @@
           },
           "vp": {
             "kills": 780,
-            "bosses": 2
+            "bosses": 1
           },
           "bonus": {
             "dmg": 2,
@@ -159,7 +159,7 @@
           },
           "vp": {
             "kills": 1000,
-            "bosses": 2,
+            "bosses": 1,
             "nohit": 30
           },
           "bonus": {
@@ -181,7 +181,7 @@
           },
           "vp": {
             "kills": 1000,
-            "bosses": 2,
+            "bosses": 1,
             "nohit": 30
           },
           "bonus": {
@@ -203,7 +203,7 @@
           },
           "vp": {
             "kills": 1250,
-            "bosses": 2,
+            "bosses": 1,
             "nohit": 30
           },
           "bonus": {
@@ -225,7 +225,7 @@
           },
           "vp": {
             "kills": 1500,
-            "bosses": 3,
+            "bosses": 2,
             "nohit": 50
           },
           "bonus": {
@@ -247,7 +247,7 @@
           },
           "vp": {
             "kills": 1500,
-            "bosses": 3,
+            "bosses": 2,
             "nohit": 50
           },
           "bonus": {
@@ -309,7 +309,7 @@
       },
       "vp": {
         "kills": 2250,
-        "bosses": 3,
+        "bosses": 1,
         "nohit": 50
       },
       "from": [
@@ -330,7 +330,7 @@
       },
       "vp": {
         "kills": 2250,
-        "bosses": 3,
+        "bosses": 1,
         "nohit": 30
       },
       "from": [
@@ -363,7 +363,7 @@
       },
       "vp": {
         "kills": 3500,
-        "bosses": 5,
+        "bosses": 2,
         "nohit": 50
       },
       "from": [

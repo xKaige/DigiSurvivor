@@ -48,7 +48,8 @@ def reqs(vbreq, stage, k):
     req, vp = {}, {}
     if tro: req[['FUE', 'VEL', 'INT', 'VIT'][k % 4]] = math.ceil(tro / 3)
     if vv: vp['kills'] = int(round(vv * KF[stage] / 10) * 10)
-    if bat: vp['bosses'] = math.ceil(bat / 5)
+    # jefes: el Gate sale cada 90 s y no da para más (pedido 23/10/2026): Campeón 1, Perfecto 1–2, forma final 1–2
+    if bat: vp['bosses'] = max(1, min({3: 1, 4: 2, 5: 2}[stage], math.ceil(bat / 5) - (1 if stage < 5 else 2)))
     if win: vp['nohit'] = {50: 30, 60: 40, 70: 50}.get(win, 30 + (win - 50))
     if not req and not vp: vp['kills'] = {3: 200, 4: 600, 5: 1200}[stage]   # VB "N/A" (la salida por defecto allá): algo mínimo acá
     score = (vv or 0) / 1000 + (bat or 0) / 10 + (tro or 0) / 10 + ((win or 0) - 40) / 30
