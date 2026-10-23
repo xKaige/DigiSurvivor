@@ -7108,8 +7108,8 @@
       "nv": "barrage06"
     },
     "giant_missile": {
-      "pr": "bullet45",
-      "hit": "shock06",
+      "pr": "bullet46",
+      "hit": "exp27",
       "nv": "barrage06"
     },
     "summon": {
@@ -7386,12 +7386,12 @@
       "nv": "barrage06"
     },
     "cannonball": {
-      "pr": "bullet45",
+      "pr": "bullet14",
       "hit": "shock06",
       "nv": "barrage06"
     },
     "metal_meteor": {
-      "pr": "bullet45",
+      "pr": "bullet14",
       "hit": "shock06",
       "nv": "barrage06"
     },
@@ -7401,7 +7401,7 @@
       "nv": "pillar24"
     },
     "brave_metal": {
-      "pr": "bullet45",
+      "pr": "bullet14",
       "hit": "power21",
       "nv": "pillar04"
     },
@@ -7536,7 +7536,7 @@
       "nv": "pillar16"
     },
     "zwanglanze": {
-      "pr": "bullet45",
+      "pr": "bullet14",
       "hit": "exp06",
       "nv": "pillar04"
     },
