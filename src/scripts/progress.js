@@ -27,6 +27,7 @@ const Progress = {
     if (!r.ok) throw new Error('No se encontró src/data/unlocks.json (' + r.status + ')');
     this.data = await r.json();
     this.activate();   // en memoria: se guarda en la próxima escritura (no pisar lo de la cuenta antes de loadProg)
+    this.claimDone(false);
   },
 
   // ---------- Estado guardado ----------
@@ -107,13 +108,20 @@ const Progress = {
     return out;
   },
   isActive(u) { return this.active().includes(u); },
+  // misiones ya cumplidas que se quedaron sin su Digitama (pedido: se veían "¡Lograda!" y no daban el huevo; pasaba cuando
+  // en la misma partida se cumplían dos y el tope de 1 por partida dejaba la otra esperando): se entregan ahora
+  claimDone(save) {
+    const s = this.read(); let n = 0;
+    for (const u of this.active()) if (!this.has(u.cid) && !s.eggs[u.cid] && this.value(u) >= u.goal) { s.eggs[u.cid] = { left: 1 }; n++; }
+    if (n) { this.activate(); if (save) this.write(); else this.badge(); }
+    return n;
+  },
   // fija la base de las misiones que se acaban de activar (las que suman arrancan de 0)
   activate() { const s = this.read(); for (const u of this.active()) if (s.act[u.cid] == null) s.act[u.cid] = this.raw(u); },
   value(u) {
     const s = this.read();
     if (this.BEST.includes(u.type)) return s.pv[u.cid] | 0;
-    if (u.type === 'analyzer') return this.raw(u);
-    return s.act[u.cid] == null ? 0 : Math.max(0, this.raw(u) - s.act[u.cid]);
+    return this.raw(u);   // las que suman cuentan TODO lo jugado (pedido 24/10/2026; antes, solo desde que se activaban)
   },
   // valor de toda la vida (estadísticas acumuladas)
   raw(u) {
@@ -266,7 +274,7 @@ const Progress = {
     w.querySelectorAll('.an-tabs button').forEach(b => b.onclick = () => { this.tab = b.dataset.t; this.render(); });
   },
   open() {
-    this.build();
+    this.build(); if (!running) this.claimDone(true);
     if (Object.keys(this.read().eggs).length) this.tab = 'egg';   // si hay huevos listos, abre directo en Digitamas
     this.render(); document.getElementById('analyzer').style.display = 'flex';
     this.loadAlts();
@@ -327,7 +335,7 @@ window.getProg = () => Progress.read();
 window.loadProg = st => {
   Progress.st = null;
   try { if (st) localStorage.setItem(Progress.KEY, JSON.stringify(st)); else localStorage.removeItem(Progress.KEY); } catch (e) {}
-  Progress.read(); if (Progress.data) Progress.activate(); Progress.renderRank();
+  Progress.read(); if (Progress.data) { Progress.activate(); Progress.claimDone(true); } Progress.renderRank();
   if (Progress.isOpen()) Progress.render();
   if (window.onProgressReady && Progress.data) window.onProgressReady();   // revisa el Digimon elegido (puede quedar bloqueado)
 };

@@ -8,7 +8,7 @@
     "stage_with": "Mejor etapa alcanzada con el Digimon 'with'",
     "boss": "Veces que derrotaste al jefe 'boss'",
     "analyzer": "Datos registrados en el Digimon Analyzer (formas + jefes)",
-    "_rules": "Las misiones van en orden: solo cuentan las 'active' (3) primeras sin cumplir, y por partida se gana como mucho 'perRun' (1) Digitama. Las de récord (reach_stage, survive, stage_with) se cumplen en UNA partida jugada con la misión activa; las que suman (kills_total, runs_total, kills_with, boss) cuentan desde que se activan; analyzer cuenta el total.",
+    "_rules": "Las misiones van en orden: solo cuentan las 'active' (3) primeras sin cumplir, y por partida se gana como mucho 'perRun' (1) Digitama. Las de récord (reach_stage, survive, stage_with) se cumplen en UNA partida jugada con la misión activa; las que suman (kills_total, runs_total, kills_with, boss) cuentan todo lo jugado; analyzer cuenta el total.",
     "boss_any": "Jefes del Digital Gate derrotados (cualquiera; el jefe sale al azar)"
   },
   "eggs": {
