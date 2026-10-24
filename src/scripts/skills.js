@@ -409,8 +409,19 @@ const SkillSys = {
     cx.closePath();
   },
   // efecto de las balas de un enemigo: cada especie (o jefe) tiene el suyo, sacado de los efectos de proyectil de las skills
-  prList() { if (!this._pr) { const s = new Set(); for (const k in (this.cat && this.cat.fxSkill) || {}) if (this.cat.fxSkill[k].pr) s.add(this.cat.fxSkill[k].pr); this._pr = [...s].sort(); } return this._pr; },
-  bfx(e) { const L = this.prList(); if (!L.length || !e) return 0; const id = e.bo != null ? 'b' + e.bo : 'e' + (e.et != null ? e.et : e.sk || 0); let h = 7; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 9973; return 1 + h % L.length; },
+  // balas enemigas: cualquier sprite de proyectil (lista fija y ordenada: el índice viaja en el sync como `bf`)
+  prList() { if (!this._pr) this._pr = Object.keys((this.cat && this.cat.fxSprites) || {}).filter(k => /^(bullet|ball|arrow|fire|shock|power|wind)\d/.test(k)).sort(); return this._pr; },
+  // sprites que no parecen un disparo (corazones, peces, caras, jeringa…): el sorteo de las balas enemigas no los usa
+  EB_ODD: ['ball11', 'ball15', 'ball16', 'ball17', 'ball19', 'ball29', 'ball34', 'bullet20', 'bullet22', 'bullet25', 'bullet29', 'bullet30', 'bullet36', 'bullet37', 'bullet38', 'bullet39', 'bullet41', 'bullet43', 'bullet44', 'bullet45', 'arrow20', 'shock09', 'power12', 'power13', 'power19', 'power20', 'power21', 'power23', 'power24', 'power27', 'power28', 'power30', 'power31', 'power32'],
+  // sprite de las balas de un enemigo/jefe: el que diga su ficha (`bf` en bosses.json, p. ej. los Royal Knights) o uno fijo
+  // sorteado por su especie entre los que parecen disparos
+  bfx(e) {
+    const L = this.prList(); if (!L.length || !e) return 0;
+    const B = e.bo != null && typeof Bosses !== 'undefined' ? Bosses.def(e.bo) : null;
+    if (B && B.bf && L.includes(B.bf)) return L.indexOf(B.bf) + 1;
+    const ok = L.filter(k => !this.EB_ODD.includes(k)), id = e.bo != null ? 'b' + e.bo : 'e' + (e.et != null ? e.et : e.sk || 0);
+    let h = 7; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 9973; return L.indexOf(ok[h % ok.length]) + 1;
+  },
   // dibuja una bala enemiga con su efecto (bf = índice + 1 en prList); devuelve false si no tiene o todavía no cargó
   drawEB(b) {
     const k = b.bf && this.prList()[b.bf - 1], S = k && this.get(k); if (!S) return false;

@@ -793,7 +793,8 @@
    "hp": 3200,
    "coins": 60,
    "rank": 9,
-   "royal": true
+   "royal": true,
+   "bf": "ball14"
   },
   {
    "id": "royal_dukemon",
@@ -827,7 +828,8 @@
    "hp": 3200,
    "coins": 60,
    "rank": 9,
-   "royal": true
+   "royal": true,
+   "bf": "arrow05"
   },
   {
    "id": "royal_magnamon",
@@ -861,7 +863,8 @@
    "hp": 3200,
    "coins": 60,
    "rank": 9,
-   "royal": true
+   "royal": true,
+   "bf": "ball31"
   },
   {
    "id": "royal_ulforceveedramon",
@@ -896,7 +899,8 @@
    "hp": 3200,
    "coins": 60,
    "rank": 9,
-   "royal": true
+   "royal": true,
+   "bf": "arrow01"
   },
   {
    "id": "royal_lordknightmon",
@@ -930,7 +934,8 @@
    "hp": 3200,
    "coins": 60,
    "rank": 9,
-   "royal": true
+   "royal": true,
+   "bf": "power22"
   },
   {
    "id": "royal_examon",
@@ -964,7 +969,8 @@
    "hp": 3200,
    "coins": 60,
    "rank": 9,
-   "royal": true
+   "royal": true,
+   "bf": "fire11"
   }
  ],
  "rankNote": "rank: 1 aparece desde el primer jefe, 2 desde el segundo, 3 desde el cuarto (Bosses.pick sortea sin repetir los últimos 4)"
