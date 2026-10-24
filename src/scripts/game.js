@@ -202,8 +202,8 @@ window.initPeer = function () {
         whenOpen(c, () => Bosses.banner('¡' + (back.nick || 'Tu compañero') + ' volvió!'));
         return;
       }
-      // alguien a quien invité se une a mi party: yo soy el líder/anfitrión
-      if (conn || running || !pendingInv[md.uid] || gs.length >= MAX_PLAYERS - 1 || gs.some(g => g.uid === md.uid)) { try { c.close(); } catch (e) {} return; }
+      // alguien a quien invité se une a mi party: yo soy el líder/anfitrión (con la misma versión del juego)
+      if (md.v !== GAME_VERSION || conn || running || !pendingInv[md.uid] || gs.length >= MAX_PLAYERS - 1 || gs.some(g => g.uid === md.uid)) { try { c.close(); } catch (e) {} return; }
       delete pendingInv[md.uid];
       addGuest(c, md);
     } else {
@@ -213,6 +213,11 @@ window.initPeer = function () {
         // se consulta en el momento si es amigo (así una amistad recién creada o eliminada se respeta al instante)
         Promise.resolve(window.isFriendUid ? window.isFriendUid(m.uid) : false).then(isF => {
           if (!isF) return;
+          if (m.v !== GAME_VERSION) {   // otra versión del juego: no se puede jugar junto (pedido)
+            whenOpen(c, () => sendTo(c, { type: 'decline', ver: GAME_VERSION }));
+            lobbyMsg(String(m.nick || 'Tu amigo').slice(0, 20) + ' te invitó con la versión ' + (m.v || 'vieja') + ' y vos tenés la ' + GAME_VERSION + '. Actualicen la página (Ctrl+F5).');
+            return;
+          }
           if (inParty() || running || inbox.some(i => i.uid === m.uid)) { whenOpen(c, () => sendTo(c, { type: 'decline', busy: 1 })); return; }
           const inv = { id: Math.random().toString(36).slice(2), uid: m.uid, nick: String(m.nick || '').slice(0, 20), peerId: m.peerId, c };
           inbox.push(inv); setTimeout(() => dropInvite(inv.id), 60000); lobbyChanged();
@@ -263,10 +268,10 @@ window.Lobby = {
     const fail = msg => { if (done) return; done = true; clearTimeout(to); delete ctl[f.peerId]; delete pendingInv[f.uid]; lobbyMsg(msg); try { c.close(); } catch (e) {} };
     to = setTimeout(() => fail(f.nick + ' no respondió'), 15000);
     ctl[f.peerId] = () => fail(f.nick + ' no está disponible');
-    whenOpen(c, () => sendTo(c, { type: 'invite', uid: me.uid, nick: me.nick, peerId: myPeerId }));
+    whenOpen(c, () => sendTo(c, { type: 'invite', uid: me.uid, nick: me.nick, peerId: myPeerId, v: GAME_VERSION }));
     c.on('data', m => {
       if (!m) return;
-      if (m.type === 'decline') fail(f.nick + (m.busy ? ' está ocupado' : ' rechazó la invitación'));
+      if (m.type === 'decline') fail(f.nick + (m.ver ? ' tiene la versión ' + m.ver + ' y vos la ' + GAME_VERSION + ': actualicen la página (Ctrl+F5)' : m.busy ? ' está ocupado' : ' rechazó la invitación'));
       else if (m.type === 'accept') { done = true; clearTimeout(to); delete ctl[f.peerId]; setTimeout(() => { try { c.close(); } catch (e) {} }, 500); }
     });
     c.on('error', () => fail(f.nick + ' no está disponible'));
@@ -280,7 +285,7 @@ window.Lobby = {
     sendTo(inv.c, { type: 'accept' });
     setTimeout(() => { try { inv.c.close(); } catch (e) {} }, 500);
     while (inbox.length) sendTo(inbox.pop().c, { type: 'decline', busy: 1 });   // las demás invitaciones se rechazan
-    const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick }, serialization: 'json', reliable: true });
+    const c = peer.connect(inv.peerId, { metadata: { kind: 'game', uid: me.uid, nick: me.nick, v: GAME_VERSION }, serialization: 'json', reliable: true });
     conn = c; isHost = false; isOnline = false; myIdx = 1;
     roster = [{ i: 0, uid: inv.uid, nick: inv.nick, c: null }];
     setupConn(c);
@@ -376,7 +381,9 @@ function setupConn(c) {
     if (c.open && /not-open-yet|message-too-big/.test(why)) { console.warn('DigiSurvivor: ' + why + ' (la conexión sigue)'); return; }
     connClosed(c, why);
   });
+  c.seen = performance.now(); c.on('open', () => { c.seen = performance.now(); });
   c.on('data', data => {
+    c.seen = performance.now();
     if (data && data.type === 'part') { data = joinPart(data); if (!data) return; }   // mensaje grande que llegó en pedazos
     const g = isHost ? guestOf(c) : null;
     if (data.type === 'hello' || data.type === 'pick') {
@@ -451,6 +458,22 @@ function setupConn(c) {
   });
 }
 
+// Latido (pedido: si alguien se iba sin que PeerJS avisara el corte —cerrar la pestaña, se cae internet— el anfitrión quedaba
+// esperando su carta y los demás no podían seguir): todos mandan 'ping' cada 1 s desde un Worker (no lo frena la pestaña
+// oculta) y si alguien no manda NADA en HB_LOST ms se lo da por cortado: deja de contar para las cartas y tiene RECON_S para volver.
+const HB_LOST = 7000;
+function heartbeat() {
+  const now = performance.now(), chk = running && isOnline;   // el ping va siempre que haya party (también en el lobby y al cargar); el corte se mira solo en partida
+  if (isHost) {
+    for (const g of gs.slice()) { if (!g.c || g.lost) continue; sendTo(g.c, { type: 'ping' });
+      if (chk && now - (g.c.seen || now) > HB_LOST) { const c = g.c; try { c.close(); } catch (e) {} connClosed(c, 'sin respuesta'); } }
+  } else if (conn) {
+    sendTo(conn, { type: 'ping' });
+    if (chk && now - (conn.seen || now) > HB_LOST) { const c = conn; try { c.close(); } catch (e) {} connClosed(c, 'sin respuesta'); }
+  }
+}
+try { const w = new Worker(URL.createObjectURL(new Blob(['setInterval(()=>postMessage(0),1000)'], { type: 'text/javascript' }))); w.onmessage = heartbeat; }
+catch (e) { setInterval(heartbeat, 1000); }
 // Online (anfitrión): jugadores que tienen que elegir carta (él y los invitados conectados que siguen en la partida)
 const mustPick = () => [0, ...gs.filter(g => !g.lost && g.c).map(g => g.i)].filter(i => P[i] && !P[i].gone);
 // Online (anfitrión): si ya eligieron todos, sigue la partida (o arranca la evolución final)
