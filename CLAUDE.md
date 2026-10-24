@@ -276,7 +276,7 @@ Campos clave: `cid, el (atributo), hp/max, dmg, rate, sp, multi, pierce, mag, ar
 - 39 logros en 8 categorías (`Achievements.LIST`, cada uno con `v(S)` y `goal`; los ids no se cambian). Pestaña "Logros" del menú (`#lgb` → `#logros`) y aviso dorado arriba (`#lg-toast`, sonido `win`).
 - Se guardan en el progreso de la cuenta: `Progress.st.ach = {id: fecha}` y `Progress.st.ax` = contadores propios (mejor partida de Digimon eliminados, evoluciones perfectas `pfc`, segundos sin daño, revividas `revs`, monedas ganadas, partidas online/de 4, desafíos, racha de días, banderas de los secretos).
 - Hooks: `Achievements.onStart` (start), `tick` (cada cuadro, con TU jugador: al borde, pacifista, X-Antibody, oscura, los 4 vivos a los 15 min, una sola skill 5 min), `onRunEnd` (endRun, antes de `Challenge.onRunEnd`), y envuelve `Progress.hatchNow`, `Trees.buy`, `Missions.claim` y `window.loadProg`. Jefe en menos de 30 s: `Bosses.fast` (sync `bf`). El online manda `pfc` y `revs` en los datos lentos.
-- **La fisura del Digital Gate se cierra a los `Gate.LIFE` (120) s si nadie entra** ("La fisura se cerró", el jefe espera al próximo turno); es el logro secreto "¿Dónde está el jefe?".
+- **La fisura del Digital Gate se cierra a los `Gate.LIFE` (120) s si nadie entra** ("La fisura se cerró", el jefe espera al próximo turno). Arriba de la grieta y en su flecha se ve cuánto falta (`Gate.left/leftTxt`, rojo los últimos 20 s; online `lf` en el sync del Gate); es el logro secreto "¿Dónde está el jefe?".
 - **A los enemigos se les dice "Digimon", nunca "virus"** (Virus es solo el atributo). Se cambiaron todos los textos (skills, misiones, desafío, HUD, pantalla final) y `tools/workshop/gen_lines.py`.
 
 ### Rango de Tamer (`progress.js`)

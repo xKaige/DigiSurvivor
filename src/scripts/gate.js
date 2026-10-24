@@ -77,8 +77,11 @@ const Gate = {
   },
 
   // ---------- Sync online ----------
-  sync() { return { g: this.g && [Math.round(this.g[0]), Math.round(this.g[1])], a: World.arena ? 1 : 0, cd: this.cd == null ? null : Math.round(this.cd * 10) / 10 }; },
-  apply(d) { this.g = d.g || null; World.arena = !!d.a; this.cd = d.cd; },
+  sync() { return { g: this.g && [Math.round(this.g[0]), Math.round(this.g[1])], a: World.arena ? 1 : 0, cd: this.cd == null ? null : Math.round(this.cd * 10) / 10, lf: this.g ? Math.round(this.left()) : null }; },
+  apply(d) { this.g = d.g || null; World.arena = !!d.a; this.cd = d.cd; if (d.lf != null) this.gt = t - (this.LIFE - d.lf); },
+  // segundos que le quedan a la fisura antes de cerrarse (pedido: timer en el Gate) y su texto m:ss
+  left() { return Math.max(0, this.LIFE - (t - this.gt)); },
+  leftTxt() { const s = Math.ceil(this.left()); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); },
 
   // ---------- Avisos (anfitrión y cliente) ----------
   hud() {
@@ -112,6 +115,12 @@ const Gate = {
     // círculo para pararse
     cx.strokeStyle = 'rgba(61,255,122,' + (0.5 + 0.3 * Math.sin(k * 2)) + ')'; cx.lineWidth = 3;
     cx.beginPath(); cx.ellipse(x, y, this.R + 10, (this.R + 10) * 0.45, 0, 0, 6.283); cx.stroke();
+    // cuánto falta para que se cierre (rojo y latiendo los últimos 20 s)
+    const lw = this.left() < 20, sz = lw ? 20 + 3 * Math.abs(Math.sin(t * 5)) : 18;
+    cx.save(); cx.textAlign = 'center'; cx.font = '900 ' + Math.round(sz) + "px 'Orbitron','Chakra Petch',sans-serif";
+    cx.lineWidth = 5; cx.strokeStyle = '#000'; cx.strokeText(this.leftTxt(), x, y - h - 26); cx.fillStyle = lw ? '#ff4d4d' : '#b6ffcb'; cx.fillText(this.leftTxt(), x, y - h - 26);
+    cx.font = "700 11px 'Chakra Petch',sans-serif"; cx.lineWidth = 4; cx.strokeText('SE CIERRA EN', x, y - h - 46); cx.fillStyle = '#9fe8b4'; cx.fillText('SE CIERRA EN', x, y - h - 46);
+    cx.restore();
   },
   // cuenta regresiva en pantalla (sin cámara)
   drawOverlay() {

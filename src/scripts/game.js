@@ -1510,7 +1510,7 @@ function pname(i){const m=isOnline&&roster.find(x=>x.i===i);return(m&&m.nick)||(
 function drawPointers(){
  const me=isOnline?P[myIdx]:null,ox=me&&!me.dead?me.x:cam.x,oy=me&&!me.dead?me.y:cam.y,list=[];
  if(mode>1)P.forEach((q,i)=>{if(isOnline&&i===myIdx)return;list.push({x:q.x,y:q.y-30,col:PC[i],txt:(q.dead?'✝ ':'')+pname(i)})});
- if(Gate.g&&!World.arena)list.push({x:Gate.g[0],y:Gate.g[1]-60,col:'#3dff7a',txt:'Digital Gate'});
+ if(Gate.g&&!World.arena)list.push({x:Gate.g[0],y:Gate.g[1]-60,col:'#3dff7a',txt:'Digital Gate · '+Gate.leftTxt()});
  list.push(...Explore.pointers(ox,oy));
  if(!World.arena)for(const e of en)if(e.cp&&Math.hypot(e.x-ox,e.y-oy)<1500)list.push({x:e.x,y:e.y-50,col:'#ffb02e',txt:'Campeón'});   // campeones (Issue #7)   // cofres y zonas de datos (explore.js)
  for(const o of list){const sx=o.x-cam.x+W/2,sy=o.y-cam.y+H/2;if(sx>20&&sx<W-20&&sy>20&&sy<H-20)continue;
