@@ -3,7 +3,7 @@
 Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero que ataca solo, juntás XP de los virus que matás, subís de nivel, elegís mejoras y skills, y tu compañero digievoluciona. Hay 1 jugador y online de 2 a 4 jugadores (PeerJS, invitando amigos). **El modo 2 jugadores local se sacó** (a pedido): el código de `mode>1` local queda pero no hay botón.
 
 ## Estado actual (última sesión: 18/10/2026)
-- **Versión en el código: 0.7** (ver abajo). **Versión publicada: 0.6** (17/10/2026 22:42; `RESET_BEFORE` reinició todo el progreso anterior): motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo de 99 nodos + árbol de Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores.
+- **Versión en el código: 0.8** (ver abajo). **Versión publicada: 0.6** (17/10/2026 22:42; `RESET_BEFORE` reinició todo el progreso anterior): motor de stats (`stats.js`), familias de Wikimon, rasgo por especie, SP, evoluciones estilo V-Pet, árboles por atributo de 99 nodos + árbol de Tamer (`trees.js`), vínculo, Chips de Reformateo, re-sorteo y bases para 4 jugadores.
 - **Subido después de la 0.6** (sin versión nueva):
   - Online: el host sigue simulando con la ventana minimizada (Worker), sync compacto a 15/s con interpolación y mensajes partidos (PeerJS JSON no manda más de 16 KB: era lo que cortaba las partidas), números de daño para el invitado, reconexión de 20 s si se corta, carta automática si estás caído, cámara propia y flechas hacia los compañeros (nick y metros).
   - **Digital Gate** (`gate.js`): los jefes se pelean en una arena estilo MT Infinity a la que se entra por una fisura; al ganar, recompensas, nivel obligatorio, cuenta 5→0 y vuelta.
@@ -15,6 +15,10 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - Reglas de Firestore pendientes de revisar: `challenges/{día}/scores/{uid}`, el campo `prog` y los campos de la 0.6 en `users/{uid}` (`ac`, `rc`, `tr`, `bond`, `v`).
 - Después: **mapas** (más zonas, selector, lava que daña en Magma Mountain), 3–4 jugadores en el menú y en el online (las bases ya están).
 - En la raíz hay dos archivos del usuario sin subir: `ost.mp3` y `free_pixel_16_woods.png` (el tileset original; el juego usa `assets/maps/woods_tiles.png`).
+
+## Versión 0.8 (24/10/2026): Royal Knights
+- Al minuto 15 (`FINALE_T`; con `?finale`, al minuto) `Finale.royals()` borra todos los Digimon, balas, la fisura y los cofres y hace aparecer en ronda a los 6 Royal Knights (`bosses.json` con `royal: true`, sprites `assets/sprites/bosses/royal_*.png` sacados de Streaming Avatars `AppData/LocalLow/ClonzeWork/Streaming Avatars/data/avatars/royal*.png`; las de 7 filas sin la de baile). Mientras `Finale.rk` no aparecen Digimon comunes, oleadas, campeones, Gates ni cofres. Si te borran, termina como siempre; cuando caen los 6 arranca la luz de Yggdrasill (mismo `endRun`, logro `fin`).
+- Royal: `Bosses.spawn(i)` con índice fijo (el sorteo del Gate los excluye), vida mín. `ROYAL_T` (32) s del DPS del grupo, daño ×`ROYAL_DM` (1,6), tamaño `scale` (1,5; Examon 2,5: `Bosses.h`), mecánicas propias `R1`/`R2` (sin zonas seguras, achicar, gravedad, escudo, ola ni agarre) y sin ataque definitivo. Con 3+ jefes las barras van compactas en grilla (`body.bossN`). El Bestiario no los cuenta.
 
 ## Versión 0.7 (20/10/2026, sin publicar todavía)
 - **Clima** (`weather.js`, `Weather`, se carga después de finale.js): 0 despejado, 1 lluvia, 2 tormenta; cambia cada 50–90 s (empieza despejado ~1 min). No hay clima en la arena ni en el final. Lluvia: enemigos −8% de velocidad (`Weather.slow()` en `Enemies.move`). Tormenta: rayos marcados (`Enemies.bomb` amarillo, 1,3 s, daño ~ al de los enemigos del minuto, sin atributo: `el: NaN`) que también dañan a los enemigos (60% de su vida); efecto `bolt` (`Weather.drawBolt`), relámpagos y sonido `thunder`. Online: `wx` en el sync.

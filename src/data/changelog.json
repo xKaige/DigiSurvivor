@@ -1,5 +1,13 @@
 [
   {
+    "v": "0.8",
+    "items": [
+      "Royal Knights: al minuto 15 desaparecen todos los Digimon del mapa y llegan Omegamon, Dukemon, Magnamon, UlforceVeedramon, LordKnightmon y Examon, uno de cada uno.",
+      "Son mucho más grandes, con muchísima más vida y daño que un jefe común (Examon es enorme). Si te borran, termina la partida.",
+      "Si vencés a los seis, Yggdrasill reinicia el Digimundo y ganás la partida."
+    ]
+  },
+  {
     "v": "0.7",
     "items": [
       "Clima: ahora puede llover o caer una tormenta eléctrica, con rayos marcados que dañan a todos los que estén adentro.",

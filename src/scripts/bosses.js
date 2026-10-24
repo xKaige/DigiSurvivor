@@ -53,8 +53,8 @@ const Bosses = {
   // los de rango 1); nunca repite uno de los últimos 4
   pick() {
     const L = this.data.list, n = this.n, hi = n < 1 ? 1 : n < 3 ? 2 : 3, lo = n >= 6 ? 2 : 1, rk = i => L[i].rank || 1;
-    let c = L.map((_, i) => i).filter(i => rk(i) <= hi && rk(i) >= lo && !this.recent.includes(i));
-    if (!c.length) c = L.map((_, i) => i).filter(i => rk(i) <= hi);
+    let c = L.map((_, i) => i).filter(i => !L[i].royal && rk(i) <= hi && rk(i) >= lo && !this.recent.includes(i));
+    if (!c.length) c = L.map((_, i) => i).filter(i => !L[i].royal && rk(i) <= hi);
     const i = c[Math.random() * c.length | 0]; this.recent = [i, ...this.recent].slice(0, 4); return i;
   },
   // Vida según tu poder (pedido: los jefes se quedaban muy atrás y explotaban): se estima el daño por segundo contra UN
@@ -73,17 +73,19 @@ const Bosses = {
     }
     return d * crit;
   },
-  spawn() {
-    const L = this.data.list, i = this.pick(), cyc = Math.floor(this.n / 6), B = L[i];   // cyc: cada 6 jefes, más fuertes
-    this.n++;
+  spawn(fi) {
+    const L = this.data.list, i = fi != null ? fi : this.pick(), cyc = Math.floor(this.n / 6), B = L[i];   // cyc: cada 6 jefes, más fuertes
+    if (!B.royal) this.n++;
     const a = Math.random() * 6.283, d = Math.hypot(W, H) / 2 + 60;
     // la vida escala con la etapa del más evolucionado (0,5× en Bebé … 1,75× en forma final), el ciclo y la cantidad de jugadores
     const st = Math.max(...P.map(q => q.stage | 0)); let hp = 2.4 * B.hp * (0.5 + 0.25 * st) * (1 + 0.035 * Math.max(0, lvl - 1)) * (1 + cyc * 1.5) * (1 + 1.1 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores (+110% c/u: en party morían antes de la furia) y, desde los 4 min, con el tiempo
     const dps = P.reduce((s, q) => s + this.dpsOf(q), 0);
     hp = Math.max(hp, dps * this.FIGHT_T * (1 + cyc * 0.3));
+    if (B.royal) hp = Math.max(hp, dps * this.ROYAL_T);   // 0.8: Royal Knights (finale.js), mucha más vida
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
       hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5) * (1 + Math.max(0, t - 240) / 600), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
-      pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0, t0: t });
+      pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0, t0: t, sc: B.scale || 1, rk: B.royal ? 1 : 0 });
+    if (B.royal) { const b = en[en.length - 1]; b.dm *= this.ROYAL_DM; b.pt = 2 + Math.random() * 4; }
     const b = en[en.length - 1], sp = World.spawnPos(b) || World.freeSpot(b.x, b.y, b); b.x = sp[0]; b.y = sp[1];
   },
   // comportamiento de un jefe en el loop de enemigos (tg = jugador más cercano, dd = distancia, a = ángulo hacia él)
@@ -94,6 +96,11 @@ const Bosses = {
   P1: [{ n: 'Terremoto', k: 'quake' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Gravedad', k: 'grav' }, { n: 'Muralla', k: 'wall' }, { n: 'Campo minado', k: 'mines' }, { n: 'Cruz giratoria', k: 'shieldx' }, { n: 'Láser barredor', k: 'sweep' }, { n: 'Cuadrícula', k: 'grid' }],
   P2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Cruz giratoria', k: 'shieldx' }, { n: 'Terremoto', k: 'quake' }, { n: 'Orbes', k: 'homing' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Zonas seguras', k: 'safe' }, { n: 'Sentencia', k: 'mark' }, { n: 'Gravedad', k: 'grav' }, { n: 'Campo minado', k: 'mines' }, { n: 'Arena que se achica', k: 'shrink' }, { n: 'Ola', k: 'wave' }, { n: 'Agarre', k: 'grab' }, { n: 'Láser barredor', k: 'sweep' }],
   SX_DUR: 7.5, SX_W: 54, SX_L: 1150,
+  // Royal Knights (0.8, finale.js): salen los 6 juntos en el mapa, así que usan mecánicas que no se pisan entre ellos (nada de
+  // zonas seguras, arena que se achica, gravedad, escudo, ola ni agarre) y no tienen ataque definitivo
+  ROYAL_T: 32, ROYAL_DM: 1.6,
+  R1: [{ n: 'Terremoto', k: 'quake' }, { n: 'Embestidas', k: 'mdash' }, { n: 'Muralla', k: 'wall' }, { n: 'Orbes', k: 'homing' }],
+  R2: [{ n: 'Espiral', k: 'spiral' }, { n: 'Lluvia', k: 'rain' }, { n: 'Sentencia', k: 'mark' }, { n: 'Campo minado', k: 'mines' }, { n: 'Láser barredor', k: 'sweep' }, { n: 'Embestidas', k: 'mdash' }],
   // barra de casteo (pedido): habilidades que duran (cruz, zonas seguras, gravedad, espiral, sentencia) → [índice, 0..1 que queda]
   CASTS: ['Cruz giratoria', 'Zonas seguras', 'Gravedad', 'Espiral', 'Sentencia', 'Arena que se achica', 'Cuadrícula', 'Láser barredor', 'Ola', 'Agarre', 'ATAQUE DEFINITIVO'],
   castOf(e) {
@@ -127,7 +134,7 @@ const Bosses = {
     const B = this.def(e.bo); if (!B) return;
     // Issue #13: cuanto menos vida, más rápido (pausa entre ataques, giro, espiral, balas y movimiento): F va de 1 a 1,9
     const F = 1 + 0.9 * (1 - Math.max(0, e.hp) / e.mh); e.rg = F;
-    if (!e.p3 && e.hp < e.mh * 0.25) { e.p3 = 1; this.ultimate(e, B); }
+    if (!e.p3 && !e.rk && e.hp < e.mh * 0.25) { e.p3 = 1; this.ultimate(e, B); }
     e.at -= dt;
     const ag = this.aggro(e, dt); if (ag) { tg = ag; dd = Math.hypot(tg.x - e.x, tg.y - e.y); a = Math.atan2(tg.y - e.y, tg.x - e.x); e.ang = a; }
     // Cruz giratoria: primero va al centro de la arena, después escudo (no recibe daño) y 4 rayos que giran
@@ -258,7 +265,7 @@ const Bosses = {
     const ma = World.steer(e, a), vs = e.sp * (1 + 0.4 * (F - 1)); World.move(e, Math.cos(ma) * vs * dt, Math.sin(ma) * vs * dt);   // rodea las paredes
     e.pt -= dt;
     if (e.pt > 0 || dd > 720) return;
-    const L = e.p2 ? B.atk.concat(this.P2) : B.atk.concat(this.P1);
+    const L = B.atk.concat(e.rk ? (e.p2 ? this.R2 : this.R1) : e.p2 ? this.P2 : this.P1);
     // bolsa mezclada (pedido: en solo los jefes morían antes de llegar a las mecánicas nuevas, que estaban al final de una
     // lista fija): primero las mecánicas en orden al azar, después sus técnicas canon; no repite hasta vaciarla. Al entrar en
     // furia se arma una bolsa nueva con las de esa fase.
@@ -362,7 +369,7 @@ const Bosses = {
   },
 
   // ---------- Dibujo y HUD (anfitrión y cliente) ----------
-  h(e) { return e.r * 6.5; },           // alto en pantalla (bastante más grande que un tanque)
+  h(e) { return e.r * 6.5 * (e.sc || (this.def(e.bo) || {}).scale || 1); },   // sc: Royal Knights más grandes (Examon ×2,5)           // alto en pantalla (bastante más grande que un tanque)
   banner(txt) {
     if (evo) return;
     const v = $('evt'); v.textContent = txt; v.style.display = 'block';
@@ -385,7 +392,7 @@ const Bosses = {
       else if (gone.length && running) { this.banner('¡Derrotaste a ' + gone.join(' y ') + '!'); Sound.play('win'); }
       this.shown = id; this.shownNames = names;
     }
-    document.body.classList.toggle('boss2', L.length > 1);   // con dos barras, el cartel de avisos baja (style.css)
+    document.body.classList.toggle('boss2', L.length > 1); document.body.classList.toggle('bossN', L.length > 2);   // con dos barras, el cartel de avisos baja (style.css)
     if (!L.length) { this.hideBar(); return; }
     const b = this.bar(); b.style.display = 'block';
     if (b.children.length !== L.length) b.innerHTML = L.map(() => '<div class="bb-one"><div class="bb-top"><b></b><span></span></div><div class="bb-hp"><i></i></div><div class="bb-cast"><em></em><u></u></div></div>').join('');

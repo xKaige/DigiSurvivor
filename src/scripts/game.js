@@ -846,7 +846,7 @@ function renderLegend() {
 // poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
 // a esa fecha vuelve a 0 una sola vez (monedas, árbol y misiones del día). Nick, amigos y Digimon elegido no se tocan.
 // Ej.: const RESET_BEFORE = Date.parse('2027-03-01T00:00:00-03:00');
-const GAME_VERSION = '0.7';
+const GAME_VERSION = '0.8';
 const RESET_BEFORE = Date.parse('2026-10-17T22:42:00-03:00');   // 0.6: todo el progreso anterior vuelve a cero
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
@@ -1399,9 +1399,9 @@ function update(dt){
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
  // (más densidad, pedido: intervalo de 0,6 s que baja hasta 0,15 s y tandas +1 cada 90 s; además, oleadas: Enemies.events)
  spawnT-=dt;const iv=Math.max(.15,.6-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
- if(!World.arena){Enemies.events(dt,Math.max(0,mt-1));Enemies.champ(dt,Math.max(0,mt-1))}
- Gate.tick(dt);Weather.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&!Finale.rk&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
+ if(!World.arena&&!Finale.rk){Enemies.events(dt,Math.max(0,mt-1));Enemies.champ(dt,Math.max(0,mt-1))}
+ if(!Finale.rk)Gate.tick(dt);Weather.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
    if(b){const a0=Math.atan2(ehy(b)-pcy(q),b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:pcy(q),vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0,r:5+Math.min(9,Math.log2(Math.max(1,q.dmg))*2.2)})}q.atkT=q.rate}}}
@@ -1432,7 +1432,7 @@ function update(dt){
  for(const g of gems){let tg=null,td=1e9;for(const q of al2){const d=Math.hypot(q.x-g.x,q.y-g.y);if(d<td){td=d;tg=q}}
   if(tg){if(td<tg.mag)g.f=1;if(g.f||Items.magT>0||g.mg){const a=Math.atan2(tg.y-g.y,tg.x-g.x),gv=Items.magT>0||g.mg?900:(g.gv=Math.min(1600,(g.gv||380)+500*dt));g.x+=Math.cos(a)*gv*dt;g.y+=Math.sin(a)*gv*dt}if(td<tg.r+8){xp+=g.v*tg.xpm*XP_GAIN*xpMul();g.dead=1;Sound.play('gem')}}}
  gems=gems.filter(g=>!g.dead);
- Items.update(dt);Explore.tick(dt);
+ Items.update(dt);if(!Finale.rk)Explore.tick(dt);
  if(xp>=need)levelUp();
  for(const f of fx){f.y-=45*dt;f.l-=dt}fx=fx.filter(f=>f.l>0);for(const o of ef)o.l-=dt;ef=ef.filter(o=>o.l>0);if(ef.length>MAX_EF){const wn=ef.filter(o=>o.k==='wline'||o.k==='wcirc'||o.k==='pool'),vi=ef.filter(o=>o.k!=='wline'&&o.k!=='wcirc'&&o.k!=='pool');ef=wn.concat(vi.slice(Math.max(0,vi.length-(MAX_EF-wn.length))))}   // tope de efectos (los avisos de ataque nunca se descartan)
  for(const q of pt){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}pt=pt.filter(q=>q.l>0);

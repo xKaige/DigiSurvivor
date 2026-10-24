@@ -19,7 +19,7 @@ const Achievements = {
     { id: 'dm', c: 'boss', n: 'Dark Masters', d: 'Derrotá a Piemon, MetalSeadramon y Machinedramon', goal: 3, v: S => S.bossesOf(['piemon', 'metalseadramon', 'machinedramon']) },
     { id: 'vamp', c: 'boss', n: 'Señores de la noche', d: 'Derrotá a Vamdemon, NeoVamdemon y BelialVamdemon', goal: 3, v: S => S.bossesOf(['vamdemon', 'neovamdemon', 'belialvamdemon']) },
     { id: 'show', c: 'boss', n: 'Rey del show', d: 'Derrotá a Etemon, MetalEtemon y KingEtemon', goal: 3, v: S => S.bossesOf(['etemon', 'metaletemon', 'kingetemon']) },
-    { id: 'allb', c: 'boss', n: 'Bestiario', d: 'Derrotá a todos los jefes al menos una vez', goal: () => Bosses.data ? Bosses.data.list.length : 26, v: S => S.bossesOf(Bosses.data ? Bosses.data.list.map(b => b.id) : []) },
+    { id: 'allb', c: 'boss', n: 'Bestiario', d: 'Derrotá a todos los jefes al menos una vez', goal: () => Bosses.data ? Bosses.data.list.filter(b => !b.royal).length : 26, v: S => S.bossesOf(Bosses.data ? Bosses.data.list.filter(b => !b.royal).map(b => b.id) : []) },
     { id: 'fast', c: 'boss', n: 'Rápido y furioso', d: 'Derrotá a un jefe en menos de 30 segundos', goal: 1, v: S => S.ax.fast },
 
     { id: 'st3', c: 'evo', n: 'Digievolución', d: 'Llegá a Campeón', goal: 1, v: S => S.s.bestStage >= 3 ? 1 : 0 },
@@ -31,7 +31,7 @@ const Achievements = {
 
     { id: 's10', c: 'surv', n: 'Aguante', d: 'Sobreviví 10 minutos', goal: 600, t: 1, v: S => S.s.bestSecs },
     { id: 's20', c: 'surv', n: 'Veterano', d: 'Sobreviví 20 minutos', goal: 1200, t: 1, v: S => S.s.bestSecs },
-    { id: 'fin', c: 'surv', n: 'Fin del Digimundo', d: 'Llegá al final con Yggdrasill (30 minutos)', goal: 1, v: S => S.ax.fin },
+    { id: 'fin', c: 'surv', n: 'Fin del Digimundo', d: 'Vencé a los Royal Knights y llegá al final con Yggdrasill', goal: 1, v: S => S.ax.fin },
     { id: 'nohit', c: 'surv', n: 'Intocable', d: 'Aguantá 3 minutos seguidos sin recibir daño', goal: 180, t: 1, v: S => S.ax.noHit },
     { id: 'low5', c: 'surv', n: 'Al borde', d: 'Quedá con menos del 5% de vida y aguantá 10 segundos más', goal: 1, v: S => S.ax.low5 },
 

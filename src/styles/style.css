@@ -737,3 +737,11 @@ body.ingame.boss2 #evt{top:calc(16% + 70px)}
 #bossbar .bb-cast{display:none;position:relative;height:16px;margin-top:3px;background:rgba(4,10,20,.85);border:1px solid #ffd23f;overflow:hidden}
 #bossbar .bb-cast u{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#ff9a2e,#ffd23f);opacity:.75}
 #bossbar .bb-cast em{position:relative;z-index:1;display:block;font:800 11px/16px 'Chakra Petch',sans-serif;font-style:normal;letter-spacing:.1em;text-transform:uppercase;text-align:center;color:#fff;text-shadow:0 0 3px #000}
+/* 0.8: con 3+ jefes (Royal Knights) las barras van compactas en grilla de 3 columnas (2 en celular) */
+body.bossN #bossbar{display:grid!important;grid-template-columns:repeat(3,1fr);gap:6px 12px;width:min(820px,calc(100% - 32px))}
+body.bossN #bossbar .bb-one+.bb-one{margin-top:0}
+body.bossN #bossbar b{font-size:12px}body.bossN #bossbar span{display:none}
+body.bossN #bossbar .bb-hp{height:8px;border-width:1px;box-shadow:none}
+body.bossN #bossbar .bb-cast{height:12px}body.bossN #bossbar .bb-cast em{font-size:9px;line-height:12px}
+body.ingame.bossN #evt{top:calc(16% + 110px)}
+@media (max-width:700px){body.bossN #bossbar{grid-template-columns:repeat(2,1fr)}}
