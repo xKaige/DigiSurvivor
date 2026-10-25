@@ -69,6 +69,78 @@ async function hatch(page, cid) {
   assert.equal(await page.evaluate(cid => Progress.has(cid), cid), true);
 }
 
+test('15 jefes guardados entregan el huevo aunque las primeras misiones estén pendientes', () => withGame(async page => {
+  await page.evaluate(() => {
+    const s = Progress.blank(); s.bosses.piemon = 15;
+    localStorage.setItem(Progress.KEY, JSON.stringify(s));
+  });
+  await page.reload();
+  await page.waitForFunction(() => typeof Progress !== 'undefined' && Progress.data && CreatureLoader.cache['016_commandramon']);
+  await page.locator('#anb').click();
+  assert.equal(await page.locator(`[data-cid="${commandramon}"] .an-hatch`).count(), 1);
+  assert.equal(await page.evaluate(() => Progress.state('005_veemon')), 'lock');
+  assert.equal(await page.evaluate(() => Object.keys(Progress.read().eggs).length), 5);
+  assert.doesNotMatch(await page.locator('#an-list').innerText(), /Misión bloqueada|primero cumplí|máximo .* por partida/);
+  if (process.env.TEST_OUTPUT_DIR) {
+    await fs.mkdir(process.env.TEST_OUTPUT_DIR, { recursive: true });
+    await page.locator(`[data-cid="${commandramon}"]`).screenshot({ path: path.join(process.env.TEST_OUTPUT_DIR, 'mision-completa-entrega-huevo.png'), animations: 'disabled' });
+  }
+  await page.clock.install();
+  await hatch(page, commandramon);
+  await page.locator('#hatch .hno').click();
+  assert.equal(await page.evaluate(() => Progress.claimDone(true)), 0);
+  assert.equal(await page.evaluate(() => Progress.state('016_commandramon')), 'open');
+}));
+
+test('el progreso de la cuenta recupera todos los objetivos completos sin duplicar entregas', () => withGame(async page => {
+  const result = await page.evaluate(() => {
+    const s = Progress.blank(); s.bosses.piemon = 20; s.runs = 15;
+    window.testSaves = [];
+    window.onProgSave = st => window.testSaves.push(JSON.parse(JSON.stringify(st)));
+    window.loadProg(s);
+    const first = window.testSaves[0], writes = window.testSaves.length, again = Progress.claimDone(true);
+    return { total: Object.keys(Progress.read().eggs).length, saved: first && Object.keys(first.eggs).length, again, extraWrites: window.testSaves.length - writes, firstMission: Progress.state('005_veemon') };
+  });
+  assert.deepEqual(result, { total: 7, saved: 7, again: 0, extraWrites: 0, firstMission: 'lock' });
+}));
+
+test('los récords históricos cuentan sin activación previa y se conservan los objetivos ya completados', () => withGame(async page => {
+  const result = await page.evaluate(() => {
+    const s = Progress.blank();
+    s.bestStage = 5; s.bestSecs = 900; s.cidStage['002_renamon'] = 5;
+    s.pv['012_jellymon'] = 4;
+    window.loadProg(s);
+    return ['005_veemon', '006_gammamon', '009_ryudamon', '020_biyomon', '026_lalamon', '015_kudamon', '012_jellymon', '017_agumon'].map(cid => Progress.state(cid));
+  });
+  assert.deepEqual(result, ['egg', 'egg', 'egg', 'egg', 'egg', 'egg', 'egg', 'lock']);
+}));
+
+test('los objetivos incompletos no dan huevo y los récords no se suman entre partidas', () => withGame(async page => {
+  const result = await page.evaluate(() => {
+    const s = Progress.blank(); s.bosses.piemon = 14; window.loadProg(s);
+    const r = { kills: 0, secs: 300, pl: [{ cid: '001_guilmon', stage: 2 }], bosses: [] };
+    Progress.onRunEnd(r); Progress.onRunEnd(r);
+    return { boss: Progress.state('016_commandramon'), time: Progress.state('006_gammamon'), stage: Progress.state('005_veemon'), bestSecs: Progress.read().bestSecs };
+  });
+  assert.deepEqual(result, { boss: 'lock', time: 'lock', stage: 'lock', bestSecs: 300 });
+}));
+
+test('eclosionar un huevo entrega también el objetivo del Analyzer que acaba de completarse', () => withGame(async page => {
+  await page.evaluate(() => {
+    const s = Progress.blank(); s.eggs['016_commandramon'] = { left: 1 };
+    for (let i = 0; i < 39; i++) s.seen['test:' + i] = 1;
+    window.loadProg(s);
+  });
+  assert.equal(await page.evaluate(() => Progress.state('011_zubamon')), 'lock');
+  await page.locator('#anb').click();
+  await page.clock.install();
+  await hatch(page, commandramon);
+  await page.locator('#hatch .hno').click();
+  assert.equal(await page.evaluate(() => Progress.seenCount()), 40);
+  assert.equal(await page.locator('[data-cid="011_zubamon"] .an-hatch').count(), 1);
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem(Progress.KEY)).eggs['011_zubamon'].left), 1);
+}));
+
 test('un pendiente desconocido no bloquea los huevos nuevos', () => withGame(async page => {
   await eggs(page, [commandramon]);
   await page.evaluate(() => {
@@ -154,9 +226,17 @@ test('el guardado normaliza colas malformadas y duplicadas sin perder desbloqueo
   assert.equal(await page.evaluate(() => Progress.has('016_commandramon')), false);
 }));
 
-test('los 34 Digitamas se pueden eclosionar en secuencia', () => withGame(async page => {
-  const ids = await page.evaluate(() => Progress.data.unlocks.map(u => u.cid));
-  await eggs(page, ids);
+test('los 34 objetivos completos entregan sus Digitamas y se pueden eclosionar en secuencia', () => withGame(async page => {
+  const ids = await page.evaluate(() => {
+    const s = Progress.blank(); s.kills = 25000; s.runs = 100; s.bestStage = 5; s.bestSecs = 900; s.bosses.piemon = 40;
+    for (const c of CREATURES) { s.cidStage[c.id] = 5; s.cidKills[c.id] = 3000; }
+    for (let i = 0; i < 140; i++) s.seen['test:' + i] = 1;
+    window.loadProg(s);
+    return Progress.data.unlocks.map(u => u.cid);
+  });
+  assert.equal(await page.evaluate(() => Object.keys(Progress.read().eggs).length), 34);
+  await page.locator('#anb').click();
+  await page.clock.install();
   for (const cid of ids) {
     await hatch(page, cid);
     if (cid === commandramon && process.env.TEST_OUTPUT_DIR) {
@@ -168,17 +248,16 @@ test('los 34 Digitamas se pueden eclosionar en secuencia', () => withGame(async 
   assert.deepEqual(await page.evaluate(() => ({ total: Object.keys(Progress.read().unl).length, eggs: Object.keys(Progress.read().eggs).length, queue: Progress.read().hatchQ })), { total: 34, eggs: 0, queue: [] });
 }));
 
-for (const players of [1, 2]) test(`un huevo ganado al finalizar una partida local de ${players} jugador(es) eclosiona`, () => withGame(async page => {
+for (const players of [1, 2]) test(`varias misiones completadas en una partida de ${players} jugador(es) entregan todos sus huevos`, () => withGame(async page => {
   await page.evaluate(async players => {
     const s = Progress.blank();
-    for (const u of Progress.data.unlocks) s.unl[u.cid] = 1;
-    delete s.unl['016_commandramon']; s.bosses.piemon = 14;
     window.loadProg(s);
-    await start(players, ['014_herissmon', '001_guilmon']);
-    Bosses.down.push('piemon');
+    await start(players, ['001_guilmon', '003_terriermon']);
+    Bosses.down.push(...Array(15).fill('piemon'));
     endRun('Prueba de eclosión');
   }, players);
   assert.equal(await page.evaluate(() => Progress.state('016_commandramon')), 'egg');
+  assert.equal(await page.evaluate(() => Object.keys(Progress.read().eggs).length), 5);
   await page.locator('#anb').click();
   await page.clock.install();
   await hatch(page, commandramon);
