@@ -349,7 +349,7 @@ const Bosses = {
       const n = 4 + Math.min(4, e.cyc * 2);
       for (let j = 0; j < n; j++) { const g = j / n * 6.283; eb.push({ x: e.x, y: e.y, vx: Math.cos(g) * 160, vy: Math.sin(g) * 160, l: 6, el: e.el, bf: SkillSys.bfx(e), dm: e.dm, r: 11, hm: 3.2 }); }
     } else if (k.k === 'summon') {   // refuerzos del jefe: Digimon del plantel marcados (aro violeta, mn), como mucho 6 vivos a la vez
-      const ti = Math.max(0, Math.max(...P.map(q => q.stage | 0)) - 1), n = Math.min(k.c, 6 - en.filter(x => x.mn).length);
+      const ti = Enemies.tier(), n = Math.min(k.c, 6 - en.filter(x => x.mn).length);
       if (n > 0) this.banner(B.name + ' invoca refuerzos');
       for (let j = 0; j < n; j++) {
         const i = Enemies.choose(ti); if (i == null) break;
@@ -380,9 +380,10 @@ const Bosses = {
     if (!b) { b = document.createElement('div'); b.id = 'bossbar'; document.body.appendChild(b); }
     return b;
   },
-  hideBar() { const b = document.getElementById('bossbar'); if (b) b.style.display = 'none'; },
+  hideBar() { const b = document.getElementById('bossbar'); if (b) b.style.display = 'none'; document.body.classList.remove('boss2', 'bossN'); },
   // una barra por jefe (con dos en el Gate se veía solo la de uno)
   hud() {
+    if (!running) { this.hideBar(); return; }
     const L = en.filter(x => x.bo != null && this.def(x.bo));
     const id = L.map(e => e.bo + ':' + e.cyc).join(',') || null;
     if (id !== this.shown) {             // apareció uno nuevo o cayó alguno

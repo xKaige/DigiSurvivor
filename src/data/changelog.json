@@ -1,5 +1,14 @@
 [
   {
+    "v": "0.8.1",
+    "items": [
+      "Las barras de los Royal Knights desaparecen al terminar la partida.",
+      "Renacer con un Chip de Reformateo funciona en multijugador: cada jugador conserva su propia ruta y calendario de evolución.",
+      "Los enemigos aparecen según el reloj: Bebé al inicio, Rookie a los 2:30, Campeón a los 5:00 y Ultimate a los 10:00. El tiempo dentro del Digital Gate no cuenta.",
+      "Los especiales ahora se llaman Élite y aparecen una etapa por encima: empiezan como Rookie y terminan como Mega."
+    ]
+  },
+  {
     "v": "0.8",
     "items": [
       "Royal Knights: al minuto 15 desaparecen todos los Digimon del mapa y llegan Omegamon, Dukemon, Magnamon, UlforceVeedramon, LordKnightmon y Examon, uno de cada uno.",

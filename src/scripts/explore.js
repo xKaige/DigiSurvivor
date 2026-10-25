@@ -87,7 +87,7 @@ const Explore = {
     Sound.play('item');
   },
   wave(o) {
-    const ti = Math.max(0, Math.max(...P.map(q => q.stage | 0)) - 1), n = 3 + Math.min(5, Math.floor(t / 180));
+    const ti = Enemies.tier(), n = 3 + Math.min(5, Math.floor(t / 180));
     for (let j = 0; j < n; j++) {
       const i = Enemies.choose(ti); if (i == null) return;
       const a = Math.random() * 6.283, d = this.ZONE_R + 260 + Math.random() * 120;

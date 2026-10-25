@@ -10,7 +10,7 @@
 const Enemies = {
   data: null,
   spr: {},          // id -> canvas { canvas, cols, rows } (los de criatura se toman de CreatureLoader)
-  roster: [],       // por nivel de aparición (0..4): índices de `data.list` elegidos para esta partida
+  roster: [],       // por etapa (0..5): índices de `data.list` elegidos para esta partida
   bombs: [],        // golpes pendientes { x, y, R, t, dm, el, src } (solo anfitrión)
   RED: '#ff3d3d',
 
@@ -51,15 +51,16 @@ const Enemies = {
   elOf(d) { return d.attribute === 'Virus' ? 1 : d.attribute === 'Dato' ? 2 : 0; },
 
   // ---------- Plantel de la partida ----------
-  // Para el nivel de aparición ti entran las especies de nivel ti y ti+1. Se garantiza al menos un enemigo "común"
-  // (swarm o chaser) por nivel, para que no sean todos especiales.
+  // El reloj de la partida define la etapa, sin contar el tiempo dentro del Gate. Los élite van una etapa por delante.
+  tier(elite = false) { const s = gclk(), ti = s >= 600 ? 4 : s >= 300 ? 3 : s >= 150 ? 2 : 0; return elite ? (ti === 0 ? 2 : ti + 1) : ti; },
+  // Una sola etapa por plantel. Se garantiza un swarm/chaser si hay, para las oleadas.
   newRun() {
-    this.bombs = []; this.pools = []; this.evT = 100;
+    this.bombs = []; this.pools = []; this.evT = 100; this.chT = 60;
     if (!this.data) return;
     const L = this.data.list, n = this.data.perRun || 5, sh = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
     this.roster = [];
-    for (let ti = 0; ti <= 4; ti++) {
-      const cand = sh(L.map((d, i) => i).filter(i => L[i].tier === ti || L[i].tier === ti + 1));
+    for (let ti = 0; ti <= 5; ti++) {
+      const cand = sh(L.map((d, i) => i).filter(i => L[i].tier === ti));
       // uno común (swarm/chaser) y un tirador si hay; después, como mucho 1 especie por comportamiento especial
       const basic = cand.find(i => L[i].kind === 'swarm' || L[i].kind === 'chaser'), shoot = cand.find(i => L[i].kind === 'shooter');
       const pick = [basic, shoot].filter(i => i != null), cnt = k => pick.filter(i => L[i].kind === k).length;
@@ -70,7 +71,7 @@ const Enemies = {
   },
   // elige especie del nivel ti según el peso de su comportamiento (los especiales salen menos que los comunes)
   choose(ti) {
-    const pool = this.roster[Math.max(0, Math.min(4, ti))] || [];
+    const pool = this.roster[Math.max(0, Math.min(5, ti))] || [];
     if (!pool.length) return null;
     const early = t < 20, w = i => { const k = this.data.list[i].kind; return early && k !== 'swarm' && k !== 'chaser' ? 0.15 : this.data.kinds[k].w; };
     let r = Math.random() * pool.reduce((a, i) => a + w(i), 0);
@@ -89,8 +90,7 @@ const Enemies = {
   DM: [1, 1.15, 1.3, 1.5, 1.75, 2],
   spawn(ti, group) {
     if (!this.data || !this.roster.length) return;
-    const elite = Math.random() < 0.12, lv = Math.min(5, ti + (elite ? 1 : 0));
-    const i = this.choose(elite ? ti + 1 : ti); if (i == null) return;
+    const lv = ti, i = this.choose(ti); if (i == null) return;
     const d = this.data.list[i], K = this.data.kinds[d.kind];
     // lugar fuera de pantalla, libre y con camino hasta el jugador (map.js)
     const base = World.spawnPos({ k: 0, r: K.r * (1 + 0.1 * lv) }) || [cam.x + Math.hypot(W, H) / 2, cam.y];
@@ -137,16 +137,16 @@ const Enemies = {
     if (e.mv === 'orbit' && dd > 150) return a + e.fs * (dd > 380 ? 0.6 : 1.25);
     return a;
   },
-  // ---------- Campeones (Issue #7) ----------
-  // Cada 25–35 s (desde el minuto 1) aparece un Digimon campeón: más grande, aura dorada, barra de vida, ×8 de vida y
+  // ---------- Élite (Issues #7 y #28) ----------
+  // Cada 25–35 s (desde el minuto 1) aparece un Digimon élite: más grande, aura dorada, barra de vida, ×8 de vida y
   // ×2,5 de daño. Al caer suelta siempre botín (carne o potenciador, y a veces los dos) y mucha experiencia. Los comunes
   // sueltan menos ítems (Items.DROP), así las curas vienen sobre todo de ellos.
   chT: 60,
-  champ(dt, ti) {
+  champ(dt) {
     if (!this.data || !this.roster.length || (this.chT -= dt) > 0) return;
     this.chT = 25 + Math.random() * 10;
     if (en.filter(e => e.cp).length >= 2 + P.length) return;
-    const lv = Math.min(5, ti + 1), i = this.choose(lv); if (i == null) return;
+    const lv = this.tier(true), i = this.choose(lv); if (i == null) return;
     const d = this.data.list[i], K = this.data.kinds[d.kind];
     const sp = World.spawnPos({ k: 0, r: K.r * 1.5 }); if (!sp) return;
     const e = this.make(i, lv, sp[0], sp[1], 'direct');

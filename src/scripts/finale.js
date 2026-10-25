@@ -44,7 +44,7 @@ const Finale = {
       b.x = sp[0]; b.y = sp[1]; for (let k = 0; k < 24; k++) burst(b.x, b.y, k % 2 ? '#fff' : '#ffd23f');
     });
     P.forEach(q => q.inv = Math.max(q.inv, 2));
-    Sound.play('gate'); setTimeout(() => Bosses.banner('¡LOS ROYAL KNIGHTS! Vencelos a todos'), 50);
+    Sound.play('gate'); setTimeout(() => { if (running && this.rk) Bosses.banner('¡LOS ROYAL KNIGHTS! Vencelos a todos'); }, 50);
   },
   start() {
     this.on = true; this.k = 0; this.scene(true);

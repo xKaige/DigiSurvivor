@@ -119,7 +119,7 @@ let myIdx = 0, rk = {}, picked = new Set();
 // suya (gRnd) y descarta lo viejo (así un resume_game atrasado no le cierra las cartas de la ronda nueva)
 let rnd = 0, rndAt = 0, rndOpen = false, gRnd = -1;
 // anfitrión: abre una ronda de cartas y se la avisa a todos
-function hostRound(type) { rnd++; rndAt = performance.now(); rndOpen = true; gs.forEach(g => g.rs = 0); sendAll({ type, rnd, stage: lineStage }); }
+function hostRound(type) { rnd++; rndAt = performance.now(); rndOpen = true; gs.forEach(g => g.rs = 0); sendAll({ type, rnd, stage: lineStage, players: evoPlayers }); }
 // sync: el anfitrión manda el estado SYNC_HZ veces por segundo (12 con 3 o más jugadores, para no saturar su subida)
 const SYNC_HZ = 15, SYNC_HZ_MANY = 12, SYNC_SLOW = 0.5, AOI = 1500;
 let syncT = 0, slowT = 0, enId = 0, inSig = '', inT = 0;
@@ -327,14 +327,14 @@ function connClosed(c, why) {
     if (running && isOnline) {
       g.lost = true; g.c = null; rk[g.i] = {};
       Bosses.banner(g.nick + ' se desconectó. Esperando…');
-      if (paused && picked.has(myIdx)) allPicked();   // estaba esperando su carta: sigue sin él
+      if (paused && rndOpen) allPicked();   // sigue aunque el anfitrión no participe de esta evolución
       clearTimeout(g.lt);
       g.lt = setTimeout(() => {
         if (!g.lost) return;
         gs.splice(gs.indexOf(g), 1);
         const q = P[g.i]; if (q) { q.dead = true; q.gone = true; q.hp = 0; }   // queda fuera (no se puede revivir)
         if (running) Bosses.banner(g.nick + ' abandonó la partida');
-        if (paused && picked.has(myIdx)) allPicked();
+        if (paused && rndOpen) allPicked();
       }, RECON_S * 1000);
       return;
     }
@@ -396,6 +396,13 @@ function setupConn(c) {
       rk[c.pi || 1] = data.keys || {};
     } else if (data.type === 'dash') {
       if (isHost) dash(P[c.pi || 1]);
+    } else if (data.type === 'rebirth') {
+      // El índice sale de la conexión: nadie puede gastar el chip de otro jugador.
+      if (isHost && isOnline && g && !g.lost && !rebirth(P[g.i])) sendTo(c, { type: 'rebirth_rejected' });
+    } else if (data.type === 'reborn') {
+      if (!isHost && isOnline && running && P[data.i] && P[data.i].rbL == null) applyRebirth(P[data.i], data.level, data.from, data.chips);
+    } else if (data.type === 'rebirth_rejected') {
+      if (!isHost && running) Bosses.banner('No podés renacer ahora. Revisá tu chip y esperá a terminar la elección de cartas.');
     } else if (data.type === 'start') {
       if (isHost) return;
       isOnline = true; myIdx = data.you | 0;
@@ -414,26 +421,34 @@ function setupConn(c) {
     } else if (data.type === 'sync') {
       applyOnlineSync(data);
     } else if (data.type === 'trigger_levelup') {
-      if (data.rnd != null) { if (data.rnd === gRnd) return; gRnd = data.rnd; }   // repetido (el anfitrión lo reenvía si tarda)
+      if (isHost || !isOnline || !running) return;
+      if (data.rnd != null) { if (data.rnd <= gRnd) return; gRnd = data.rnd; }   // repetido o atrasado
+      if (evo) stepEvo(evo.D);   // pestaña lenta: completa la evolución anterior antes de mostrar las cartas
       paused = true;
       picked = new Set();
       pending = [P[myIdx]];
       showCards();
     } else if (data.type === 'trigger_line') {
-      if (data.rnd != null) { if (data.rnd === gRnd) return; gRnd = data.rnd; }
+      if (isHost || !isOnline || !running) return;
+      if (data.rnd != null) { if (data.rnd <= gRnd) return; gRnd = data.rnd; }
+      if (evo) stepEvo(evo.D);
       lineStage = data.stage || 5;
+      evoPlayers = data.players || P.map(q => q.id);
       paused = true;
       picked = new Set();
-      pending = [P[myIdx]];
-      chooseLine();
+      cardMode = 'line';
+      pending = evoPlayers.includes(myIdx) ? [P[myIdx]] : [];
+      if (pending.length) chooseLine(); else waitEvolution();
     } else if (data.type === 'trigger_evo') {
+      if (isHost || !isOnline || !running) return;
+      if (evo) stepEvo(evo.D);
       $('up').style.display = 'none';
-      startEvo(data.stage);
+      startEvo(data.stage, data.players);
     } else if (data.type === 'client_choice') {
       // un invitado eligió: el anfitrión lo aplica, se lo pasa a los demás y, si ya eligieron todos, sigue
       const i = c.pi || 1;
       if (data.rnd != null && data.rnd !== rnd) return;   // elección de una ronda que ya terminó
-      if (isHost && P[i] && !picked.has(i)) {
+      if (isHost && rndOpen && mustPick().includes(i) && !picked.has(i)) {
         applyCardOp(P[i], data);
         picked.add(i);
         sendAll(Object.assign({}, data, { type: 'host_choice', i }), c);
@@ -441,6 +456,7 @@ function setupConn(c) {
       }
     } else if (data.type === 'host_choice') {
       // elección de otro jugador (i; si no viene, es el anfitrión)
+      if (data.rnd != null && data.rnd !== gRnd) return;
       const i = data.i == null ? 0 : data.i;
       if (!isHost && P[i] && (i !== myIdx || data.auto)) {   // auto: el anfitrión eligió por mí porque tardé demasiado
         applyCardOp(P[i], data);
@@ -475,13 +491,13 @@ function heartbeat() {
 try { const w = new Worker(URL.createObjectURL(new Blob(['setInterval(()=>postMessage(0),1000)'], { type: 'text/javascript' }))); w.onmessage = heartbeat; }
 catch (e) { setInterval(heartbeat, 1000); }
 // Online (anfitrión): jugadores que tienen que elegir carta (él y los invitados conectados que siguen en la partida)
-const mustPick = () => [0, ...gs.filter(g => !g.lost && g.c).map(g => g.i)].filter(i => P[i] && !P[i].gone);
+const mustPick = () => [0, ...gs.filter(g => !g.lost && g.c).map(g => g.i)].filter(i => P[i] && !P[i].gone && (cardMode !== 'line' || evoPlayers.includes(i)));
 // Online (anfitrión): si ya eligieron todos, sigue la partida (o arranca la evolución final)
 function allPicked() {
-  if (!isHost || !mustPick().every(i => picked.has(i))) return;   // espera solo a los que siguen conectados (si se cortó uno, no lo frena)
+  if (!isHost || !rndOpen || !mustPick().every(i => picked.has(i))) return;   // espera solo a los conectados que participan de esta ronda
   $('up').style.display = 'none';
   rndOpen = false;
-  if (cardMode === 'line') { sendAll({ type: 'trigger_evo', stage: lineStage }); startEvo(lineStage); }
+  if (cardMode === 'line') beginEvolution(lineStage, evoPlayers);
   else { paused = false; last = performance.now(); sendAll({ type: 'resume_game', rnd }); }
 }
 // Anfitrión: si una ronda de cartas tarda, se la reenvía cada 5 s a quien no eligió; a los 30 s elige por él
@@ -492,7 +508,7 @@ setInterval(() => {
   if (!late.length) return;
   if (dt < 30000) {
     const ty = cardMode === 'line' ? 'trigger_line' : 'trigger_levelup';
-    for (const g of gs) if (late.includes(g.i) && g.c && Math.floor(dt / 5000) > (g.rs | 0)) { g.rs = Math.floor(dt / 5000); sendTo(g.c, { type: ty, rnd, stage: lineStage }); }
+    for (const g of gs) if (late.includes(g.i) && g.c && Math.floor(dt / 5000) > (g.rs | 0)) { g.rs = Math.floor(dt / 5000); sendTo(g.c, { type: ty, rnd, stage: lineStage, players: evoPlayers }); }
     return;
   }
   for (const i of late) {
@@ -528,7 +544,7 @@ function hostSync(dt) {
   const rr = o => { const out = {}; for (const k in o) out[k] = r2(o[k]); return out; };
   const pl = P.map(q => {
     const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, alt: q.alt, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp, bf: Explore.bfSync(q), grab: q.grab > 0 ? 1 : 0, gp: q.gp | 0 };
-    if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs, ds: rr(q.ds || {}) });
+    if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs, ds: rr(q.ds || {}), rbL: q.rbL == null ? null : q.rbL, rbFrom: q.rbFrom, maxSt: q.maxSt });
     return o;
   });
   // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
@@ -589,7 +605,7 @@ function joinOnline(ids) {
 // Cliente: el anfitrión manda el estado SYNC_HZ veces por segundo. Las posiciones no se pisan de golpe: se guardan como
 // destino (tx, ty) y onlineSmooth las va acercando en cada cuadro (si algo saltó muy lejos, se pone directo).
 function applyOnlineSync(data) {
-  if (isHost) return;
+  if (isHost || !isOnline || !running) return;
   t = data.t; if (data.ar != null) arT = data.ar; kills = data.kills; lvl = data.lvl; need = data.need; xp = data.xp;
   if (data.P && P.length === data.P.length) {
     data.P.forEach((sq, i) => { const q = P[i]; if (!q) return;
@@ -661,6 +677,7 @@ async function start(m,ids,los){
   { const sd = World.nextSeed != null ? World.nextSeed : (Math.random() * 2 ** 31) | 0; World.nextSeed = null; await World.gen(sd).catch(e => { console.error(e); return World.load(); }).catch(e => console.error(e)); }   // mapa nuevo (map.js)
   mode=lastMode=m;P=[];for(let i=0;i<m;i++){const q=np(i,ids[i]||ids[0]);{const s0=World.startPos(),a=i/m*6.283,sp=World.freeSpot(s0[0]+(m===1?0:Math.cos(a+Math.PI)*45),s0[1]+(m===1?0:Math.sin(a+Math.PI)*30),q);q.x=sp[0];q.y=sp[1]}Stats.init(q,chal('notree')?null:(los[i]||Trees.loadout(q.cid)));if(chal('glass')){q.m.hpX*=.5;q.m.dmgX*=1.5;Stats.calc(q,true)}P.push(q)}
   p=P[0];cam={x:P[0].x,y:P[0].y};en=[];sh=[];pt=[];gems=[];fx=[];ef=[];eb=[];pending=[];xp=0;lvl=1;arT=0;need=xpNeed(1);for(const q of P)Stats.calc(q);paused=false;evo=null;t=0;kills=0;spawnT=0;running=true;
+  evoQueue=[];evoPlayers=[];rndOpen=false;gRnd=-1;
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Weather.reset();Explore.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
@@ -869,7 +886,7 @@ function renderLegend() {
 // poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
 // a esa fecha vuelve a 0 una sola vez (monedas, árbol y misiones del día). Nick, amigos y Digimon elegido no se tocan.
 // Ej.: const RESET_BEFORE = Date.parse('2027-03-01T00:00:00-03:00');
-const GAME_VERSION = '0.8';
+const GAME_VERSION = '0.8.1';   // las evoluciones por jugador requieren que todos usen el mismo protocolo online
 const RESET_BEFORE = Date.parse('2026-10-17T22:42:00-03:00');   // 0.6: todo el progreso anterior vuelve a cero
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
@@ -892,37 +909,43 @@ function togglePause(){if(menuPause){menuPause=false;$('pause').style.display='n
  $('pnote').textContent=isOnline?'Partida online: el juego sigue corriendo mientras estás acá':'El juego está en pausa';
  $('pause').style.display='flex';$('pcont').focus();routePanel()}
 $('pcont').onclick=()=>{if(menuPause)togglePause()};
-$('preb').onclick=()=>{if(menuPause&&canRebirth(P[0])){rebirth(P[0]);togglePause()}};
+function requestRebirth(q){if(!menuPause||!canRebirth(q))return;if(isOnline&&!isHost)sendTo(conn,{type:'rebirth'});else rebirth(q);togglePause()}
 // puntos de un stat para los requisitos de evolución: los de la partida (cartas) + los del árbol (nodos de Entrenamiento)
 const reqPts=(q,k)=>((q.st&&q.st[k])|0)+((q.m&&q.m[k])|0);
 // ---------- Ruta evolutiva (Issue #14): en la pausa, qué pide cada forma que te queda por delante y cuánto llevás ----------
 function routePanel(){const q=mine()[0]||P[0],box=$('proute');if(!q||!box)return;const s0=q.stage|0,need=v=>Math.ceil(v*REQ_FACTOR),rows=[];
  for(let s=Math.max(3,s0+1);s<=5;s++){const L=formOpts(q,s);if(s<5&&L.length<2)continue;
-  rows.push('<div class="rt-st">'+(s>=5?'Formas finales':STAGE_NAMES_UP[s])+' <small>(nivel '+(s>=5?lineLevel():evoLevels()[s-1])+')</small></div>');
+  rows.push('<div class="rt-st">'+(s>=5?'Formas finales':STAGE_NAMES_UP[s])+' <small>(nivel '+(s>=5?lineLevel(q):evoLevels(q)[s-1])+')</small></div>');
   for(const o of L){const R=o.xp?[]:[...Object.entries(o.req||{}).map(([k,v])=>[SN[k],reqPts(q,k),need(v)]),...Object.entries(o.vp||{}).map(([k,v])=>[Stats.VPN[k],Stats.vpVal(q,k),need(v)])],ok=R.every(r=>r[1]>=r[2]);
    rows.push('<div class="rt-f'+(ok?' ok':'')+'"><b>'+(ok?'✓ ':'')+o.name+'</b>'+(o.xp?'<span>Solo experiencia</span>':R.map(r=>'<span>'+r[0]+' '+Math.min(r[1],r[2])+'/'+r[2]+(r[0]===Stats.VPN.nohit?' · racha actual '+Math.floor((q.vp&&q.vp.nh)||0)+' s':'')+'<i style="width:'+Math.min(100,r[1]/r[2]*100)+'%"></i></span>').join(''))+'</div>')}}
  box.innerHTML=rows.length?'<h3>Ruta evolutiva</h3><p class="rt-note">Segundos sin daño: se reinicia con cualquier golpe (balas, contacto, charcos, rayos). Cuenta tu mejor racha.</p>'+rows.join(''):'';
- const rb=$('preb'),c=canRebirth(q);rb.style.display=!isOnline&&P.length===1&&(q.stage|0)>=2?'block':'none';rb.disabled=!c;
- rb.textContent=q.rbL!=null?'Renacer (ya lo usaste)':'Renacer · 1 Chip de Reformateo ('+((q.vp&&q.vp.rc)|0)+')';
- rb.title='Tu Digimon vuelve a ser Bebé y evoluciona cada 2 niveles: elegís otra ruta. Conservás nivel, skills y puntos. Una vez por partida.'}
+ document.querySelectorAll('.reb-extra').forEach(b=>b.remove());
+ let previous=$('preb');mine().forEach((q,i)=>{const rb=i?$('preb').cloneNode(false):$('preb');if(i){rb.id='preb'+i;rb.className='reb-extra';previous.after(rb);previous=rb}
+  rb.style.display=(q.stage|0)>=2||q.rbL!=null?'block':'none';rb.disabled=!canRebirth(q);
+  rb.textContent=(!isOnline&&P.length>1?pname(q.id)+' · ':'')+(q.rbL!=null?'Renacer (ya lo usaste)':'Renacer · 1 Chip de Reformateo ('+((q.vp&&q.vp.rc)|0)+')');
+  rb.title='Tu Digimon vuelve a ser Bebé y evoluciona cada 2 niveles: elegís otra ruta. Conservás nivel, skills y puntos. Una vez por jugador y partida.';
+  rb.onclick=()=>requestRebirth(q)})}
 // aviso "¡Ya podés: X!" la primera vez que cumplís todos los requisitos de una forma que te queda por delante
-let rtT=0;function routeWatch(dt){if((rtT-=dt)>0||!running)return;rtT=1;const need=v=>Math.ceil(v*REQ_FACTOR);
+let rtT=0;function routeWatch(dt){if((rtT-=dt)>0||!running)return;rtT=1;if(menuPause)routePanel();const need=v=>Math.ceil(v*REQ_FACTOR);
  for(const q of mine()){if(!q||q.dead||!q.vp||!q.st)continue;q.rtOk=q.rtOk||{};
   for(let s=Math.max(3,(q.stage|0)+1);s<=5;s++)for(const o of formOpts(q,s)){if(o.xp||q.rtOk[o.key])continue;
    const ok=Object.entries(o.req||{}).every(([k,v])=>reqPts(q,k)>=need(v))&&Object.entries(o.vp||{}).every(([k,v])=>Stats.vpVal(q,k)>=need(v));
    if(ok){q.rtOk[o.key]=1;Stats.flash(q,'¡Ya podés: '+o.name+'!','#4dffb8');Sound.play('item')}}}}
 // ---------- Renacer (Issue #14): con un Chip de Reformateo de ESTA partida, tu Digimon vuelve a Digitama y renace como Bebé ----------
-const canRebirth=q=>!!q&&!isOnline&&P.length===1&&running&&(q.stage|0)>=2&&q.rbL==null&&((q.vp&&q.vp.rc)|0)>0;
-function rebirth(q){q.vp.rc--;q.rbFrom=q.stage|0;q.maxSt=Math.max(q.maxSt|0,q.stage|0);q.rbL=lvl;q.stage=0;q.alt={};q.branchId=null;q.line=0;q.dark=false;q.r=14;q.inv=Math.max(q.inv,2);
- for(let i=0;i<36;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');ef.push({k:'ring',x:q.x,y:pcy(q),R:260,col:'#ffd23f',l:.7,m:.7});Sound.play('evo');seeForm(q);
- Bosses.banner('¡Renaciste como '+formName(q,0)+'! Evolucionás cada 2 niveles')}
+const canRebirth=q=>!!q&&P.includes(q)&&running&&!q.dead&&!q.gone&&!evo&&!pickRes&&!Finale.on&&(!paused||menuPause&&!isOnline)&&(q.stage|0)>=2&&q.rbL==null&&((q.vp&&q.vp.rc)|0)>0;
+function rebirth(q){if(isOnline&&!isHost||!canRebirth(q))return false;
+ const data={type:'reborn',i:q.id,level:lvl,from:q.stage|0,chips:q.vp.rc-1};applyRebirth(q,data.level,data.from,data.chips);
+ if(isOnline){sendAll(data);syncT=slowT=0;hostSync(0)}return true}
+function applyRebirth(q,level,from,chips){q.vp.rc=chips;q.rbFrom=from;q.maxSt=Math.max(q.maxSt|0,from);q.rbL=level;q.stage=0;q.alt={};q.branchId=null;q.line=0;q.dark=false;q.r=14;q.inv=Math.max(q.inv,2);
+ for(let i=0;i<36;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');ef.push({k:'ring',x:q.x,y:pcy(q),R:260,col:'#ffd23f',l:.7,m:.7});Sound.play('evo');
+ if(mine().includes(q)){seeForm(q);Bosses.banner('¡Renaciste como '+formName(q,0)+'! Evolucionás cada 2 niveles')}}
 $('pbtn').onclick=()=>{if(running)togglePause()};
 $('dbtn').addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();myDash()},{passive:false});$('dbtn').onclick=()=>myDash();   // dash en celular   // botón de pausa (celular: no hay Escape)
 $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
  if(isOnline&&isHost)sendAll({type:'end',title:title});
- running=false;paused=false;evo=null;pending=[];SkillSys.clearBar();Sound.music(false);Gate.reset();Finale.reset();
+ running=false;paused=false;evo=null;pending=[];evoQueue=[];evoPlayers=[];rndOpen=false;SkillSys.clearBar();Sound.music(false);Gate.reset();Finale.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
  const bc=Math.round(0.5*Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.2+t/10+lvl*3)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
@@ -969,7 +992,7 @@ function drawEvo(){const e0=evo.t,sw=e0>=evo.sw,s=evo.s,f=Math.min(1,e0/evo.sw),
    for(let j=0;j<7;j++){cx.globalAlpha=dk*(1-j/7)*.8;cx.fillText((c*7+j+Math.floor(e0*8))%3?'1':'0',c*22+11,y0-j*18)}}
   cx.globalAlpha=1}
  cx.restore();
- for(const q of P){const col=s>=5?'#ffd23f':ELC[q.el|0]||'#3fd0ff';
+ for(const q of P){if(!evo.players.includes(q.id)){if(!q.dead)drawBuddy(q,q.stage,q.x,q.y,q.face,1);continue}const col=s>=5?'#ffd23f':ELC[q.el|0]||'#3fd0ff';
   if(!sw){
    // columna de luz (Perfecto y forma final) y aura
    if(s>=4){const g=cx.createLinearGradient(0,q.y-700,0,q.y+48);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.7,col);g.addColorStop(1,'#fff');
@@ -1098,33 +1121,26 @@ function drawEnemy(e){
 // color con un cartel "VIEJA ▶ NUEVA" y su etapa. Más larga y vistosa cuanto más alta la etapa (columna de luz desde
 // Perfecto, rayos en la forma final). Se ve igual en el anfitrión y en los invitados (trigger_evo).
 const EVO_DUR=[0,2.4,2.6,3,3.4,4.2];let buddyWhite=0;
-function startEvo(s){const me=mine()[0]||P[0];evo={t:0,s,done:0,D:EVO_DUR[s]||3,sw:(EVO_DUR[s]||3)*.55,sk:0,fl:0,from:formName(me,s-1)};Sound.play('evo');$('evt').style.display='none'}
+let evoQueue=[],evoPlayers=[];   // grupos por etapa: Renacer cambia el calendario de cada jugador, no el de sus compañeros
+function startEvo(s,players=P.map(q=>q.id)){const me=mine().find(q=>players.includes(q.id))||P[players[0]];paused=true;closePauseMenu();evo={t:0,s,players,done:0,D:EVO_DUR[s]||3,sw:(EVO_DUR[s]||3)*.55,sk:0,fl:0,from:formName(me,s-1)};Sound.play('evo');$('evt').style.display='none'}
+function beginEvolution(s,players){startEvo(s,players);if(isOnline&&isHost)sendAll({type:'trigger_evo',stage:s,players})}
 function stepEvo(dt){evo.t+=dt;
  evo.sk=Math.max(0,evo.sk-dt);evo.fl=Math.max(0,evo.fl-dt*1.8);
  if(!evo.done&&evo.t>=evo.sw){evo.done=1;evo.sk=.45;evo.fl=1;Sound.play('evo2');
-  for(const q of P){
+  for(const q of P.filter(q=>evo.players.includes(q.id))){
    const s=q.stage=evo.s;q.r=[14,16,19,22,25,28][s] || 20;
    Stats.evolve(q,s);   // perfil de la especie, bono de etapa / rama ("bonus" en el JSON), familia nueva y evolución perfecta
    for(let i=0;i<30;i++)burst(q.x,q.y,i%2?'#fff':'#ffd23f');
   }
-  mine().forEach(seeForm);   // Digimon Analyzer
+  mine().filter(q=>evo.players.includes(q.id)).forEach(seeForm);   // Digimon Analyzer
   // nombre(s) de la nueva forma de cada jugador (sin repetir)
-  const names=P.map(q=>formName(q,evo.s)).filter((n,i,a)=>n&&a.indexOf(n)===i);
-  const me=mine()[0]||P[0];evo.to=formName(me,evo.s);evo.pf=evo.s<5&&!!me.perfect;evo.names=names;
+  const names=evo.players.map(i=>formName(P[i],evo.s)).filter((n,i,a)=>n&&a.indexOf(n)===i);
+  const me=mine().find(q=>evo.players.includes(q.id))||P[evo.players[0]];evo.to=formName(me,evo.s);evo.pf=evo.s<5&&!!me.perfect;evo.names=names;
   powerPulse();   // onda que empuja a los enemigos (solo anfitrión / local)
  }
  if(evo.t>=evo.D){
-  const s=evo.s;evo=null;const v=$('evt');
-  v.style.display='block';v.textContent='¡Enemigos reforzados!';
-  setTimeout(()=>{if(!evo)v.style.display='none'},2600);
-  if (isOnline) {
-    if (isHost) {
-      hostRound('trigger_levelup');
-      startCards();
-    }
-  } else {
-    startCards();
-  }
+  evo=null;
+  if(!isOnline||isHost)nextEvolution();
  }}
 
 const SN={FUE:'Fuerza',VEL:'Velocidad',VIT:'Vitalidad',INT:'Inteligencia'};
@@ -1133,7 +1149,8 @@ function setHead(txt){$('up').classList.remove('pick');const h=$('up').querySele
 // Evita que un click o tecla de la pantalla anterior elija una carta sin querer
 // (en modo FAST los niveles se encadenan y la elección aparece justo donde estaba la carta anterior).
 let cardsAt = 0;
-function showUp(){ cardsAt = performance.now(); $('up').style.display = 'flex'; }
+function closePauseMenu(){menuPause=false;$('pause').style.display='none'}
+function showUp(){ closePauseMenu(); cardsAt = performance.now(); $('up').style.display = 'flex'; }
 function thumbOf(C, key){
   const s = C && (key === 'dark' ? darkSpr(C) : C.canvases[key]); if(!s) return '';
   const fw = s.canvas.width / s.cols, fh = s.canvas.height / s.rows;
@@ -1156,7 +1173,7 @@ function chooseLine(){
   cur = formOpts(p, s).map(o => ({
     n: o.name, lock: !meets(o), weak: false, op: 'line', stage: s, lineIdx: o.idx, branchId: s >= 5 ? o.id : null, altId: s < 5 ? o.id : null, key: o.key, xp: o.xp,
     d: o.desc || '',
-    req: o.xp ? 'solo experiencia' + (s >= 5 ? ' (llegar al nivel ' + lineLevel() + ')' : '') : [...Object.entries(o.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(reqPts(p, k), need(v))}/${need(v)}`),
+    req: o.xp ? 'solo experiencia' + (s >= 5 ? ' (llegar al nivel ' + lineLevel(p) + ')' : '') : [...Object.entries(o.req || {}).map(([k, v]) => `${SN[k]} ${Math.min(reqPts(p, k), need(v))}/${need(v)}`),
       ...Object.entries(o.vp || {}).map(([k, v]) => `${Stats.VPN[k]} ${Math.min(Stats.vpVal(p, k), need(v))}/${need(v)}`)].join(' · '),
     f: s >= 5 ? () => { p.line = o.idx; p.branchId = o.id; p.weak = false; p.dark = false; } : () => { p.alt = p.alt || {}; p.alt[s] = o.id; }
   }));
@@ -1180,36 +1197,30 @@ function powerPulse(){if(isOnline&&!isHost)return;for(const q of P){if(q.dead)co
 function levelUp(){
   xp-=need;lvl++;need=xpNeed(lvl);paused=true;powerPulse();for(const q of P)Stats.calc(q);   // el daño crece con el nivel (Stats.LV_DMG)
 
-  const EL=evoLevels();
-  if(EL.includes(lvl)){
-    const nextStage = EL.indexOf(lvl) + 1;
-    // con evoluciones alternativas para alguno: primero se elige (como la forma final), después evoluciona
-    if (nextStage >= 3 && P.some(q => !q.gone && formOpts(q, nextStage).length > 1)) { lineStage = nextStage; openLine(); return; }
-    startEvo(nextStage);
-    if (isOnline && isHost) sendAll({ type: 'trigger_evo', stage: nextStage });
-    return;
-  }
-  if(lvl===lineLevel()){ lineStage = 5; openLine(); return; }
-  if (isOnline) {
-    pending = [P[myIdx]];
-    if (isHost) hostRound('trigger_levelup');
-  } else {
-    pending = [...P];
-  }
-  startCards();
+  evoQueue=[];
+  for(let s=1;s<=5;s++){const players=P.filter(q=>!q.gone&&q.stage===s-1&&lvl>=(s===5?lineLevel(q):evoLevels(q)[s-1])).map(q=>q.id);if(players.length)evoQueue.push({s,players})}
+  nextEvolution();
 }
-// abre la elección de evolución (lineStage) para todos
+// Procesa cada grupo y al terminar abre una sola ronda de cartas de nivel para toda la party.
+function nextEvolution(){const next=evoQueue.shift();
+ if(next){evoPlayers=next.players;lineStage=next.s;
+  if(next.s===5||next.s>=3&&next.players.some(i=>formOpts(P[i],next.s).length>1))openLine();else beginEvolution(next.s,next.players);
+ }else{evoPlayers=[];cardMode='cards';if(isOnline&&isHost)hostRound('trigger_levelup');startCards()}}
+function waitEvolution(){p=P[myIdx]||P[0];setHead('ESPERANDO LA EVOLUCIÓN');$('cards').textContent='Tus compañeros están eligiendo su nueva forma.';$('up').querySelector('p').textContent='Tu Digimon conserva su propia ruta evolutiva';showUp()}
+// Solo eligen quienes evolucionan en esta ronda; los demás conservan su forma y esperan.
 function openLine(){
+  cardMode='line';
   if (isOnline) {
-    pending = [P[myIdx]]; picked = new Set();
+    pending = evoPlayers.includes(myIdx)?[P[myIdx]]:[]; picked = new Set();
     if (isHost) hostRound('trigger_line');
   } else {
-    pending = [...P];
+    pending = evoPlayers.map(i=>P[i]);
   }
-  chooseLine();
+  if(pending.length)chooseLine();else{waitEvolution();if(isHost)allPicked()}
 }
 
 function startCards(){
+  cardMode='cards';
   picked = new Set();
   if (isOnline) {
     pending = [P[myIdx]];
@@ -1281,9 +1292,10 @@ function choose(u){
     const payload = { type: isHost ? 'host_choice' : 'client_choice', rnd: isHost ? rnd : gRnd, i: myIdx, op: u.op, c: u.c, wpKey: u.wpKey, lineIdx: u.lineIdx, branchId: u.branchId, stage: u.stage, altId: u.altId, rm: u.rm, weak: u.weak, dark: u.dark, rep: u.rep };
     sendAll(payload);
     picked.add(myIdx);
-    if (isHost ? !mustPick().every(i => picked.has(i)) : picked.size < P.filter(q => !q.gone).length) {
+    if (!isHost || !mustPick().every(i => picked.has(i))) {
+      const voters=cardMode==='line'?evoPlayers:P.filter(q=>!q.gone).map(q=>q.id),done=voters.filter(i=>picked.has(i)).length;
       setHead('ESPERANDO A LOS DEMÁS');
-      $('cards').innerHTML = '<p style="font-size:20px;color:var(--gold);padding:20px;">' + pname(myIdx) + ' listo. Esperando a que elijan los demás (' + picked.size + '/' + P.length + ')...</p>';
+      $('cards').textContent = pname(myIdx) + ' listo. Esperando al grupo (' + done + '/' + voters.length + ')…';
       return;
     }
   }
@@ -1294,7 +1306,7 @@ function choose(u){
     allPicked();
   } else {
     $('up').style.display = 'none';
-    if (modo === 'line') startEvo(lineStage);
+    if (modo === 'line') beginEvolution(lineStage,evoPlayers);
     else { paused = false; last = performance.now(); }
   }
 }
@@ -1310,8 +1322,8 @@ function enNear(x,y,R,fn){const c0=Math.floor((x-R)/EG_C),c1=Math.floor((x+R)/EG
 function spawn(ti,group){if(Enemies.data&&Enemies.roster.length)Enemies.spawn(ti,group);else spawnOld(ti)}
 function spawnOld(ti){const a=Math.random()*6.283,d=Math.hypot(W,H)/2+40;
  const q=Math.random(),k=t>25&&q<.15?2:t>10&&q<.4?1:0,b=2+Math.floor(t/40);
- // sk: sprite de ENEMY_LINE. Etapa = tier; los tanques van una etapa arriba (en el tope, una de las ramas finales al azar)
- const es=ti+(k===2?1:0),sk=es<5?'stage_'+es:'branch_6_'+(1+Math.floor(Math.random()*3));
+ // sk: sprite de ENEMY_LINE, de la misma etapa que el resto de los enemigos comunes.
+ const sk=ti<5?'stage_'+ti:'branch_6_'+(1+Math.floor(Math.random()*3));
  const HM=[1,1.5,2.2,3,4,5.5][ti],T=[{hp:b,sp:1,r:12,v:3},{hp:Math.max(1,Math.ceil(b/2)),sp:1.9,r:9,v:4},{hp:b*4,sp:.55,r:21,v:10}][k];
  en.push({x:cam.x+Math.cos(a)*d,y:cam.y+Math.sin(a)*d,k,ti,sk,hp:T.hp*HM,sp:(55+Math.random()*25+t*.4)*T.sp*(1+.05*ti)*(chal('fast')?1.3:1),r:T.r*(1+.12*ti),v:T.v*(1+.5*ti),dm:[1,1.2,1.4,1.7,2,2.4][ti],fl:0,ang:0,el:Math.floor(Math.random()*3),gun:k!==1&&t>15&&Math.random()<Math.min(.4,(t-15)/150)+.08*ti,cd:1+Math.random()*2})}
 function burst(x,y,c){if(pt.length>=MAX_PT)return;for(let i=0;i<8;i++){const a=Math.random()*6.283,s=60+Math.random()*120;pt.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.4,c})}}
@@ -1353,10 +1365,10 @@ function bounce(s,e){let b=null,bd=320;for(const o of en){if(o===e||s.h.has(o)||
 // jefe derrotado: cuenta para las ramas (V-Pet) y puede soltar un Chip de Reformateo a cada jugador (sirve para reiniciar un árbol)
 function bossReward(e){for(const q of P){if(!q.vp)continue;q.vp.bo++;if(Math.random()<.35*(1+(q.luck||0)+((q.m&&q.m.rcChance)||0))){q.vp.rc++;Stats.flash(q,'Chip de Reformateo','#9dff6b')}}}
 // niveles de evolución de esta partida (Inicio rápido, del árbol de Tamer: la primera llega un nivel antes)
-function evoLevels(){const b=P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LEVELS.slice(1)]:EVO_LEVELS,q=P[0];
+function evoLevels(q=P[0]){const b=P.some(q=>q.m&&q.m.quick)?[EVO_LEVELS[0]-1,...EVO_LEVELS.slice(1)]:EVO_LEVELS;
  // Renacer (Issue #14): desde el nivel en que renaciste, evolucionás cada 2 niveles hasta la etapa que tenías; después, lo de siempre
  return q&&q.rbL!=null?b.map((l,i)=>i+1<=q.rbFrom?q.rbL+2*(i+1):Math.max(l,q.rbL+2*(i+1))):b}
-function lineLevel(){const q=P[0];return q&&q.rbL!=null?(q.rbFrom>=5?q.rbL+10:Math.max(LINE_LEVEL,q.rbL+10)):LINE_LEVEL}
+function lineLevel(q=P[0]){return q&&q.rbL!=null?(q.rbFrom>=5?q.rbL+10:Math.max(LINE_LEVEL,q.rbL+10)):LINE_LEVEL}
 // HUD: vida (con rastro del daño recibido), experiencia con el nivel y virus eliminados. Lo usan el host y el cliente online.
 // Cajas de vida: la 1 y la 2 están en index.html; la 3 y la 4 se crean copiando la 2 (mismos ids con otro número)
 function hudBoxes(m){for(let i=3;i<=MAX_PLAYERS;i++){if($('hp'+i+'box')||i>m)continue;const b=$('hp2box').cloneNode(true);b.id='hp'+i+'box';b.className='hpbox p'+i;
@@ -1421,9 +1433,9 @@ function update(dt){
    d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
  // (más densidad, pedido: intervalo de 0,6 s que baja hasta 0,15 s y tandas +1 cada 90 s; además, oleadas: Enemies.events)
- spawnT-=dt;const iv=Math.max(.15,.6-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),mt=Math.max(...P.map(q=>q.stage|0));
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&!Finale.rk&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(Math.max(0,mt-1),1);spawnT+=iv}
- if(!World.arena&&!Finale.rk){Enemies.events(dt,Math.max(0,mt-1));Enemies.champ(dt,Math.max(0,mt-1))}
+ spawnT-=dt;const iv=Math.max(.15,.6-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),ti=Enemies.tier();
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&!Finale.rk&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(ti,1);spawnT+=iv}
+ if(!World.arena&&!Finale.rk){Enemies.events(dt,ti);Enemies.champ(dt)}
  if(!Finale.rk)Gate.tick(dt);Weather.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  for(const q of al){q.atkT-=dt;
   if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
@@ -1512,7 +1524,7 @@ function drawPointers(){
  if(mode>1)P.forEach((q,i)=>{if(isOnline&&i===myIdx)return;list.push({x:q.x,y:q.y-30,col:PC[i],txt:(q.dead?'✝ ':'')+pname(i)})});
  if(Gate.g&&!World.arena)list.push({x:Gate.g[0],y:Gate.g[1]-60,col:'#3dff7a',txt:'Digital Gate · '+Gate.leftTxt()});
  list.push(...Explore.pointers(ox,oy));
- if(!World.arena)for(const e of en)if(e.cp&&Math.hypot(e.x-ox,e.y-oy)<1500)list.push({x:e.x,y:e.y-50,col:'#ffb02e',txt:'Campeón'});   // campeones (Issue #7)   // cofres y zonas de datos (explore.js)
+ if(!World.arena)for(const e of en)if(e.cp&&Math.hypot(e.x-ox,e.y-oy)<1500)list.push({x:e.x,y:e.y-50,col:'#ffb02e',txt:'Élite'});   // cofres y zonas de datos (explore.js)
  for(const o of list){const sx=o.x-cam.x+W/2,sy=o.y-cam.y+H/2;if(sx>20&&sx<W-20&&sy>20&&sy<H-20)continue;
   const a=Math.atan2(sy-H/2,sx-W/2),mg=46,k=Math.min((W/2-mg)/Math.max(1e-6,Math.abs(Math.cos(a))),(H/2-mg)/Math.max(1e-6,Math.abs(Math.sin(a)))),px=W/2+Math.cos(a)*k,py=H/2+Math.sin(a)*k;
   const txt=o.txt+' · '+Math.round(Math.hypot(o.x-ox,o.y-oy)/40)+' m';
