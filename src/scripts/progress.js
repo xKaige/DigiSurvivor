@@ -20,7 +20,7 @@ const Progress = {
   KEY: 'digisurvivor_prog',
   data: null,
   st: null,
-  hatchQ: [],
+  hatching: false,
 
   async load() {
     const r = await fetch('src/data/unlocks.json');
@@ -39,6 +39,9 @@ const Progress = {
     this.st = Object.assign(this.blank(), s || {});
     for (const cid in this.st.unl) this.st.seen[cid + ':stage_0'] = 1;   // al eclosionar ya conocés su forma bebé
     for (const cid in this.st.eggs) if (this.st.unl[cid] || STARTERS.includes(cid)) delete this.st.eggs[cid];   // huevos de Digimon ya desbloqueados (quedaban en la cuenta)
+    // La cola es solo de animaciones: una entrada vieja o repetida no debe bloquear los demás huevos.
+    this.st.hatchQ = [...new Set(Array.isArray(this.st.hatchQ) ? this.st.hatchQ : [])]
+      .filter(cid => this.st.unl[cid] && CREATURES.some(c => c.id === cid));
     return this.st;
   },
   write() { try { localStorage.setItem(this.KEY, JSON.stringify(this.st)); } catch (e) {} if (window.onProgSave) window.onProgSave(this.st); this.badge(); },
@@ -53,9 +56,9 @@ const Progress = {
   hatchNow(cid) {
     const s = this.read(); if (!s.eggs[cid] || this.hatching || running) return;
     delete s.eggs[cid]; s.unl[cid] = 1; s.seen[cid + ':stage_0'] = 1; s.hatchQ.push(cid);
-    this.write(); this.showHatch();
+    this.write(); if (this.isOpen()) this.render(); this.showHatch();
   },
-  reset() { this.st = this.blank(); this.write(); },   // lo usa el reinicio de progreso (RESET_BEFORE en game.js)
+  reset() { this.cancelHatch(); this.st = this.blank(); this.write(); },   // lo usa el reinicio de progreso (RESET_BEFORE en game.js)
 
   has(cid) { return STARTERS.includes(cid) || !!this.read().unl[cid]; },
   unlockOf(cid) { return this.data && this.data.unlocks.find(u => u.cid === cid); },
@@ -220,41 +223,57 @@ const Progress = {
   },
 
   // ---------- Eclosión (en el menú, después de la partida) ----------
+  cancelHatch() {
+    clearTimeout(this.hf); clearTimeout(this.ht); clearInterval(this.ha);
+    this.hatching = false;
+    const w = document.getElementById('hatch'); if (w) w.style.display = 'none';
+  },
   showHatch() {
     const s = this.read();
     if (running || this.hatching || !s.hatchQ.length) return;
-    const cid = s.hatchQ[0], C = CreatureLoader.cache[cid];
-    if (!C) return;   // todavía no cargaron los sprites: game.js la vuelve a pedir al terminar de cargar
+    // Si una criatura todavía no cargó, queda pendiente sin frenar las que ya se pueden mostrar.
+    const cid = s.hatchQ.find(id => CreatureLoader.cache[id]), C = CreatureLoader.cache[cid];
+    if (!C) return;   // game.js la vuelve a pedir al terminar de cargar
     this.hatching = true;
     let w = document.getElementById('hatch');
     if (!w) { w = document.createElement('div'); w.id = 'hatch'; document.body.appendChild(w); }
     w.innerHTML = '<div class="hbox"><small>Digitama</small><h2>¡Se está moviendo!</h2><div class="hstage">' + this.eggHtml(cid, 7, 'fast') + '</div>' +
-      '<p class="hmsg"></p><div class="hbtns"></div></div>';
+      '<p class="hmsg"></p><div class="hbtns"><button class="hok" style="display:none">Elegir a ' + this.rookie(cid) + '</button><button class="hno">Seguir</button></div></div>';
     w.style.display = 'flex';
     const stage = w.querySelector('.hstage'), M = C.meta;
-    setTimeout(() => stage.classList.add('flash'), 1700);
-    setTimeout(() => {
-      // nace el bebé (etapa 0), dibujado en grande y animado
-      const S = C.canvases.stage_0, fw = S.canvas.width / S.cols, fh = S.canvas.height / S.rows, sc = Math.max(1, Math.floor(200 / Math.max(fw, fh)));
-      // se cambia el huevo por el bebé (el destello de .flash sigue encima y se desvanece solo)
-      stage.querySelector('.egg').remove();
-      stage.insertAdjacentHTML('afterbegin', '<canvas width="' + fw * sc + '" height="' + fh * sc + '"></canvas>');
-      const g = stage.firstChild.getContext('2d'); g.imageSmoothingEnabled = false;
-      let f = 0; const paint = () => { g.clearRect(0, 0, fw * sc, fh * sc); g.drawImage(S.canvas, f * fw, 0, fw, fh, 0, 0, fw * sc, fh * sc); f = 1 - f; };
-      paint(); clearInterval(this.ha); this.ha = setInterval(paint, 380);
+    const done = pick => {
+      const i = s.hatchQ.indexOf(cid);
+      if (this.st !== s || i < 0) return;   // sesión cambiada o botón ya atendido
+      this.cancelHatch();
+      s.hatchQ.splice(i, 1); this.write();
+      if (pick && window.setPick) window.setPick(cid);
+      if (this.isOpen()) this.render();
+      this.showHatch();
+    };
+    const bt = w.querySelector('.hbtns');
+    bt.querySelector('.hok').onclick = () => done(true);
+    bt.querySelector('.hno').onclick = () => done(false);   // siempre se puede salir, aunque falle la imagen
+    bt.querySelector('.hno').focus();
+    this.hf = setTimeout(() => stage.classList.add('flash'), 1700);
+    this.ht = setTimeout(() => {
       w.querySelector('h2').textContent = '¡Nació ' + M.stages[0].name + '!';
       w.querySelector('.hmsg').innerHTML = 'Ya podés elegir a <b style="color:' + ELC[elOf(cid)] + '">' + this.rookie(cid) + '</b> como compañero.';
-      const bt = w.querySelector('.hbtns');
-      bt.innerHTML = '<button class="hok">Elegir a ' + this.rookie(cid) + '</button><button class="hno">Seguir</button>';
-      const done = pick => {
-        clearInterval(this.ha); w.style.display = 'none'; this.hatching = false;
-        s.hatchQ.shift(); this.write();
-        if (pick && window.setPick) window.setPick(cid);
-        if (this.isOpen()) this.render();   // el Analyzer se actualiza (el huevo pasa a Compañeros)
-        this.showHatch();   // si hay más huevos, sigue el próximo
-      };
-      bt.querySelector('.hok').onclick = () => done(true);
-      bt.querySelector('.hno').onclick = () => done(false);
+      // La imagen es decorativa: si no cargó, el compañero igual queda disponible y la cola puede seguir.
+      try {
+        const S = C.canvases.stage_0;
+        if (!S) throw new Error('No se cargó la imagen de ' + cid);
+        const fw = S.canvas.width / S.cols, fh = S.canvas.height / S.rows, sc = Math.max(1, Math.floor(200 / Math.max(fw, fh)));
+        stage.querySelector('.egg').remove();
+        stage.insertAdjacentHTML('afterbegin', '<canvas width="' + fw * sc + '" height="' + fh * sc + '"></canvas>');
+        const g = stage.firstChild.getContext('2d'); g.imageSmoothingEnabled = false;
+        let f = 0; const paint = () => { g.clearRect(0, 0, fw * sc, fh * sc); g.drawImage(S.canvas, f * fw, 0, fw, fh, 0, 0, fw * sc, fh * sc); f = 1 - f; };
+        paint(); clearInterval(this.ha); this.ha = setInterval(paint, 380);
+      } catch (e) {
+        console.warn('No se pudo mostrar la eclosión:', e);
+        stage.style.display = 'none';
+        w.querySelector('.hmsg').append(' La imagen no pudo cargarse.');
+      }
+      bt.querySelector('.hok').style.display = '';
       bt.querySelector('.hok').focus();
     }, 2100);
   },
@@ -333,6 +352,7 @@ const Progress = {
 // Puente con firebase.js: el progreso es de la cuenta logueada
 window.getProg = () => Progress.read();
 window.loadProg = st => {
+  Progress.cancelHatch();
   Progress.st = null;
   try { if (st) localStorage.setItem(Progress.KEY, JSON.stringify(st)); else localStorage.removeItem(Progress.KEY); } catch (e) {}
   Progress.read(); if (Progress.data) { Progress.activate(); Progress.claimDone(true); } Progress.renderRank();
