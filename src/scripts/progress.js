@@ -157,7 +157,8 @@ const Progress = {
     const r1 = this.rank(s.txp), reward = r1.i > r0 ? 100 * (r1.i - r0) * r1.i : 0;
     if (reward) { save.coins += reward; persist(); wal(); }
     s.kills += r.kills | 0;
-    if (r.secs >= 300) s.runs++;   // Issue #24: abandonar antes de 5 minutos no suma una partida para los Digitamas.
+    // Issue #24: 5 minutos y una evolución propia. Online, pl contiene solo tu Digimon; en local comparten el guardado.
+    if (r.secs >= 300 && r.pl.some(q => q.stage >= 1)) s.runs++;
     s.bestSecs = Math.max(s.bestSecs, Math.floor(r.secs));
     for (const q of r.pl) {
       s.bestStage = Math.max(s.bestStage, q.stage);

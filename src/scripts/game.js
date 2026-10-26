@@ -470,7 +470,7 @@ function setupConn(c) {
     } else if (data.type === 'end') {
       if (!isHost && isOnline && running) {
         if (Number.isFinite(data.secs) && data.secs >= 0) t = data.secs;   // duración final del anfitrión, aunque falte el último sync
-        endRun(data.title || 'Run terminada');
+        endRun(data.title || 'Run terminada', Array.isArray(data.stages) ? data.stages : null);
       }
     } else if (data.type === 'resume_game') {
       if (data.rnd != null && data.rnd !== gRnd) return;   // de una ronda vieja
@@ -950,9 +950,9 @@ function applyRebirth(q,level,from,chips){q.vp.rc=chips;q.rbFrom=from;q.maxSt=Ma
 $('pbtn').onclick=()=>{if(running)togglePause()};
 $('dbtn').addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();myDash()},{passive:false});$('dbtn').onclick=()=>myDash();   // dash en celular   // botón de pausa (celular: no hay Escape)
 $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
-function endRun(title){if(!running)return;
+function endRun(title,finalStages){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
- if(isOnline&&isHost)sendAll({type:'end',title:title,secs:t});
+ if(isOnline&&isHost)sendAll({type:'end',title:title,secs:t,stages:P.map(q=>Math.max(q.stage|0,q.maxSt|0))});
  running=false;paused=false;evo=null;pending=[];evoQueue=[];evoPlayers=[];rndOpen=false;SkillSys.clearBar();Sound.music(false);Gate.reset();Finale.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
@@ -964,7 +964,7 @@ function endRun(title){if(!running)return;
  if(typeof Missions!=='undefined'){const me=(isOnline&&P[myIdx])||P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode>1,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
  // progresión permanente (progress.js): Digitamas y desbloqueos
- if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:Math.max(q.stage|0,q.maxSt|0)})),bosses:Bosses.down.slice()});
+ if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:finalStages&&Number.isInteger(finalStages[q.id])?Math.max(0,Math.min(5,finalStages[q.id])):Math.max(q.stage|0,q.maxSt|0)})),bosses:Bosses.down.slice()});
   if(r.eggs.length)$('m').textContent+=' ¡Conseguiste '+(r.eggs.length>1?r.eggs.length+' Digitamas':'un Digitama')+' ('+r.eggs.map(u=>u.name).join(', ')+')! '+(r.eggs.length>1?'Hacelos':'Hacelo')+' eclosionar en el Digimon Analyzer.';
   $('m').textContent+=' +'+r.txp+' XP de Tamer'+(r.rankUp?'. ¡Subiste a '+r.rankUp+'! (+'+r.reward+' monedas)':'')+'.';
   if(r.hatched.length)setTimeout(()=>Progress.showHatch(),700)}
