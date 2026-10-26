@@ -1,4 +1,4 @@
-// Regresiones de los issues #21 y #26–28. Ejecutar con Node y Playwright: node --test tools/test-gameplay.cjs
+// Regresiones de los issues #21, #24 y #26–28. Ejecutar con Node y Playwright: node --test tools/test-gameplay.cjs
 // PLAYWRIGHT_CHANNEL=msedge usa Edge instalado. TEST_OUTPUT_DIR guarda las capturas de revisión.
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
@@ -337,4 +337,38 @@ test('#21: sprites y ataques de todas las formas de Gammamon',()=>withPages(1,as
     return {sprites:keys.length,skills:skills.size};
   });
   assert.ok(checked.sprites>=15);assert.ok(checked.skills>20);
+}));
+
+for(const n of [1,2])test(`#24: abandonar antes de 5 minutos no suma partidas en ${n}J`,()=>withPages(1,async page=>{
+  await page.evaluate(()=>{const s=Progress.blank();s.runs=14;window.loadProg(s)});
+  for(const secs of [0,1,299.99,300]){
+    await localStart(page,n);
+    await page.evaluate(secs=>{t=secs;kills=7;togglePause();draw()},secs);
+    await page.locator('#pquit').click();
+    const expected=secs>=300?15:14;
+    assert.deepEqual(await page.evaluate(()=>({runs:Progress.read().runs,state:Progress.state('014_herissmon')})),{runs:expected,state:expected===15?'egg':'lock'});
+    // Una segunda llamada de cierre no puede contar dos veces la misma partida.
+    await page.evaluate(()=>endRun('Run terminada'));
+    assert.equal(await page.evaluate(()=>Progress.read().runs),expected);
+    assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem(Progress.KEY)).runs),expected);
+    if(secs===299.99){
+      await page.evaluate(()=>{Progress.open();Progress.tab='egg';Progress.render()});
+      const mission=page.locator('.an-row').filter({hasText:'Tamer constante'});
+      assert.ok((await mission.innerText()).includes('14 / 15'));
+      assert.doesNotMatch(await mission.innerText(),/5 min|300|cinco/i);
+      if(process.env.TEST_OUTPUT_DIR){await fs.mkdir(process.env.TEST_OUTPUT_DIR,{recursive:true});await mission.screenshot({path:path.join(process.env.TEST_OUTPUT_DIR,`mision-partidas-${n}J.png`)})}
+      await page.evaluate(()=>Progress.close());
+    }
+  }
+  assert.equal(await page.evaluate(()=>Progress.read().kills),28,'Los demás objetivos siguen contando en partidas cortas');
+  assert.equal(await page.evaluate(()=>Progress.read().bestSecs),300);
+}));
+
+for(const [secs,guestSecs]of [[299.99,300.1],[300,299.8],[301,300.8]])test(`#24 online: cierre a ${secs}s con reloj del invitado en ${guestSecs}s`,()=>withPages(2,async(host,guest)=>{
+  await Promise.all([host,guest].map(page=>page.evaluate(()=>{const s=Progress.blank();s.runs=14;window.loadProg(s)})));
+  await onlineStart(host,guest);
+  await guest.evaluate(secs=>{t=secs},guestSecs);
+  await host.evaluate(secs=>{t=secs;endRun('Run terminada')},secs);
+  await guest.waitForFunction(()=>!running);
+  for(const page of [host,guest])assert.deepEqual(await page.evaluate(()=>({runs:Progress.read().runs,state:Progress.state('014_herissmon')})),{runs:secs>=300?15:14,state:secs>=300?'egg':'lock'});
 }));

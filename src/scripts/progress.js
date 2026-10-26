@@ -156,7 +156,8 @@ const Progress = {
     s.txp += txp;
     const r1 = this.rank(s.txp), reward = r1.i > r0 ? 100 * (r1.i - r0) * r1.i : 0;
     if (reward) { save.coins += reward; persist(); wal(); }
-    s.kills += r.kills | 0; s.runs++;
+    s.kills += r.kills | 0;
+    if (r.secs >= 300) s.runs++;   // Issue #24: abandonar antes de 5 minutos no suma una partida para los Digitamas.
     s.bestSecs = Math.max(s.bestSecs, Math.floor(r.secs));
     for (const q of r.pl) {
       s.bestStage = Math.max(s.bestStage, q.stage);

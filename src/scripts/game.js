@@ -468,7 +468,10 @@ function setupConn(c) {
         if (i === myIdx) { pending = []; $('up').style.display = 'none'; }
       }
     } else if (data.type === 'end') {
-      if (running) endRun(data.title || 'Run terminada');
+      if (!isHost && isOnline && running) {
+        if (Number.isFinite(data.secs) && data.secs >= 0) t = data.secs;   // duración final del anfitrión, aunque falte el último sync
+        endRun(data.title || 'Run terminada');
+      }
     } else if (data.type === 'resume_game') {
       if (data.rnd != null && data.rnd !== gRnd) return;   // de una ronda vieja
       $('up').style.display = 'none';
@@ -949,7 +952,7 @@ $('dbtn').addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation
 $('pquit').onclick=()=>{if(running)endRun('Run terminada')};
 function endRun(title){if(!running)return;
  // si termina el anfitrión, avisa al otro jugador para que también termine (si no, queda jugando con todo congelado)
- if(isOnline&&isHost)sendAll({type:'end',title:title});
+ if(isOnline&&isHost)sendAll({type:'end',title:title,secs:t});
  running=false;paused=false;evo=null;pending=[];evoQueue=[];evoPlayers=[];rndOpen=false;SkillSys.clearBar();Sound.music(false);Gate.reset();Finale.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
