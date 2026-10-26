@@ -6,7 +6,7 @@ let W,H,CZ=1,CK=1;function rs(){CZ=innerWidth<700?Math.max(.6,Math.min(1.2,inner
 const keys={};
 let P=[],p,cam={x:0,y:0},en=[],sh=[],pt=[],gems=[],fx=[],ef=[],eb=[],t=0,kills=0,running=false,spawnT=0,last=0,xp=0,lvl=1,need=5,paused=false,evo=null,pending=[],cardMode='cards',mode=1,lastMode=1,cur=[],treeOpen=false;
 // Hasta MAX_PLAYERS jugadores (hoy el menú ofrece 1 y 2; el código ya acepta 3 y 4: ver inputOf y el HUD)
-const MAX_PLAYERS=4,PC=['#2ee6c8','#ff7ad9','#ffd23f','#7aa8ff'],ELC=['#4db8ff','#c05bff','#ffb02e'],$=id=>document.getElementById(id);
+const MAX_PLAYERS=4,PC=['#2ee6c8','#ff7ad9','#ffd23f','#7aa8ff'],ELC=['#4db8ff','#c05bff','#ffb02e','#b8c1cc','#b8c1cc','#b8c1cc','#b8c1cc'],$=id=>document.getElementById(id);
 
 // Criaturas jugables. Cada una necesita la carpeta assets/sprites/creatures/<id>/ y el archivo src/data/creatures/<id>.json
 // Para sumar otra: agregala acá (y creá su JSON). Si falta el JSON, simplemente no aparece en la selección.
@@ -26,8 +26,10 @@ const CR = q => CreatureLoader.cache[(q && q.cid) || '001_guilmon'] || null;
 // Línea que se usa para dibujar a los enemigos (no hace falta que sea jugable). Si no carga, se dibujan con formas.
 const ENEMY_LINE = '004_impmon';
 // Atributos: 0 Vacuna, 1 Virus, 2 Dato. Cada uno es fuerte contra el siguiente: Vacuna > Virus > Dato > Vacuna.
-// El atributo de cada Digimon sale de "attribute" en su JSON.
-const ATTR = ['Vacuna', 'Virus', 'Dato'];
+// Los demás atributos son neutros. Los compañeros conservan el atributo de su línea.
+const ATTR = ['Vacuna', 'Virus', 'Dato', 'Free', 'Variable', 'Desconocido', 'Sin atributo'];
+const attrOf = a => { const i = ATTR.indexOf(a); return i < 0 ? 6 : i; };
+const attrBadge = el => el >= 3 ? '<img class="attr-neutral" src="assets/sprites/attr/neutral.svg" alt="Ne" title="Neutral">' : ATTR[el];
 const elOf = cid => { const C = CreatureLoader.cache[cid], a = C && C.meta.attribute; return a === 'Virus' ? 1 : a === 'Dato' ? 2 : 0; };
 // Revivir: un compañero vivo parado sobre tu sprite te revive tras REVIVE_TIME segundos.
 // Cada jugador tiene q.revSpd (1 = normal) para que futuras pasivas puedan acelerarlo.
@@ -92,11 +94,13 @@ const prevForm = (q, s) => (s > 3 && q.alt && q.alt[s - 1]) || 'main';   // form
 function formOpts(q, s) {
   const C = CR(q); if (!C) return [];
   const M = C.meta, pf = prevForm(q, s), ok = a => !a.from || a.from.includes(pf);
-  if (s >= 5) return M.branches.map((b, idx) => ({ b, idx })).filter(o => o.idx === 0 || ok(o.b)).map(o => ({ id: o.b.id, idx: o.idx, name: o.b.name, desc: o.b.desc, req: o.b.req, vp: o.b.vp, key: 'branch_' + o.b.id, xp: o.idx === 0 }));
+  const ready = L => { if (M.strictRoute && L.length && !L.some(o => o.xp)) L[0].xp = true; return L; };
+  if (s >= 5) return ready(M.branches.map((b, idx) => ({ b, idx })).filter(o => (!M.strictRoute && o.idx === 0) || ok(o.b)).map(o => ({ id: o.b.id, idx: o.idx, name: o.b.name, desc: o.b.desc, req: o.b.req, vp: o.b.vp, key: 'branch_' + o.b.id, xp: o.idx === 0 || !!o.b.xp })));
   const st = M.stages[s]; if (!st) return [];
-  return [{ id: null, name: st.name, desc: 'La forma de siempre de la línea', key: 'stage_' + s, xp: true },
-    ...(st.alts || []).filter(ok).map(a => ({ id: a.id, name: a.name, desc: a.desc, req: a.req, vp: a.vp, key: 'alt_' + s + '_' + a.id }))];
+  return ready([...(M.strictRoute && !ok(st) ? [] : [{ id: null, name: st.name, desc: 'La forma de siempre de la línea', key: 'stage_' + s, xp: true }]),
+    ...(st.alts || []).filter(ok).map(a => ({ id: a.id, name: a.name, desc: a.desc, req: a.req, vp: a.vp, key: 'alt_' + s + '_' + a.id, xp: !!a.xp }))]);
 }
+function defaultEvolution(q,s){const L=formOpts(q,s),o=L.find(o=>o.xp)||L[0];return s<5?{op:'line',stage:s,altId:o.id}:{op:'line',stage:s,lineIdx:o.idx,branchId:o.id,weak:false,dark:false}}
 const seeForm = q => { if (typeof Progress === 'undefined' || !q) return; const k = formKey(q, q.stage | 0), C = CR(q);
   Progress.see(q.cid, k); if (q.xa && C && C.canvases['x_' + k]) Progress.see(q.cid, 'x_' + k); };
 // Reglas del desafío diario (challenge.js) activas en esta partida
@@ -514,7 +518,7 @@ setInterval(() => {
   for (const i of late) {
     const q = P[i]; if (!q) continue;
     let data;
-    if (cardMode === 'line') { const C = CR(q), b = C && C.meta.branches[0]; data = lineStage < 5 ? { op: 'line', stage: lineStage, altId: null } : { op: 'line', stage: 5, lineIdx: 0, branchId: b ? b.id : null, weak: false, dark: false }; }
+    if (cardMode === 'line') data = defaultEvolution(q,lineStage);
     else { const k = Stats.CARDS[Math.floor(Math.random() * Stats.CARDS.length)]; data = { op: k.op, c: k.c }; }
     applyCardOp(q, data); picked.add(i);
     sendAll(Object.assign({ type: 'host_choice', i, rnd, auto: 1 }, data));
@@ -645,7 +649,7 @@ addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 // del dibujo respecto de e.y) y e.hr (radio ≈ 36% del ancho del dibujo, nunca menos que e.r). Jugador: el dibujo crece
 // hacia arriba desde los pies (q.y + 48), así que su centro es q.y + 48 − alto/2 (de Bebé, 31 px más abajo que q.y).
 const ehy=e=>e.y+(e.hcy||0),ehr=e=>e.hr||e.r,pcy=q=>q.y+48-(q.dh||BUDDY_H[Math.min(5,q.stage|0)])/2;
-function mult(a,d){return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
+function mult(a,d){if(!Number.isInteger(a)||!Number.isInteger(d)||a<0||d<0||a>2||d>2)return 1;return d===(a+1)%3?1.5:a===(d+1)%3?.5:1}
 // Topes para que no se acumulen miles de objetos (lag): números de daño, partículas y gemas
 const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=matchMedia('(pointer:coarse)').matches?210:320;   // MAX_EN: enemigos a la vez con 1 jugador (+60 por cada jugador más; en celular menos). Con la grilla espacial (buildEG) aguanta
 function dmgNum(x,y,v,col,sz,txt){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:txt||String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
@@ -860,7 +864,7 @@ async function openMenuPick() {
 // Leyenda de atributos (cada uno es fuerte contra el siguiente), empezando por el tuyo
 // Triángulo de atributos: arriba el tuyo; cada flecha va del que gana al que pierde (x1,5 de daño)
 // íconos oficiales de los atributos (Wikimon: Vaccine_Icon, Virus_Icon, Data_Icon)
-const ATTR_ICON = ['vaccine', 'virus', 'data'].map(n => 'assets/sprites/attr/' + n + '.png');
+const ATTR_ICON = ['vaccine.png', 'virus.png', 'data.png', 'neutral.svg'].map(n => 'assets/sprites/attr/' + n);
 const ATTR_IMG = ATTR_ICON.map(s => { const i = new Image(); i.src = s; return i; });   // sobre cada enemigo (Issue #7)
 function renderLegend() {
   const e0 = P[0].el | 0, o = [e0, (e0 + 1) % 3, (e0 + 2) % 3];
@@ -870,7 +874,7 @@ function renderLegend() {
     return '<line x1="' + (a[0] + ux * r) + '" y1="' + (a[1] + uy * r) + '" x2="' + (b[0] - ux * (r + 4)) + '" y2="' + (b[1] - uy * (r + 4)) + '" stroke="' + col + '" stroke-width="2.5" marker-end="url(#lgar' + col.slice(1) + ')"/>';
   };
   let s = '<svg viewBox="-4 0 128 122" aria-label="Triángulo de atributos"><defs>';
-  ELC.forEach(c => { s += '<marker id="lgar' + c.slice(1) + '" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="' + c + '"/></marker>'; });
+  ELC.slice(0,3).forEach(c => { s += '<marker id="lgar' + c.slice(1) + '" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="' + c + '"/></marker>'; });
   s += '</defs>';
   for (let i = 0; i < 3; i++) s += arrow(pt[i], pt[(i + 1) % 3], ELC[o[i]]);
   o.forEach((e, i) => {
@@ -879,6 +883,7 @@ function renderLegend() {
   });
   s += '<text x="60" y="76" text-anchor="middle" class="lgx">x1,5</text></svg>';
   $('leg').innerHTML = s;
+  $('leg').title = 'Vacuna > Virus > Dato > Vacuna. Ne (gris): Free, Variable, Desconocido y Sin atributo; daño neutro (×1).';
 }
 
 // ---------- Versión y reinicio del progreso ----------
@@ -886,7 +891,7 @@ function renderLegend() {
 // poné en RESET_BEFORE la fecha del lanzamiento: todo guardado (navegador o cuenta) con 'updated' anterior
 // a esa fecha vuelve a 0 una sola vez (monedas, árbol y misiones del día). Nick, amigos y Digimon elegido no se tocan.
 // Ej.: const RESET_BEFORE = Date.parse('2027-03-01T00:00:00-03:00');
-const GAME_VERSION = '0.8.1';   // las evoluciones por jugador requieren que todos usen el mismo protocolo online
+const GAME_VERSION = '0.8.2';   // atributos neutros y catálogo: todos deben usar los mismos índices online
 const RESET_BEFORE = Date.parse('2026-10-17T22:42:00-03:00');   // 0.6: todo el progreso anterior vuelve a cero
 if($('gver'))$('gver').textContent='v'+GAME_VERSION;
 function wipeIfOld(s){if(!RESET_BEFORE||(s.updated||0)>=RESET_BEFORE)return false;
@@ -1111,7 +1116,7 @@ function drawEnemy(e){
  cx.drawImage(e.fl>0?whiteOf(S):cv,col*fw,row*fh+1,fw,fh-2,-(B.x0+B.x1)/2*kk,h/2-2-B.y1*kk+kk,fw*kk,(fh-2)*kk);   // golpeado: silueta blanca
  cx.restore();
  // Issue #7: ícono de su atributo arriba (Vacuna / Virus / Dato) y, los campeones, barra de vida
- if(e.bo==null){const top=e.y+h/2-2-th,ai=ATTR_IMG[e.el|0];let y=top-6;
+ if(e.bo==null){const top=e.y+h/2-2-th,ai=ATTR_IMG[Math.min(3,e.el|0)];let y=top-6;
   if(e.cp){const bw=Math.max(46,w*.6),f=Math.max(0,Math.min(1,e.hf!=null?e.hf:e.hp/e.mh));y=top-10;cx.fillStyle='rgba(0,0,0,.7)';cx.fillRect(e.x-bw/2-1,y-1,bw+2,7);cx.fillStyle='#ffb02e';cx.fillRect(e.x-bw/2,y,bw*f,5);y-=4}
   if(ai&&ai.complete&&ai.naturalWidth){const s=e.cp?18:13;cx.drawImage(ai,e.x-s/2,y-s,s,s)}}
  return true}
@@ -1204,7 +1209,7 @@ function levelUp(){
 // Procesa cada grupo y al terminar abre una sola ronda de cartas de nivel para toda la party.
 function nextEvolution(){const next=evoQueue.shift();
  if(next){evoPlayers=next.players;lineStage=next.s;
-  if(next.s===5||next.s>=3&&next.players.some(i=>formOpts(P[i],next.s).length>1))openLine();else beginEvolution(next.s,next.players);
+  if(next.s===5||next.s>=3&&next.players.some(i=>{const L=formOpts(P[i],next.s);return L.length>1||L[0]&&L[0].id!=null}))openLine();else beginEvolution(next.s,next.players);
  }else{evoPlayers=[];cardMode='cards';if(isOnline&&isHost)hostRound('trigger_levelup');startCards()}}
 function waitEvolution(){p=P[myIdx]||P[0];setHead('ESPERANDO LA EVOLUCIÓN');$('cards').textContent='Tus compañeros están eligiendo su nueva forma.';$('up').querySelector('p').textContent='Tu Digimon conserva su propia ruta evolutiva';showUp()}
 // Solo eligen quienes evolucionan en esta ronda; los demás conservan su forma y esperan.

@@ -1,5 +1,13 @@
 [
   {
+    "v": "0.8.2",
+    "items": [
+      "Línea de Gammamon corregida: WezenGammamon es una alternativa de Campeón; Canoweissmon es Perfecto y Siriusmon es Mega. GulusGammamon puede seguir hacia Regulusmon y Arcturusmon.",
+      "Etapas y atributos de enemigos y jefes revisados. Los compañeros conservan el atributo de su línea durante toda la partida.",
+      "Free, Variable, Desconocido y Sin atributo se resumen como Ne dentro de un hexágono gris, sin ventaja ni desventaja de atributo."
+    ]
+  },
+  {
     "v": "0.8.1",
     "items": [
       "Las barras de los Royal Knights desaparecen al terminar la partida.",

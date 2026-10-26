@@ -66,7 +66,9 @@ def desc_of(b):
 
 log = []
 for cid, ch in CHART.items():
-    f, d = crea[cid]; C = VB[ch]['stages']
+    f, d = crea[cid]
+    if d.get('strictRoute'): continue   # ruta revisada a mano; no restaurar la línea vieja de Gammamon
+    C = VB[ch]['stages']
     mainKey = {}   # etapa -> clave VB de la forma de siempre
     for s, col in ((3, 'adult'), (4, 'perfect')):
         nm = norm(d['stages'][s]['name'])

@@ -35,7 +35,7 @@ const Bosses = {
 
   def(i) { return this.data && this.data.list[i]; },
   sprite(i) { const b = this.def(i); return b ? this.spr[b.id] : null; },
-  elOf(b) { return b.attribute === 'Virus' ? 1 : b.attribute === 'Dato' ? 2 : 0; },
+  elOf(b) { return attrOf(b.attribute); },
   every() { return this.data ? (TEST ? this.data.testEvery : typeof Challenge !== 'undefined' && Challenge.has('boss60') ? 60 : this.data.every) : 1e9; },
 
   // al empezar cada partida
@@ -401,7 +401,9 @@ const Bosses = {
       const B = this.def(e.bo), el = this.elOf(B), r = b.children[i];
       r.style.setProperty('--ac', ELC[el]);
       r.querySelector('b').textContent = B.name + (e.cyc ? ' +' + e.cyc : '');
-      r.querySelector('span').textContent = B.level + ' · ' + ATTR[el];
+      const label = r.querySelector('span'), content = (L.length > 2 ? '' : B.level + ' · ') + attrBadge(el);
+      if (label.innerHTML !== content) label.innerHTML = content;
+      label.classList.toggle('bb-neutral', el >= 3); label.title = B.level + ' · ' + ATTR[el];
       r.querySelector('i').style.width = Math.max(0, e.hp / e.mh * 100) + '%';
       const c = this.castOf(e), cb = r.querySelector('.bb-cast'); cb.style.display = c ? 'block' : 'none';
       if (c) { cb.querySelector('em').textContent = this.CASTS[c[0]]; cb.querySelector('u').style.width = Math.max(0, Math.min(1, c[1])) * 100 + '%'; }

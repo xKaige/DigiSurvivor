@@ -3,7 +3,7 @@
   "name": "Línea Gammamon",
   "attribute": "Virus",
   "anySkill": false,
-  "source": "Sprites: Steam Workshop de Stream Avatars. Evoluciones y skills: Wikimon (canon)",
+  "source": "Etapas y evoluciones: https://wikimon.net/Gammamon y fichas enlazadas (26/10/2026). Atributo de combate fijo por línea.",
   "stages": [
     {
       "stage": 0,
@@ -78,7 +78,11 @@
             "dmg": 1,
             "hp": 15
           },
-          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida",
+          "skills": [
+            "dark_pales",
+            "desdemona"
+          ]
         },
         {
           "id": "kausgamma",
@@ -98,25 +102,78 @@
             "dmg": 1,
             "hp": 25
           },
-          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida",
+          "skills": [
+            "urda_impulse",
+            "lamberta_kick"
+          ]
+        },
+        {
+          "id": "wezengamma",
+          "name": "WezenGammamon",
+          "file": "creatures/006_gammamon/wezengammamon_5.png",
+          "from": [
+            "main"
+          ],
+          "req": {
+            "VIT": 3
+          },
+          "vp": {
+            "kills": 540,
+            "bosses": 1
+          },
+          "bonus": {
+            "dmg": 1,
+            "hp": 25
+          },
+          "desc": "Evolución alternativa: cañones de largo alcance",
+          "skills": [
+            "sedna",
+            "albion"
+          ],
+          "family": "VB"
         }
       ]
     },
     {
       "stage": 4,
-      "name": "WezenGammamon",
-      "file": "wezengammamon_5.png",
+      "name": "Canoweissmon",
+      "file": "canoweissmon_6_1.png",
       "cols": 2,
       "rows": 6,
       "skills": [
-        "sedna",
-        "albion"
+        "gallia_fissure",
+        "dragonia",
+        "meteor_lux"
       ],
-      "wiki": null,
-      "verified": false,
-      "note": "Skills del canon (Wikimon); no está en la wiki DSR",
+      "from": [
+        "main",
+        "kausgamma",
+        "wezengamma"
+      ],
+      "wiki": "https://wikimon.net/Canoweissmon",
+      "verified": true,
       "family": "VB",
       "alts": [
+        {
+          "id": "regulus",
+          "name": "Regulusmon",
+          "file": "enemies/regulusmon.png",
+          "from": [
+            "gulusgamma"
+          ],
+          "req": {},
+          "vp": {},
+          "xp": true,
+          "bonus": {},
+          "desc": "La evolución de GulusGammamon",
+          "skills": [
+            "kalyp_bite",
+            "genierce",
+            "gran_tres"
+          ],
+          "family": "NSo"
+        },
         {
           "id": "chimaira",
           "name": "Chimairamon",
@@ -137,7 +194,11 @@
             "dmg": 1,
             "hp": 15
           },
-          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida"
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +15 de vida",
+          "skills": [
+            "heat_viper",
+            "hybrid_arms"
+          ]
         },
         {
           "id": "brachio",
@@ -159,30 +220,11 @@
             "dmg": 1,
             "hp": 25
           },
-          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida"
-        },
-        {
-          "id": "canoweiss",
-          "name": "Canoweissmon",
-          "file": "creatures/006_gammamon/canoweissmon_6_1.png",
-          "from": [
-            "main",
-            "kausgamma",
-            "gulusgamma"
-          ],
-          "req": {
-            "FUE": 4
-          },
-          "vp": {
-            "kills": 1500,
-            "bosses": 2,
-            "nohit": 50
-          },
-          "bonus": {
-            "dmg": 2,
-            "hp": 35
-          },
-          "desc": "Evolución alternativa (Vital Bracelet): +2 de daño, +35 de vida"
+          "desc": "Evolución alternativa (Vital Bracelet): +1 de daño, +25 de vida",
+          "skills": [
+            "brachio_bubble",
+            "brachio_hammer_head"
+          ]
         }
       ]
     }
@@ -190,27 +232,31 @@
   "branches": [
     {
       "id": "6_1",
-      "name": "Canoweissmon",
-      "file": "canoweissmon_6_1.png",
+      "name": "Siriusmon",
+      "file": "enemies/siriusmon.png",
       "cols": 2,
       "rows": 6,
       "req": {},
       "desc": "Pesado: +3 de daño, +60 de vida y ataques que perforan",
       "skills": [
-        "gallia_fissure",
-        "dragonia",
-        "meteor_lux"
+        "photon_blaster",
+        "cosmo_blade",
+        "breaquasar"
       ],
-      "wiki": null,
-      "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
+      "wiki": "https://wikimon.net/Siriusmon",
+      "verified": true,
+      "note": "Mega; evoluciona desde Canoweissmon o Regulusmon.",
       "family": "VB",
       "bonus": {
         "dmg": 3,
         "hp": 60,
         "pierce": 1
       },
-      "vp": {}
+      "vp": {},
+      "from": [
+        "main",
+        "regulus"
+      ]
     },
     {
       "id": "v_aegisdra",
@@ -227,13 +273,13 @@
         "nohit": 50
       },
       "from": [
-        "canoweiss"
+        "main"
       ],
       "desc": "Evolución alternativa (Vital Bracelet): +3 de daño, +50 de vida",
       "skills": [
-        "gallia_fissure",
-        "dragonia",
-        "meteor_lux"
+        "power_water",
+        "blaze_power",
+        "shine_breaker"
       ],
       "family": "VB",
       "bonus": {
@@ -258,15 +304,14 @@
         "nohit": 40
       },
       "from": [
-        "canoweiss",
+        "main",
         "brachio",
         "chimaira"
       ],
       "desc": "Evolución alternativa (Vital Bracelet): +4 de daño, +70 de vida",
       "skills": [
-        "gallia_fissure",
-        "dragonia",
-        "meteor_lux"
+        "ultimate_blast",
+        "ultimate_quake"
       ],
       "family": "VB",
       "bonus": {
@@ -275,6 +320,31 @@
         "multi": 0
       },
       "vb": "ultimatebrachi"
+    },
+    {
+      "id": "v_arcturus",
+      "name": "Arcturusmon",
+      "file": "enemies/arcturusmon.png",
+      "cols": 2,
+      "rows": 6,
+      "from": [
+        "regulus"
+      ],
+      "req": {},
+      "vp": {},
+      "xp": true,
+      "desc": "Forma final oscura: +3 de daño y +60 de vida",
+      "skills": [
+        "black_death",
+        "black_confession"
+      ],
+      "family": "NSo",
+      "bonus": {
+        "dmg": 3,
+        "hp": 60,
+        "pierce": 1
+      },
+      "wiki": "https://wikimon.net/Arcturusmon"
     }
   ],
   "dark": {
@@ -297,5 +367,6 @@
     "name": "Curiosidad",
     "desc": "+12% de experiencia"
   },
-  "vbChart": "gamma"
+  "vbChart": "gamma",
+  "strictRoute": true
 }

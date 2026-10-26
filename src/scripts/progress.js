@@ -315,7 +315,7 @@ const Progress = {
         const n = s.bosses[B.id] | 0, el = Bosses.elOf(B), S = Bosses.spr[B.id];
         const img = S ? this.thumb({ canvases: { x: S } }, 'x', 64) : '';
         h += '<div class="an-row boss' + (n ? '' : ' no') + '" style="--ac:' + ELC[el] + '"><span class="an-f' + (n ? '' : ' no') + '">' + img + '</span><div class="an-info">' +
-          '<b>' + (n ? B.name : '???') + ' <small>' + B.level + ' · ' + B.attribute + '</small></b>' +
+          '<b>' + (n ? B.name : '???') + ' <small title="' + B.level + ' · ' + B.attribute + '">' + B.level + ' · ' + attrBadge(el) + '</small></b>' +
           '<span class="desc">' + (n ? B.desc : 'Aparece a los ' + (() => { const s = (i + 1) * Bosses.data.every; return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); })() + ' de partida. Derrotalo para registrar sus datos.') + '</span>' +
           (n ? '<span class="an-st">Técnicas: ' + [...new Set(B.atk.map(a => a.n))].join(', ') + ' · Derrotado ' + n + (n > 1 ? ' veces' : ' vez') + '</span>' : '') +
           '</div></div>';

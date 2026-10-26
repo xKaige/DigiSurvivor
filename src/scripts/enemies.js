@@ -48,7 +48,7 @@ const Enemies = {
     if (!this.spr[d.id]) this.loadSprite(d);   // todavía no estaba (ej. invitado online): se pide y mientras se dibuja con figuras
     return this.spr[d.id] || null;
   },
-  elOf(d) { return d.attribute === 'Virus' ? 1 : d.attribute === 'Dato' ? 2 : 0; },
+  elOf(d) { return attrOf(d.attribute); },
 
   // ---------- Plantel de la partida ----------
   // El reloj de la partida define la etapa, sin contar el tiempo dentro del Gate. Los élite van una etapa por delante.

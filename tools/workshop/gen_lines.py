@@ -9,6 +9,7 @@ ex = json.load(open(D + '/existing.json'))
 SK = json.load(open(R + '/src/data/skills.json', encoding='utf-8'))
 UN = json.load(open(R + '/src/data/unlocks.json', encoding='utf-8'))
 EN = json.load(open(R + '/src/data/enemies.json', encoding='utf-8'))
+CANON = json.load(open(R + '/tools/canon-reference.json', encoding='utf-8'))['enemy']
 def h(s): return int(hashlib.md5(s.encode()).hexdigest(), 16)
 
 # ---------- nombres ----------
@@ -25,6 +26,11 @@ def attr(k):
     for a in db.get(k, {}).get('attr', []):
         if a in AT: return AT[a]
     return ['Vacuna', 'Virus', 'Dato'][h(k) % 3]
+
+def enemy_attr(k, eid):
+    if eid in CANON: return CANON[eid]['attribute']
+    first = (db.get(k, {}).get('attr') or ['None'])[0]
+    return {**AT, 'Free': 'Free', 'Variable': 'Variable', 'Unknown': 'Desconocido', 'None': 'Sin atributo'}.get(first, 'Sin atributo')
 FAM = ['Nature Spirits', 'Deep Savers', 'Nightmare Soldiers', 'Wind Guardians', 'Metal Empire', 'Virus Busters', "Dragon's Roar", 'Jungle Troopers', 'Dark Area', 'Unknown']
 CODE = {'Nature Spirits': 'NSp', 'Deep Savers': 'DS', 'Nightmare Soldiers': 'NSo', 'Wind Guardians': 'WG', 'Metal Empire': 'ME',
         'Virus Busters': 'VB', "Dragon's Roar": 'DR', 'Jungle Troopers': 'JT', 'Dark Area': 'DA', 'Unknown': 'UK'}
@@ -199,8 +205,9 @@ for k in sorted(idx):
     if lvl not in TIER: continue
     tier = TIER[lvl]
     if lvl == 'Hybrid' and 'ancient' in k: tier = 5
+    if eid in CANON: tier = CANON[eid]['tier']
     shutil.copy(os.path.join(D, 'sprites', k + '.png'), os.path.join(R, 'assets/sprites/enemies', eid + '.png'))
-    EN['list'].append({'id': eid, 'name': nm, 'tier': tier, 'attribute': attr(k), 'kind': kind_of(k, tier), 'file': eid + '.png', 'pack': idx[k]['pack']})
+    EN['list'].append({'id': eid, 'name': nm, 'tier': tier, 'attribute': enemy_attr(k, eid), 'level': CANON.get(eid, {}).get('level', lvl), 'kind': kind_of(k, tier), 'file': eid + '.png', 'pack': idx[k]['pack']})
     enemy_ids.add(eid); added.append(eid)
 
 json.dump(SK, open(R + '/src/data/skills.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2)

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#242a32"/><stop offset="1" stop-color="#0b1016"/></linearGradient></defs>
+  <path d="M29 5Q32 3 35 5L53 15Q56 17 56 21V43Q56 47 53 49L35 59Q32 61 29 59L11 49Q8 47 8 43V21Q8 17 11 15Z" fill="url(#bg)" stroke="#141a22" stroke-width="6"/>
+  <path d="M29 5Q32 3 35 5L53 15Q56 17 56 21V43Q56 47 53 49L35 59Q32 61 29 59L11 49Q8 47 8 43V21Q8 17 11 15Z" fill="none" stroke="#77818d" stroke-width="2.5"/>
+  <text x="32" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="bold" fill="#b8c1cc">Ne</text>
+</svg>

@@ -1,0 +1,2230 @@
+{
+  "date": "2026-10-26",
+  "note": "Atributo y nivel principales de Wikimon. Armor/Híbrido conservan una equivalencia de las seis etapas documentada en Digi-API. Los jugables mantienen su atributo por línea.",
+  "enemy": {
+    "pyonmon": {
+      "name": "Pyonmon",
+      "attribute": "Sin atributo",
+      "level": "Bebé I",
+      "tier": 0,
+      "source": "https://wikimon.net/Pyonmon"
+    },
+    "digitamamon": {
+      "name": "Digitamamon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Digitamamon"
+    },
+    "agumonnegro": {
+      "name": "Agumon (negro)",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Agumon_(Black)"
+    },
+    "shoutmon": {
+      "name": "Shoutmon",
+      "attribute": "Dato",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Shoutmon"
+    },
+    "vemmon": {
+      "name": "Vemmon",
+      "attribute": "Desconocido",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/BEMmon"
+    },
+    "bosamon": {
+      "name": "Bosamon",
+      "attribute": "Sin atributo",
+      "level": "Bebé II",
+      "tier": 1,
+      "source": "https://wikimon.net/Bosamon"
+    },
+    "numemon": {
+      "name": "Numemon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Numemon"
+    },
+    "damemon": {
+      "name": "Damemon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Damemon"
+    },
+    "porcupamon": {
+      "name": "Porcupamon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Porcupamon"
+    },
+    "wendimon": {
+      "name": "Wendimon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Wendimon"
+    },
+    "turuiemon": {
+      "name": "Turuiemon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Turuiemon"
+    },
+    "tyrannomon": {
+      "name": "Tyrannomon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Tyranomon"
+    },
+    "leomon": {
+      "name": "Leomon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Leomon"
+    },
+    "rukamon": {
+      "name": "Rukamon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Rukamon"
+    },
+    "gesomon": {
+      "name": "Gesomon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Gesomon"
+    },
+    "airdramon": {
+      "name": "Airdramon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Airdramon"
+    },
+    "raptordramon": {
+      "name": "Raptordramon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Raptordramon"
+    },
+    "musyamon": {
+      "name": "Musyamon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Musyamon"
+    },
+    "dokugumon": {
+      "name": "Dokugumon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Dokugumon"
+    },
+    "gyukimon": {
+      "name": "Gyukimon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Gyukimon"
+    },
+    "thunderballmon": {
+      "name": "Thunderballmon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Thunderballmon"
+    },
+    "chirinmon": {
+      "name": "Chirinmon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Tyilinmon"
+    },
+    "gundramon": {
+      "name": "Gundramon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Gundramon"
+    },
+    "komondomon": {
+      "name": "Komondomon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Komondomon"
+    },
+    "angoramon": {
+      "name": "Angoramon",
+      "attribute": "Vacuna",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Angoramon"
+    },
+    "hicommandramon": {
+      "name": "Hi-Commandramon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Hi-Commandramon"
+    },
+    "snatchmon": {
+      "name": "Snatchmon",
+      "attribute": "Desconocido",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Snatchmon"
+    },
+    "fladramon": {
+      "name": "Fladramon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Fladramon"
+    },
+    "lighdramon": {
+      "name": "Lighdramon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Lighdramon"
+    },
+    "andiramon": {
+      "name": "Andiramon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Andiramon"
+    },
+    "monzaemon": {
+      "name": "Monzaemon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Monzaemon"
+    },
+    "metaltyrannomon": {
+      "name": "MetalTyrannomon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Metal_Tyranomon"
+    },
+    "gigadramon": {
+      "name": "Gigadramon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Gigadramon"
+    },
+    "mastertyrannomon": {
+      "name": "MasterTyrannomon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Master_Tyranomon"
+    },
+    "rusttyrannomon": {
+      "name": "RustTyrannomon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Rust_Tyranomon"
+    },
+    "andromon": {
+      "name": "Andromon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Andromon"
+    },
+    "deltamon": {
+      "name": "Deltamon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Deltamon"
+    },
+    "cargodramon": {
+      "name": "Cargodramon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Cargodramon"
+    },
+    "hangyomon": {
+      "name": "Hangyomon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Hangyomon"
+    },
+    "pukumon": {
+      "name": "Pukumon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Pukumon"
+    },
+    "whamon": {
+      "name": "Whamon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Whamon"
+    },
+    "grappuleomon": {
+      "name": "GrappuLeomon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Grap_Leomon"
+    },
+    "griffomon": {
+      "name": "Griffomon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Griffomon"
+    },
+    "skullbaluchimon": {
+      "name": "SkullBaluchimon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Skull_Baluchimon"
+    },
+    "makuramon": {
+      "name": "Makuramon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Makuramon"
+    },
+    "pajiramon": {
+      "name": "Pajiramon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Pajiramon"
+    },
+    "sinduramon": {
+      "name": "Sinduramon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Sinduramon"
+    },
+    "brachiomon": {
+      "name": "Brachiomon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Brachiomon"
+    },
+    "kausgammamon": {
+      "name": "KausGammamon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Kaus_Gammamon"
+    },
+    "bladekuwagamon": {
+      "name": "BladeKuwagamon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Blade_Kuwagamon"
+    },
+    "giromon": {
+      "name": "Giromon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Giromon"
+    },
+    "xvmon": {
+      "name": "XV-mon",
+      "attribute": "Free",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/XV-mon"
+    },
+    "soloogarmon": {
+      "name": "Soloogarmon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Soloogarmon"
+    },
+    "chimairamon": {
+      "name": "Chimairamon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Chimairamon"
+    },
+    "aegisdramon": {
+      "name": "Aegisdramon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Aegisdramon"
+    },
+    "ultimatebrachiomon": {
+      "name": "UltimateBrachiomon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ultimate_Brachiomon"
+    },
+    "gulusgammamon": {
+      "name": "GulusGammamon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Gulus_Gammamon"
+    },
+    "saberleomon": {
+      "name": "SaberLeomon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Saber_Leomon"
+    },
+    "anubimon": {
+      "name": "Anubimon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Anubimon"
+    },
+    "lamortmon": {
+      "name": "Lamortmon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Lamortmon"
+    },
+    "symbareangoramon": {
+      "name": "SymbareAngoramon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Symbare_Angoramon"
+    },
+    "zanbamon": {
+      "name": "Zanbamon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Zanbamon"
+    },
+    "asuramon": {
+      "name": "Asuramon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Asuramon"
+    },
+    "ragnalordmon": {
+      "name": "RagnaLordmon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ragna_Lordmon"
+    },
+    "oboromon": {
+      "name": "Oboromon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Oboromon"
+    },
+    "hiandromon": {
+      "name": "HiAndromon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Hi_Andromon"
+    },
+    "ragnamon": {
+      "name": "Ragnamon",
+      "attribute": "Desconocido",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ragnamon"
+    },
+    "nidhoggmon": {
+      "name": "Nidhoggmon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Nidhoggmon"
+    },
+    "orochimon": {
+      "name": "Orochimon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Orochimon"
+    },
+    "kingetemon": {
+      "name": "KingEtemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/King_Etemon"
+    },
+    "shinmonzaemon": {
+      "name": "ShinMonzaemon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Shin_Monzaemon"
+    },
+    "metalseadramon": {
+      "name": "MetalSeadramon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Metal_Seadramon"
+    },
+    "grademon": {
+      "name": "Grademon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Grademon"
+    },
+    "metallifekuwagamon": {
+      "name": "MetallifeKuwagamon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Metallife_Kuwagamon"
+    },
+    "omegashoutmon": {
+      "name": "OmegaShoutmon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Omega_Shoutmon"
+    },
+    "cherubimonvirtud": {
+      "name": "Cherubimon (Virtud)",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Cherubimon_(Virtue)"
+    },
+    "magnamon": {
+      "name": "Magnamon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 5,
+      "source": "https://wikimon.net/Magnamon"
+    },
+    "sagittarimon": {
+      "name": "Sagittarimon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Sagittarimon"
+    },
+    "kiimon": {
+      "name": "Kiimon",
+      "attribute": "Sin atributo",
+      "level": "Bebé I",
+      "tier": 0,
+      "source": "https://wikimon.net/Kiimon"
+    },
+    "yaamon": {
+      "name": "Yaamon",
+      "attribute": "Sin atributo",
+      "level": "Bebé II",
+      "tier": 1,
+      "source": "https://wikimon.net/Yaamon"
+    },
+    "impmon": {
+      "name": "Impmon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Impmon"
+    },
+    "wizarmon": {
+      "name": "Wizarmon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Wizarmon"
+    },
+    "baalmon": {
+      "name": "Baalmon",
+      "attribute": "Free",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Baalmon"
+    },
+    "beelzebumon": {
+      "name": "Beelzebumon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Beelzebumon"
+    },
+    "agnimon": {
+      "name": "Agnimon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Agnimon"
+    },
+    "aldamon": {
+      "name": "Aldamon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Aldamon"
+    },
+    "algomonadult": {
+      "name": "Algomon(Adult)",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Algomon_(Adult)"
+    },
+    "amphimon": {
+      "name": "Amphimon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Amphimon"
+    },
+    "ancientgarurumon": {
+      "name": "AncientGarurumon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ancient_Garurumon"
+    },
+    "ancientgreymon": {
+      "name": "AncientGreymon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ancient_Greymon"
+    },
+    "ancientirismon": {
+      "name": "AncientIrismon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ancient_Irismon"
+    },
+    "ancientmegatheriumon": {
+      "name": "AncientMegatheriumon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ancient_Megatheriumon"
+    },
+    "ancienttroiamon": {
+      "name": "AncientTroiamon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ancient_Troiamon"
+    },
+    "ancientvolcamon": {
+      "name": "AncientVolcamon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ancient_Volcamon"
+    },
+    "ancientwisemon": {
+      "name": "AncientWisemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Ancient_Wisemon"
+    },
+    "anomalocarimon": {
+      "name": "Anomalocarimon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Anomalocarimon"
+    },
+    "anomalocarimonxantibody": {
+      "name": "Anomalocarimon(X-Antibody)",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Anomalocarimon_(X-Antibody)"
+    },
+    "arbormon": {
+      "name": "Arbormon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Arbormon"
+    },
+    "arcturusmon": {
+      "name": "Arcturusmon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Arcturusmon"
+    },
+    "arkhaiangemon": {
+      "name": "ArkhaiAngemon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Arkhai_Angemon"
+    },
+    "arresterdramon": {
+      "name": "Arresterdramon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Arresterdramon"
+    },
+    "archnemon": {
+      "name": "Archnemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Archnemon"
+    },
+    "astamon": {
+      "name": "Astamon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Astamon"
+    },
+    "bakemon": {
+      "name": "Bakemon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Bakemon"
+    },
+    "banchostingmon": {
+      "name": "BanchoStingmon",
+      "attribute": "Free",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Bancho_Stingmon"
+    },
+    "baohuckmon": {
+      "name": "BaoHuckmon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Bao_Hackmon"
+    },
+    "bastemon": {
+      "name": "Bastemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Bastemon"
+    },
+    "belphemonragemode": {
+      "name": "Belphemon: Rage Mode",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Belphemon%3A_Rage_Mode"
+    },
+    "beowolfmon": {
+      "name": "Beowolfmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Beowolfmon"
+    },
+    "bigmamemon": {
+      "name": "BigMamemon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Big_Mamemon"
+    },
+    "blackkingnumemon": {
+      "name": "BlackKingNumemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Black_King_Numemon"
+    },
+    "blitzmon": {
+      "name": "Blitzmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Blitzmon"
+    },
+    "blizzarmon": {
+      "name": "Blizzarmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Blizzarmon"
+    },
+    "bokomon": {
+      "name": "Bokomon",
+      "attribute": "Vacuna",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Bokomon"
+    },
+    "bolgmon": {
+      "name": "Bolgmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Bolgmon"
+    },
+    "bombermon": {
+      "name": "Bombermon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Bombermon"
+    },
+    "calamaramon": {
+      "name": "Calamaramon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Calamaramon"
+    },
+    "cannondramon": {
+      "name": "Cannondramon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Cannondramon"
+    },
+    "caprimon": {
+      "name": "Caprimon",
+      "attribute": "Sin atributo",
+      "level": "Bebé II",
+      "tier": 1,
+      "source": "https://wikimon.net/Caprimon"
+    },
+    "cerberumon": {
+      "name": "Cerberumon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Cerberumon"
+    },
+    "chackmon": {
+      "name": "Chackmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Chackmon"
+    },
+    "chamblemon": {
+      "name": "Chamblemon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Chamblemon"
+    },
+    "choromon": {
+      "name": "Choromon",
+      "attribute": "Sin atributo",
+      "level": "Bebé I",
+      "tier": 0,
+      "source": "https://wikimon.net/Choromon"
+    },
+    "cockatrimon": {
+      "name": "Cockatrimon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Cockatrimon"
+    },
+    "coelamon": {
+      "name": "Coelamon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Coelamon"
+    },
+    "coredramon": {
+      "name": "Coredramon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Coredramon_(Green)"
+    },
+    "cthyllamon": {
+      "name": "Cthyllamon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Cthyllamon"
+    },
+    "daipenmon": {
+      "name": "Daipenmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Daipenmon"
+    },
+    "darksuperstarmon": {
+      "name": "DarkSuperstarmon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Dark_Superstarmon"
+    },
+    "deathmon": {
+      "name": "Deathmon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Deathmon"
+    },
+    "deathmonblack": {
+      "name": "Deathmon(Black)",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Deathmon_(Black)"
+    },
+    "devimon": {
+      "name": "Devimon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Devimon"
+    },
+    "devitamamon": {
+      "name": "Devitamamon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Devitamamon"
+    },
+    "diarbbitmon": {
+      "name": "Diarbbitmon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Diarbbitmon"
+    },
+    "digmon": {
+      "name": "Digmon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 2,
+      "source": "https://wikimon.net/Digmon"
+    },
+    "dinorexmon": {
+      "name": "Dinorexmon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Dinorexmon"
+    },
+    "dobermon": {
+      "name": "Dobermon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Dobermon"
+    },
+    "dogmon": {
+      "name": "Dogmon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Dogmon"
+    },
+    "donedevimon": {
+      "name": "DoneDevimon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Done_Devimon"
+    },
+    "duskmon": {
+      "name": "Duskmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Duskmon"
+    },
+    "dynasmon": {
+      "name": "Dynasmon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Dynasmon"
+    },
+    "ebidramon": {
+      "name": "Ebidramon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Ebidramon"
+    },
+    "eosmonperfect": {
+      "name": "Eosmon(Perfect)",
+      "attribute": "Desconocido",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Eosmon_(Perfect)"
+    },
+    "espimon": {
+      "name": "Espimon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Espimon"
+    },
+    "fairimon": {
+      "name": "Fairimon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Fairimon"
+    },
+    "fantomon": {
+      "name": "Fantomon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Fantomon"
+    },
+    "flamon": {
+      "name": "Flamon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 2,
+      "source": "https://wikimon.net/Flamon"
+    },
+    "frozomon": {
+      "name": "Frozomon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Frozomon"
+    },
+    "fumamon": {
+      "name": "Fumamon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Fumamon"
+    },
+    "garummon": {
+      "name": "Garummon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Garummon"
+    },
+    "gazimon": {
+      "name": "Gazimon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Gazimon"
+    },
+    "ghilliedhumon": {
+      "name": "Ghilliedhumon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Ghilliedhumon"
+    },
+    "ghostmon": {
+      "name": "Ghostmon",
+      "attribute": "Dato",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Ghostmon"
+    },
+    "gigaseadramon": {
+      "name": "GigaSeadramon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Giga_Seadramon"
+    },
+    "gigasmon": {
+      "name": "Gigasmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Gigasmon"
+    },
+    "gizamon": {
+      "name": "Gizamon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Gizamon"
+    },
+    "gokimon": {
+      "name": "Gokimon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Gokimon"
+    },
+    "gorimon": {
+      "name": "Gorimon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Gorimon"
+    },
+    "gottsumon": {
+      "name": "Gottsumon",
+      "attribute": "Dato",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Gottsumon"
+    },
+    "gracenovamon": {
+      "name": "GraceNovamon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Grace_Novamon"
+    },
+    "grankuwagamon": {
+      "name": "GranKuwagamon",
+      "attribute": "Free",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Gran_Kuwagamon"
+    },
+    "grottemon": {
+      "name": "Grottemon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Grottemon"
+    },
+    "groundramon": {
+      "name": "Groundramon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Groundramon"
+    },
+    "gumdramon": {
+      "name": "Gumdramon",
+      "attribute": "Vacuna",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Gumdramon"
+    },
+    "gusokumon": {
+      "name": "Gusokumon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Gusokumon"
+    },
+    "hippogriffomon": {
+      "name": "Hippogriffomon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Hippogriffomon"
+    },
+    "hoverespimon": {
+      "name": "HoverEspimon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Hover_Espimon"
+    },
+    "huankunmon": {
+      "name": "Huankunmon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Huankunmon"
+    },
+    "hudiemon": {
+      "name": "Hudiemon",
+      "attribute": "Free",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Hudiemon"
+    },
+    "hyougamon": {
+      "name": "Hyougamon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Hyougamon"
+    },
+    "icemon": {
+      "name": "Icemon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Icemon"
+    },
+    "ikkakumon": {
+      "name": "Ikkakumon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Ikkakumon"
+    },
+    "jazamon": {
+      "name": "Jazamon",
+      "attribute": "Dato",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Jazamon"
+    },
+    "jazarichmon": {
+      "name": "Jazarichmon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Jazarichmon"
+    },
+    "jesmon": {
+      "name": "JESmon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/JESmon"
+    },
+    "jetsilphymon": {
+      "name": "JetSilphymon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Jet_Silphymon"
+    },
+    "jewelbeemon": {
+      "name": "Jewelbeemon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Jewelbeemon"
+    },
+    "jokermon": {
+      "name": "Jokermon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Jokermon"
+    },
+    "jyagamon": {
+      "name": "Jyagamon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Jyagamon"
+    },
+    "kaisergreymon": {
+      "name": "KaiserGreymon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 5,
+      "source": "https://wikimon.net/Kaiser_Greymon"
+    },
+    "kaiserleomon": {
+      "name": "KaiserLeomon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Kaiser_Leomon"
+    },
+    "kinkakumon": {
+      "name": "Kinkakumon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Kinkakumon"
+    },
+    "kokabuterimon": {
+      "name": "Kokabuterimon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Kokabuterimon"
+    },
+    "kongoumon": {
+      "name": "Kongoumon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 2,
+      "source": "https://wikimon.net/Kongoumon"
+    },
+    "kuwagamon": {
+      "name": "Kuwagamon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Kuwagamon"
+    },
+    "lotusmon": {
+      "name": "Lotusmon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Lotusmon"
+    },
+    "lwemon": {
+      "name": "Löwemon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/L%C3%B6wemon"
+    },
+    "lucemonfalldownmode": {
+      "name": "Lucemon: Falldown Mode",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Lucemon%3A_Falldown_Mode"
+    },
+    "luxmon": {
+      "name": "Luxmon",
+      "attribute": "Vacuna",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Luxmon"
+    },
+    "madleomon": {
+      "name": "MadLeomon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Mad_Leomon"
+    },
+    "magnagarurumon": {
+      "name": "MagnaGarurumon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 5,
+      "source": "https://wikimon.net/Magna_Garurumon"
+    },
+    "magnakidmon": {
+      "name": "MagnaKidmon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Magna_Kidmon"
+    },
+    "majiramon": {
+      "name": "Majiramon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Majiramon"
+    },
+    "belialvamdemon": {
+      "name": "BelialVamdemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Belial_Vamdemon"
+    },
+    "mamemon": {
+      "name": "Mamemon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Mamemon"
+    },
+    "mammon": {
+      "name": "Mammon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Mammon"
+    },
+    "manticoremon": {
+      "name": "Manticoremon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Manticoremon"
+    },
+    "marinchimairamon": {
+      "name": "MarinChimairamon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Marin_Chimairamon"
+    },
+    "megaseadramon": {
+      "name": "MegaSeadramon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Mega_Seadramon"
+    },
+    "mephismon": {
+      "name": "Mephismon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Mephismon"
+    },
+    "meramon": {
+      "name": "Meramon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Meramon"
+    },
+    "mercuremon": {
+      "name": "Mercuremon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Mercuremon"
+    },
+    "mermaimon": {
+      "name": "Mermaimon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Mermaimon"
+    },
+    "metallicdramon": {
+      "name": "Metallicdramon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Metallicdramon"
+    },
+    "metaltyranomon": {
+      "name": "MetalTyranomon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Metal_Tyranomon"
+    },
+    "mojyamon": {
+      "name": "Mojyamon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Mojyamon"
+    },
+    "koemon": {
+      "name": "Koemon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Koemon"
+    },
+    "moosemon": {
+      "name": "Moosemon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Moosemon"
+    },
+    "morphomon": {
+      "name": "Morphomon",
+      "attribute": "Vacuna",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Morphomon"
+    },
+    "mummymon": {
+      "name": "Mummymon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Mummymon"
+    },
+    "murmukusmon": {
+      "name": "Murmukusmon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Murmukusmon"
+    },
+    "vamdemon": {
+      "name": "Vamdemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Vamdemon"
+    },
+    "nanomon": {
+      "name": "Nanomon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Nanomon"
+    },
+    "neodevimon": {
+      "name": "NeoDevimon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Neo_Devimon"
+    },
+    "neovamdemon": {
+      "name": "NeoVamdemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Neo_Vamdemon"
+    },
+    "noblepumpmon": {
+      "name": "NoblePumpmon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Noble_Pumpmon"
+    },
+    "octmon": {
+      "name": "Octmon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Octmon"
+    },
+    "orgemon": {
+      "name": "Orgemon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Orgemon"
+    },
+    "okuwamon": {
+      "name": "Okuwamon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Okuwamon"
+    },
+    "oleamon": {
+      "name": "Oleamon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Oleamon"
+    },
+    "olegmon": {
+      "name": "Olegmon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Olegmon"
+    },
+    "omegamon": {
+      "name": "Omegamon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Omegamon"
+    },
+    "pagumon": {
+      "name": "Pagumon",
+      "attribute": "Sin atributo",
+      "level": "Bebé II",
+      "tier": 1,
+      "source": "https://wikimon.net/Pagumon"
+    },
+    "paildramon": {
+      "name": "Paildramon",
+      "attribute": "Free",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Paildramon"
+    },
+    "panjyamon": {
+      "name": "Panjyamon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Panjyamon"
+    },
+    "panjyamonxantibody": {
+      "name": "Panjyamon(X-Antibody)",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Panjyamon_(X-Antibody)"
+    },
+    "parrotmon": {
+      "name": "Parrotmon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Parrotmon"
+    },
+    "peacockmon": {
+      "name": "Peacockmon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Peacockmon"
+    },
+    "pegasmon": {
+      "name": "Pegasmon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 2,
+      "source": "https://wikimon.net/Pegasmon"
+    },
+    "petaldramon": {
+      "name": "Petaldramon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Petaldramon"
+    },
+    "phascomon": {
+      "name": "Phascomon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Phascomon"
+    },
+    "phelesmon": {
+      "name": "Phelesmon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Phelesmon"
+    },
+    "piccolomon": {
+      "name": "Piccolomon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Piccolomon"
+    },
+    "pidmon": {
+      "name": "Pidmon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Pidmon"
+    },
+    "piemon": {
+      "name": "Piemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Piemon"
+    },
+    "piranimon": {
+      "name": "Piranimon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Piranimon"
+    },
+    "platinumnumemon": {
+      "name": "PlatinumNumemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Platinum_Numemon"
+    },
+    "pomumon": {
+      "name": "Pomumon",
+      "attribute": "Dato",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Pomumon"
+    },
+    "proximamon": {
+      "name": "Proximamon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Proximamon"
+    },
+    "publimon": {
+      "name": "Publimon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Publimon"
+    },
+    "pucchiemon": {
+      "name": "Pucchiemon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Pucchiemon"
+    },
+    "pumpmon": {
+      "name": "Pumpmon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Pumpmon"
+    },
+    "raihimon": {
+      "name": "Raihimon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Raihimon"
+    },
+    "ranamon": {
+      "name": "Ranamon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Ranamon"
+    },
+    "regulusmon": {
+      "name": "Regulusmon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Regulusmon"
+    },
+    "rhinokabuterimon": {
+      "name": "RhinoKabuterimon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Rhino_Kabuterimon"
+    },
+    "saberdramon": {
+      "name": "Saberdramon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Saberdramon"
+    },
+    "saviorhuckmon": {
+      "name": "SaviorHuckmon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Savior_Hackmon"
+    },
+    "scorpiomon": {
+      "name": "Scorpiomon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Scorpiomon"
+    },
+    "seadramon": {
+      "name": "Seadramon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Seadramon"
+    },
+    "siesamon": {
+      "name": "Siesamon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Siesamon"
+    },
+    "sephirothmon": {
+      "name": "Sephirothmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Sephirothmon"
+    },
+    "shadramon": {
+      "name": "Shadramon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Shadramon"
+    },
+    "shakamon": {
+      "name": "Shakamon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Shakamon"
+    },
+    "karatukinumemon": {
+      "name": "KaratukiNumemon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Karatuki_Numemon"
+    },
+    "shutumon": {
+      "name": "Shutumon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 4,
+      "source": "https://wikimon.net/Shutumon"
+    },
+    "sirenmon": {
+      "name": "Sirenmon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Sirenmon"
+    },
+    "siriusmon": {
+      "name": "Siriusmon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Siriusmon"
+    },
+    "skullmammon": {
+      "name": "SkullMammon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Skull_Mammon"
+    },
+    "skullsatamon": {
+      "name": "SkullSatamon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Skull_Satamon"
+    },
+    "snowgoburimon": {
+      "name": "SnowGoburimon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Snow_Goburimon"
+    },
+    "spinomon": {
+      "name": "Spinomon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Spinomon"
+    },
+    "splashmon": {
+      "name": "Splashmon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Splashmon"
+    },
+    "starmon": {
+      "name": "Starmon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Starmon"
+    },
+    "strabimon": {
+      "name": "Strabimon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 2,
+      "source": "https://wikimon.net/Strabimon"
+    },
+    "submarimon": {
+      "name": "Submarimon",
+      "attribute": "Free",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Submarimon"
+    },
+    "superstarmon": {
+      "name": "Superstarmon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Superstarmon"
+    },
+    "susanoomon": {
+      "name": "Susanoomon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Susanoomon"
+    },
+    "thunderbirmon": {
+      "name": "Thunderbirmon",
+      "attribute": "Dato",
+      "level": "Armor",
+      "tier": 3,
+      "source": "https://wikimon.net/Thunderbirmon"
+    },
+    "tinkermon": {
+      "name": "Tinkermon",
+      "attribute": "Virus",
+      "level": "Novato",
+      "tier": 2,
+      "source": "https://wikimon.net/Tinkermon"
+    },
+    "tobiumon": {
+      "name": "Tobiumon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Tobiumon"
+    },
+    "togemon": {
+      "name": "Togemon",
+      "attribute": "Dato",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Togemon"
+    },
+    "toropiamon": {
+      "name": "Toropiamon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Toropiamon"
+    },
+    "tortamon": {
+      "name": "Tortamon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Tortamon"
+    },
+    "triceramon": {
+      "name": "Triceramon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Triceramon"
+    },
+    "valvemon": {
+      "name": "Valvemon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Valvemon"
+    },
+    "velgrmon": {
+      "name": "Velgrmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Velgrmon"
+    },
+    "vritramon": {
+      "name": "Vritramon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Vritramon"
+    },
+    "vulturemon": {
+      "name": "Vulturemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Vulturemon"
+    },
+    "waruseadramon": {
+      "name": "WaruSeadramon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Waru_Seadramon"
+    },
+    "wisemon": {
+      "name": "Wisemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Wisemon"
+    },
+    "wolfmon": {
+      "name": "Wolfmon",
+      "attribute": "Variable",
+      "level": "Híbrido",
+      "tier": 3,
+      "source": "https://wikimon.net/Wolfmon"
+    },
+    "xiangpengmon": {
+      "name": "Xiangpengmon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "tier": 5,
+      "source": "https://wikimon.net/Xiangpengmon"
+    },
+    "xiquemon": {
+      "name": "Xiquemon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Xiquemon"
+    },
+    "yukidarumon": {
+      "name": "Yukidarumon",
+      "attribute": "Vacuna",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Yukidarumon"
+    },
+    "zamielmon": {
+      "name": "Zamielmon",
+      "attribute": "Dato",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Zamielmon"
+    },
+    "zanmetsumon": {
+      "name": "Zanmetsumon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Zanmetsumon"
+    },
+    "zassoumon": {
+      "name": "Zassoumon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "tier": 3,
+      "source": "https://wikimon.net/Zassoumon"
+    },
+    "zudomon": {
+      "name": "Zudomon",
+      "attribute": "Vacuna",
+      "level": "Perfecto",
+      "tier": 4,
+      "source": "https://wikimon.net/Zudomon"
+    },
+    "zurumon": {
+      "name": "Zurumon",
+      "attribute": "Sin atributo",
+      "level": "Bebé I",
+      "tier": 0,
+      "source": "https://wikimon.net/Zurumon"
+    }
+  },
+  "boss": {
+    "darktyrannomon": {
+      "name": "DarkTyrannomon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "source": "https://wikimon.net/Dark_Tyranomon"
+    },
+    "etemon": {
+      "name": "Etemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Etemon"
+    },
+    "megadramon": {
+      "name": "Megadramon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Megadramon"
+    },
+    "warumonzaemon": {
+      "name": "WaruMonzaemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Waru_Monzaemon"
+    },
+    "metaletemon": {
+      "name": "MetalEtemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Metal_Etemon"
+    },
+    "machinedramon": {
+      "name": "Machinedramon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Mugendramon"
+    },
+    "vamdemon": {
+      "name": "Vamdemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Vamdemon"
+    },
+    "skullsatamon": {
+      "name": "SkullSatamon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Skull_Satamon"
+    },
+    "archnemon": {
+      "name": "Archnemon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Archnemon"
+    },
+    "mummymon": {
+      "name": "Mummymon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Mummymon"
+    },
+    "neodevimon": {
+      "name": "NeoDevimon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Neo_Devimon"
+    },
+    "mephismon": {
+      "name": "Mephismon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Mephismon"
+    },
+    "piemon": {
+      "name": "Piemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Piemon"
+    },
+    "gigadramon": {
+      "name": "Gigadramon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Gigadramon"
+    },
+    "deltamon": {
+      "name": "Deltamon",
+      "attribute": "Virus",
+      "level": "Campeón",
+      "source": "https://wikimon.net/Deltamon"
+    },
+    "belphemonragemode": {
+      "name": "Belphemon: Rage Mode",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Belphemon%3A_Rage_Mode"
+    },
+    "donedevimon": {
+      "name": "DoneDevimon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Done_Devimon"
+    },
+    "lucemonfalldownmode": {
+      "name": "Lucemon: Falldown Mode",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Lucemon%3A_Falldown_Mode"
+    },
+    "kingetemon": {
+      "name": "KingEtemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/King_Etemon"
+    },
+    "belialvamdemon": {
+      "name": "BelialVamdemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Belial_Vamdemon"
+    },
+    "neovamdemon": {
+      "name": "NeoVamdemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Neo_Vamdemon"
+    },
+    "metalseadramon": {
+      "name": "MetalSeadramon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "source": "https://wikimon.net/Metal_Seadramon"
+    },
+    "ragnamon": {
+      "name": "Ragnamon",
+      "attribute": "Desconocido",
+      "level": "Mega",
+      "source": "https://wikimon.net/Ragnamon"
+    },
+    "cthyllamon": {
+      "name": "Cthyllamon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Cthyllamon"
+    },
+    "nidhoggmon": {
+      "name": "Nidhoggmon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Nidhoggmon"
+    },
+    "orochimon": {
+      "name": "Orochimon",
+      "attribute": "Virus",
+      "level": "Perfecto",
+      "source": "https://wikimon.net/Orochimon"
+    },
+    "royal_omegamon": {
+      "name": "Omegamon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "source": "https://wikimon.net/Omegamon"
+    },
+    "royal_dukemon": {
+      "name": "Dukemon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Dukemon"
+    },
+    "royal_magnamon": {
+      "name": "Magnamon",
+      "attribute": "Free",
+      "level": "Armor",
+      "source": "https://wikimon.net/Magnamon"
+    },
+    "royal_ulforceveedramon": {
+      "name": "UlforceVeedramon",
+      "attribute": "Vacuna",
+      "level": "Mega",
+      "source": "https://wikimon.net/Ulforce_V-dramon"
+    },
+    "royal_lordknightmon": {
+      "name": "LordKnightmon",
+      "attribute": "Virus",
+      "level": "Mega",
+      "source": "https://wikimon.net/Lord_Knightmon"
+    },
+    "royal_examon": {
+      "name": "Examon",
+      "attribute": "Dato",
+      "level": "Mega",
+      "source": "https://wikimon.net/Examon"
+    }
+  }
+}

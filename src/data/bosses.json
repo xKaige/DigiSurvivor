@@ -130,7 +130,7 @@
    "id": "metaletemon",
    "name": "MetalEtemon",
    "level": "Mega",
-   "attribute": "Dato",
+   "attribute": "Virus",
    "file": "metaletemon.png",
    "hp": 1600,
    "r": 34,
@@ -213,7 +213,7 @@
     {
      "n": "Bloody Stream",
      "k": "charge",
-     "dur": 1.0
+     "dur": 1
     },
     {
      "n": "Night Raid",
@@ -297,7 +297,7 @@
     {
      "n": "Snake Bandage",
      "k": "charge",
-     "dur": 1.0
+     "dur": 1
     }
    ]
   },
@@ -363,7 +363,7 @@
    "hp": 900,
    "r": 32,
    "sp": 70,
-   "dm": 2.0,
+   "dm": 2,
    "coins": 32,
    "desc": "El líder de los Dark Masters. Sus espadas aparecen de la nada.",
    "atk": [
@@ -395,7 +395,7 @@
    "hp": 850,
    "r": 32,
    "sp": 72,
-   "dm": 2.0,
+   "dm": 2,
    "coins": 30,
    "desc": "Gemelo de Megadramon. Sus misiles buscan el blanco.",
    "atk": [
@@ -415,14 +415,14 @@
   {
    "id": "deltamon",
    "name": "Deltamon",
-   "level": "Perfecto",
+   "level": "Campeón",
    "attribute": "Virus",
    "rank": 2,
    "file": "enemies/deltamon.png",
    "hp": 800,
    "r": 32,
    "sp": 64,
-   "dm": 2.0,
+   "dm": 2,
    "coins": 30,
    "desc": "Tres cabezas, tres veces más problemas.",
    "atk": [
@@ -435,7 +435,7 @@
     {
      "n": "Serpent Bite",
      "k": "charge",
-     "dur": 1.0
+     "dur": 1
     }
    ]
   },
@@ -499,7 +499,7 @@
   {
    "id": "lucemonfalldownmode",
    "name": "Lucemon: Falldown Mode",
-   "level": "Mega",
+   "level": "Perfecto",
    "attribute": "Virus",
    "rank": 2,
    "file": "enemies/lucemonfalldownmode.png",
@@ -648,7 +648,7 @@
    "id": "ragnamon",
    "name": "Ragnamon",
    "level": "Mega",
-   "attribute": "Virus",
+   "attribute": "Desconocido",
    "rank": 3,
    "file": "enemies/ragnamon.png",
    "hp": 1900,
@@ -731,7 +731,7 @@
   {
    "id": "orochimon",
    "name": "Orochimon",
-   "level": "Mega",
+   "level": "Perfecto",
    "attribute": "Virus",
    "rank": 3,
    "file": "enemies/orochimon.png",
@@ -789,7 +789,7 @@
      "c": 24
     }
    ],
-   "level": "Royal Knight",
+   "level": "Mega",
    "hp": 3200,
    "coins": 60,
    "rank": 9,
@@ -799,7 +799,7 @@
   {
    "id": "royal_dukemon",
    "name": "Dukemon",
-   "attribute": "Vacuna",
+   "attribute": "Virus",
    "file": "royal_dukemon.png",
    "r": 40,
    "sp": 58,
@@ -824,7 +824,7 @@
      "c": 22
     }
    ],
-   "level": "Royal Knight",
+   "level": "Mega",
    "hp": 3200,
    "coins": 60,
    "rank": 9,
@@ -834,7 +834,7 @@
   {
    "id": "royal_magnamon",
    "name": "Magnamon",
-   "attribute": "Vacuna",
+   "attribute": "Free",
    "file": "royal_magnamon.png",
    "r": 38,
    "sp": 66,
@@ -856,10 +856,10 @@
     {
      "n": "Extreme Jihad",
      "k": "charge",
-     "dur": 1.0
+     "dur": 1
     }
    ],
-   "level": "Royal Knight",
+   "level": "Armor",
    "hp": 3200,
    "coins": 60,
    "rank": 9,
@@ -895,7 +895,7 @@
      "c": 20
     }
    ],
-   "level": "Royal Knight",
+   "level": "Mega",
    "hp": 3200,
    "coins": 60,
    "rank": 9,
@@ -905,7 +905,7 @@
   {
    "id": "royal_lordknightmon",
    "name": "LordKnightmon",
-   "attribute": "Dato",
+   "attribute": "Virus",
    "file": "royal_lordknightmon.png",
    "r": 38,
    "sp": 64,
@@ -927,10 +927,10 @@
     {
      "n": "Knight Charge",
      "k": "charge",
-     "dur": 1.0
+     "dur": 1
     }
    ],
-   "level": "Royal Knight",
+   "level": "Mega",
    "hp": 3200,
    "coins": 60,
    "rank": 9,
@@ -965,7 +965,7 @@
      "spread": 0.14
     }
    ],
-   "level": "Royal Knight",
+   "level": "Mega",
    "hp": 3200,
    "coins": 60,
    "rank": 9,

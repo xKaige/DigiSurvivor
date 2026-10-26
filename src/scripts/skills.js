@@ -106,13 +106,14 @@ const SkillSys = {
   },
 
   shuffle(a) { return a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]); },
+  stageSkills(q,s) { const C=CR(q),st=C&&C.meta.stages[s],a=st&&q.alt&&(st.alts||[]).find(a=>a.id===q.alt[s]);return (a&&a.skills)||(st&&st.skills)||[]; },
 
   // Skills que se pueden APRENDER ahora: solo las de la etapa actual / rama elegida
   pool(q) {
     const C = CR(q), meta = C && C.meta; if (!meta) return [];
     if (meta.anySkill) return Object.keys(this.cat.skills);
     const s = q.stage | 0;
-    if (s < 5) { const st = meta.stages[s]; return (st && st.skills) || []; }
+    if (s < 5) return this.stageSkills(q,s);
     const b = meta.branches.find(x => x.id === q.branchId) || meta.branches[q.line || 0];
     return (b && b.skills) || [];
   },
@@ -121,8 +122,7 @@ const SkillSys = {
   poolOld(q) {
     const C = CR(q), meta = C && C.meta; if (!meta || meta.anySkill) return [];
     const out = [];
-    for (let s = 0; s < Math.min(5, q.stage | 0); s++) for (const k of ((meta.stages[s] && meta.stages[s].skills) || [])) if (!out.includes(k)) out.push(k);
-    if ((q.stage | 0) >= 5) { const st = meta.stages[4]; for (const k of ((st && st.skills) || [])) if (!out.includes(k)) out.push(k); }
+    for (let s = 0; s < Math.min(5, q.stage | 0); s++) for (const k of this.stageSkills(q,s)) if (!out.includes(k)) out.push(k);
     return out;
   },
 
@@ -130,7 +130,7 @@ const SkillSys = {
   tier(q, k) {
     const C = CR(q), meta = C && C.meta, d = this.def(k);
     if (meta && !meta.anySkill) {
-      for (let s = 0; s < 5; s++) if (((meta.stages[s] && meta.stages[s].skills) || []).includes(k)) return s;
+      for (let s = 0; s < 5; s++) { const st=meta.stages[s];if(st&&[st,...(st.alts||[])].some(a=>(a.skills||[]).includes(k)))return s; }
       if ((meta.branches || []).some(b => (b.skills || []).includes(k))) return 5;
     }
     return d && d.final ? 5 : 0;
