@@ -52,7 +52,7 @@ const Enemies = {
 
   // ---------- Plantel de la partida ----------
   // El reloj de la partida define la etapa, sin contar el tiempo dentro del Gate. Los élite van una etapa por delante.
-  tier(elite = false) { const s = gclk(), ti = s >= 600 ? 4 : s >= 300 ? 3 : s >= 150 ? 2 : 0; return elite ? (ti === 0 ? 2 : ti + 1) : ti; },
+  tier(elite = false) { const s = gclk(), ti = s >= 600 ? 4 : s >= 450 ? 3 : s >= 300 ? 2 : s >= 150 ? 1 : 0; return ti + (elite ? 1 : 0); },
   // Una sola etapa por plantel. Se garantiza un swarm/chaser si hay, para las oleadas.
   newRun() {
     this.bombs = []; this.pools = []; this.evT = 100; this.chT = 60;

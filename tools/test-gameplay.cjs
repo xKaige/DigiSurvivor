@@ -64,10 +64,10 @@ for (const n of [1, 2]) test(`#26: las barras Royal Knights no vuelven al menú 
   assert.equal(await page.locator('#bossbar').isVisible(), false);
 }));
 
-test('#28: etapas exactas por reloj, élite un escalón arriba, sin depender del jugador', () => withPages(1, async page => {
-  await localStart(page, 2);
+for (const n of [1, 2]) test(`#28: cuatro saltos por reloj y élite un escalón arriba en ${n}J`, () => withPages(1, async page => {
+  await localStart(page, n);
   const result = await page.evaluate(() => {
-    const cases = [[0,0,2],[149.99,0,2],[150,2,3],[299.99,2,3],[300,3,4],[599.99,3,4],[600,4,5],[899,4,5]], results = [];
+    const cases = [[0,0,1],[149.99,0,1],[150,1,2],[299.99,1,2],[300,2,3],[449.99,2,3],[450,3,4],[599.99,3,4],[600,4,5],[899,4,5]], results = [];
     for (const stage of [0, 5]) for (const [secs, normal, elite] of cases) {
       P.forEach(q => q.stage = stage); t = secs + 180; arT = 180; en = [];
       for (let j = 0; j < 20; j++) spawn(Enemies.tier(), 1);
@@ -75,19 +75,22 @@ test('#28: etapas exactas por reloj, élite un escalón arriba, sin depender del
       results.push({ secs, stage, normal, elite, tiers: [...new Set(en.filter(e => !e.cp).map(e => Enemies.def(e.et).tier))], elites: en.filter(e => e.cp).map(e => Enemies.def(e.et).tier) });
     }
     Enemies.chT = 1; Enemies.newRun();
-    return { results, timer: Enemies.chT, roster: Enemies.roster.map(a => [...new Set(a.map(i => Enemies.def(i).tier))]) };
+    return { results, timer: Enemies.chT, roster: Enemies.roster.map(a => [...new Set(a.map(i => Enemies.def(i).tier))]), babiesII: Enemies.data.list.filter(d=>d.tier===1).map(d=>d.id).sort() };
   });
   for (const r of result.results) { assert.deepEqual(r.tiers, [r.normal], JSON.stringify(r)); assert.deepEqual(r.elites, [r.elite], JSON.stringify(r)); }
   assert.deepEqual(result.roster, [[0],[1],[2],[3],[4],[5]]);
+  assert.deepEqual(result.babiesII, ['caprimon','pagumon','yaamon']);
   assert.equal(result.timer, 60);
   const labels = await page.evaluate(() => {
-    t = 600; arT = 0; en = []; P.forEach(q => q.stage = 0); Enemies.chT = 0; Enemies.champ(1);
+    t = 450; arT = 0; en = []; P.forEach(q => q.stage = 0); Enemies.chT = 0; Enemies.champ(1);
     en[0].x = cam.x + W; en[0].y = cam.y;
+    update(0);
     const labels = [], fill = cx.fillText; cx.fillText = function(text, ...args) { labels.push(text); return fill.call(this, text, ...args); };
     draw(); cx.fillText = fill; return labels;
   });
   assert.ok(labels.some(s => s.startsWith('Élite ·'))); assert.ok(!labels.some(s => s.startsWith('Campeón')));
-  await screenshot(page, 'enemigos-elite');
+  assert.equal(await page.locator('#tm').textContent(), '7:30');
+  await screenshot(page, `enemigos-7m30-${n}J`);
 }));
 
 for (const n of [1, 2]) test(`#27: Renacer conserva recursos y la progresión de los demás en ${n}J`, () => withPages(1, async page => {

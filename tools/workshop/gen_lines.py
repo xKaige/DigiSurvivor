@@ -177,7 +177,7 @@ for n, (cid, L) in enumerate(LINES.items()):
     report.append(f"{cid}: {at} · " + ' → '.join(s['name'] for s in stages) + ' ⇒ ' + ' / '.join(b['name'] for b in branches))
 
 # ---------- enemigos con lo que sobra ----------
-TIER = {'Baby I': 0, 'Baby II': 1, 'Child': 1, 'Adult': 2, 'Perfect': 3, 'Ultimate': 4, 'Armor': 2, 'Hybrid': 3}
+TIER = {'Baby I': 0, 'Baby II': 1, 'Child': 2, 'Adult': 3, 'Perfect': 4, 'Ultimate': 5, 'Armor': 3, 'Hybrid': 3}
 def kind_of(k, tier):
     ty = ' '.join(db[k].get('type') or []).lower(); r = h(k) % 100
     if tier <= 1: return 'swarm' if r < 55 else 'chaser'
@@ -198,7 +198,6 @@ for k in sorted(idx):
     lvl = (v.get('level') or ['?'])[0]
     if lvl not in TIER: continue
     tier = TIER[lvl]
-    if lvl == 'Ultimate' and h(k) % 2: tier = 5
     if lvl == 'Hybrid' and 'ancient' in k: tier = 5
     shutil.copy(os.path.join(D, 'sprites', k + '.png'), os.path.join(R, 'assets/sprites/enemies', eid + '.png'))
     EN['list'].append({'id': eid, 'name': nm, 'tier': tier, 'attribute': attr(k), 'kind': kind_of(k, tier), 'file': eid + '.png', 'pack': idx[k]['pack']})

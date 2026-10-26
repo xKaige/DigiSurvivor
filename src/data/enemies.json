@@ -75,7 +75,7 @@
     {
       "id": "pyonmon",
       "name": "Pyonmon",
-      "tier": 1,
+      "tier": 0,
       "attribute": "Dato",
       "kind": "swarm",
       "file": "pyonmon.png",
@@ -84,7 +84,7 @@
     {
       "id": "digitamamon",
       "name": "Digitamamon",
-      "tier": 1,
+      "tier": 4,
       "attribute": "Dato",
       "kind": "swarm",
       "file": "digitamamon.png",
@@ -1092,7 +1092,7 @@
     {
       "id": "bokomon",
       "name": "Bokomon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Vacuna",
       "kind": "swarm",
       "file": "bokomon.png",
@@ -1362,7 +1362,7 @@
     {
       "id": "espimon",
       "name": "Espimon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Virus",
       "kind": "swarm",
       "file": "espimon.png",
@@ -1425,7 +1425,7 @@
     {
       "id": "gazimon",
       "name": "Gazimon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Virus",
       "kind": "swarm",
       "file": "gazimon.png",
@@ -1443,7 +1443,7 @@
     {
       "id": "ghostmon",
       "name": "Ghostmon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Dato",
       "kind": "chaser",
       "file": "ghostmon.png",
@@ -1470,7 +1470,7 @@
     {
       "id": "gizamon",
       "name": "Gizamon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Virus",
       "kind": "swarm",
       "file": "gizamon.png",
@@ -1497,7 +1497,7 @@
     {
       "id": "gottsumon",
       "name": "Gottsumon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Dato",
       "kind": "swarm",
       "file": "gottsumon.png",
@@ -1542,7 +1542,7 @@
     {
       "id": "gumdramon",
       "name": "Gumdramon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Vacuna",
       "kind": "swarm",
       "file": "gumdramon.png",
@@ -1623,7 +1623,7 @@
     {
       "id": "jazamon",
       "name": "Jazamon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Dato",
       "kind": "swarm",
       "file": "jazamon.png",
@@ -1713,7 +1713,7 @@
     {
       "id": "kokabuterimon",
       "name": "Kokabuterimon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Virus",
       "kind": "swarm",
       "file": "kokabuterimon.png",
@@ -1767,7 +1767,7 @@
     {
       "id": "luxmon",
       "name": "Luxmon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Vacuna",
       "kind": "chaser",
       "file": "luxmon.png",
@@ -1929,7 +1929,7 @@
     {
       "id": "koemon",
       "name": "Koemon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Virus",
       "kind": "chaser",
       "file": "koemon.png",
@@ -1947,7 +1947,7 @@
     {
       "id": "morphomon",
       "name": "Morphomon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Vacuna",
       "kind": "chaser",
       "file": "morphomon.png",
@@ -2145,7 +2145,7 @@
     {
       "id": "phascomon",
       "name": "Phascomon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Virus",
       "kind": "swarm",
       "file": "phascomon.png",
@@ -2208,7 +2208,7 @@
     {
       "id": "pomumon",
       "name": "Pomumon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Dato",
       "kind": "chaser",
       "file": "pomumon.png",
@@ -2415,7 +2415,7 @@
     {
       "id": "snowgoburimon",
       "name": "SnowGoburimon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Virus",
       "kind": "swarm",
       "file": "snowgoburimon.png",
@@ -2496,7 +2496,7 @@
     {
       "id": "tinkermon",
       "name": "Tinkermon",
-      "tier": 1,
+      "tier": 2,
       "attribute": "Virus",
       "kind": "swarm",
       "file": "tinkermon.png",
