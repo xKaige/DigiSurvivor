@@ -376,7 +376,7 @@ async function initSocial(ctx) {
       if (S !== s) return false;
       const ref = s.fb.doc(s.db, 'ranking_' + (mode === 'party' ? 'party' : 'solo'), s.uid);
       const old = await s.fb.getDoc(ref).catch(() => null);
-      if (old && old.exists() && (old.data().score | 0) >= r.score) return false;   // solo si superás tu récord
+      if (old && old.exists() && Number(old.data().score) >= r.score) return false;   // solo si superás tu récord
       await s.fb.setDoc(ref, Object.assign({ nick: s.nick || nick, at: Date.now() }, r));
       return true;
     },
@@ -384,7 +384,7 @@ async function initSocial(ctx) {
       if (S !== s) return [];
       const q = s.fb.query(s.fb.collection(s.db, 'ranking_' + (mode === 'party' ? 'party' : 'solo')), s.fb.orderBy('score', 'desc'), s.fb.limit(50));
       const snap = await s.fb.getDocs(q);
-      return snap.docs.map(d => Object.assign({ me: d.id === s.uid }, d.data()));
+      return snap.docs.map(d => Object.assign({}, d.data(), { me: d.id === s.uid }));
     }
   };
   window.onPeerOpen = id => { if (S === s) s.fb.setDoc(profileRef(), { peerId: id, seen: Date.now() }, { merge: true }).catch(e => console.error(e)); };
