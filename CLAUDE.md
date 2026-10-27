@@ -364,6 +364,12 @@ Todas las pantallas comparten el look: fondo con grilla, marcos cian/naranja con
 - Índice propio `myIdx` (anfitrión 0, invitados 1–3); `rk[i]` teclas de cada remoto; `picked` = quién ya eligió carta/rama (se espera a todos: `allPicked`); `sendAll` manda a todas las conexiones (`conns()`, hoy una). Las elecciones llevan `i` y el anfitrión las reenvía a los demás. Controles locales: `inputOf(q)` (J1 WASD, J2 flechas, J3/J4 joysticks). **Cámara online**: cada uno sigue a su jugador (`camFollow`; caído: a un compañero vivo); solo en local los jugadores quedan atados a la pantalla compartida. Los enemigos aparecen alrededor de un jugador vivo al azar (`World.spawnCenter`). `drawPointers` dibuja flechas en el borde hacia compañeros fuera de pantalla (color, nick con `pname`, distancia en metros = px/40, ✝ si están caídos) y hacia el Digital Gate.
 - Limitaciones conocidas: el cliente no ve partículas (no se sincroniza `pt`), no hay interpolación, y mandar el estado completo cada frame es pesado.
 
+## Issue #30: habilidad inicial y eliminación del ataque básico
+- `np` da `bubble_blow: 1` a cada jugador (solo, local, online y desafío); ocupa un espacio normal, se mejora y se consume al evolucionar/fusionar skills. Renacer conserva las skills y no regala otra copia.
+- El combate usa solo `SkillSys`: se quitó el disparo básico y su aporte al DPS estimado de los jefes. Daño sin skill (p. ej. Púas/Pulso) aparece como "Rasgos y pasivas".
+- `SkillSys.cooldown` aplica velocidad de ataque (`q.rate / 0.6`) y recarga; los bonos de proyectiles/perforación y Momentai pasan a las skills de proyectil. La pose de ataque usa `skT`, también sincronizado online.
+- Regresiones en `tools/test-gameplay.cjs`: inicio con todas las criaturas, 1J/2J/online de 4, mejoras, Renacer, reinicio, disparos y bonos sin ataque fantasma.
+
 ## Cosas a tener en cuenta al cambiar código
 - Los ids del HTML (`#hud`, `#hp1box/#hp2box`, `#fill`, `#fill2`, `#lag1/#lag2`, `#hpt1/#hpt2`, `#xp`, `#xpf`, `#xpl`, `#xpt`, `#tm`, `#info`, `#pst`, `#leg`, `#up`, `#cards`, `#evt`, `#ov`, `#mnu`, `#dvscreen`, `#gver`, `#msb`, `#anb`, `#chb`, `#tree`, `#pause`, `#pcont`, `#pquit`, etc.) están acoplados a los scripts. Otros los crean los propios scripts: `#analyzer`, `#hatch`, `#rank`, `#bossbar`, `#challenge`, `#news`/`#news-btn`, `#missions`. Si cambiás uno, cambialo en los dos lados. (`#tr` ya no existe.)
 - `index.html` tiene un `<style id="hud-css">` de respaldo que duplica reglas de `style.css`.

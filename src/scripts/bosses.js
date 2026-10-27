@@ -58,18 +58,18 @@ const Bosses = {
     const i = c[Math.random() * c.length | 0]; this.recent = [i, ...this.recent].slice(0, 4); return i;
   },
   // Vida según tu poder (pedido: los jefes se quedaban muy atrás y explotaban): se estima el daño por segundo contra UN
-  // objetivo de cada jugador (ataque básico + cada skill con su nivel, rareza, recarga y críticos) y el jefe nace con vida
+  // objetivo de cada jugador (sus skills con nivel, rareza, bonos, recarga y críticos) y el jefe nace con vida
   // para aguantar FIGHT_T segundos de ese daño (más en cada ciclo). Se usa si es mayor que la fórmula de siempre.
   FIGHT_T: 25,   // la estimación es optimista (todo pega siempre al jefe): 25 s estimados ≈ 35–60 s reales
   dpsOf(q) {
     if (!q || q.dead) return 0;
     const crit = 1 + Math.min(0.75, q.crit || 0) * ((q.critD || 1.5) - 1);
-    let d = q.dmg * (q.multi || 1) / Math.max(0.15, q.rate || 0.6);   // ataque básico
+    let d = 0;
     for (const k in q.wp || {}) {
       const lv = q.wp[k] | 0, D = SkillSys.def(k); if (!lv || !D) continue;
-      const S = SkillSys.perks(D, lv), n = (D.count || 1) + S.cnt, per = (D.dmg || 0) * q.dmg * S.dmg * ((q.wm && q.wm[k]) || 1);
+      const S = SkillSys.perks(D, lv, q), n = (D.count || 1) + S.cnt, per = (D.dmg || 0) * q.dmg * S.dmg * ((q.wm && q.wm[k]) || 1);
       if (D.type === 'orbit') d += per * Math.min(n, 3) / 0.45;
-      else d += per * (1 + 0.5 * Math.max(0, n - 1)) / Math.max(0.35, (D.cd || 1) * S.cd * (q.cdr || 1));
+      else d += per * (1 + 0.5 * Math.max(0, n - 1)) / SkillSys.cooldown(q, D, S);
     }
     return d * crit;
   },

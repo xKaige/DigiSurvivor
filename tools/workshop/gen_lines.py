@@ -121,7 +121,7 @@ TRAITS = {'valor': ('Valor', 'Al recibir un golpe, +25% de daño durante 3 s'), 
           'hazard': ('Furia', 'Cuanta menos vida tiene, más daño hace (hasta +40%)'), 'arsenal': ('Arsenal', '+1 disparo básico y ataca un 10% más rápido'),
           'filo': ('Filo', '+10% de crítico y +25% de daño crítico'), 'hilo': ('Enredadera', 'Sus golpes ralentizan a los enemigos un 30%'),
           'pulso': ('Pulso', 'Mientras se mueve, suelta una descarga alrededor cada 3 s'), 'curioso': ('Curiosidad', '+12% de experiencia'),
-          'puas': ('Púas', 'Los enemigos que lo tocan reciben daño'), 'momentai': ('Rebote', 'Sus disparos básicos rebotan a otro enemigo')}
+          'puas': ('Púas', 'Los enemigos que lo tocan reciben daño'), 'momentai': ('Rebote', 'Los proyectiles de sus skills rebotan a otro enemigo')}
 META = {  # perfil FUE/INT/VEL/VIT (suma 10), rasgo, huevo, misión
  '017_agumon':        ((4, 1, 2, 3), 'valor',    {'type': 'reach_stage', 'goal': 4, 'name': 'Emblema del Valor', 'desc': 'Llegá a etapa Perfecto en una partida'}),
  '018_gabumon':       ((3, 2, 3, 2), 'manada',   {'type': 'kills_with', 'with': '017_agumon', 'goal': 500, 'name': 'Emblema de la Amistad', 'desc': 'Eliminá 500 Digimon en total jugando con Agumon'}),

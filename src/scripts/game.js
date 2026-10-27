@@ -552,6 +552,7 @@ function hostSync(dt) {
   const pl = P.map(q => {
     const o = { x: r(q.x), y: r(q.y), hp: r2(q.hp), max: r(q.max), stage: q.stage, alt: q.alt, face: q.face, dead: q.dead, gone: q.gone, moving: q.moving, wt: rr(q.wt || {}), wc: rr(q.wc || {}), oa: r2(q.oa || 0), revP: q.revP, spv: q.spv, emp: q.emp, bf: Explore.bfSync(q), grab: q.grab > 0 ? 1 : 0, gp: q.gp | 0 };
     if (full) Object.assign(o, { line: q.line, branchId: q.branchId, wp: q.wp, dark: q.dark, xa: q.xa, vp: q.vp, fam: q.fam, perfect: q.perfect, pfc: q.pfc, revs: q.revs, ds: rr(q.ds || {}), rbL: q.rbL == null ? null : q.rbL, rbFrom: q.rbFrom, maxSt: q.maxSt });
+    o.skT = r2(q.skT || 0);
     return o;
   });
   // listas de números en vez de objetos (pesa mucho menos): ver unpackEn / applyOnlineSync. a[1], a[2] = posición
@@ -591,6 +592,7 @@ function unpackEn(a) {
 }
 function onlineSmooth(dt) {
   const k = Math.min(1, dt * 12);
+  for (const q of P) q.skT = Math.max(0, (q.skT || 0) - dt);
   for (const q of P) { if (q.tx == null || q.dead) continue;
     // el propio se mueve con el teclado acá mismo: solo se corrige si se fue lejos de donde lo tiene el anfitrión
     const f = q.id === myIdx ? (Math.hypot(q.tx - q.x, q.ty - q.y) > 70 ? Math.min(1, dt * 6) : Math.min(1, dt * 1.5)) : k;
@@ -658,12 +660,12 @@ const MAX_FX=70,MAX_PT=450,MAX_GEMS=220,MAX_EF=160,MAX_EN=matchMedia('(pointer:c
 function dmgNum(x,y,v,col,sz,txt){if(fx.length>=MAX_FX)return;fx.push({x:x+(Math.random()-.5)*12,y:y-8,txt:txt||String(Math.max(1,Math.round(v*10))),col,sz,l:.8})}
 // q: quién golpea (para el crítico, las pasivas y a quién se le cuenta la muerte; ver stats.js)
 // Estadísticas de daño (Issue #8): cada jugador suma en q.ds el daño hecho por fuente: la skill (DSRC, lo pone SkillSys
-// mientras la usa y los disparos guardan la suya en s.sk), 'basic' = ataque básico, 'pulse' = onda al subir de nivel.
+// mientras la usa y los disparos guardan la suya en s.sk), 'passive' = rasgos y pasivas, 'pulse' = onda al subir de nivel.
 // Se cuenta el daño real (como mucho la vida que le quedaba). Se muestra en la pantalla final (showDmg).
 let DSRC=null;
 function hit(e,d,el,q){if(e.shd>0){if(Math.random()<.12)dmgNum(e.x,e.y-e.r,0,'#9fe8ff',18,'INMUNE');return}const m=mult(el|0,e.el);let v=d*m,cr=0;if(e.hp0==null)e.hp0=e.hp;
  if(q&&q.m){v=Stats.onHit(q,e,v);if(Math.random()<q.crit){v*=q.critD;cr=1}e.lh=q.id}
- if(q&&q.m){const k=DSRC||'basic';q.ds=q.ds||{};q.ds[k]=(q.ds[k]||0)+Math.min(v,Math.max(0,e.hp))}
+ if(q&&q.m){const k=DSRC||'passive';q.ds=q.ds||{};q.ds[k]=(q.ds[k]||0)+Math.min(v,Math.max(0,e.hp))}
  e.hp-=v;if(e.bo!=null&&q){e.dmg=e.dmg||{};e.dmg[q.id]=(e.dmg[q.id]||0)+v}e.fl=.1;dmgNum(e.x,e.y-e.r,v,cr?'#ffd23f':m>1?'#43ff7a':m<1?'#ff4a4a':'#fff',cr?32:m>1?30:m<1?14:18,cr?String(Math.max(1,Math.round(v*10)))+'!':0);
  if(q&&q.m)Stats.afterHit(q,e,v)}
 // Dash (0.7): hasta DASH_N cargas, cada una se recarga en DASH_CD s; sos inmune a todo daño mientras dura la animación (q.dsI: impulso + estela).
@@ -674,7 +676,8 @@ function dash(q){if(!q||q.dead||!running||paused||evo||Finale.on)return;if(q.dc=
 function myDash(){if(!running)return;if(isOnline){const q=P[myIdx];if(dash(q)&&!isHost&&conn)sendTo(conn,{type:'dash'})}else dash(P[0])}
 function hurt(q,d,el,src){if(q.dead||q.dsT>0||q.dsI>0)return;const m=mult(el,q.el|0);let v=d*m*(1-q.arm);v=Stats.onHurt(q,v,src);if(v<=0)return;q.hp-=v;q.inv=.45;if(!isOnline||q.id===myIdx)Sound.play('hurt');burst(q.x,q.y,'#ff3d81');dmgNum(q.x,q.y-q.r-6,v,m>1?'#ff4a4a':m<1?'#43ff7a':'#ffb0b0',20);if(q.hp<=0){q.hp=0;if(Stats.onDeath(q))return;q.dead=true;q.revP=0;for(let i=0;i<20;i++)burst(q.x,q.y,PC[q.id])}}
 function tot(q,k){return Stats.pts(q,k)}   // puntos de stat: especie + partida + árbol (stats.js)
-function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,alt:{},line:0,branchId:null,weak:false,dead:false,moving:false,atkT:0,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{},wt:{},oa:0,skT:0}}
+// Issue #30: todos empiezan con Bubble Blow nivel 1; no hay disparo básico independiente.
+function np(i,cid){return{id:i,cid:cid||'001_guilmon',el:elOf(cid||'001_guilmon'),revP:0,revSpd:1,x:0,y:0,hp:100,max:100,r:16,sp:210,face:1,inv:0,dmg:1,rate:.6,multi:1,pierce:0,mag:70,stage:0,alt:{},line:0,branchId:null,weak:false,dead:false,moving:false,arm:0,xpm:1,coin:1,st:{FUE:0,VEL:0,VIT:0,INT:0},wp:{bubble_blow:1},wt:{},oa:0,skT:0}}
 
 // ids: criatura de cada jugador, ej. ['002_renamon'] o ['001_guilmon','003_terriermon']
 // los: "loadout" de cada jugador (árbol y vínculo de SU guardado, ver trees.js). Si falta, se arma con el de este navegador.
@@ -688,7 +691,7 @@ async function start(m,ids,los){
   menuPause=false;$('pause').style.display='none';document.body.classList.add('ingame');Bosses.reset();Gate.reset();Finale.reset();Weather.reset();Explore.reset();Items.reset();Enemies.newRun();await Enemies.prepare();await Promise.all(P.map(q=>CreatureLoader.loadAlts(q.cid).catch(e=>console.error(e))));   // evoluciones alternativasif(P.some(q=>q.m.itemStart))Items.on.push({x:P[0].x+50,y:P[0].y+30,k:'meat',l:Items.LIFE});mine().forEach(seeForm);   // el HUD solo se ve en partida
   $('ov').style.display='none';$('up').style.display='none';$('evt').style.display='none';
   hudBoxes(m);rk={};picked=new Set();
-  renderLegend();Sound.music(true);if(typeof Achievements!=='undefined')Achievements.onStart();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
+  renderLegend();SkillSys.renderBar(isOnline?mine():P);Sound.music(true);if(typeof Achievements!=='undefined')Achievements.onStart();if(isOnline)bgStart();syncT=0;if(window.onRunStart)window.onRunStart();last=performance.now();requestAnimationFrame(loop);
 }
 
 // ---------- Selección de criatura ----------
@@ -978,7 +981,7 @@ function endRun(title,finalStages){if(!running)return;
 function showDmg(q){let b=$('dmgst');if(!b){b=document.createElement('div');b.id='dmgst';$('m').after(b)}
  const ds=(q&&q.ds)||{},L=Object.entries(ds).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]),tot=L.reduce((a,x)=>a+x[1],0);
  if(!L.length){b.style.display='none';return}b.style.display='';
- const nm=k=>k==='basic'?'Ataque básico':k==='pulse'?'Onda de poder':SkillSys.def(k)?SkillSys.def(k).name:k,num=v=>Math.round(v*10).toLocaleString('es-AR');
+ const nm=k=>k==='passive'?'Rasgos y pasivas':k==='pulse'?'Onda de poder':SkillSys.def(k)?SkillSys.def(k).name:k,num=v=>Math.round(v*10).toLocaleString('es-AR');
  b.innerHTML='<div class="dm-h">Daño por habilidad <span>'+num(tot)+' en total</span></div>'+L.slice(0,8).map(([k,v])=>{const d=SkillSys.def(k),col=d?SkillSys.col(d):k==='pulse'?'#ffe066':'#3fd0ff',lv=q.wp&&q.wp[k];
   return '<div class="dm-r" style="--c:'+col+'"><img src="'+(d?SkillSys.iconOf(d):'assets/sprites/skills/el_neutral.webp')+'" alt=""><div class="dm-b"><div class="dm-t"><b>'+nm(k)+(lv?' <small>Nv '+lv+'</small>':'')+'</b><span>'+num(v)+' · '+Math.round(v/tot*100)+'%</span></div><i style="width:'+Math.max(2,v/L[0][1]*100)+'%"></i></div></div>'}).join('')}
 
@@ -1053,7 +1056,7 @@ function drawBuddy(q,s,x,y,f,a){
  let row = 0, col = 0;
  if(q.dead){
   row = 2; col = 0;
- }else if(!q.moving && (q.atkT > q.rate - 0.25 || q.skT > 0)){   // pose de ataque solo quieto (caminando con la pose fija parecía que patinaba)
+ }else if(!q.moving && q.skT > 0){   // pose de ataque solo quieto (caminando con la pose fija parecía que patinaba)
   row = 5; col = 0;
  }else if(q.moving){
   row = 1; col = Math.floor(t * 6) % 2;
@@ -1367,7 +1370,7 @@ function inputOf(q){
  return pad(q.id-2)}
 // cuántas cartas se muestran al subir de nivel (3 + pasivas del árbol, hasta 5)
 function nCards(q){return Math.min(5,3+((q&&q.m&&q.m.cards)|0))}
-// Momentai (Terriermon): el disparo básico rebota al enemigo más cercano que todavía no golpeó
+// Momentai: los proyectiles de las skills rebotan al enemigo más cercano que todavía no golpearon.
 function bounce(s,e){let b=null,bd=320;for(const o of en){if(o===e||s.h.has(o)||o.hp<=0)continue;const d=Math.hypot(o.x-e.x,o.y-e.y);if(d<bd){bd=d;b=o}}
  if(!b){s.l=0;return}s.rb--;const a=Math.atan2(b.y-e.y,b.x-e.x),v=Math.hypot(s.vx,s.vy);s.x=e.x;s.y=e.y;s.vx=Math.cos(a)*v;s.vy=Math.sin(a)*v;s.l=.7}
 // jefe derrotado: cuenta para las ramas (V-Pet) y puede soltar un Chip de Reformateo a cada jugador (sirve para reiniciar un árbol)
@@ -1445,9 +1448,6 @@ function update(dt){
  while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&!Finale.rk&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(ti,1);spawnT+=iv}
  if(!World.arena&&!Finale.rk){Enemies.events(dt,ti);Enemies.champ(dt)}
  if(!Finale.rk)Gate.tick(dt);Weather.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
- for(const q of al){q.atkT-=dt;
-  if(q.atkT<=0){let b=null,bd=420;for(const e of en){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d<bd){bd=d;b=e}}
-   if(b){const a0=Math.atan2(ehy(b)-pcy(q),b.x-q.x),n=q.multi;for(let i=0;i<n;i++){const a=a0+(i-(n-1)/2)*.22;sh.push({x:q.x,y:pcy(q),vx:Math.cos(a)*460,vy:Math.sin(a)*460,l:1,pi:q.pierce,h:new Set(),d:q.dmg,el:q.el,q:q.id,rb:q.tr==='momentai'?1:0,r:5+Math.min(9,Math.log2(Math.max(1,q.dmg))*2.2)})}q.atkT=q.rate}}}
  buildEG();
  for(const s of sh){s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=dt;const sr=(s.r||5)+1;
   enNear(s.x,s.y,110,e=>{if(s.l<=0)return true;if(e.hp>0&&!s.h.has(e)&&Math.hypot(e.x-s.x,ehy(e)-s.y)<ehr(e)+sr){DSRC=s.sk||null;hit(e,s.d,s.el,P[s.q]);s.h.add(e);if(s.pi>0)s.pi--;else if(s.rb>0)bounce(s,e);else s.l=0;if(s.ex)SkillSys.explode(s,e);DSRC=null;burst(s.x,s.y,'#ffd23f')}})}

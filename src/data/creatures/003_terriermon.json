@@ -281,7 +281,7 @@
   "trait": {
     "id": "momentai",
     "name": "Momentai",
-    "desc": "Sus disparos básicos rebotan a otro enemigo"
+    "desc": "Los proyectiles de sus skills rebotan a otro enemigo"
   },
   "vbChart": "terrier_ex"
 }

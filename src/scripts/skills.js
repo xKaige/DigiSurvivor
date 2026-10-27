@@ -91,7 +91,7 @@ const SkillSys = {
       big: 'MÁXIMO PODER: +40% de daño, +25% de área y +1 ' + u }[k] || '+30% de daño';
   },
   // valores efectivos de una skill a cierto nivel (suma de todas las mejoras hasta ese nivel)
-  perks(d, lv) {
+  perks(d, lv, q) {
     const S = { dmg: 1, area: 1, cd: 1, cnt: 0, pierce: 0, size: 1 }, L = this.PERKS[d.type] || [];
     for (let i = 2; i <= lv; i++) {
       const k = L[i - 2] || 'dmg';
@@ -102,8 +102,12 @@ const SkillSys = {
       else if (k === 'pierce') S.pierce++;
       else if (k === 'big') { S.dmg *= 1.4; S.area *= 1.25; S.size *= 1.35; S.cnt++; }
     }
+    // Issue #30: los bonos del antiguo disparo básico ahora mejoran los proyectiles de las skills.
+    if (q && d.type === 'projectile') { S.cnt += Math.max(0, Math.ceil(q.multi || 1) - 1); S.pierce += q.pierce || 0; }
     return S;
   },
+  // Velocidad de ataque y reducción de recarga conservan sus bonos; límite común de 0,35 s.
+  cooldown(q, d, S) { return Math.max(.35, d.cd * S.cd * (q.cdr || 1) * ((q.rate || .6) / .6)); },
 
   shuffle(a) { return a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]); },
   stageSkills(q,s) { const C=CR(q),st=C&&C.meta.stages[s],a=st&&q.alt&&(st.alts||[]).find(a=>a.id===q.alt[s]);return (a&&a.skills)||(st&&st.skills)||[]; },
@@ -193,7 +197,7 @@ const SkillSys = {
     for (const k in q.wp) {
       const lv = q.wp[k] | 0; if (!lv) continue;
       const d = this.def(k); if (!d) continue;
-      const S = this.perks(d, lv);
+      const S = this.perks(d, lv, q);
       // poder extra por la rareza de las cartas (game.js: q.wm): más daño y un poco más grande (que se note)
       const Wm = q.wm && q.wm[k]; if (Wm && Wm !== 1) { S.dmg *= Wm; const g = Math.min(1.35, 1 + (Wm - 1) * 0.4); S.area *= g; S.size *= g; }
       // stats del jugador (stats.js): área, recarga y duración
@@ -206,7 +210,7 @@ const SkillSys = {
       if (q.wt[k] > 0) continue;
       const fn = this[d.type]; if (!fn) continue;
       if (q.emp && this.near(q, 520)) { Stats.useEmp(q, S); capA(); }   // SP lleno: esta sale potenciada (con el mismo tope)
-      const cd = Math.max(.35, d.cd * S.cd * (q.cdr || 1)), c0 = q.casts | 0;
+      const cd = this.cooldown(q, d, S), c0 = q.casts | 0;
       DSRC = k; fn.call(this, q, k, d, S, cd);
       // Sobrecarga (árbol de Dato): cada 5 skills, la quinta sale dos veces
       if (q.m && q.m.overload && (q.casts | 0) > c0 && q.casts % 5 === 0) fn.call(this, q, k, d, S, cd);
@@ -257,7 +261,7 @@ const SkillSys = {
     for (let i = 0; i < n; i++) {
       const a = a0 + (n > 1 ? -sp / 2 + sp * i / (n - 1) : 0);
       sh.push({ x: q.x, y: pcy(q), vx: Math.cos(a) * d.speed, vy: Math.sin(a) * d.speed, sk: k,
-        l: (d.life || 1.2) * (q.dur || 1), pi: (d.pierce || 0) + S.pierce, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el, q: q.id,
+        l: (d.life || 1.2) * (q.dur || 1), pi: (d.pierce || 0) + S.pierce, rb: q.tr === 'momentai' ? 1 : 0, h: new Set(), d: d.dmg * q.dmg * S.dmg, el: q.el, q: q.id,
         ex: (d.explode || 0) * S.area, c: this.col(d), r: 8 * S.size, fx: this.fxKey(k, d), sz: 34 * this.vis(q) * S.size });
     }
     this.fired(q, k, cd);

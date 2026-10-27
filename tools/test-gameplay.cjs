@@ -1,4 +1,4 @@
-// Regresiones de los issues #21, #24 y #26–28. Ejecutar con Node y Playwright: node --test tools/test-gameplay.cjs
+// Regresiones de los issues #21, #24, #26–28 y #30. Ejecutar con Node y Playwright: node --test tools/test-gameplay.cjs
 // PLAYWRIGHT_CHANNEL=msedge usa Edge instalado. TEST_OUTPUT_DIR guarda las capturas de revisión.
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
@@ -46,6 +46,13 @@ async function withPages(n, run) {
   } finally { await context.close(); }
 }
 const localStart = (page, n) => page.evaluate(n => start(n, Array(n).fill('001_guilmon')), n);
+// Un blanco quieto y resistente permite medir disparos reales sin depender del azar de las oleadas.
+async function attackTarget(page) {
+  await page.evaluate(() => {
+    en=[];sh=[];spawnT=1e6;
+    for(const q of P){q.crit=0;q.wt={};q.ds={};const e=Enemies.make(0,0,q.x+100,q.y);e.x=q.x+100;e.y=pcy(q);e.hcy=0;e.hr=30;e.hp=e.mh=1e9;e.sp=0;e.el=q.el;e.dm=0;e.cd=999;}
+  });
+}
 async function screenshot(page, name) {
   if (!process.env.TEST_OUTPUT_DIR) return;
   await fs.mkdir(process.env.TEST_OUTPUT_DIR, { recursive: true });
@@ -130,15 +137,16 @@ for (const n of [1, 2]) test(`#27: Renacer conserva recursos y la progresión de
 
 async function onlineStart(host, ...guests) {
   const channel = `qa-${Date.now()}`, pages = [host,...guests];
-  for (const [i, page] of pages.entries()) await page.evaluate(({i,channel,n}) => {
+  const ids=await Promise.all(pages.map(page=>page.evaluate(()=>selected)));
+  for (const [i, page] of pages.entries()) await page.evaluate(({i,channel,n,ids}) => {
     const connection = index => {
       const bc = new BroadcastChannel(channel+'-'+index), handlers = {};
       const c = { open:true, pi:index, send:m=>bc.postMessage(JSON.parse(JSON.stringify(m))), on:(event,fn)=>(handlers[event] ||= []).push(fn), close:()=>{} };
       bc.onmessage = e => (handlers.data || []).forEach(fn => fn(e.data));return c;
     };
     me = { uid: 'qa'+i, nick: i ? 'Invitado' : 'Anfitrión' }; isHost = !i; myIdx = i;
-    if(i){conn=connection(i);setupConn(conn)}else{gs=Array.from({length:n-1},(_,j)=>({c:connection(j+1),i:j+1,uid:'qa'+(j+1),nick:'Invitado '+(j+1),cid:selected}));gs.forEach(g=>setupConn(g.c))}
-  }, {i,channel,n:pages.length});
+    if(i){conn=connection(i);setupConn(conn)}else{gs=Array.from({length:n-1},(_,j)=>({c:connection(j+1),i:j+1,uid:'qa'+(j+1),nick:'Invitado '+(j+1),cid:ids[j+1]}));gs.forEach(g=>setupConn(g.c))}
+  }, {i,channel,n:pages.length,ids});
   await host.evaluate(() => Lobby.startOnline());
   await Promise.all(pages.map(page => page.waitForFunction(n => running && P.length === n, pages.length)));
   // start carga sprites y alternativas después de running=true; esta espera verifica que terminó la preparación.
@@ -396,4 +404,99 @@ test('#24 online de 4: progreso independiente y Renacer antes del último sync',
   });
   await Promise.all(guests.map(page=>page.waitForFunction(()=>!running)));
   for(const [i,page]of [host,...guests].entries())assert.equal(await page.evaluate(()=>Progress.read().runs),[0,1,1,0][i]);
+}));
+
+test('#30: todas las criaturas empiezan con Bubble Blow 1 y su carta mejora a nivel 2',()=>withPages(1,async page=>{
+  const result=await page.evaluate(async()=>{
+    const out=[];
+    for(const c of CREATURES){
+      await start(1,[c.id]);
+      const q=P[0],cards=SkillSys.cards(q),bubble=cards.find(u=>u.wpKey==='bubble_blow');
+      out.push({id:c.id,level:lvl,stage:q.stage,wp:{...q.wp},slots:SkillSys.activeCount(q),bar:document.getElementById('skbar').textContent,fresh:!!bubble?.fresh});
+      if(!bubble)throw Error('Falta la mejora en '+c.id);bubble.f();
+      if(q.wp.bubble_blow!==2)throw Error('No mejoró en '+c.id);
+    }
+    return out;
+  });
+  assert.ok(result.length>=37);
+  for(const r of result){assert.equal(r.level,1,r.id);assert.equal(r.stage,0,r.id);assert.deepEqual(r.wp,{bubble_blow:1},r.id);assert.equal(r.slots,1);assert.equal(r.fresh,false);assert.match(r.bar,/Bubble BlowNv 1\/5/);}
+}));
+
+for(const n of [1,2])test(`#30: Bubble Blow ataca sin disparo básico en ${n}J y etapas posteriores`,()=>withPages(1,async page=>{
+  await page.evaluate(n=>start(n,['026_lalamon','002_renamon'].slice(0,n)),n);
+  await page.evaluate(()=>{hudBars();draw()});
+  assert.equal(await page.locator('#skbar .skbox[data-k="bubble_blow"]').count(),n);
+  await screenshot(page,`bubble-blow-inicio-${n}J`);
+  for(const stage of [0,2,5]){
+    await page.evaluate(stage=>{P.forEach(q=>{q.stage=stage;q.wp={bubble_blow:1};q.wt={};q.wc={}})},stage);
+    await attackTarget(page);
+    const result=await page.evaluate(()=>{
+      update(.02);const shots=sh.map(s=>({skill:s.sk,player:s.q}));
+      for(let i=0;i<70;i++)update(.02);
+      return{shots,damage:P.map(q=>({...q.ds}))};
+    });
+    assert.equal(result.shots.length,n*2);
+    assert.deepEqual([...new Set(result.shots.map(s=>s.player))],Array.from({length:n},(_,i)=>i));
+    assert.ok(result.shots.every(s=>s.skill==='bubble_blow'));
+    for(const d of result.damage){assert.ok(d.bubble_blow>0);assert.equal(d.basic,undefined);}
+  }
+  await page.evaluate(()=>{P.forEach(q=>q.wp={});sh=[];for(let i=0;i<80;i++)update(.02)});
+  assert.equal(await page.evaluate(()=>sh.length),0,'Sin skills no reaparece un disparo oculto');
+  assert.deepEqual(await page.evaluate(()=>P.map(q=>Bosses.dpsOf(q))),Array(n).fill(0));
+}));
+
+test('#30: bonos de ataque, proyectiles, perforación y rebote funcionan con las skills',()=>withPages(1,async page=>{
+  await page.evaluate(()=>start(1,['003_terriermon']));await attackTarget(page);
+  const r=await page.evaluate(()=>{
+    const q=P[0],d=SkillSys.def('bubble_blow');SkillSys.update(q,.02);
+    const before={cd:q.wc.bubble_blow,count:sh.length,pierce:sh[0].pi,bounce:sh[0].rb,dps:Bosses.dpsOf(q)};
+    q.m.multi+=1;q.m.pierce+=1;Stats.card(q,'rate');sh=[];q.wt={};SkillSys.update(q,.02);
+    const after={cd:q.wc.bubble_blow,count:sh.length,pierce:sh[0].pi,bounce:sh[0].rb,dps:Bosses.dpsOf(q)};
+    const shot=sh[0],first=en[0],next={...first,x:first.x+100,hp:100};en.push(next);shot.h.add(first);bounce(shot,first);
+    const bounced={left:shot.rb,life:shot.l,vx:shot.vx};
+    // La vida estimada del jefe usa exactamente la recarga y el número de proyectiles que acaba de lanzar.
+    const expected=d.dmg*q.dmg*(1+.5*(after.count-1))/after.cd*(1+q.crit*(q.critD-1));
+    q.wp={tackle:1};q.wt={};SkillSys.update(q,.02);const meleeCD=q.wc.tackle;
+    q.m.rateP+=1;Stats.calc(q);q.wt={};SkillSys.update(q,.02);
+    return{before,after,expected,bounced,meleeCD,fasterMelee:q.wc.tackle};
+  });
+  assert.equal(r.before.count,2);assert.equal(r.after.count,3);assert.equal(r.after.pierce,r.before.pierce+1);
+  assert.equal(r.before.bounce,1);assert.equal(r.after.bounce,1);assert.equal(r.bounced.left,0);assert.equal(r.bounced.life,.7);assert.ok(r.bounced.vx>0);
+  assert.ok(r.after.cd<r.before.cd);assert.ok(r.fasterMelee<r.meleeCD);assert.ok(r.after.dps>r.before.dps);assert.ok(Math.abs(r.after.dps-r.expected)<1e-9);
+}));
+
+test('#30: reemplazar Bubble Blow, Renacer y empezar otra partida no duplica habilidades',()=>withPages(1,async page=>{
+  await localStart(page,1);
+  const r=await page.evaluate(async()=>{
+    const q=P[0];q.stage=2;q.wp={bubble_blow:5,tackle:1,hot_bite:1,fireball:1};
+    const card=SkillSys.cards(q).find(u=>u.wpKey==='rock_breaker');
+    if(!card?.rep?.includes('bubble_blow'))throw Error('No ofrece evolucionar Bubble Blow');card.f();
+    const replaced={...q.wp};q.vp.rc=1;const reborn=rebirth(q),after={...q.wp};
+    endRun('Run terminada');await start(1,['001_guilmon']);
+    return{replaced,reborn,after,next:{...P[0].wp},timers:{...P[0].wt}};
+  });
+  assert.equal(r.reborn,true);assert.equal(r.replaced.bubble_blow,undefined);assert.equal(r.replaced.rock_breaker,1);
+  assert.deepEqual(r.after,r.replaced);assert.deepEqual(r.next,{bubble_blow:1});assert.deepEqual(r.timers,{});
+}));
+
+test('#30 online de 4: cada jugador empieza con Bubble Blow y ve su recarga y animación',()=>withPages(4,async(host,...guests)=>{
+  const pages=[host,...guests],ids=['026_lalamon','003_terriermon','016_commandramon','006_gammamon'];
+  for(const [i,page]of pages.entries())await page.evaluate(cid=>{selected=cid},ids[i]);
+  await onlineStart(host,...guests);
+  for(const page of pages){
+    assert.deepEqual(await page.evaluate(()=>P.map(q=>q.cid)),ids);
+    assert.deepEqual(await page.evaluate(()=>P.map(q=>({...q.wp}))),Array.from({length:4},()=>({bubble_blow:1})));
+    assert.equal(await page.locator('#skbar .skbox[data-k="bubble_blow"]').count(),1);
+  }
+  await attackTarget(host);
+  const shots=await host.evaluate(()=>{update(.02);syncT=slowT=0;hostSync(0);return sh.map(s=>({skill:s.sk,player:s.q}))});
+  assert.deepEqual([...new Set(shots.map(s=>s.player))],[0,1,2,3]);assert.ok(shots.every(s=>s.skill==='bubble_blow'));
+  for(const guest of guests){
+    await guest.waitForFunction(()=>P[myIdx].wc.bubble_blow>0&&P[myIdx].skT>0&&sh.length>0);
+    await guest.evaluate(()=>{SkillSys.renderBar(mine());draw()});
+    assert.equal(await guest.locator('#skbar .skbox.cool').count(),1);
+    assert.ok(await guest.evaluate(()=>sh.every(s=>!!s.fx)));
+    const count=await guest.evaluate(()=>{const n=sh.length;update(.02);return[n,sh.length]});assert.equal(count[0],count[1],'El invitado no duplica los disparos');
+  }
+  await screenshot(guests[0],'bubble-blow-online');
 }));

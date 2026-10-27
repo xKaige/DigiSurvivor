@@ -110,7 +110,7 @@ const Stats = {
     { c: 'FUE', n: 'Más daño',        d: '+1 de daño por disparo',              op: 'dmg',   m: { dmg: 1 } },
     { c: 'FUE', n: 'Golpe certero',   d: '+5% de chance de crítico',            op: 'crit',  m: { crit: 0.05 } },
     { c: 'VEL', n: 'Patas veloces',   d: '+15% de velocidad',                   op: 'sp',    m: { spP: 0.15 } },
-    { c: 'VEL', n: 'Disparo rápido',  d: 'Ataca un 15% más seguido',            op: 'rate',  m: { rateP: 0.15 } },
+    { c: 'VEL', n: 'Ataque rápido',   d: 'Usa las skills un 15% más seguido',   op: 'rate',  m: { rateP: 0.15 } },
     { c: 'VIT', n: 'Reparación',      d: '+25 de vida máxima y cura 25',        op: 'hp',    m: { hp: 25 } },
     { c: 'VIT', n: 'Regeneración',    d: '+0,6 de vida por segundo',            op: 'regen', m: { regen: 0.6 } },
     { c: 'INT', n: 'Imán de datos',   d: 'Atrae el XP desde el doble de lejos (+100 px)', op: 'mag', m: { magP: 1 } },
