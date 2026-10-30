@@ -16,6 +16,14 @@ Juego web tipo "Vampire Survivors" con temática Digimon. Elegís un compañero 
 - Después: **mapas** (más zonas, selector, lava que daña en Magma Mountain), 3–4 jugadores en el menú y en el online (las bases ya están).
 - En la raíz hay dos archivos del usuario sin subir: `ost.mp3` y `free_pixel_16_woods.png` (el tileset original; el juego usa `assets/maps/woods_tiles.png`).
 
+## Issues #22, #31–#36 (29/10/2026)
+- **Dificultad** (#34, #36, enemies.js): todo usa `Enemies.T()` = `gclk()` (no corre en la arena; también el resumen, monedas, misiones y ranking de `endRun`). Hordas por minuto: `Enemies.tier()` sube en los minutos 1, 3, 5 y 7 (`TIERS`; antes según la etapa del jugador). `hpF()`: misma curva, pero desde el minuto 7 el tiempo cuenta doble. Daño `dmF()` = 1 + (bonus de vida)/2 (a los 15': vida ×57, daño ×29; antes ×26 y ×3,4). Élites 12% → 25% en el minuto 15. Los rayos de la tormenta usan `dmF`.
+- **Zona de datos** (#32): radio `Explore.zR(o)` = 3× al empezar y se achica a `ZONE_R` con el progreso; da el triple (XP 1,8 niveles, gemas ×3 y 3 potenciadores).
+- **Skills** (#31): con lugar libre se ofrecen primero las de tier más alto; la PRIMERA de forma final se aprende sin fusión, las demás de forma final se fusionan de a dos.
+- **Carta INT** (#35): "Carga de SP" (+30% `spg`) en vez de Imán de datos. **Logro `pac`** (#33): ahora "Maestría", 3 skills en nivel 10 (el Pacifista era imposible).
+- **Dorumon** (#22): sin Alphamon: Ouryuken (es la fusión de Alphamon con Ouryumon, está en la línea de Ryudamon).
+- El #18 (minijuego de códigos en el final) no se hace: al usuario no le gustó.
+
 ## Versión 0.8 (24/10/2026): Royal Knights
 - Al minuto 15 (`FINALE_T`; con `?finale`, al minuto) `Finale.royals()` borra todos los Digimon, balas, la fisura y los cofres y hace aparecer en ronda a los 6 Royal Knights (`bosses.json` con `royal: true`, sprites `assets/sprites/bosses/royal_*.png` sacados de Streaming Avatars `AppData/LocalLow/ClonzeWork/Streaming Avatars/data/avatars/royal*.png`; las de 7 filas sin la de baile). Mientras `Finale.rk` no aparecen Digimon comunes, oleadas, campeones, Gates ni cofres. Si te borran, termina como siempre; cuando caen los 6 arranca la luz de Yggdrasill (mismo `endRun`, logro `fin`).
 - Royal: `Bosses.spawn(i)` con índice fijo (el sorteo del Gate los excluye), vida mín. `ROYAL_T` (32) s del DPS del grupo, daño ×`ROYAL_DM` (1,6), tamaño `scale` (1,5; Examon 2,5: `Bosses.h`), bala propia `bf` (Omegamon ball14, Dukemon arrow05, Magnamon ball31, UlforceV arrow01, LordKnightmon power22, Examon fire11), mecánicas propias `R1`/`R2` (sin zonas seguras, achicar, gravedad, escudo, ola ni agarre) y sin ataque definitivo. Con 3+ jefes las barras van compactas en grilla (`body.bossN`). El Bestiario no los cuenta.

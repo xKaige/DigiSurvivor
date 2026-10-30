@@ -52,7 +52,9 @@ const Enemies = {
 
   // ---------- Plantel de la partida ----------
   // El reloj de la partida define la etapa, sin contar el tiempo dentro del Gate. Los élite van una etapa por delante.
-  tier(elite = false) { const s = gclk(), ti = s >= 600 ? 4 : s >= 450 ? 3 : s >= 300 ? 2 : s >= 150 ? 1 : 0; return ti + (elite ? 1 : 0); },
+  // Issue #34: saltos en los minutos 1, 3, 5 y 7 (antes 2:30, 5, 7:30 y 10)
+  TIERS: [60, 180, 300, 420],
+  tier(elite = false) { const s = gclk(), ti = this.TIERS.filter(x => s >= x).length; return ti + (elite ? 1 : 0); },
   // Una sola etapa por plantel. Se garantiza un swarm/chaser si hay, para las oleadas.
   newRun() {
     this.bombs = []; this.pools = []; this.evT = 100; this.chT = 60;
@@ -84,13 +86,18 @@ const Enemies = {
   HPT: 60,          // cada HPT segundos los enemigos ganan la vida base de uno nuevo
   HPQ: 180,         // y además (t/HPQ)^HPE: crece cada vez más rápido desde mitad de partida (el daño del jugador escala mucho):
   HPE: 2.2,         //   (2,4 → 2,2 a pedido: a los 10 min ~13% menos vida y a los 20 ~26% menos; costaba matarlos)
-  DMT: 300,         // desde DMT_0 segundos, el daño de los enemigos sube 1× cada DMT segundos
-  DMT_0: 180,
   HM: [1, 1.45, 2.1, 2.85, 3.9, 5.1],
+  // Issues #34 y #36: la dificultad usa el reloj de la partida (gclk: no corre en la arena del Gate); desde el minuto 7 crece
+  // el doble de rápido; las hordas suben de nivel en los minutos 1, 3, 5 y 7; el daño crece la mitad que la vida (antes iba
+  // aparte y se quedaba muy bajo) y las élites pasan de 12% a 25% en el minuto 15.
+  T() { return typeof gclk === 'function' ? gclk() : t; },
+  hpF() { const T = this.T(), e = T <= 420 ? T : 420 + 2 * (T - 420); return 2 + e / this.HPT + Math.pow(e / this.HPQ, this.HPE); },
+  dmF() { return 1 + (this.hpF() / 2 - 1) / 2; },
   DM: [1, 1.15, 1.3, 1.5, 1.75, 2],
   spawn(ti, group) {
     if (!this.data || !this.roster.length) return;
-    const lv = ti, i = this.choose(ti); if (i == null) return;
+    // Issue #36: además de los élite del evento, una parte de la horda viene una etapa adelante: 0% al empezar, 25% en el minuto 15
+    const elite = Math.random() < 0.25 * Math.min(1, this.T() / 900), lv = Math.min(5, ti + (elite ? 1 : 0)), i = this.choose(lv); if (i == null) return;
     const d = this.data.list[i], K = this.data.kinds[d.kind];
     // lugar fuera de pantalla, libre y con camino hasta el jugador (map.js)
     const base = World.spawnPos({ k: 0, r: K.r * (1 + 0.1 * lv) }) || [cam.x + Math.hypot(W, H) / 2, cam.y];
@@ -101,11 +108,11 @@ const Enemies = {
   make(i, lv, x, y, mv) {
     const d = this.data.list[i], K = this.data.kinds[d.kind];
     // más vida con más jugadores (+60% por cada uno: en party se rompía todo)
-    const hp = (2 + t / this.HPT + Math.pow(t / this.HPQ, this.HPE)) * this.HM[lv] * K.hp * (1 + 0.6 * Math.max(0, P.length - 1));
+    const hp = this.hpF() * this.HM[lv] * K.hp * (1 + 0.6 * Math.max(0, P.length - 1));
     const e = { x, y, et: i, kd: d.kind,
       k: d.kind === 'swarm' ? 1 : d.kind === 'tank' ? 2 : 0, ti: lv, hp, mh: hp,
-      sp: (55 + Math.random() * 25 + Math.min(45, t * 0.12)) * K.sp * (1 + 0.04 * lv) * (typeof Challenge !== 'undefined' && Challenge.has('fast') ? 1.3 : 1),
-      r: K.r * (1 + 0.1 * lv), v: K.xp * (1 + 0.5 * lv), dm: this.DM[lv] * (1 + Math.max(0, t - this.DMT_0) / this.DMT), touch: K.touch, el: this.elOf(d),
+      sp: (55 + Math.random() * 25 + Math.min(45, this.T() * 0.12)) * K.sp * (1 + 0.04 * lv) * (typeof Challenge !== 'undefined' && Challenge.has('fast') ? 1.3 : 1),
+      r: K.r * (1 + 0.1 * lv), v: K.xp * (1 + 0.5 * lv), dm: this.DM[lv] * this.dmF(), touch: K.touch, el: this.elOf(d),
       fl: 0, ang: 0, ac: (K.cd || 3) * (0.5 + Math.random() * 0.6), st: 0, stT: 0,
       mv: mv || this.pattern(d.kind), fs: Math.random() < 0.5 ? 1 : -1, zp: Math.random() * 6.283, sub: this.variant(d.kind) };
     en.push(e);
@@ -164,18 +171,18 @@ const Enemies = {
   // cada 35–55 s desde el minuto 2: un cerco (te rodean desde todos lados) o una estampida (una fila que cruza la pantalla)
   evT: 100,
   events(dt, ti) {
-    if (!this.data || !this.roster.length || (this.evT -= dt) > 0 || t < 120) return;
+    if (!this.data || !this.roster.length || (this.evT -= dt) > 0 || this.T() < 120) return;
     this.evT = 35 + Math.random() * 20;
     const al = P.filter(q => !q.dead); if (!al.length) return;
     const q = al[(Math.random() * al.length) | 0], pool = (this.roster[Math.max(0, Math.min(4, ti))] || []).filter(i => { const k = this.data.list[i].kind; return k === 'swarm' || k === 'chaser'; });
     if (!pool.length) return;
     const pick = () => pool[(Math.random() * pool.length) | 0], R = Math.hypot(W, H) / 2 + 40;
     if (Math.random() < 0.55) {   // cerco
-      const n = Math.min(36, 14 + Math.floor(t / 60));
+      const n = Math.min(36, 14 + Math.floor(this.T() / 60));
       for (let j = 0; j < n; j++) { const g = j / n * 6.283; this.make(pick(), ti, q.x + Math.cos(g) * R, q.y + Math.sin(g) * R, 'direct'); }
       Bosses.banner('¡Te rodean!');
     } else {   // estampida: una fila que cruza de un lado al otro
-      const g = Math.random() * 6.283, n = Math.min(26, 10 + Math.floor(t / 90)), px = -Math.sin(g), py = Math.cos(g);
+      const g = Math.random() * 6.283, n = Math.min(26, 10 + Math.floor(this.T() / 90)), px = -Math.sin(g), py = Math.cos(g);
       for (let j = 0; j < n; j++) {
         const o = (j - (n - 1) / 2) * 46, x = q.x - Math.cos(g) * R + px * o, y = q.y - Math.sin(g) * R + py * o;
         const e = this.make(pick(), ti, x, y, 'rush'); e.ra = g; e.sp *= 1.6; e.ru = t + 2 * R / e.sp + 1.5;

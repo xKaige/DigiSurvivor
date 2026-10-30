@@ -29,7 +29,7 @@ const Weather = {
       for (let j = 0; j < n; j++) {
         const q = al[(Math.random() * al.length) | 0], g = Math.random() * 6.283, d = 40 + Math.random() * 220;
         const x = q.x + Math.cos(g) * d, y = q.y + Math.sin(g) * d, R = 85;
-        const dm = 1.3 * (1 + Math.max(0, t - Enemies.DMT_0) / Enemies.DMT);
+        const dm = 1.3 * Enemies.dmF();   // como el daño de los Digimon del minuto
         Enemies.bomb(x, y, R, 1.3, { dm, el: NaN }, 1.9, '#fff36b');   // daño a los jugadores (enemies.js), sin atributo
         this.hits.push({ x, y, R, t: 1.3 });
       }

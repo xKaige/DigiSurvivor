@@ -113,7 +113,7 @@ const Stats = {
     { c: 'VEL', n: 'Ataque rápido',   d: 'Usa las skills un 15% más seguido',   op: 'rate',  m: { rateP: 0.15 } },
     { c: 'VIT', n: 'Reparación',      d: '+25 de vida máxima y cura 25',        op: 'hp',    m: { hp: 25 } },
     { c: 'VIT', n: 'Regeneración',    d: '+0,6 de vida por segundo',            op: 'regen', m: { regen: 0.6 } },
-    { c: 'INT', n: 'Imán de datos',   d: 'Atrae el XP desde el doble de lejos (+100 px)', op: 'mag', m: { magP: 1 } },
+    { c: 'INT', n: 'Carga de SP',     d: '+30% de carga de SP (la skill potenciada sale más seguido)', op: 'spg', m: { spg: 0.3 } },   // Issue #35: antes Imán de datos
     { c: 'INT', n: 'Procesador',      d: '-6% de recarga de las skills',        op: 'cdr',   m: { cdr: 0.06 } },
     { c: 'INT', n: 'Expansión',       d: '+15% de área y tamaño de las skills',  op: 'area',  m: { area: 0.15 } }
   ],

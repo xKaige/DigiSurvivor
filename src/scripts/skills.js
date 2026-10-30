@@ -152,8 +152,11 @@ const SkillSys = {
     const pickMax = (d, n, k) => maxed.filter(r => this.tier(q, r) < this.tier(q, k)).sort((a, b) => (this.def(b).element === d.element) - (this.def(a).element === d.element)).slice(0, n);
     // con lugar libre también vuelven las de etapas anteriores (incluso las que evolucionaste); con las 4 ocupadas, solo las de tu etapa
     const now = this.pool(q), cand = full ? now : now.concat(this.poolOld(q).filter(k => !now.includes(k)));
+    // Issue #31: la PRIMERA de forma final se aprende como cualquier otra (con lugar libre, o evolucionando una maxeada); las
+    // demás de forma final se fusionan de a dos maxeadas, así se pueden tener todas las de Mega a la vez
+    const hasFinal = Object.keys(q.wp).some(k => (q.wp[k] | 0) > 0 && this.def(k) && this.def(k).final);
     const fresh = cand.filter(k => this.def(k) && !(q.wp[k] | 0)).map(k => {
-      const d = this.def(k), need = d.final ? 2 : full ? 1 : 0;
+      const d = this.def(k), need = d.final && hasFinal ? 2 : full ? 1 : 0;
       const rep = need ? pickMax(d, need, k) : null;
       if (need && rep.length < need) return null;
       const u = { n: d.name, d: d.desc, op: 'wp', wpKey: k, tag: 'Skill NUEVA', fresh: 1, rep,
@@ -166,7 +169,7 @@ const SkillSys = {
       return { n: d.name, d: d.desc, op: 'wp', wpKey: k,
         tag: 'Nivel ' + nx + '/' + this.maxOf(k) + ' · ' + this.perkText(d, nx), f: () => { q.wp[k] = (q.wp[k] | 0) + 1; } };
     });
-    const a = this.shuffle(fresh.filter(u => now.includes(u.wpKey))).concat(this.shuffle(fresh.filter(u => !now.includes(u.wpKey)))),   // primero las de tu etapa
+    const a = this.shuffle(fresh).sort((x, y) => this.tier(q, y.wpKey) - this.tier(q, x.wpKey)),   // Issue #31: primero las de tier más alto
       c = this.shuffle(ups), out = [];
     for (let i = 0; i < Math.max(a.length, c.length); i++) { if (a[i]) out.push(a[i]); if (c[i]) out.push(c[i]); }
     return out;

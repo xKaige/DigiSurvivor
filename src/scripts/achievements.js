@@ -51,7 +51,7 @@ const Achievements = {
     { id: 'daily3', c: 'daily', n: 'Misiones al día', d: 'Reclamá las 3 misiones diarias en un mismo día', goal: 1, v: S => S.ax.daily3 },
     { id: 'coins', c: 'daily', n: 'Coleccionista de monedas', d: 'Ganá 10.000 monedas en total', goal: 10000, v: S => S.ax.coinsTot },
 
-    { id: 'pac', c: 'secret', secret: 1, n: 'Pacifista', d: 'Sobreviví 1 minuto sin eliminar ningún Digimon', goal: 1, v: S => S.ax.pac },
+    { id: 'pac', c: 'secret', secret: 1, n: 'Maestría', d: 'Tené 3 skills en nivel 10 a la vez', goal: 1, v: S => S.ax.pac },
     { id: 'gate', c: 'secret', secret: 1, n: '¿Dónde está el jefe?', d: 'Dejá que la fisura del Digital Gate se cierre sin entrar', goal: 1, v: S => S.ax.gate },
     { id: 'mono', c: 'secret', secret: 1, n: 'Monotema', d: 'Aguantá 5 minutos usando una sola skill', goal: 1, v: S => S.ax.mono },
   ],
@@ -97,7 +97,8 @@ const Achievements = {
     if (q.dead) this.run.lowAt = null;
     else if (this.run.lowAt == null && q.max > 0 && q.hp > 0 && q.hp < q.max * 0.05) this.run.lowAt = t;
     if (this.run.lowAt != null && t - this.run.lowAt >= 10 && !s.low5) this.flag('low5');
-    if (t >= 60 && kills === 0 && !q.dead && !s.pac) this.flag('pac');
+    // Issue #33: el viejo Pacifista (1 minuto sin eliminar) era imposible con el ataque automático; el id sigue siendo 'pac'
+    if (q.wp && !s.pac && Object.values(q.wp).filter(v => (v | 0) >= 10).length >= 3) this.flag('pac');
     if (q.xa && !s.xa) this.flag('xa');
     if (q.stage >= 5 && (q.line | 0) > 0 && !s.hard) this.flag('hard');
     if (isOnline && P.length === 4 && t >= 880 && P.every(x => !x.dead) && !s.team15) this.flag('team15');

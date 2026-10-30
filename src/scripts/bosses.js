@@ -78,12 +78,12 @@ const Bosses = {
     if (!B.royal) this.n++;
     const a = Math.random() * 6.283, d = Math.hypot(W, H) / 2 + 60;
     // la vida escala con la etapa del más evolucionado (0,5× en Bebé … 1,75× en forma final), el ciclo y la cantidad de jugadores
-    const st = Math.max(...P.map(q => q.stage | 0)); let hp = 2.4 * B.hp * (0.5 + 0.25 * st) * (1 + 0.035 * Math.max(0, lvl - 1)) * (1 + cyc * 1.5) * (1 + 1.1 * (P.length - 1)) * (1 + Math.max(0, t - 240) / 300);   // más vida con más jugadores (+110% c/u: en party morían antes de la furia) y, desde los 4 min, con el tiempo
+    const st = Math.max(...P.map(q => q.stage | 0)); let hp = 2.4 * B.hp * (0.5 + 0.25 * st) * (1 + 0.035 * Math.max(0, lvl - 1)) * (1 + cyc * 1.5) * (1 + 1.1 * (P.length - 1)) * (1 + Math.max(0, gclk() - 240) / 300);   // más vida con más jugadores (+110% c/u: en party morían antes de la furia) y, desde los 4 min, con el tiempo
     const dps = P.reduce((s, q) => s + this.dpsOf(q), 0);
     hp = Math.max(hp, dps * this.FIGHT_T * (1 + cyc * 0.3));
     if (B.royal) hp = Math.max(hp, dps * this.ROYAL_T);   // 0.8: Royal Knights (finale.js), mucha más vida
     en.push({ x: cam.x + Math.cos(a) * d, y: cam.y + Math.sin(a) * d, k: 2, ti: 0, sk: null, bo: i, cyc,
-      hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5) * (1 + Math.max(0, t - 240) / 600), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
+      hp, mh: hp, sp: B.sp, r: B.r, v: 0, dm: B.dm * (1 + cyc * 0.5) * (1 + Math.max(0, gclk() - 240) / 600), fl: 0, ang: 0, el: this.elOf(B), gun: false, cd: 0,
       pt: 2.5, at: 0, ch: 0, wd: 0, ca: 0, ai: 0, t0: t, sc: B.scale || 1, rk: B.royal ? 1 : 0 });
     if (B.royal) { const b = en[en.length - 1]; b.dm *= this.ROYAL_DM; b.pt = 2 + Math.random() * 4; }
     const b = en[en.length - 1], sp = World.spawnPos(b) || World.freeSpot(b.x, b.y, b); b.x = sp[0]; b.y = sp[1];

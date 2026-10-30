@@ -37,7 +37,7 @@ const Explore = {
       if (o.k === 'chest') {
         if (al.some(q => Math.hypot(q.x - o.x, q.y - o.y) < q.r + 34)) { this.open(o); o.l = 0; }
       } else {
-        const ins = al.filter(q => Math.hypot(q.x - o.x, q.y - o.y) < this.ZONE_R);
+        const ins = al.filter(q => Math.hypot(q.x - o.x, q.y - o.y) < this.zR(o));
         if (ins.length) {
           if (!o.p) Bosses.banner('¡Zona de datos! Quedate adentro');
           o.p = Math.min(this.ZONE_T, (o.p || 0) + dt * (1 + 0.35 * (ins.length - 1))); o.l = Math.max(o.l, 6);
@@ -64,6 +64,8 @@ const Explore = {
   },
   // Issue #6: nada en lugares a los que no se llega (paredes, mesetas sin subida)
   ok(x, y) { if (!World.grid || !World.flow) return true; const v = World.reach(x, y + 40); return v !== 65535 && v !== -1 && World.free(x, y + 40, 12); },
+  // Issue #32: la zona arranca el triple de grande y se va achicando hasta su tamaño a medida que carga
+  zR(o) { return this.ZONE_R * (3 - 2 * Math.min(1, (o.p || 0) / this.ZONE_T)); },
   zoneOk(x, y) {
     for (const f of [0.45, 0.85]) for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; if (!this.ok(x + Math.cos(a) * this.ZONE_R * f, y + Math.sin(a) * this.ZONE_R * f)) return false; }
     return true;
@@ -90,15 +92,16 @@ const Explore = {
     const ti = Enemies.tier(), n = 3 + Math.min(5, Math.floor(t / 180));
     for (let j = 0; j < n; j++) {
       const i = Enemies.choose(ti); if (i == null) return;
-      const a = Math.random() * 6.283, d = this.ZONE_R + 260 + Math.random() * 120;
+      const a = Math.random() * 6.283, d = this.zR(o) + 260 + Math.random() * 120;
       Enemies.make(i, ti, o.x + Math.cos(a) * d, o.y + Math.sin(a) * d);
     }
   },
   done(o, ins) {
-    xp += need * 0.6;   // como un Digicore y medio
-    for (let i = 0; i < 18; i++) { const a = Math.random() * 6.283, r = 20 + Math.random() * 90; gems.push({ x: o.x + Math.cos(a) * r, y: o.y + Math.sin(a) * r, v: 2 + t / 150, mg: 1 }); }
-    const bk = Object.keys(this.BUFFS), b = bk[(Math.random() * bk.length) | 0];
-    for (const q of ins) this.buff(q, b);
+    // Issue #32: el triple de recompensas por el riesgo (XP, gemas y tres potenciadores distintos)
+    xp += need * 1.8;
+    for (let i = 0; i < 18; i++) { const a = Math.random() * 6.283, r = 20 + Math.random() * 90; gems.push({ x: o.x + Math.cos(a) * r, y: o.y + Math.sin(a) * r, v: 3 * (2 + t / 150), mg: 1 }); }
+    const bk = Object.keys(this.BUFFS).sort(() => Math.random() - 0.5).slice(0, 3);
+    for (const q of ins) for (const b of bk) this.buff(q, b);
     for (let i = 0; i < 40; i++) burst(o.x, o.y, i % 2 ? '#3dff9a' : '#fff');
     ef.push({ k: 'ring', x: o.x, y: o.y, R: this.ZONE_R * 1.6, col: '#3dff9a', l: 0.6, m: 0.6 });
     Bosses.banner('¡Datos recuperados!'); Sound.play('win');
@@ -151,7 +154,7 @@ const Explore = {
     cx.restore();
   },
   drawZone(o) {
-    const R = this.ZONE_R, f = Math.min(1, (o.p || 0) / this.ZONE_T);
+    const R = this.zR(o), f = Math.min(1, (o.p || 0) / this.ZONE_T);
     cx.save();
     cx.globalAlpha = 0.12 + 0.05 * Math.sin(t * 4); cx.fillStyle = '#3dff9a'; cx.beginPath(); cx.arc(o.x, o.y, R, 0, 6.283); cx.fill();
     cx.globalAlpha = 0.9; cx.strokeStyle = '#3dff9a'; cx.lineWidth = 2.5; cx.setLineDash([12, 8]); cx.lineDashOffset = -t * 30;

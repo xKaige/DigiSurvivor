@@ -135,32 +135,6 @@
       "vp": {
         "nohit": 40
       }
-    },
-    {
-      "id": "6_3",
-      "name": "Alphamon: Ouryuken",
-      "file": "alphamonouryuken_6_3.png",
-      "cols": 2,
-      "rows": 6,
-      "req": {
-        "INT": 4
-      },
-      "desc": "Poderoso: +5 de daño",
-      "skills": [
-        "ouryuken",
-        "seiken_gradalpha",
-        "alpha_inforce"
-      ],
-      "wiki": null,
-      "verified": false,
-      "note": "No está en la wiki (DSR): skills del canon (Wikimon)",
-      "family": "VB",
-      "bonus": {
-        "dmg": 5
-      },
-      "vp": {
-        "care": 1
-      }
     }
   ],
   "x": {

@@ -959,22 +959,22 @@ function endRun(title,finalStages){if(!running)return;
  running=false;paused=false;evo=null;pending=[];evoQueue=[];evoPlayers=[];rndOpen=false;SkillSys.clearBar();Sound.music(false);Gate.reset();Finale.reset();
  menuPause=false;$('pause').style.display='none';document.body.classList.remove('ingame');
  $('evt').style.display='none';$('up').style.display='none';
- const bc=Math.round(0.5*Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(t/60),s=Math.floor(t%60),c=Math.floor((kills*.2+t/10+lvl*3)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
+ const bc=Math.round(0.5*Bosses.coins()*(1+((P[0].m&&P[0].m.bossCoin)||0))),m=Math.floor(gclk()/60),s=Math.floor(gclk()%60),c=Math.floor((kills*.2+gclk()/10+lvl*3)*P[0].coin)+bc;save.coins+=c;persist();Bosses.hideBar();
  $('t').textContent=title;
  const trTxt=Trees.onRunEnd(mine(),t);
  $('m').textContent='Aguantaste '+m+':'+String(s).padStart(2,'0')+' y eliminaste '+kills+' Digimon. Ganaste '+c+' monedas'+(bc?' ('+bc+' por jefes)':'')+'.'+trTxt;
  // misiones diarias (missions.js): cuenta la partida con los datos de TU jugador (en online el invitado es P[1])
- if(typeof Missions!=='undefined'){const me=(isOnline&&P[myIdx])||P[0],done=Missions.onRunEnd({kills,secs:t,lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode>1,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
+ if(typeof Missions!=='undefined'){const me=(isOnline&&P[myIdx])||P[0],done=Missions.onRunEnd({kills,secs:gclk(),lvl,stage:me.stage|0,online:isOnline,local2p:!isOnline&&mode>1,attr:me.el|0,coins:c,skillMax:Object.entries(me.wp).some(([k,v])=>v>=SkillSys.maxOf(k))});
   if(done.length)$('m').textContent+=' ¡'+(done.length>1?'Misiones cumplidas':'Misión cumplida')+': '+done.map(x=>x.name).join(', ')+'! '+(done.length>1?'Reclamalas':'Reclamala')+' en Misiones diarias.'}
  // progresión permanente (progress.js): Digitamas y desbloqueos
- if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:t,pl:mine().map(q=>({cid:q.cid,stage:finalStages&&Number.isInteger(finalStages[q.id])?Math.max(0,Math.min(5,finalStages[q.id])):Math.max(q.stage|0,q.maxSt|0)})),bosses:Bosses.down.slice()});
+ if(typeof Progress!=='undefined'){const r=Progress.onRunEnd({kills,secs:gclk(),pl:mine().map(q=>({cid:q.cid,stage:finalStages&&Number.isInteger(finalStages[q.id])?Math.max(0,Math.min(5,finalStages[q.id])):Math.max(q.stage|0,q.maxSt|0)})),bosses:Bosses.down.slice()});
   if(r.eggs.length)$('m').textContent+=' ¡Conseguiste '+(r.eggs.length>1?r.eggs.length+' Digitamas':'un Digitama')+' ('+r.eggs.map(u=>u.name).join(', ')+')! '+(r.eggs.length>1?'Hacelos':'Hacelo')+' eclosionar en el Digimon Analyzer.';
   $('m').textContent+=' +'+r.txp+' XP de Tamer'+(r.rankUp?'. ¡Subiste a '+r.rankUp+'! (+'+r.reward+' monedas)':'')+'.';
   if(r.hatched.length)setTimeout(()=>Progress.showHatch(),700)}
  // logros (achievements.js): antes que Challenge.onRunEnd, que borra las reglas del desafío
  if(typeof Achievements!=='undefined')Achievements.onRunEnd({kills,coins:c,online:isOnline,n:P.length,chal:typeof Challenge!=='undefined'&&!!Challenge.active,fin:title==='Yggdrasill reinició el Digimundo',fast:Bosses.fast,me:mine()[0]});
- if(typeof Ranking!=='undefined')Ranking.onRunEnd({q:mine()[0],kills,bosses:Bosses.down.length,secs:t,lvl,n:P.length,chal:typeof Challenge!=='undefined'&&!!Challenge.active});   // ranking.js (antes que Challenge.onRunEnd)
- if(typeof Challenge!=='undefined')$('m').textContent+=Challenge.onRunEnd({kills,secs:t,bosses:Bosses.down.length,cid:(mine()[0]||P[0]).cid});
+ if(typeof Ranking!=='undefined')Ranking.onRunEnd({q:mine()[0],kills,bosses:Bosses.down.length,secs:gclk(),lvl,n:P.length,chal:typeof Challenge!=='undefined'&&!!Challenge.active});   // ranking.js (antes que Challenge.onRunEnd)
+ if(typeof Challenge!=='undefined')$('m').textContent+=Challenge.onRunEnd({kills,secs:gclk(),bosses:Bosses.down.length,cid:(mine()[0]||P[0]).cid});
  showDmg(mine()[0]||P[0]);
  wal();isOnline=false;$('ov').style.display='flex';lobbyChanged()}
 // gráfico de daño de la partida (Issue #8): barras por skill con su ícono, el total y el % del daño de tu jugador
@@ -1444,8 +1444,8 @@ function update(dt){
    d.dead=false;d.hp=d.max*Math.min(1,.5+rh);d.inv=2;d.revP=0;for(let i=0;i<24;i++)burst(d.x,d.y,i%2?'#fff':'#ffd23f')}}
  // ritmo de aparición: intervalo de 0,75 s que baja hasta 0,3 s, tandas que crecen cada 2 minutos y tope de enemigos en pantalla
  // (más densidad, pedido: intervalo de 0,6 s que baja hasta 0,15 s y tandas +1 cada 90 s; además, oleadas: Enemies.events)
- spawnT-=dt;const iv=Math.max(.15,.6-t*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),ti=Enemies.tier();
- while(spawnT<=0){for(let i=0,n=1+Math.floor(t/90);!World.arena&&!Finale.rk&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(ti,1);spawnT+=iv}
+ spawnT-=dt;const gt=gclk(),iv=Math.max(.15,.6-gt*.003)/(1+.4*(P.length-1))/(chal('swarm')?1.5:1),ti=Enemies.tier();
+ while(spawnT<=0){for(let i=0,n=1+Math.floor(gt/90);!World.arena&&!Finale.rk&&i<n&&en.length<MAX_EN+60*(P.length-1);i++)spawn(ti,1);spawnT+=iv}
  if(!World.arena&&!Finale.rk){Enemies.events(dt,ti);Enemies.champ(dt)}
  if(!Finale.rk)Gate.tick(dt);Weather.tick(dt);Enemies.tick(dt);World.updateFlow(dt);World.relocate(dt);for(const q of al)Stats.tick(q,dt);for(const e of en)Stats.enemyTick(e,dt);
  buildEG();
